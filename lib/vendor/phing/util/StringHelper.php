@@ -178,7 +178,10 @@ class StringHelper {
             trigger_error("substring(), Endindex out of bounds must be $startpos<n<".($len-1), E_USER_ERROR);
         }
         if ($startpos === $endpos) {
-            return (string) $string{$startpos};
+            // A string can also be 1 or 0, this will be converted
+            // to a boolean if we don't cast it first.
+            $string = (string) $string;
+            return (string) $string[$startpos];
         } else {
             $len = $endpos-$startpos;
         }

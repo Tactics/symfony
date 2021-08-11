@@ -222,7 +222,11 @@ class IntrospectionHelper {
 
                     $classname = null;
 
-                    if (($hint = $params[0]->getClass()) !== null) {
+                    $hint = $params[0]->getType() && !$params[0]->getType()->isBuiltin()
+                        ? new ReflectionClass($params[0]->getType()->getName())
+                        : null;
+
+                    if ($hint !== null) {
                         $classname = $hint->getName();
                     }
 
@@ -250,7 +254,11 @@ class IntrospectionHelper {
 
                     $classname = null;
 
-                    if (($hint = $params[0]->getClass()) !== null) {
+                    $hint = $params[0]->getType() && !$params[0]->getType()->isBuiltin()
+                        ? new ReflectionClass($params[0]->getType()->getName())
+                        : null;
+
+                    if ($hint !== null) {
                         $classname = $hint->getName();
                     }
 
@@ -327,7 +335,11 @@ class IntrospectionHelper {
 
                 $classname = null;
 
-                if (($hint = $params[0]->getClass()) !== null) {
+                $hint = $params[0]->getType() && !$params[0]->getType()->isBuiltin()
+                    ? new ReflectionClass($params[0]->getType()->getName())
+                    : null;
+
+                if ($hint !== null) {
                     $classname = $hint->getName();
                 }
 
@@ -413,7 +425,11 @@ class IntrospectionHelper {
 
                 $classname = null;
 
-                if (($hint = $params[0]->getClass()) !== null) {
+                $hint = $params[0]->getType() && !$params[0]->getType()->isBuiltin()
+                    ? new ReflectionClass($params[0]->getType()->getName())
+                    : null;
+
+                if ($hint !== null) {
                     $classname = $hint->getName();
                 }
 
