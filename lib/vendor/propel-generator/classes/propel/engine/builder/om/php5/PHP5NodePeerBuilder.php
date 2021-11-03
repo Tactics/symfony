@@ -203,7 +203,7 @@ abstract class ".$this->getClassname()." {
 	 * Use at your own risk!
 	 *
 	 * @param      $objectClassname Object wrapped by new node.
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     $nodeObjectClassname
 	 * @throws     PropelException
 	 */
@@ -250,7 +250,7 @@ abstract class ".$this->getClassname()." {
 	 * safer alternative to createNewRootNode().
 	 *
 	 * @param      $objectClassname Object wrapped by new node.
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     $nodeObjectClassname
 	 * @throws     PropelException
 	 */
@@ -312,7 +312,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      Criteria Criteria to use.
 	 * @param      boolean True if ancestors should also be retrieved.
 	 * @param      boolean True if descendants should also be retrieved.
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     array Array of root nodes.
 	 */
 	public static function retrieveNodes(\$criteria, \$ancestors = false, \$descendants = false, \$con = null)
@@ -340,7 +340,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      mixed $objectClassname primary key (array for composite keys)
 	 * @param      boolean True if ancestors should also be retrieved.
 	 * @param      boolean True if descendants should also be retrieved.
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     $nodeObjectClassname
 	 */
 	public static function retrieveNodeByPK(\$pk, \$ancestors = false, \$descendants = false, \$con = null)
@@ -366,7 +366,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      string Node path to retrieve.
 	 * @param      boolean True if ancestors should also be retrieved.
 	 * @param      boolean True if descendants should also be retrieved.
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     $objectClassname
 	 */
 	public static function retrieveNodeByNP(\$np, \$ancestors = false, \$descendants = false, \$con = null)
@@ -389,7 +389,7 @@ abstract class ".$this->getClassname()." {
 	 *
 	 * @param      string Node path to retrieve.
 	 * @param      boolean True if descendants should also be retrieved.
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     ".$this->getStubNodeBuilder()->getClassname()."
 	 */
 	public static function retrieveRootNode(\$descendants = false, \$con = null)
@@ -418,7 +418,7 @@ abstract class ".$this->getClassname()." {
 	 *
 	 * @param      string Source node path to move (root of the src subtree).
 	 * @param      string Destination node path to move to (root of the dst subtree).
-	 * @param      Connection Connection to use.
+	 * @param      Connection|null Connection to use.
 	 * @return     void
 	 * @throws     PropelException
 	 * @todo       This is currently broken for simulated 'onCascadeDelete's.
@@ -493,7 +493,7 @@ abstract class ".$this->getClassname()." {
 	 * Deletes the node subtree at the specified node path from the database.
 	 *
 	 * @param      string Node path to delete
-	 * @param      Connection Connection to use.
+	 * @param      ConneConnection|nullction Connection to use.
 	 * @return     void
 	 * @throws     PropelException
 	 * @todo       This is currently broken for simulated 'onCascadeDelete's.

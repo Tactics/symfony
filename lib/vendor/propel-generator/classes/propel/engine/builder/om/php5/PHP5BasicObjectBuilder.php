@@ -247,9 +247,13 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 		$table = $this->getTable();
 
-		foreach ($table->getColumns() as $col) {
+        /** @var Column $col */
+        foreach ($table->getColumns() as $col) {
 
-			$cptype = $col->getPhpNative();
+            $extra = ($col->isNotNull() && !$col->isLazyLoad()) || $col->getPhpNative() === PropelTypes::BOOLEAN_NATIVE_TYPE  ? '' : '|null';
+            $optional = ($col->isNotNull() && !$col->isLazyLoad()) || $col->getPhpNative() === PropelTypes::BOOLEAN_NATIVE_TYPE ? '' : '?';
+
+            $cptype = $col->getPhpNative();
 			$clo=strtolower($col->getName());
 			$defVal = "";
 			if (($val = $col->getPhpDefaultValue()) !== null) {
@@ -262,9 +266,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * The value for the $clo field.
-	 * @var        $cptype
+	 * @var        $cptype$extra
 	 */
-	protected \$" . $clo . $defVal . ";
+	protected ". $optional.$cptype ." \$" . $clo . $defVal . ";
 ";
 
 			if ($col->isLazyLoad()) {
@@ -350,7 +354,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @throws     PropelException - if unable to convert the date/time to timestamp.
 	 */
 	public function get$cfc(\$format = ".var_export($defaultfmt, true)."";
-		if ($col->isLazyLoad()) $script .= ", \$con = null";
+		if ($col->isLazyLoad()) $script .= ", Connection \$con = null";
 		$script .= ")
 	{
 ";
@@ -395,14 +399,19 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$cfc=$col->getPhpName();
 		$clo=strtolower($col->getName());
 
+        $extra = '';
+        if (!$col->isNotNull() && !in_array($col->getPhpNative(), [PropelTypes::BOOLEAN])) {
+            $extra = "|null";
+        }
+
 		$script .= "
 	/**
 	 * Get the [$clo] column value.
 	 * ".$col->getDescription()."
-	 * @return     ".$col->getPhpNative(). $col->isNotNull() ? "" : "|null
+	 * @return     ".$col->getPhpNative().$extra ."
 	 */
 	public function get$cfc(";
-		if ($col->isLazyLoad()) $script .= "\$con = null";
+		if ($col->isLazyLoad()) $script .= "Connection \$con = null";
 		$script .= ")
 	{
 ";
@@ -413,8 +422,27 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 ";
 		}
+
+        switch ($col->getPhpNative()) {
+            case PropelTypes::BOOLEAN_NATIVE_TYPE:
+                $typeCast = '(bool)';
+                break;
+            case PropelTypes::INTEGER_NATIVE_TYPE:
+                if ($col->isNotNull()) {
+                    $typeCast = '(int)';
+                }
+                break;
+            case PropelTypes::CHAR_NATIVE_TYPE:
+                if ($col->isNotNull()) {
+                    $typeCast = '(string)';
+                }
+                break;
+            default:
+                $typeCast = '';
+        }
+
 		$script .= "
-		return \$this->$clo;
+		return $typeCast \$this->$clo;
 	}
 ";
 	}
@@ -442,7 +470,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @return     void
 	 * @throws     PropelException - any underlying error will be wrapped and re-thrown.
 	 */
-	protected function load$cfc(\$con = null)
+	protected function load$cfc(Connection \$con = null)
 	{
 		\$c = \$this->buildPkeyCriteria();
 		\$c->addSelectColumn(".$this->getColumnConstant($col).");
@@ -871,13 +899,13 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 $script .= "
 			case $i:
 				return \$this->get$cfc();
-				break;";
+				";
 		$i++;
 	} /* foreach */
 $script .= "
 			default:
 				return null;
-				break;
+
 		} // switch()
 	}
 ";
@@ -982,13 +1010,13 @@ $script .= "
 	/**
 	 * Removes this object from datastore and sets delete attribute.
 	 *
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     void
 	 * @throws     PropelException
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(\$con = null)
+	public function delete(Connection \$con = null)
 	{
 		if (\$this->isDeleted()) {
 			throw new PropelException(\"This object has already been deleted.\");
@@ -1045,11 +1073,11 @@ $script .= "
 	 *
 	 * If the object is new, it inserts it; otherwise an update is performed.
 	 *
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     int The number of rows affected by this insert/update operation (for non-complex OM this will be at most 1).
 	 * @throws     PropelException
 	 */
-	public function save(\$con = null)
+	public function save(Connection \$con = null)
 	{
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 

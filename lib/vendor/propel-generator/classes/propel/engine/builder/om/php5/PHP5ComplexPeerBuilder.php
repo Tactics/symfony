@@ -110,12 +110,12 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * Selects a collection of $className objects pre-filled with their $joinClassName objects.
 	 *
 	 * @param      Criteria \$c
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     {$className}[] array Array of $className objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, \$con = null)
+	public static function doSelectJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, Connection \$con = null)
 	{
 		\$c = clone \$c;
 
@@ -242,12 +242,12 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 *
 	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     int Number of matching rows.
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCountJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, \$distinct = false, \$con = null)
+	public static function doCountJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, bool \$distinct = false, Connection \$con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;
@@ -306,12 +306,12 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * Selects a collection of $className objects pre-filled with all related objects.
 	 *
 	 * @param      Criteria \$c
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     {$className}[] array Array of $className objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAll(Criteria \$c, \$con = null)
+	public static function doSelectJoinAll(Criteria \$c, Connection \$con = null)
 	{
 		\$c = clone \$c;
 
@@ -493,12 +493,12 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 *
 	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     int Number of matching rows.
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCountJoinAll(Criteria \$criteria, \$distinct = false, \$con = null)
+	public static function doCountJoinAll(Criteria \$criteria, bool \$distinct = false, Connection \$con = null)
 	{
 		\$criteria = clone \$criteria;
 
@@ -602,12 +602,12 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * Selects a collection of ".$table->getPhpName()." objects pre-filled with all related objects except ".$thisTableObjectBuilder->getFKPhpNameAffix($fk).".
 	 *
 	 * @param      Criteria \$c
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     array Array of ".$table->getPhpName()." objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, \$con = null)
+	public static function doSelectJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, Connection \$con = null)
 	{
 		\$c = clone \$c;
 
@@ -798,10 +798,10 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 *
 	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
-	 * @param      Connection \$con
+	 * @param      Connection|null \$con
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, \$distinct = false, \$con = null)
+	public static function doCountJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, bool \$distinct = false, Connection \$con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;
