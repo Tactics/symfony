@@ -97,7 +97,7 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 					// the join table will be aliases when
                     // this table == foreign table
                     $alias = $fk->getForeignTableName() == $table->getName() ? 'alias' : null;
-                    
+
                     $joinClassName = $joinTable->getPhpName();
 
                     $thisTableObjectBuilder = OMBuilder::getNewObjectBuilder($table);
@@ -244,6 +244,8 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
 	 * @param      Connection \$con
 	 * @return     int Number of matching rows.
+	 * @throws PropelException
+     * @throws SQLException
 	 */
 	public static function doCountJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
@@ -493,6 +495,8 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
 	 * @param      Connection \$con
 	 * @return     int Number of matching rows.
+	 * @throws PropelException
+     * @throws SQLException
 	 */
 	public static function doCountJoinAll(Criteria \$criteria, \$distinct = false, \$con = null)
 	{

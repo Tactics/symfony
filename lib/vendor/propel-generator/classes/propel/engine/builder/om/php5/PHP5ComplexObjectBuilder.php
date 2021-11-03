@@ -296,7 +296,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	/**
 	 * Declares an association between this object and a $className object.
 	 *
-	 * @param      Base$className \$v
+	 * @param      Base$className|null \$v
 	 * @return     void
 	 * @throws     PropelException
 	 */
@@ -523,9 +523,10 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * api reasonable.  You can provide public methods for those you
 	 * actually need in ".$table->getPhpName().".
 	 *
-	 * @param Criteria     \$criteria
-	 * @param Connection   \$con
+	 * @param Criteria|null     \$criteria
+	 * @param Connection|null  \$con
 	 * @return ".$className."[] $relCol joined with $relCol2
+	 * @throws PropelException
 	 */
 	public function get".$relCol."Join".$relCol2."(Criteria \$criteria = null, Connection \$con = null)
 	{
@@ -714,7 +715,6 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * @param      boolean \$distinct
 	 * @param      Connection \$con
 	 * @return     int The number of $relCol
-	 * @throws     PropelException
 	 */
 	public function count$relCol(\$criteria = null, \$distinct = false, \$con = null)
 	{
@@ -769,9 +769,8 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * an empty collection or the current collection, the criteria
 	 * is ignored on a new object.
 	 *
-	 * @param      Connection \$con
-	 * @param      Criteria \$criteria
-	 * @throws     PropelException
+	 * @param      Connection|null   \$con
+	 * @param      Criteria|null   \$criteria
 	 * @return     ".$className."[] $relCol
 	 */
 	public function get$relCol(\$criteria = null, \$con = null)
