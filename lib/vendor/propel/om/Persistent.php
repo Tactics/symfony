@@ -100,19 +100,19 @@ interface Persistent {
 	 */
 	public function setDeleted($b);
 
-    /**
-     * Deletes the object.
-     * @param      Connection|null $con
-     * @return     void
-     * @throws     Exception
-     */
-	public function delete(Connection $con = null);
+	/**
+	 * Deletes the object.
+	 * @param      Connection $con
+	 * @return     void
+	 * @throws     Exception
+	 */
+	public function delete($con = null);
 
-    /**
-     * Saves the object.
-     * @param      Connection|null $con
-     * @return     void
-     * @throws     Exception
-     */
-	public function save(Connection $con = null);
+	/**
+	 * Saves the object.
+	 * @param      Connection $con
+	 * @return     void
+	 * @throws     Exception
+	 */
+	public function save($con = null);
 }

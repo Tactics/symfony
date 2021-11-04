@@ -260,9 +260,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 				settype($val, $cptype);
 				$defaultValue = var_export($val, true);
 				$defVal = " = " . $defaultValue;
-			} else {
-                $defVal = " = null";
-            }
+			}
 
 			$script .= "
 

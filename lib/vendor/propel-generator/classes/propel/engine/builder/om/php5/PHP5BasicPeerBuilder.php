@@ -533,7 +533,7 @@ if (Propel::isInit()) {
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCount(Criteria \$criteria, bool \$distinct = false, Connection \$con = null)
+	public static function doCount(Criteria \$criteria, bool bool \$distinct = false, Connection \$con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;
