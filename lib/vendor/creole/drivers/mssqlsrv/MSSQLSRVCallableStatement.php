@@ -345,7 +345,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) { return []; }
     return (array) unserialize($this->boundOutVars[$paramIndex]);
   }
 
@@ -369,7 +369,9 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) {
+        return new Blob();
+    }
     require_once 'creole/util/Blob.php';
     $b = new Blob();
     $b->setContents($this->boundOutVars[$paramIndex]);
@@ -384,7 +386,9 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) {
+        return new Clob();
+    }
     require_once 'creole/util/Clob.php';
     $c = new Clob();
     $c->setContents($this->boundOutVars[$paramIndex]);
@@ -423,7 +427,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) { return 0.00; }
     return (float) $this->boundOutVars[$paramIndex];
   }
 
@@ -435,7 +439,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) { return 0; }
     return (int) $this->boundOutVars[$paramIndex];
   }
 
@@ -447,7 +451,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) { return ''; }
     return (string) $this->boundOutVars[$paramIndex];
   }
 
