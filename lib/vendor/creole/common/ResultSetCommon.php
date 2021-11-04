@@ -311,7 +311,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return false; }
         return (boolean) $this->fields[$idx];
     }
 

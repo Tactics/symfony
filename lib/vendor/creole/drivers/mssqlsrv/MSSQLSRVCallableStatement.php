@@ -357,7 +357,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if (!array_key_exists($paramIndex, $this->boundOutVars)) {
       throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
     }
-    if ($this->boundOutVars[$paramIndex] === null) { return null; }
+    if ($this->boundOutVars[$paramIndex] === null) { return false; }
     return (boolean) $this->boundOutVars[$paramIndex];
   }
 
