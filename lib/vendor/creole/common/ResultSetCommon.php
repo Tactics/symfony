@@ -300,7 +300,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return []; }
         return (array) unserialize($this->fields[$idx]);
     }
 
@@ -322,7 +322,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return new Blob(); }
         require_once 'creole/util/Blob.php';
         $b = new Blob();
         $b->setContents($this->fields[$idx]);
@@ -336,7 +336,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return new Clob(); }
         require_once 'creole/util/Clob.php';
         $c = new Clob();
         $c->setContents($this->fields[$idx]);
@@ -385,7 +385,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return 0.00; }
         return (float) $this->fields[$idx];
     }
 
@@ -396,7 +396,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return 0; }
         return (int) $this->fields[$idx];
     }
 
@@ -407,7 +407,7 @@ abstract class ResultSetCommon {
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
+        if ($this->fields[$idx] === null) { return ''; }
 		return ($this->rtrimString ? rtrim($this->fields[$idx]) : (string) $this->fields[$idx]);
     }
 
