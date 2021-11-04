@@ -250,27 +250,70 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         /** @var Column $col */
         foreach ($table->getColumns() as $col) {
 
-            $extra = ($col->isNotNull() && !$col->isLazyLoad()) || $col->getPhpNative() === PropelTypes::BOOLEAN_NATIVE_TYPE  ? '' : '|null';
-            $optional = ($col->isNotNull() && !$col->isLazyLoad()) || $col->getPhpNative() === PropelTypes::BOOLEAN_NATIVE_TYPE ? '' : '?';
+
+            $isInt = in_array($col->getPhpNative(), [
+                PropelTypes::TINYINT_NATIVE_TYPE,
+                PropelTypes::SMALLINT_NATIVE_TYPE,
+                PropelTypes::DATE_NATIVE_TYPE,
+                PropelTypes::TIME_NATIVE_TYPE,
+                PropelTypes::TIMESTAMP_NATIVE_TYPE,
+            ]);
+
+            $isFloat = in_array($col->getPhpNative(), [
+                PropelTypes::NUMERIC_NATIVE_TYPE,
+                PropelTypes::DECIMAL_NATIVE_TYPE,
+                PropelTypes::REAL_NATIVE_TYPE,
+                PropelTypes::FLOAT_NATIVE_TYPE,
+                PropelTypes::DOUBLE_NATIVE_TYPE,
+            ]);
+
+            $isBoolean = in_array($col->getPhpNative(), [PropelTypes::BOOLEAN_NATIVE_TYPE]);
+            $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
+            $isReference = $col->isLazyLoad();
+            $isNull = !$col->isNotNull();
+
+            if ($isBoolean) {
+                $isOptional = FALSE;
+            } else {
+                $isOptional = $isReference || $isDate || $isNull;
+            }
+
+            $extraDoc = $isOptional  ? '|null' : '';
+            $extraType = $isOptional ? '?' : '';
 
             $cptype = $col->getPhpNative();
-			$clo=strtolower($col->getName());
-			$defVal = "";
-			if (($val = $col->getPhpDefaultValue()) !== null) {
-				settype($val, $cptype);
-				$defaultValue = var_export($val, true);
-				$defVal = " = " . $defaultValue;
-			} else {
+            $clo=strtolower($col->getName());
+            $defVal = "";
+            if (!$isOptional) {
+                $val = $col->getPhpDefaultValue();
+                settype($val, $cptype);
+                $defaultValue = var_export($val, true);
+                $defVal = " = " . $defaultValue;
+            }
+
+            if ($isOptional) {
                 $defVal = " = null";
+            }
+
+            if (!$isOptional && $isReference) {
+                $defVal = " = null";
+            }
+
+            if (!$isOptional && $isInt) {
+                $defVal = " = 0";
+            }
+
+            if (!$isOptional && $isFloat) {
+                $defVal = " = 0.00";
             }
 
 			$script .= "
 
 	/**
 	 * The value for the $clo field.
-	 * @var        $cptype$extra
+	 * @var        $cptype$extraDoc
 	 */
-	protected ". $optional.$cptype ." \$" . $clo . $defVal . ";
+	protected ". $extraType.$cptype ." \$" . $clo . $defVal . ";
 ";
 
 			if ($col->isLazyLoad()) {

@@ -277,7 +277,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	/**
 	 * @var        $className|null
 	 */
-	protected ?$className $".$varName.";
+	protected ?$className $".$varName." = null;
 ";
 	}
 
@@ -618,7 +618,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * Collection to store aggregation of $collName.
 	 * @var        array
 	 */
-	protected array $".$collName.";
+	protected array $".$collName." = [];
 
 	/**
 	 * The criteria used to select the current contents of $collName.
