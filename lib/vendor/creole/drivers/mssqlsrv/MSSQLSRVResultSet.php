@@ -36,19 +36,19 @@ require_once 'creole/common/ResultSetCommon.php';
 class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
 
   private $fieldNames = null;
-  
+
   /**
    * Offset at which to start reading rows.
    * @var int
    */
   private $offset = 0;
- 
+
   /**
    * Maximum rows to retrieve, or 0 if all.
    * @var int
    */
-  private $limit = 0;   
- 
+  private $limit = 0;
+
   /**
    * This MSSQL-only function exists to set offset after ResultSet is instantiated.
    * This function should be "protected" in Java sense: only available to classes in package.
@@ -63,7 +63,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
           $this->seek(0);  // 0 becomes $offset by seek() method
       }
   }
- 
+
   /**
    * This MSSQL-only function exists to set limit after ResultSet is instantiated.
    * This function should be "protected" in Java sense: only available to classes in package.
@@ -113,7 +113,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
         $this->afterLast();
         return false;
     }
-    
+
     $sqlsrvFetchmode = $this->fetchmode === ResultSet::FETCHMODE_ASSOC ? SQLSRV_FETCH_ASSOC :  SQLSRV_FETCH_NUMERIC;
     $this->fields = sqlsrv_fetch_array($this->result, $sqlsrvFetchmode,  SQLSRV_SCROLL_ABSOLUTE, $this->offset + $this->cursorPos);
 
@@ -140,11 +140,11 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
    * @see ResultSet::getRecordCount()
    */
   function getRecordCount()
-  {    
+  {
     $rows = @sqlsrv_num_rows($this->result);
     if ($rows === null) {
         throw new SQLException('Error getting record count', $this->sqlError());
-    }   
+    }
     // adjust count based on emulated LIMIT/OFFSET
     $rows -= $this->offset;
     return ($this->limit > 0 && $rows > $this->limit ? $this->limit : $rows);
@@ -199,7 +199,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
   {
       $idx = (is_int($column) ? $column - 1 : $column);
       if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-      if ($this->fields[$idx] === null) { return null; }
+      if ($this->fields[$idx] === null) { return ''; }
 
       // Fixes BU_DATE
       // treated as text by propel, return as DateTime by SQLServer Driver

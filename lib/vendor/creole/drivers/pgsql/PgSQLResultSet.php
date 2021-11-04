@@ -167,7 +167,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	{
 		if (is_int($column)) { $column--; } // because Java convention is to start at 1
 		if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
-		if ($this->fields[$column] === null) { return null; }
+		if ($this->fields[$column] === null) { return []; }
 		return $this->strToArray($this->fields[$column]);
 	}
 
@@ -182,7 +182,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	{
 		if (is_int($column)) { $column--; } // because Java convention is to start at 1
 		if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
-		if ($this->fields[$column] === null) { return null; }
+		if ($this->fields[$column] === null) { return new Blob(); }
 		require_once 'creole/util/Blob.php';
 		$b = new Blob();
 		$b->setContents(pg_unescape_bytea($this->fields[$column]));
