@@ -346,7 +346,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * ".$col->getDescription()."
 	 * @param      string \$format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the integer unix timestamp will be returned.
-	 * @return     false|int|string|null Formatted date/time value as string or integer unix timestamp (if format is NULL).
+	 * @return     mixed Formatted date/time value as string or integer unix timestamp (if format is NULL).
 	 * @throws     PropelException - if unable to convert the date/time to timestamp.
 	 */
 	public function get$cfc(\$format = ".var_export($defaultfmt, true)."";
@@ -399,7 +399,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Get the [$clo] column value.
 	 * ".$col->getDescription()."
-	 * @return     ".$col->getPhpNative(). $col->isNotNull() ? "" : "|null
+	 * @return     ".$col->getPhpNative()."
 	 */
 	public function get$cfc(";
 		if ($col->isLazyLoad()) $script .= "\$con = null";
@@ -500,12 +500,12 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * ".$col->getDescription()."
 	 * @param      ".$col->getPhpNative()." \$v new value
 	 * @return     void";
-
+  
 		if ($throwsPropelException){
 		    $script .= "
      * @throws     PropelException";
         }
-
+        
         $script .= "
 	 */
 	public function set$cfc(\$v)
@@ -635,10 +635,10 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 
 		$this->addMutatorOpen($script, $col);
-
+		
 		// Perform some smart checking here to handle possible type discrepancies
 		// between the passed-in value and the value from the DB
-
+		
 		if ($col->getPhpNative() === "int") {
 			$script .= "
 		// Since the native PHP type for this column is integer,
@@ -656,7 +656,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 ";
 		}
-
+		
 		$script .= "
 		if (\$this->$clo !== \$v";
 		if ($defaultValue !== null) {
@@ -811,8 +811,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 *
 	 * @param      string \$keyType One of the class type constants TYPE_PHPNAME,
 	 *                        TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
-	 * @return     array an associative array containing the field names (as keys) and field values
-	 * @throws PropelException
+	 * @return     mixed[string] an associative array containing the field names (as keys) and field values
 	 */
 	public function toArray(\$keyType = BasePeer::TYPE_PHPNAME)
 	{
@@ -840,7 +839,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 *                     one of the class type constants TYPE_PHPNAME,
 	 *                     TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
 	 * @return     mixed Value of field.
-	 * @throws PropelException
 	 */
 	public function getByName(\$name, \$type = BasePeer::TYPE_PHPNAME)
 	{
@@ -896,7 +894,6 @@ $script .= "
 	 *                     one of the class type constants TYPE_PHPNAME,
 	 *                     TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
 	 * @return     void
-	 * @throws PropelException
 	 */
 	public function setByName(\$name, \$value, \$type = BasePeer::TYPE_PHPNAME)
 	{
@@ -917,7 +914,6 @@ $script .= "
 	 * @param      int \$pos position in xml schema
 	 * @param      mixed \$value field value
 	 * @return     void
-     * @throws PropelException
 	 */
 	public function setByPosition(\$pos, \$value)
 	{
@@ -957,7 +953,6 @@ $script .= "
 	 * @param      array  \$arr     An array to populate the object from.
 	 * @param      string \$keyType The type of keys the array uses.
 	 * @return     void
-     * @throws PropelException
 	 */
 	public function fromArray(\$arr, \$keyType = BasePeer::TYPE_PHPNAME)
 	{

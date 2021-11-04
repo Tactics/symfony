@@ -406,14 +406,14 @@ if (Propel::isInit()) {
 	/** A key representing a particular subclass */
 	const CLASSKEY_".strtoupper($child->getKey())." = '" . $child->getKey() . "';
 ";
-
+	
 	if (strtoupper($child->getClassname()) != strtoupper($child->getKey())) {
 		$script .= "
 	/** A key representing a particular subclass */
 	const CLASSKEY_".strtoupper($child->getClassname())." = '" . $child->getKey() . "';
 ";
 	}
-
+	
 	$script .= "
 	/** A class that can be returned by this peer. */
 	const CLASSNAME_".strtoupper($child->getKey())." = '". $childBuilder->getClasspath() . "';
@@ -530,8 +530,6 @@ if (Propel::isInit()) {
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
 	 * @param      Connection \$con
 	 * @return     int Number of matching rows.
-	 * @throws PropelException
-     * @throws SQLException
 	 */
 	public static function doCount(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
@@ -574,9 +572,9 @@ if (Propel::isInit()) {
 	 *
 	 * @param      Criteria \$criteria object used to create the SELECT statement.
 	 * @param      Connection \$con
-	 * @return     ".$this->getTable()->getPhpName()."|null
-	 * @throws PropelException
-     * @throws SQLException
+	 * @return     ".$this->getTable()->getPhpName()."
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function doSelectOne(Criteria \$criteria, \$con = null)
 	{
@@ -604,8 +602,8 @@ if (Propel::isInit()) {
 	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
 	 * @param      Connection \$con
 	 * @return     {$className}[] Array of selected Objects
-	 * @throws PropelException
-     * @throws SQLException
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function doSelect(Criteria \$criteria, \$con = null)
 	{
@@ -669,8 +667,8 @@ if (Propel::isInit()) {
 	 *
 	 * @param      Resultset \$rs
 	 * @return     ".$table->getPhpName()."[]
-	 * @throws PropelException
-     * @throws SQLException
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function populateObjects(ResultSet \$rs)
 	{
@@ -1278,7 +1276,6 @@ if (Propel::isInit()) {
 	 * @param      mixed \$cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
-	 * @throws PropelException
 	 */
 	public static function doValidate(Base".$table->getPhpName()." \$obj, \$cols = null)
 	{
@@ -1332,9 +1329,7 @@ if (Propel::isInit()) {
 	 *
 	 * @param      mixed \$pk the primary key.
 	 * @param      Connection \$con the connection to use
-	 * @return     $className|null
-	 * @throws PropelException
-     * @throws SQLException
+	 * @return     $className
 	 */
 	public static function ".$this->getRetrieveMethodName()."(\$pk, \$con = null)
 	{
@@ -1385,8 +1380,8 @@ if (Propel::isInit()) {
 	 * @param      array \$pks List of primary keys
 	 * @param      Connection \$con the connection to use
 	 * @return     {$className}[]
-	 * @throws PropelException
-     * @throws SQLException
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function ".$this->getRetrieveMethodName()."s(\$pks, \$con = null)
 	{
