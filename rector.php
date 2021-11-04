@@ -5,22 +5,30 @@ declare(strict_types=1);
 use Rector\Core\Configuration\Option;
 use Rector\Set\ValueObject\SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Rector\PSR4\Rector\FileWithoutNamespace\NormalizeNamespaceByPSR4ComposerAutoloadRector;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    // get parameters
+    $containerConfigurator->import(SetList::CODE_QUALITY);
+
+    $containerConfigurator->import(SetList::CODING_STYLE);
+    $containerConfigurator->import(SetList::PHP_54);
+    $containerConfigurator->import(SetList::PHP_55);
+    $containerConfigurator->import(SetList::PHP_56);
+    $containerConfigurator->import(SetList::PHP_70);
+    $containerConfigurator->import(SetList::PHP_71);
+    $containerConfigurator->import(SetList::PHP_72);
+    $containerConfigurator->import(SetList::PHP_73);
+    $containerConfigurator->import(SetList::PHP_74);
+
     $parameters = $containerConfigurator->parameters();
 
-    // paths to refactor; solid alternative to CLI arguments
-    $parameters->set(Option::PATHS, [__DIR__ . '/lib']);
+    $parameters->set(Option::AUTOLOAD_PATHS, []);
 
-    // Define what rule sets will be applied
-    $parameters->set(Option::SETS, [
-        SetList::DEAD_CODE
+    $parameters->set(Option::PATHS, [
+        __DIR__ . '/lib',
     ]);
 
-    // register single rule
-    $services = $containerConfigurator->services();
-    $services->set(NormalizeNamespaceByPSR4ComposerAutoloadRector::class);
+    $parameters->set(Option::SKIP, []);
 
 };
+
+

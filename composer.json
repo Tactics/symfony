@@ -4,11 +4,17 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "fabpot",
-            "email": "fabpot@sensio.com"
+            "name": "Tactics",
+            "email": "info@tactics.be"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
     "require": {
+        "php": ">=7.4",
         "ext-dom": "*",
         "ext-json": "*",
         "ext-curl": "*",
@@ -16,7 +22,7 @@
         "ext-intl": "*"
     },
     "require-dev": {
-        "rector/rector": "^0.8.56"
+        "rector/rector": "^0.11.60"
     },
     "scripts": {
         "rector:dryrun": "./vendor/bin/rector process --config rector.php --dry-run",
