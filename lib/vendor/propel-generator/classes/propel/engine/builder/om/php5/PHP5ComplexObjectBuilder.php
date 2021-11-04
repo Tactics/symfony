@@ -275,9 +275,9 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 
 		$script .= "
 	/**
-	 * @var        $className|null
+	 * @var        $className
 	 */
-	protected ?$className $".$varName.";
+	protected $".$varName.";
 ";
 	}
 
@@ -370,12 +370,11 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	/**
 	 * Get the associated $className object
 	 *
-	 * @param      Connection|null \$con Optional Connection object.
+	 * @param      Connection \$con Optional Connection object.
 	 * @return     $className The associated $className object.
 	 * @throws     PropelException
-     * @throws     SQLException
 	 */
-	public function get".$this->getFKPhpNameAffix($fk, $plural = false)."(Connection \$con = null)
+	public function get".$this->getFKPhpNameAffix($fk, $plural = false)."(\$con = null)
 	{
 		if (\$this->$varName === null && ($conditional)) {
 			// include the related Peer class
@@ -618,13 +617,13 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * Collection to store aggregation of $collName.
 	 * @var        array
 	 */
-	protected array $".$collName.";
+	protected $".$collName.";
 
 	/**
 	 * The criteria used to select the current contents of $collName.
-     * @var        Criteria|null
+	 * @var        Criteria
 	 */
-	protected ?Criteria \$".$lastCriteriaName." = null;
+	protected \$".$lastCriteriaName." = null;
 ";
 	}
 
@@ -712,12 +711,12 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	/**
 	 * Returns the number of related $relCol.
 	 *
-	 * @param      Criteria|null \$criteria
+	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     int The number of $relCol
 	 */
-	public function count$relCol(Criteria \$criteria = null, bool \$distinct = false, Connection \$con = null)
+	public function count$relCol(\$criteria = null, \$distinct = false, \$con = null)
 	{
 		// include the Peer class
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
@@ -774,7 +773,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * @param      Criteria|null   \$criteria
 	 * @return     ".$className."[] $relCol
 	 */
-	public function get$relCol(Criteria \$criteria = null, Connection \$con = null)
+	public function get$relCol(\$criteria = null, \$con = null)
 	{
 		// include the Peer class
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
@@ -859,7 +858,7 @@ $script .= "
 	 * If the object is new, it inserts it; otherwise an update is performed.
 	 * All related objects are also updated in this method.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     int The number of rows affected by this insert/update and any referring fk objects' save() operations.
 	 * @throws     PropelException
 	 * @see        save()
@@ -974,9 +973,9 @@ $script .= "
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
-	 * @var        bool
+	 * @var        boolean
 	 */
-	protected bool \$alreadyInSave = false;
+	protected \$alreadyInSave = false;
 ";
 	}
 
@@ -992,12 +991,12 @@ $script .= "
 	 * it inserts it; otherwise an update is performed.  This method
 	 * wraps the doSave() worker method in a transaction.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     int The number of rows affected by this insert/update and any referring fk objects' save() operations.
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(Connection \$con = null)
+	public function save(\$con = null)
 	{
 		if (\$this->isDeleted()) {
 			throw new PropelException(\"You cannot save an object that has been deleted.\");
@@ -1031,9 +1030,9 @@ $script .= "
 	/**
 	 * Flag to prevent endless validation loop, if this object is referenced
 	 * by another object which falls in this transaction.
-	 * @var        bool
+	 * @var        boolean
 	 */
-	protected bool \$alreadyInValidation = false;
+	protected \$alreadyInValidation = false;
 ";
 	}
 
@@ -1169,11 +1168,11 @@ $script .= "
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      bool \$deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+	 * @param      boolean \$deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @return     ".$table->getPhpName()." Clone of current object.
 	 * @throws     PropelException
 	 */
-	public function copy(bool \$deepCopy = false)
+	public function copy(\$deepCopy = false)
 	{
 		// we use get_class(), because this might be a subclass
 		\$clazz = get_class(\$this);
@@ -1201,10 +1200,10 @@ $script .= "
 	 * objects.
 	 *
 	 * @param      object \$copyObj An object of ".$table->getPhpName()." (or compatible) type.
-	 * @param      bool \$deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+	 * @param      boolean \$deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
-	public function copyInto(\$copyObj, bool \$deepCopy = false)
+	public function copyInto(\$copyObj, \$deepCopy = false)
 	{
 ";
 

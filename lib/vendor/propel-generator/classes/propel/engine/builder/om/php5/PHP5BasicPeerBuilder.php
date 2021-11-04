@@ -528,12 +528,12 @@ if (Propel::isInit()) {
 	 *
 	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     int Number of matching rows.
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCount(Criteria \$criteria, bool bool \$distinct = false, Connection \$con = null)
+	public static function doCount(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;
@@ -573,12 +573,12 @@ if (Propel::isInit()) {
 	 * Method to select one object from the DB.
 	 *
 	 * @param      Criteria \$criteria object used to create the SELECT statement.
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     ".$this->getTable()->getPhpName()."|null
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doSelectOne(Criteria \$criteria, Connection \$con = null)
+	public static function doSelectOne(Criteria \$criteria, \$con = null)
 	{
 		\$critcopy = clone \$criteria;
 		\$critcopy->setLimit(1);
@@ -602,12 +602,12 @@ if (Propel::isInit()) {
 	 * Method to do selects.
 	 *
 	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     {$className}[] Array of selected Objects
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doSelect(Criteria \$criteria, Connection \$con = null)
+	public static function doSelect(Criteria \$criteria, \$con = null)
 	{
 		return ".$this->getPeerClassname()."::populateObjects(".$this->getPeerClassname()."::doSelectRS(\$criteria, \$con));
 	}";
@@ -629,13 +629,13 @@ if (Propel::isInit()) {
 	 * (instead of an array of objects).
 	 *
 	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection \$con the connection to use
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 * @return     ResultSet The resultset object with numerically-indexed fields.
 	 * @see        ".$this->basePeerClassname."::doSelect()
 	 */
-	public static function doSelectRS(Criteria \$criteria, Connection \$con = null)
+	public static function doSelectRS(Criteria \$criteria, \$con = null)
 	{
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
@@ -841,12 +841,12 @@ if (Propel::isInit()) {
 	 * Method perform an INSERT on the database, given a ".$table->getPhpName()." or Criteria object.
 	 *
 	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the INSERT statement.
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection \$con the connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doInsert(\$values, Connection \$con = null)
+	public static function doInsert(\$values, \$con = null)
 	{
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
@@ -900,12 +900,12 @@ if (Propel::isInit()) {
 	 * Method perform an UPDATE on the database, given a ".$table->getPhpName()." or Criteria object.
 	 *
 	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the UPDATE statement.
-	 * @param      Connection|null \$con The connection to use (specify Connection object to exert more control over transactions).
+	 * @param      Connection \$con The connection to use (specify Connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doUpdate(\$values, Connection \$con = null)
+	public static function doUpdate(\$values, \$con = null)
 	{
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
@@ -950,11 +950,11 @@ if (Propel::isInit()) {
 	/**
 	 * Method to DELETE all rows from the ".$table->getName()." table.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException
 	 */
-	public static function doDeleteAll(Connection \$con = null)
+	public static function doDeleteAll(\$con = null)
 	{
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
@@ -997,13 +997,13 @@ if (Propel::isInit()) {
 	 *
 	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection \$con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
 	 *				if supported by native driver or if emulated using Propel.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	 public static function doDelete(\$values, Connection \$con = null)
+	 public static function doDelete(\$values, \$con = null)
 	 {
 		if (\$con === null) {
 			\$con = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
@@ -1113,7 +1113,7 @@ if (Propel::isInit()) {
 	 * This method should be used within a transaction if possible.
 	 *
 	 * @param      Criteria \$criteria
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	protected static function doOnDeleteCascade(Criteria \$criteria, Connection \$con)
@@ -1196,7 +1196,7 @@ if (Propel::isInit()) {
 	 * This method should be used within a transaction if possible.
 	 *
 	 * @param      Criteria \$criteria
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     void
 	 */
 	protected static function doOnDeleteSetNull(Criteria \$criteria, Connection \$con)
@@ -1331,12 +1331,12 @@ if (Propel::isInit()) {
 	 * Retrieve a single object by pkey.
 	 *
 	 * @param      mixed \$pk the primary key.
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection \$con the connection to use
 	 * @return     $className|null
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function ".$this->getRetrieveMethodName()."(\$pk, Connection \$con = null)
+	public static function ".$this->getRetrieveMethodName()."(\$pk, \$con = null)
 	{
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
@@ -1383,12 +1383,12 @@ if (Propel::isInit()) {
 	 * Retrieve multiple objects by pkey.
 	 *
 	 * @param      array \$pks List of primary keys
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection \$con the connection to use
 	 * @return     {$className}[]
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function ".$this->getRetrieveMethodName()."s(\$pks, Connection \$con = null)
+	public static function ".$this->getRetrieveMethodName()."s(\$pks, \$con = null)
 	{
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
@@ -1449,7 +1449,7 @@ if (Propel::isInit()) {
 	   ";
 	   }
 	   $script .= "
-	 * @param      Connection|null \$con
+	 * @param      Connection \$con
 	 * @return     ".$table->getPhpName()."
 	 */
 	public static function ".$this->getRetrieveMethodName()."(";
@@ -1458,7 +1458,7 @@ if (Propel::isInit()) {
 			$clo = strtolower($col->getName());
 			$script .= ($co++ ? "," : "") . " $".$clo;
 		} /* foreach */
-		$script .= ", Connection \$con = null) {
+		$script .= ", \$con = null) {
 		if (\$con === null) {
 			\$con = Propel::getConnection(self::DATABASE_NAME);
 		}
