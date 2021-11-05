@@ -478,14 +478,10 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
                     $typeCast = '(bool)';
                     break;
                 case 'int':
-                    if ($col->isNotNull()) {
-                        $typeCast = '(int)';
-                    }
+                    $typeCast = '(int)';
                     break;
                 case 'string':
-                    if ($col->isNotNull()) {
-                        $typeCast = '(string)';
-                    }
+                    $typeCast = '(string)';
                     break;
                 default:
                     $typeCast = '';
