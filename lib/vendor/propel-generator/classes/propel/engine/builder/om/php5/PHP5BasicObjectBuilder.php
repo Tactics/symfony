@@ -250,25 +250,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         /** @var Column $col */
         foreach ($table->getColumns() as $col) {
 
-
-            $isInt = in_array($col->getPhpNative(), [
-                PropelTypes::TINYINT_NATIVE_TYPE,
-                PropelTypes::SMALLINT_NATIVE_TYPE,
-                PropelTypes::DATE_NATIVE_TYPE,
-                PropelTypes::TIME_NATIVE_TYPE,
-                PropelTypes::TIMESTAMP_NATIVE_TYPE,
-            ]);
-
-            $isFloat = in_array($col->getPhpNative(), [
-                PropelTypes::NUMERIC_NATIVE_TYPE,
-                PropelTypes::DECIMAL_NATIVE_TYPE,
-                PropelTypes::REAL_NATIVE_TYPE,
-                PropelTypes::FLOAT_NATIVE_TYPE,
-                PropelTypes::DOUBLE_NATIVE_TYPE,
-            ]);
+            $isInt = ($col->getPhpNative() === 'int');
+            $isFloat = ($col->getPhpNative() === 'float');
 
             $isPrimary = $col->isPrimaryKey();
-            $isBoolean = in_array($col->getPhpNative(), [PropelTypes::BOOLEAN_NATIVE_TYPE]);
+            $isBoolean = ($col->getPhpNative() === 'bool');
             $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
             $isReference = $col->isLazyLoad();
             $nullAllowed = !$col->isNotNull();
