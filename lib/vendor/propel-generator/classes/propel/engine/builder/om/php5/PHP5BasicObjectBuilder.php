@@ -446,6 +446,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
         $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
         $isBoolean = ($col->getPhpNative() === 'bool');
+        $isString = ($col->getPhpNative() === 'string');
+
 
         $extra = '';
         if ($allowNull && !$isBoolean) {
@@ -472,20 +474,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 
         $typeCast = '';
-        if (!$allowNull) {
-            switch ($col->getPhpNative()) {
-                case 'bool':
-                    $typeCast = '(bool)';
-                    break;
-                case 'int':
-                    $typeCast = '(int)';
-                    break;
-                case 'string':
-                    $typeCast = '(string)';
-                    break;
-                default:
-                    $typeCast = '';
-            }
+        if ($isBoolean) {
+            $typeCast = '(bool)';
         }
 
 		$script .= "
