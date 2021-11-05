@@ -269,6 +269,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             $extraType = $isOptional ? '?' : '';
 
             $cptype = $col->getPhpNative();
+            $type = $cptype;
             $clo=strtolower($col->getName());
             $defVal = "";
             if (!$isOptional) {
@@ -294,11 +295,21 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
                 $defVal = " = 0.00";
             }
 
+            // We can not type hint dates since that would require union type of php 8.
+            // Let do that later on.
+            if ($isDate) {
+                $extraType = '';
+                $cptype = '';
+                $defVal = '';
+                $extraDoc = '';
+                $type = 'bool|string|int|null';
+            }
+
 			$script .= "
 
 	/**
 	 * The value for the $clo field.
-	 * @var        $cptype$extraDoc
+	 * @var        $type$extraDoc
 	 */
 	protected ". $extraType.$cptype ." \$" . $clo . $defVal . ";
 ";
@@ -548,7 +559,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         $isPrimary = $col->isPrimaryKey();
         $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
         $isBoolean = ($col->getPhpNative() === 'bool');
+        $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
 
+        $type = $col->getPhpNative();
         $typeHint = '';
         $extra = '';
         if (($allowNull && !$isBoolean) || ($isPrimary)) {
@@ -556,12 +569,20 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             $typeHint = "?";
         }
 
+        // We can not type hint dates since that would require union type of php 8.
+        // Let do that later on, for now just set the docblock.
+        if ($isDate) {
+            $type = "";
+            $typeHint = "";
+            $extra = 'bool|int|string|null';
+        }
+
 
 		$script .= "
 	/**
 	 * Set the value of [$clo] column.
 	 * ".$col->getDescription()."
-	 * @param      ".$col->getPhpNative().$extra." \$v new value
+	 * @param      ".$type.$extra." \$v new value
 	 * @return     void";
 
 		if ($throwsPropelException){
@@ -571,7 +592,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
         $script .= "
 	 */
-	public function set$cfc($typeHint{$col->getPhpNative()} \$v)
+	public function set$cfc($typeHint{$type} \$v)
 	{
 ";
 		if ($col->isLazyLoad()) {
