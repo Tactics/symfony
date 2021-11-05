@@ -267,6 +267,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
                 PropelTypes::DOUBLE_NATIVE_TYPE,
             ]);
 
+            $isPrimary = $col->isPrimaryKey();
             $isBoolean = in_array($col->getPhpNative(), [PropelTypes::BOOLEAN_NATIVE_TYPE]);
             $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
             $isReference = $col->isLazyLoad();
@@ -275,7 +276,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             if ($isBoolean) {
                 $isOptional = FALSE;
             } else {
-                $isOptional = $isReference || $isDate || $nullAllowed;
+                $isOptional = $isPrimary || $isReference || $isDate || $nullAllowed;
             }
 
             $extraDoc = $isOptional  ? '|null' : '';
@@ -446,11 +447,10 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
         $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
         $isBoolean = ($col->getPhpNative() === 'bool');
-        $isString = ($col->getPhpNative() === 'string');
-
+        $isPrimary = $col->isPrimaryKey();
 
         $extra = '';
-        if ($allowNull && !$isBoolean) {
+        if (($allowNull && !$isBoolean) || ($isPrimary)) {
             $extra = "|null";
         }
 
@@ -559,12 +559,13 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$clo=strtolower($col->getName());
 		$throwsPropelException = in_array($col->getType(), array(PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP));
 
+        $isPrimary = $col->isPrimaryKey();
         $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
         $isBoolean = ($col->getPhpNative() === 'bool');
 
         $typeHint = '';
         $extra = '';
-        if ($allowNull && !$isBoolean) {
+        if (($allowNull && !$isBoolean) || ($isPrimary)) {
             $extra = "|null";
             $typeHint = "?";
         }
@@ -584,7 +585,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
         $script .= "
 	 */
-	public function set$cfc($typeHint{$col->getPhpNative()}\$v)
+	public function set$cfc($typeHint{$col->getPhpNative()} \$v)
 	{
 ";
 		if ($col->isLazyLoad()) {
