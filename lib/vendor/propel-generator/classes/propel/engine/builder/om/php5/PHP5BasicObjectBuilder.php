@@ -270,12 +270,12 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             $isBoolean = in_array($col->getPhpNative(), [PropelTypes::BOOLEAN_NATIVE_TYPE]);
             $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
             $isReference = $col->isLazyLoad();
-            $isNull = !$col->isNotNull();
+            $nullAllowed = !$col->isNotNull();
 
             if ($isBoolean) {
                 $isOptional = FALSE;
             } else {
-                $isOptional = $isReference || $isDate || $isNull;
+                $isOptional = $isReference || $isDate || $nullAllowed;
             }
 
             $extraDoc = $isOptional  ? '|null' : '';
@@ -444,8 +444,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$cfc=$col->getPhpName();
 		$clo=strtolower($col->getName());
 
+        $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
+        $isBoolean = ($col->getPhpNative() === 'bool');
+
         $extra = '';
-        if (!$col->isNotNull() && !in_array($col->getPhpNative(), [PropelTypes::BOOLEAN])) {
+        if ($allowNull && !$isBoolean) {
             $extra = "|null";
         }
 
@@ -468,22 +471,25 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 ";
 		}
 
-        switch ($col->getPhpNative()) {
-            case PropelTypes::BOOLEAN_NATIVE_TYPE:
-                $typeCast = '(bool)';
-                break;
-            case PropelTypes::INTEGER_NATIVE_TYPE:
-                if ($col->isNotNull()) {
-                    $typeCast = '(int)';
-                }
-                break;
-            case PropelTypes::CHAR_NATIVE_TYPE:
-                if ($col->isNotNull()) {
-                    $typeCast = '(string)';
-                }
-                break;
-            default:
-                $typeCast = '';
+        $typeCast = '';
+        if (!$allowNull) {
+            switch ($col->getPhpNative()) {
+                case 'bool':
+                    $typeCast = '(bool)';
+                    break;
+                case 'int':
+                    if ($col->isNotNull()) {
+                        $typeCast = '(int)';
+                    }
+                    break;
+                case 'string':
+                    if ($col->isNotNull()) {
+                        $typeCast = '(string)';
+                    }
+                    break;
+                default:
+                    $typeCast = '';
+            }
         }
 
 		$script .= "
@@ -567,11 +573,22 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$clo=strtolower($col->getName());
 		$throwsPropelException = in_array($col->getType(), array(PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP));
 
+        $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
+        $isBoolean = ($col->getPhpNative() === 'bool');
+
+        $typeHint = '';
+        $extra = '';
+        if ($allowNull && !$isBoolean) {
+            $extra = "|null";
+            $typeHint = "?";
+        }
+
+
 		$script .= "
 	/**
 	 * Set the value of [$clo] column.
 	 * ".$col->getDescription()."
-	 * @param      ".$col->getPhpNative()." \$v new value
+	 * @param      ".$col->getPhpNative().$extra." \$v new value
 	 * @return     void";
 
 		if ($throwsPropelException){
@@ -581,7 +598,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
         $script .= "
 	 */
-	public function set$cfc(\$v)
+	public function set$cfc($typeHint{$col->getPhpNative()}\$v)
 	{
 ";
 		if ($col->isLazyLoad()) {
