@@ -36,7 +36,7 @@ class MSSQLSRVStatement extends StatementCommon implements Statement {
      *
      * @param string $sql This method may optionally be called with the SQL statement.
      * @param int $fetchmode The mode to use when fetching the results (e.g. ResultSet::FETCHMODE_NUM, ResultSet::FETCHMODE_ASSOC).
-     * @return object Creole::ResultSet
+     * @return ResultSet
      * @throws SQLException If there is an error executing the specified query.
      */
     public function executeQuery($sql, $fetchmode = null)
