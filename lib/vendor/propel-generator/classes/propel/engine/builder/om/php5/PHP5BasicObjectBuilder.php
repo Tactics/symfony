@@ -720,37 +720,36 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 		$this->addMutatorOpen($script, $col);
 
+        $isPrimary = $col->isPrimaryKey();
+        $isBoolean = ($col->getPhpNative() === 'bool');
+        $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
+        $isReference = $col->isLazyLoad();
+        $nullAllowed = !$col->isNotNull();
+
+        if ($isBoolean) {
+            $isOptional = FALSE;
+        } else {
+            $isOptional = $isPrimary || $isReference || $isDate || $nullAllowed;
+        }
+
 		// Perform some smart checking here to handle possible type discrepancies
 		// between the passed-in value and the value from the DB
-
-		if ($col->getPhpNative() === "int") {
-			$script .= "
-		// Since the native PHP type for this column is integer,
-		// we will cast the input value to an int (if it is not).
-		if (\$v !== null && !is_int(\$v) && is_numeric(\$v)) {
-			\$v = (int) \$v;
-		}
-";
-		} elseif ($col->getPhpNative() === "string") {
-			$script .= "
-		// Since the native PHP type for this column is string,
-		// we will cast the input to a string (if it is not).
-		if (\$v !== null && !is_string(\$v)) {
-			\$v = (string) \$v;
-		}
-";
-		}
 
 		$script .= "
 		if (\$this->$clo !== \$v";
 		if ($defaultValue !== null) {
 			$script .= " || \$v === $defaultValue";
 		}
+        if (!$isOptional) {
+            $script .= " || \$this->isNew()";
+        }
+
 		$script .= ") {
 			\$this->$clo = \$v;
 			\$this->modifiedColumns[] = ".$this->getColumnConstant($col).";
 		}
 ";
+
 		$this->addMutatorClose($script, $col);
 	}
 
