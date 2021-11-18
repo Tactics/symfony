@@ -298,10 +298,10 @@ class PropelCreoleTransformTask extends Task {
 	public function generateXML()
 	{
 		// Establish db connection
-		$con = $this->getConnection();
+		$connection = $this->getConnection();
 
 		// Get the database Metadata.
-		$dbInfo = $con->getDatabaseInfo();
+		$dbInfo = $connection->getDatabaseInfo();
 
 		// create and add the database node
 		$databaseNode = $this->createDatabaseNode($dbInfo);
@@ -326,10 +326,10 @@ class PropelCreoleTransformTask extends Task {
 		if ($this->dbDriver) {
 			Creole::registerDriver($this->dsn['phptype'], $this->dbDriver);
 		}
-		$con = Creole::getConnection($this->dsn);
+		$connection = Creole::getConnection($this->dsn);
 		$this->log("DB connection established");
 
-		return $con;
+		return $connection;
 	}
 
 	/**

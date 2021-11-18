@@ -467,9 +467,9 @@ class Propel {
 			$name = self::getDefaultDB();
 		}
 
-		$con = isset(self::$connectionMap[$name]) ? self::$connectionMap[$name] : null;
+		$connection = isset(self::$connectionMap[$name]) ? self::$connectionMap[$name] : null;
 
-		if ($con === null) {
+		if ($connection === null) {
 
 			$dsn = isset(self::$configuration['datasources'][$name]['connection']) ? self::$configuration['datasources'][$name]['connection'] : null;
 			if ($dsn === null) {
@@ -484,14 +484,14 @@ class Propel {
 			}
 
 			try {
-				$con = Creole::getConnection($dsn);
+				$connection = Creole::getConnection($dsn);
 			} catch (SQLException $e) {
 				throw new PropelException($e);
 			}
-			self::$connectionMap[$name] = $con;
+			self::$connectionMap[$name] = $connection;
 		}
 
-		return $con;
+		return $connection;
 	}
 
 	/**

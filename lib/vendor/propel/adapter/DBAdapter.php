@@ -105,22 +105,22 @@ abstract class DBAdapter {
 	/**
 	 * Locks the specified table.
 	 *
-	 * @param      Connection $con The Creole connection to use.
+	 * @param      Connection $connection The Creole connection to use.
 	 * @param      string $table The name of the table to lock.
 	 * @return     void
 	 * @throws     SQLException No Statement could be created or executed.
 	 */
-	public abstract function lockTable(Connection $con, $table);
+	public abstract function lockTable(Connection $connection, $table);
 
 	/**
 	 * Unlocks the specified table.
 	 *
-	 * @param      Connection $con The Creole connection to use.
+	 * @param      Connection $connection The Creole connection to use.
 	 * @param      string $table The name of the table to unlock.
 	 * @return     void
 	 * @throws     SQLException No Statement could be created or executed.
 	 */
-	public abstract function unlockTable(Connection $con, $table);
+	public abstract function unlockTable(Connection $connection, $table);
 
 	/**
 	 * This method is used to ignore case.

@@ -209,18 +209,18 @@ class Creole {
             if( isset(self::$connectionMap[$connectionMapKey][1]) ) { // is persistent
                 // a persistent connection with these parameters is already there,
                 // so we return it, no matter what was specified as persistent flag
-                $con = self::$connectionMap[$connectionMapKey][1];
+                $connection = self::$connectionMap[$connectionMapKey][1];
             } else {
                 // we don't have a persistent connection, and since the persistent
                 // flag wasn't set either, we just return the non-persistent connection
-                $con = self::$connectionMap[$connectionMapKey][0];
+                $connection = self::$connectionMap[$connectionMapKey][0];
             }
 
             // if we're here, a non-persistent connection was already there, but
             // the user wants a persistent one, so it will be created
 
-            if ($con->isConnected())
-                return $con;
+            if ($connection->isConnected())
+                return $connection;
         }
 
         // support "catchall" drivers which will themselves handle the details of connecting

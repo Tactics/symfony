@@ -212,12 +212,12 @@ if (!$table->isAlias()) {
 	 *
 	 * @param Criteria $criteria
 	 * @param boolean $distinct Whether to select only distinct columns.
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return int Number of matching rows.
      * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCount(Criteria $criteria, $distinct = false, Connection $con = null)
+	public static function doCount(Criteria $criteria, $distinct = false, Connection $connection = null)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -235,7 +235,7 @@ if (!$table->isAlias()) {
 			$criteria->addSelectColumn($column);
 		}
 
-		$rs = <?php echo $table->getPhpName()?>Peer::doSelectRS($criteria, $con);
+		$rs = <?php echo $table->getPhpName()?>Peer::doSelectRS($criteria, $connection);
 		if ($rs->next()) {
 			return $rs->getInt(1);
 		} else {
@@ -248,16 +248,16 @@ if (!$table->isAlias()) {
 	 * Method to select one object from the DB.
 	 *
 	 * @param Criteria $criteria object used to create the SELECT statement.
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return <?php echo $table->getPhpName() ?>|null
      * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doSelectOne(Criteria $criteria, Connection $con = null)
+	public static function doSelectOne(Criteria $criteria, Connection $connection = null)
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = <?php echo $table->getPhpName() ?>Peer::doSelect($critcopy, $con);
+		$objects = <?php echo $table->getPhpName() ?>Peer::doSelect($critcopy, $connection);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -268,14 +268,14 @@ if (!$table->isAlias()) {
 	 * Method to do selects.
 	 *
 	 * @param Criteria $criteria The Criteria object used to build the SELECT statement.
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return array Array of selected Objects
      * @throws PropelException
      * @throws SQLException
      */
-	public static function doSelect(Criteria $criteria, Connection $con = null)
+	public static function doSelect(Criteria $criteria, Connection $connection = null)
 	{
-		return <?php echo $table->getPhpName() ?>Peer::populateObjects(<?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, $con));
+		return <?php echo $table->getPhpName() ?>Peer::populateObjects(<?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, $connection));
 	}
 
 	/**
@@ -286,16 +286,16 @@ if (!$table->isAlias()) {
 	 * (instead of an array of objects).
 	 *
 	 * @param Criteria $criteria The Criteria object used to build the SELECT statement.
-	 * @param Connection $con the connection to use
+	 * @param Connection $connection the connection to use
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 * @return ResultSet The resultset object with numerically-indexed fields.
 	 * @see <?php echo $basePeerClassname ?>::doSelect()
 	 */
-	public static function doSelectRS(Criteria $criteria, Connection $con = null)
+	public static function doSelectRS(Criteria $criteria, Connection $connection = null)
 	{
-		if ($con === null) {
-			$con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null) {
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		if (!$criteria->getSelectColumns()) {
@@ -307,7 +307,7 @@ if (!$table->isAlias()) {
 
 		// BasePeer returns a Creole ResultSet, set to return
 		// rows indexed numerically.
-		return <?php echo $basePeerClassname ?>::doSelect($criteria, $con);
+		return <?php echo $basePeerClassname ?>::doSelect($criteria, $connection);
 	}
 
 	/**
@@ -442,15 +442,15 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * Method perform an INSERT on the database, given a <?php echo $table->getPhpName() ?> or Criteria object.
 	 *
 	 * @param mixed $values Criteria or <?php echo $table->getPhpName() ?> object containing data that is used to create the INSERT statement.
-	 * @param Connection $con the connection to use
+	 * @param Connection $connection the connection to use
 	 * @return mixed The new primary key.
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doInsert($values, Connection $con = null)
+	public static function doInsert($values, Connection $connection = null)
 	{
-		if ($con === null)
-			$con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null)
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 
 		if ($values instanceof Criteria) {
 			$criteria = $values;
@@ -475,11 +475,11 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table (I guess, conceivably)
-			$con->begin();
-			$pk = <?php echo $basePeerClassname ?>::doInsert($criteria, $con);
-			$con->commit();
+			$connection->begin();
+			$pk = <?php echo $basePeerClassname ?>::doInsert($criteria, $connection);
+			$connection->commit();
 		} catch(PropelException $e) {
-			$con->rollback();
+			$connection->rollback();
 			throw $e;
 		}
 
@@ -516,15 +516,15 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * Method perform an UPDATE on the database, given a <?php echo $table->getPhpName() ?> or Criteria object.
 	 *
 	 * @param mixed $values Criteria or <?php echo $table->getPhpName() ?> object containing data that is used to create the UPDATE statement.
-	 * @param Connection $con The connection to use (specify Connection object to exert more control over transactions).
+	 * @param Connection $connection The connection to use (specify Connection object to exert more control over transactions).
 	 * @return int The number of affected rows (if supported by underlying database driver).
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doUpdate($values, Connection $con = null)
+	public static function doUpdate($values, Connection $connection = null)
 	{
-		if ($con === null) {
-			$con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null) {
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -548,7 +548,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 		// set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
-		return <?php echo $basePeerClassname ?>::doUpdate($selectCriteria, $criteria, $con);
+		return <?php echo $basePeerClassname ?>::doUpdate($selectCriteria, $criteria, $connection);
 	}
 
 	/**
@@ -556,22 +556,22 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 *
 	 * @return int The number of affected rows (if supported by underlying database driver).
 	 */
-	public static function doDeleteAll(Connection $con = null)
+	public static function doDeleteAll(Connection $connection = null)
 	{
-		if ($con === null) $con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null) $connection = Propel::getConnection(self::DATABASE_NAME);
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
-			$con->begin();
+			$connection->begin();
 			<?php if ($deleteCascadeRelevant) { ?>
-			$affectedRows += <?php echo $table->getPhpName() ?>Peer::doOnDeleteCascade(new Criteria(), $con);<?php } elseif ($deleteSetNullRelevant) { ?>
-			<?php echo $table->getPhpName() ?>Peer::doOnDeleteSetNull(new Criteria(), $con);<?php } ?>
-			$affectedRows += BasePeer::doDeleteAll(self::TABLE_NAME, $con);
-			$con->commit();
+			$affectedRows += <?php echo $table->getPhpName() ?>Peer::doOnDeleteCascade(new Criteria(), $connection);<?php } elseif ($deleteSetNullRelevant) { ?>
+			<?php echo $table->getPhpName() ?>Peer::doOnDeleteSetNull(new Criteria(), $connection);<?php } ?>
+			$affectedRows += BasePeer::doDeleteAll(self::TABLE_NAME, $connection);
+			$connection->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
-			$con->rollback();
+			$connection->rollback();
 			throw $e;
 		}
 	}
@@ -580,16 +580,16 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * Method perform a DELETE on the database, given a <?php echo $table->getPhpName() ?> or Criteria object OR a primary key value.
 	 *
 	 * @param mixed $values Criteria or <?php echo $table->getPhpName() ?> object or primary key which is used to create the DELETE statement
-	 * @param Connection $con the connection to use
+	 * @param Connection $connection the connection to use
 	 * @return int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
 	 *				if supported by native driver or if emulated using Propel.
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	 public static function doDelete($values, Connection $con = null)
+	 public static function doDelete($values, Connection $connection = null)
 	 {
-		if ($con === null)
-			$con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null)
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 
 		if ($values instanceof Criteria) {
 			$criteria = $values;
@@ -634,15 +634,15 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
-			$con->begin();
+			$connection->begin();
 			<?php if ($deleteCascadeRelevant) { ?>
-			$affectedRows += <?php echo $table->getPhpName() ?>Peer::doOnDeleteCascade($criteria, $con);<?php } elseif ($deleteSetNullRelevant) { ?>
-			<?php echo $table->getPhpName() ?>Peer::doOnDeleteSetNull($criteria, $con);<?php } ?>
-			$affectedRows += <?php echo $basePeerClassname ?>::doDelete($criteria, $con);
-			$con->commit();
+			$affectedRows += <?php echo $table->getPhpName() ?>Peer::doOnDeleteCascade($criteria, $connection);<?php } elseif ($deleteSetNullRelevant) { ?>
+			<?php echo $table->getPhpName() ?>Peer::doOnDeleteSetNull($criteria, $connection);<?php } ?>
+			$affectedRows += <?php echo $basePeerClassname ?>::doDelete($criteria, $connection);
+			$connection->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
-			$con->rollback();
+			$connection->rollback();
 			throw $e;
 		}
 	}
@@ -659,16 +659,16 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * This method should be used within a transaction if possible.
 	 *
 	 * @param Criteria $criteria
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return int The number of affected rows (if supported by underlying database driver).
 	 */
-	protected static function doOnDeleteCascade(Criteria $criteria, Connection $con)
+	protected static function doOnDeleteCascade(Criteria $criteria, Connection $connection)
 	{
 		// initialize var to track total num of affected rows
 		$affectedRows = 0;
 
 		// first find the objects that are implicated by the $criteria
-		$objects = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $con);
+		$objects = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $connection);
 		foreach($objects as $obj) {
 <?php
 			foreach ($table->getReferrers() as $fk) {
@@ -706,7 +706,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 						?>$c->add(<?php echo PeerBuilder::getColumnName($columnFK, $fkClassName) ?>, $obj->get<?php echo $columnL->getPhpName() ?>());<?php
 							//$delCmds[] = $fkClassName.'Peer::doDelete('.');
 						} ?>
-			$affectedRows += <?php echo $fkClassName ?>Peer::doDelete($c, $con);
+			$affectedRows += <?php echo $fkClassName ?>Peer::doDelete($c, $connection);
 			<?php
 					} // if cascade && fkey table name != curr table name
 
@@ -729,14 +729,14 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * This method should be used within a transaction if possible.
 	 *
 	 * @param Criteria $criteria
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return void
 	 */
-	protected static function doOnDeleteSetNull(Criteria $criteria, Connection $con)
+	protected static function doOnDeleteSetNull(Criteria $criteria, Connection $connection)
 	{
 
 		// first find the objects that are implicated by the $criteria
-		$objects = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $con);
+		$objects = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $connection);
 		foreach($objects as $obj) {
 	<?php
 
@@ -776,7 +776,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 						?>$selectCriteria->add(<?php echo PeerBuilder::getColumnName($columnFK, $fkClassName) ?>, $obj->get<?php echo $columnL->getPhpName() ?>());
 			$updateValues->add(<?php echo PeerBuilder::getColumnName($columnFK, $fkClassName) ?>, null);<?php
 						} ?>
-			<?php echo $basePeerClassname ?>::doUpdate($selectCriteria, $updateValues, $con); // use BasePeer because generated Peer doUpdate() methods only update using pkey
+			<?php echo $basePeerClassname ?>::doUpdate($selectCriteria, $updateValues, $connection); // use BasePeer because generated Peer doUpdate() methods only update using pkey
 			<?php
 					} // if cascade && fkey table name != curr table name
 
@@ -859,13 +859,13 @@ if (count($table->getPrimaryKey()) === 1) {  ?>
 	 * Retrieve a single object by pkey or NULL if not found.
 	 *
 	 * @param mixed $pk the primary key.
-	 * @param Connection $con the connection to use
+	 * @param Connection $connection the connection to use
          * @return <?php echo $table->getPhpName() . "\n" ?>
 	 */
-	public static function <?php echo $retrieveMethod ?>($pk, Connection $con = null)
+	public static function <?php echo $retrieveMethod ?>($pk, Connection $connection = null)
 	{
-		if ($con === null) {
-			$con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null) {
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		$criteria = new Criteria(self::DATABASE_NAME);
@@ -886,7 +886,7 @@ if (count($table->getPrimaryKey()) === 1) {  ?>
 		}
 	} /* if count(table.PrimaryKeys) */ ?>
 
-		$v = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $con);
+		$v = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $connection);
         return count($v) > 0 ? $v[0] : null;
 	}
 
@@ -894,14 +894,14 @@ if (count($table->getPrimaryKey()) === 1) {  ?>
 	 * Retrieve multiple objects by pkey.
 	 *
 	 * @param array $pks List of primary keys
-	 * @param Connection $con the connection to use
+	 * @param Connection $connection the connection to use
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function <?php echo $retrieveMethod ?>s($pks, $con = null)
+	public static function <?php echo $retrieveMethod ?>s($pks, $connection = null)
 	{
-		if ($con === null) {
-			$con = Propel::getConnection(self::DATABASE_NAME);
+		if ($connection === null) {
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		$objs = null;
@@ -932,7 +932,7 @@ if (count($table->getPrimaryKey()) === 1) {  ?>
 			}
   <?php } /* if count prim keys == 1 */ ?>
 
-			$objs = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $con);
+			$objs = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $connection);
 		}
 		return $objs;
 	}
@@ -948,14 +948,14 @@ $comma = false;
 	$cptype = $col->getPhpNative(); ?>
 	 * @param <?php echo $cptype ?> $<?php echo $clo ?>
 <?php } ?>
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return <?php echo $table->getPhpName() ?>
 	 */
 	public static function <?php echo $retrieveMethod ?>(<?php foreach ($table->getPrimaryKey() as $col) {
 	$clo = strtolower($col->getName()); ?><?php if ($comma) { ?>,<?php } ?> $<?php echo $clo ?><?php $comma = true; ?>
-<?php } /* foreach */ ?>, $con = null) {
-		if ($con === null) {
-			$con = Propel::getConnection(self::DATABASE_NAME);
+<?php } /* foreach */ ?>, $connection = null) {
+		if ($connection === null) {
+			$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 		$criteria = new Criteria();
 <?php foreach ($table->getPrimaryKey() as $col) {
@@ -964,7 +964,7 @@ $comma = false;
 		$criteria->add(self::<?php echo PeerBuilder::getColumnName($col) ?>, $<?php echo $clo ?>);
 <?php } ?>
 
-		$v = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $con);
+		$v = <?php echo $table->getPhpName() ?>Peer::doSelect($criteria, $connection);
         return count($v) > 0 ? $v[0] : null;
 	}
 
@@ -1026,7 +1026,7 @@ if ($complexObjectModel) {
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoin<?php echo $joinColumnId ?>(Criteria $c, $con = null)
+	public static function doSelectJoin<?php echo $joinColumnId ?>(Criteria $c, $connection = null)
 	{
 
 		// Set the correct dbName if it has not been overridden
@@ -1047,7 +1047,7 @@ if ($complexObjectModel) {
 		$c->addJoin(<?php echo PeerBuilder::getColumnName($column, $table->getPhpName()) ?>, <?php echo PeerBuilder::getColumnName($columnFk,$joinClassName)?>);
 	 <?php } ?>
 
-		$rs = <?php echo $basePeerClassname ?>::doSelect($c, $con);
+		$rs = <?php echo $basePeerClassname ?>::doSelect($c, $connection);
 		$results = array();
 
 		while($rs->next()) {
@@ -1139,7 +1139,7 @@ if ($complexObjectModel) {
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAll(Criteria $c, $con = null)
+	public static function doSelectJoinAll(Criteria $c, $connection = null)
 	{
 		// Set the correct dbName if it has not been overridden
 		if ($c->getDbName() == Propel::getDefaultDB()) {
@@ -1179,7 +1179,7 @@ if ($complexObjectModel) {
 		$c->addJoin(<?php echo PeerBuilder::getColumnName($column, $table->getPhpName()) ?>, <?php echo PeerBuilder::getColumnName($columnFk,$joinClassName)?>);
 	 <?php } } }?>
 
-		$rs = <?php echo $basePeerClassname ?>::doSelect($c, $con);
+		$rs = <?php echo $basePeerClassname ?>::doSelect($c, $connection);
 		$results = array();
 
 		while($rs->next()) {
@@ -1320,7 +1320,7 @@ if ($complexObjectModel) {
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAllExcept<?php echo $excludeString ?>(Criteria $c, $con = null)
+	public static function doSelectJoinAllExcept<?php echo $excludeString ?>(Criteria $c, $connection = null)
 	{
 		// Set the correct dbName if it has not been overridden
 		// $c->getDbName() will return the same object if not set to another value
@@ -1367,7 +1367,7 @@ if ($complexObjectModel) {
 	 <?php } } } }?>
 
 
-		$rs = <?php echo $basePeerClassname ?>::doSelect($c, $con);
+		$rs = <?php echo $basePeerClassname ?>::doSelect($c, $connection);
 		$results = array();
 
 		while($rs->next()) {

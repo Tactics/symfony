@@ -24,7 +24,7 @@ class SfObjectBuilder extends PHP5ComplexObjectBuilder
     {
       return sfToolkit::stripComments(parent::build());
     }
-    
+
     return parent::build();
   }
 
@@ -248,7 +248,7 @@ $script .= '
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:delete:pre') as \$callable)
     {
-      \$ret = call_user_func(\$callable, \$this, \$con);
+      \$ret = call_user_func(\$callable, \$this, \$connection);
       if (\$ret)
       {
         return;
@@ -260,7 +260,7 @@ $script .= '
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:delete:post') as \$callable)
     {
-      call_user_func(\$callable, \$this, \$con);
+      call_user_func(\$callable, \$this, \$connection);
     }
 
 ";
@@ -315,7 +315,7 @@ $script .= '
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:save:pre') as \$callable)
     {
-      \$affectedRows = call_user_func(\$callable, \$this, \$con);
+      \$affectedRows = call_user_func(\$callable, \$this, \$connection);
       if (is_int(\$affectedRows))
       {
         return \$affectedRows;
@@ -327,12 +327,12 @@ $script .= '
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:save:post') as \$callable)
     {
-      call_user_func(\$callable, \$this, \$con, \$affectedRows);
+      call_user_func(\$callable, \$this, \$connection, \$affectedRows);
     }
 
 EOF;
       $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
-      $tmp = preg_replace('/(\$con\->commit\(\);)/', '$1'.$post_mixer_script, $tmp);
+      $tmp = preg_replace('/(\$connection\->commit\(\);)/', '$1'.$post_mixer_script, $tmp);
     }
 
     // update current script

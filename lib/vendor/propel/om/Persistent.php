@@ -102,17 +102,17 @@ interface Persistent {
 
     /**
      * Deletes the object.
-     * @param      Connection|null $con
+     * @param      Connection|null $connection
      * @return     void
      * @throws     Exception
      */
-	public function delete(Connection $con = null);
+	public function delete(Connection $connection = null);
 
     /**
      * Saves the object.
-     * @param      Connection|null $con
+     * @param      Connection|null $connection
      * @return     void
      * @throws     Exception
      */
-	public function save(Connection $con = null);
+	public function save(Connection $connection = null);
 }

@@ -96,14 +96,14 @@ class DBMySQL extends DBAdapter {
 	/**
 	 * Locks the specified table.
 	 *
-	 * @param      Connection $con The Creole connection to use.
+	 * @param      Connection $connection The Creole connection to use.
 	 * @param      string $table The name of the table to lock.
 	 * @throws     SQLException No Statement could be created or
 	 * executed.
 	 */
-	public function lockTable(Connection $con, $table)
+	public function lockTable(Connection $connection, $table)
 	{
-		$statement = $con->createStatement();
+		$statement = $connection->createStatement();
 		$sql = "LOCK TABLE " . $table . " WRITE";
 		$statement->executeUpdate($sql);
 	}
@@ -111,14 +111,14 @@ class DBMySQL extends DBAdapter {
 	/**
 	 * Unlocks the specified table.
 	 *
-	 * @param      Connection $con The Creole connection to use.
+	 * @param      Connection $connection The Creole connection to use.
 	 * @param      string $table The name of the table to unlock.
 	 * @throws     SQLException No Statement could be created or
 	 * executed.
 	 */
-	public function unlockTable(Connection $con, $table)
+	public function unlockTable(Connection $connection, $table)
 	{
-		$statement = $con->createStatement();
+		$statement = $connection->createStatement();
 		$statement->executeUpdate("UNLOCK TABLES");
 	}
 

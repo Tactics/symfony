@@ -370,19 +370,19 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	/**
 	 * Get the associated $className object
 	 *
-	 * @param      Connection|null \$con Optional Connection object.
+	 * @param      Connection|null \$connection Optional Connection object.
 	 * @return     $className The associated $className object.
 	 * @throws     PropelException
      * @throws     SQLException
 	 */
-	public function get".$this->getFKPhpNameAffix($fk, $plural = false)."(Connection \$con = null)
+	public function get".$this->getFKPhpNameAffix($fk, $plural = false)."(Connection \$connection = null)
 	{
 		if (\$this->$varName === null && ($conditional)) {
 			// include the related Peer class
 			include_once '".$fkPeerBuilder->getClassFilePath()."';
 ";
 		$script .= "
-			\$this->$varName = ".$fkPeerBuilder->getPeerClassname()."::".$fkPeerBuilder->getRetrieveMethodName()."($arglist, \$con);
+			\$this->$varName = ".$fkPeerBuilder->getPeerClassname()."::".$fkPeerBuilder->getRetrieveMethodName()."($arglist, \$connection);
 
 			/* The following can be used instead of the line above to
 			   guarantee the related object contains a reference
@@ -390,7 +390,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 			   may be undesirable in many circumstances.
 			   As it can lead to a db query with many results that may
 			   never be used.
-			   \$obj = ".$fkPeerBuilder->getPeerClassname()."::retrieveByPK($arglist, \$con);
+			   \$obj = ".$fkPeerBuilder->getPeerClassname()."::retrieveByPK($arglist, \$connection);
 			   \$obj->add$pCollName(\$this);
 			 */
 		}
@@ -525,11 +525,11 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * actually need in ".$table->getPhpName().".
 	 *
 	 * @param Criteria|null     \$criteria
-	 * @param Connection|null  \$con
+	 * @param Connection|null  \$connection
 	 * @return ".$className."[] $relCol joined with $relCol2
 	 * @throws PropelException
 	 */
-	public function get".$relCol."Join".$relCol2."(Criteria \$criteria = null, Connection \$con = null)
+	public function get".$relCol."Join".$relCol2."(Criteria \$criteria = null, Connection \$connection = null)
 	{
 		// include the Peer class
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
@@ -562,7 +562,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 				} // end foreach ($fk->getForeignColumns()
 
 				$script .= "
-				\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelectJoin$relCol2(\$criteria, \$con);
+				\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelectJoin$relCol2(\$criteria, \$connection);
 			}
 		} else {
 			// the following code is to determine if a new query is
@@ -581,7 +581,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 
 				$script .= "
 			if (!isset(\$this->$lastCriteriaName) || !\$this->".$lastCriteriaName."->equals(\$criteria)) {
-				\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelectJoin$relCol2(\$criteria, \$con);
+				\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelectJoin$relCol2(\$criteria, \$connection);
 			}
 		}
 		\$this->$lastCriteriaName = \$criteria;
@@ -714,10 +714,10 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 *
 	 * @param      Criteria|null \$criteria
 	 * @param      boolean \$distinct
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int The number of $relCol
 	 */
-	public function count$relCol(Criteria \$criteria = null, bool \$distinct = false, Connection \$con = null)
+	public function count$relCol(Criteria \$criteria = null, bool \$distinct = false, Connection \$connection = null)
 	{
 		// include the Peer class
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
@@ -739,7 +739,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 ";
 		} // end foreach ($fk->getForeignColumns()
 		$script .="
-		return ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, \$distinct, \$con);
+		return ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, \$distinct, \$connection);
 	}
 ";
 	} // addRefererCount
@@ -770,11 +770,11 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * an empty collection or the current collection, the criteria
 	 * is ignored on a new object.
 	 *
-	 * @param      Connection|null   \$con
+	 * @param      Connection|null   \$connection
 	 * @param      Criteria|null   \$criteria
 	 * @return     ".$className."[] $relCol
 	 */
-	public function get$relCol(Criteria \$criteria = null, Connection \$con = null)
+	public function get$relCol(Criteria \$criteria = null, Connection \$connection = null)
 	{
 		// include the Peer class
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
@@ -804,7 +804,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 
 		$script .= "
 				".$fkPeerBuilder->getPeerClassname()."::addSelectColumns(\$criteria);
-				\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelect(\$criteria, \$con);
+				\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelect(\$criteria, \$connection);
 			}
 		} else {
 			// criteria has no effect for a new object
@@ -826,7 +826,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 $script .= "
 				".$fkPeerBuilder->getPeerClassname()."::addSelectColumns(\$criteria);
 				if (!isset(\$this->$lastCriteriaName) || !\$this->".$lastCriteriaName."->equals(\$criteria)) {
-					\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelect(\$criteria, \$con);
+					\$this->$collName = ".$fkPeerBuilder->getPeerClassname()."::doSelect(\$criteria, \$connection);
 				}
 			}
 		}
@@ -859,12 +859,12 @@ $script .= "
 	 * If the object is new, it inserts it; otherwise an update is performed.
 	 * All related objects are also updated in this method.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int The number of rows affected by this insert/update and any referring fk objects' save() operations.
 	 * @throws     PropelException
 	 * @see        save()
 	 */
-	protected function doSave(\$con)
+	protected function doSave(\$connection)
 	{
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 		if (!\$this->alreadyInSave) {
@@ -887,7 +887,7 @@ $script .= "
 				$script .= "
 			if (\$this->$aVarName !== null) {
 				if (\$this->".$aVarName."->isModified()) {
-					\$affectedRows += \$this->".$aVarName."->save(\$con);
+					\$affectedRows += \$this->".$aVarName."->save(\$connection);
 				}
 				\$this->set".$this->getFKPhpNameAffix($fk, $plural = false)."(\$this->$aVarName);
 			}
@@ -911,7 +911,7 @@ $script .= "
 
 		$script .= ") {
 				if (\$this->isNew()) {
-					\$pk = ".$this->getPeerClassname()."::doInsert(\$this, \$con);
+					\$pk = ".$this->getPeerClassname()."::doInsert(\$this, \$connection);
 					\$affectedRows += 1; // we are assuming that there is only 1 row per doInsert() which
 										 // should always be true here (even though technically
 										 // BasePeer::doInsert() can insert multiple rows).
@@ -932,7 +932,7 @@ $script .= "
 		$script .= "
 					\$this->setNew(false);
 				} else {
-					\$affectedRows += ".$this->getPeerClassname()."::doUpdate(\$this, \$con);
+					\$affectedRows += ".$this->getPeerClassname()."::doUpdate(\$this, \$connection);
 				}
 				\$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
@@ -947,7 +947,7 @@ $script .= "
 			if (\$this->$collName !== null) {
 				foreach(\$this->$collName as \$referrerFK) {
 					if (!\$referrerFK->isDeleted()) {
-						\$affectedRows += \$referrerFK->save(\$con);
+						\$affectedRows += \$referrerFK->save(\$connection);
 					}
 				}
 			}
@@ -992,28 +992,28 @@ $script .= "
 	 * it inserts it; otherwise an update is performed.  This method
 	 * wraps the doSave() worker method in a transaction.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int The number of rows affected by this insert/update and any referring fk objects' save() operations.
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(Connection \$con = null)
+	public function save(Connection \$connection = null)
 	{
 		if (\$this->isDeleted()) {
 			throw new PropelException(\"You cannot save an object that has been deleted.\");
 		}
 
-		if (\$con === null) {
-			\$con = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
 		}
 
 		try {
-			\$con->begin();
-			\$affectedRows = \$this->doSave(\$con);
-			\$con->commit();
+			\$connection->begin();
+			\$affectedRows = \$this->doSave(\$connection);
+			\$connection->commit();
 			return \$affectedRows;
 		} catch (PropelException \$e) {
-			\$con->rollback();
+			\$connection->rollback();
 			throw \$e;
 		}
 	}

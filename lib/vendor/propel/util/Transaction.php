@@ -47,13 +47,13 @@ class Transaction {
 	 */
 	public static function begin($dbName)
 	{
-		$con = Propel::getConnection($dbName);
+		$connection = Propel::getConnection($dbName);
 		try {
-			$con->setAutoCommit(false);
+			$connection->setAutoCommit(false);
 		} catch (SQLException $e) {
 			throw new PropelException($e);
 		}
-		return $con;
+		return $connection;
 	}
 
 	/**
@@ -68,15 +68,15 @@ class Transaction {
 	 */
 	public static function beginOptional($dbName, $useTransaction)
 	{
-		$con = Propel::getConnection($dbName);
+		$connection = Propel::getConnection($dbName);
 		try {
 			if ($useTransaction) {
-				$con->setAutoCommit(false);
+				$connection->setAutoCommit(false);
 			}
 		} catch (SQLException $e) {
 			throw new PropelException($e);
 		}
-		return $con;
+		return $connection;
 	}
 
 	/**
@@ -84,13 +84,13 @@ class Transaction {
 	 * connection after the commit.  In databases that do not support
 	 * transactions, it only returns the connection.
 	 *
-	 * @param      Connection $con The Connection for the transaction.
+	 * @param      Connection $connection The Connection for the transaction.
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public static function commit($con)
+	public static function commit($connection)
 	{
-		if ($con === null) {
+		if ($connection === null) {
 			throw new PropelException(
 					"Connection object was null. "
 					. "This could be due to a misconfiguration. "
@@ -98,9 +98,9 @@ class Transaction {
 					. "to better determine the cause.");
 		}
 		try {
-			if ($con->getAutoCommit() === false) {
-				$con->commit();
-				$con->setAutoCommit(true);
+			if ($connection->getAutoCommit() === false) {
+				$connection->commit();
+				$connection->setAutoCommit(true);
 			}
 		} catch (SQLException $e) {
 			throw new PropelException($e);
@@ -113,13 +113,13 @@ class Transaction {
 	 * transactions, this method will log the attempt and release the
 	 * connection.
 	 *
-	 * @param      Connection $con The Connection for the transaction.
+	 * @param      Connection $connection The Connection for the transaction.
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public static function rollback($con)
+	public static function rollback($connection)
 	{
-		if ($con === null) {
+		if ($connection === null) {
 			throw new PropelException(
 					"Connection object was null. "
 					. "This could be due to a misconfiguration. "
@@ -128,9 +128,9 @@ class Transaction {
 		}
 
 		try {
-			if ($con->getAutoCommit() === false) {
-				$con->rollback();
-				$con->setAutoCommit(true);
+			if ($connection->getAutoCommit() === false) {
+				$connection->rollback();
+				$connection->setAutoCommit(true);
 			}
 		} catch (SQLException $e) {
 			Propel::log(
@@ -144,13 +144,13 @@ class Transaction {
 	/**
 	 * Roll back a transaction without throwing errors if they occur.
 	 *
-	 * @param      Connection $con The Connection for the transaction.
+	 * @param      Connection $connection The Connection for the transaction.
 	 * @return     void
 	 */
-	public static function safeRollback($con)
+	public static function safeRollback($connection)
 	{
 		try {
-			Transaction::rollback($con);
+			Transaction::rollback($connection);
 		} catch (PropelException $e) {
 			Propel::log("An error occured during rollback: " . $e->getMessage(), Propel::LOG_ERR);
 		}

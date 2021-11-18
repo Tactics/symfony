@@ -397,14 +397,14 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @throws     PropelException - if unable to convert the date/time to timestamp.
 	 */
 	public function get$cfc(\$format = ".var_export($defaultfmt, true)."";
-		if ($col->isLazyLoad()) $script .= ", Connection \$con = null";
+		if ($col->isLazyLoad()) $script .= ", Connection \$connection = null";
 		$script .= ")
 	{
 ";
 		if ($col->isLazyLoad()) {
 			$script .= "
 		if (!\$this->".$clo."_isLoaded && \$this->$clo === null && !\$this->isNew()) {
-			\$this->load$cfc(\$con);
+			\$this->load$cfc(\$connection);
 		}
 ";
 		}
@@ -458,14 +458,14 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @return     ".$col->getPhpNative().$extra ."
 	 */
 	public function get$cfc(";
-		if ($col->isLazyLoad()) $script .= "Connection \$con = null";
+		if ($col->isLazyLoad()) $script .= "Connection \$connection = null";
 		$script .= ")
 	{
 ";
 		if ($col->isLazyLoad()) {
 			$script .= "
 		if (!\$this->".$clo."_isLoaded && \$this->$clo === null && !\$this->isNew()) {
-			\$this->load$cfc(\$con);
+			\$this->load$cfc(\$connection);
 		}
 ";
 		}
@@ -500,16 +500,16 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * the [$clo] column, since it is not populated by
 	 * the hydrate() method.
 	 *
-	 * @param      \$con Connection
+	 * @param      \$connection Connection
 	 * @return     void
 	 * @throws     PropelException - any underlying error will be wrapped and re-thrown.
 	 */
-	protected function load$cfc(Connection \$con = null)
+	protected function load$cfc(Connection \$connection = null)
 	{
 		\$c = \$this->buildPkeyCriteria();
 		\$c->addSelectColumn(".$this->getColumnConstant($col).");
 		try {
-			\$rs = ".$this->getPeerClassname()."::doSelectRS(\$c, \$con);
+			\$rs = ".$this->getPeerClassname()."::doSelectRS(\$c, \$connection);
 			\$rs->next();
 ";
 		$affix = CreoleTypes::getAffix(CreoleTypes::getCreoleCode($col->getType()));
@@ -1066,29 +1066,29 @@ $script .= "
 	/**
 	 * Removes this object from datastore and sets delete attribute.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     void
 	 * @throws     PropelException
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(Connection \$con = null)
+	public function delete(Connection \$connection = null)
 	{
 		if (\$this->isDeleted()) {
 			throw new PropelException(\"This object has already been deleted.\");
 		}
 
-		if (\$con === null) {
-			\$con = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
 		}
 
 		try {
-			\$con->begin();
-			".$this->getPeerClassname()."::doDelete(\$this, \$con);
+			\$connection->begin();
+			".$this->getPeerClassname()."::doDelete(\$this, \$connection);
 			\$this->setDeleted(true);
-			\$con->commit();
+			\$connection->commit();
 		} catch (PropelException \$e) {
-			\$con->rollback();
+			\$connection->rollback();
 			throw \$e;
 		}
 	}
@@ -1129,18 +1129,18 @@ $script .= "
 	 *
 	 * If the object is new, it inserts it; otherwise an update is performed.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int The number of rows affected by this insert/update operation (for non-complex OM this will be at most 1).
 	 * @throws     PropelException
 	 */
-	public function save(Connection \$con = null)
+	public function save(Connection \$connection = null)
 	{
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 
 		// If this object has been modified, then save it to the database.
 		if (\$this->isModified()) {
 			if (\$this->isNew()) {
-				\$pk = ".$this->getPeerClassname()."::doInsert(\$this, \$con);
+				\$pk = ".$this->getPeerClassname()."::doInsert(\$this, \$connection);
 				\$affectedRows += 1; // we are assuming that there is only 1 row per doInsert() which
 									 // should always be true here (even though technically
 									 // BasePeer::doInsert() can insert multiple rows).
@@ -1159,7 +1159,7 @@ $script .= "
 		$script .= "
 					\$this->setNew(false);
 			} else {
-					\$affectedRows += ".$this->getPeerClassname()."::doUpdate(\$this, \$con);
+					\$affectedRows += ".$this->getPeerClassname()."::doUpdate(\$this, \$connection);
 			}
 				\$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 		} // if \$this->isModified()

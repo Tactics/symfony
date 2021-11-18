@@ -35,7 +35,7 @@ class PreOrderNodeIterator implements Iterator
 
 	private $querydb = false;
 
-	private $con = null;
+	private $connection = null;
 
 	public function __construct($node, $opts) {
 		$this->topNode = $node;

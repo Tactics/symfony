@@ -602,7 +602,7 @@ For instance, the `$article->getComments()` method returns an array of `Comment`
 Listing 8-23 - Overriding Existing Model Methods, in `lib/model/Article.php`
 
     [php]
-    public function getComments($criteria = null, Connection $con = null)
+    public function getComments($criteria = null, Connection $connection = null)
     {
       if (is_null($criteria))
       {
@@ -615,7 +615,7 @@ Listing 8-23 - Overriding Existing Model Methods, in `lib/model/Article.php`
       }
       $criteria->addDescendingOrderByColumn(CommentPeer::CREATED_AT);
 
-      return parent::getComments($criteria, $con);
+      return parent::getComments($criteria, $connection);
     }
 
 The custom method eventually calls the one of the parent Base class, and that's good practice. However, you can completely bypass it and return the result you want.

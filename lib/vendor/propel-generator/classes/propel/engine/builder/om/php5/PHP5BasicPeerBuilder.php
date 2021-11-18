@@ -528,12 +528,12 @@ if (Propel::isInit()) {
 	 *
 	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int Number of matching rows.
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCount(Criteria \$criteria, bool \$distinct = false, Connection \$con = null)
+	public static function doCount(Criteria \$criteria, bool \$distinct = false, Connection \$connection = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;
@@ -552,7 +552,7 @@ if (Propel::isInit()) {
 			\$criteria->addSelectColumn(\$column);
 		}
 
-		\$rs = ".$this->getPeerClassname()."::doSelectRS(\$criteria, \$con);
+		\$rs = ".$this->getPeerClassname()."::doSelectRS(\$criteria, \$connection);
 		if (\$rs->next()) {
 			return \$rs->getInt(1);
 		} else {
@@ -573,16 +573,16 @@ if (Propel::isInit()) {
 	 * Method to select one object from the DB.
 	 *
 	 * @param      Criteria \$criteria object used to create the SELECT statement.
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     ".$this->getTable()->getPhpName()."|null
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doSelectOne(Criteria \$criteria, Connection \$con = null)
+	public static function doSelectOne(Criteria \$criteria, Connection \$connection = null)
 	{
 		\$critcopy = clone \$criteria;
 		\$critcopy->setLimit(1);
-		\$objects = ".$this->getPeerClassname()."::doSelect(\$critcopy, \$con);
+		\$objects = ".$this->getPeerClassname()."::doSelect(\$critcopy, \$connection);
 		if (\$objects) {
 			return \$objects[0];
 		}
@@ -602,14 +602,14 @@ if (Propel::isInit()) {
 	 * Method to do selects.
 	 *
 	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     {$className}[] Array of selected Objects
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doSelect(Criteria \$criteria, Connection \$con = null)
+	public static function doSelect(Criteria \$criteria, Connection \$connection = null)
 	{
-		return ".$this->getPeerClassname()."::populateObjects(".$this->getPeerClassname()."::doSelectRS(\$criteria, \$con));
+		return ".$this->getPeerClassname()."::populateObjects(".$this->getPeerClassname()."::doSelectRS(\$criteria, \$connection));
 	}";
 	}
 
@@ -629,16 +629,16 @@ if (Propel::isInit()) {
 	 * (instead of an array of objects).
 	 *
 	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection|null \$connection the connection to use
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 * @return     ResultSet The resultset object with numerically-indexed fields.
 	 * @see        ".$this->basePeerClassname."::doSelect()
 	 */
-	public static function doSelectRS(Criteria \$criteria, Connection \$con = null)
+	public static function doSelectRS(Criteria \$criteria, Connection \$connection = null)
 	{
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		if (!\$criteria->getSelectColumns()) {
@@ -651,7 +651,7 @@ if (Propel::isInit()) {
 
 		// BasePeer returns a Creole ResultSet, set to return
 		// rows indexed numerically.
-		return ".$this->basePeerClassname."::doSelect(\$criteria, \$con);
+		return ".$this->basePeerClassname."::doSelect(\$criteria, \$connection);
 	}";
 	}
 
@@ -841,15 +841,15 @@ if (Propel::isInit()) {
 	 * Method perform an INSERT on the database, given a ".$table->getPhpName()." or Criteria object.
 	 *
 	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the INSERT statement.
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection|null \$connection the connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doInsert(\$values, Connection \$con = null)
+	public static function doInsert(\$values, Connection \$connection = null)
 	{
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		if (\$values instanceof Criteria) {
@@ -875,11 +875,11 @@ if (Propel::isInit()) {
 		try {
 			// use transaction because \$criteria could contain info
 			// for more than one table (I guess, conceivably)
-			\$con->begin();
-			\$pk = ".$this->basePeerClassname."::doInsert(\$criteria, \$con);
-			\$con->commit();
+			\$connection->begin();
+			\$pk = ".$this->basePeerClassname."::doInsert(\$criteria, \$connection);
+			\$connection->commit();
 		} catch(PropelException \$e) {
-			\$con->rollback();
+			\$connection->rollback();
 			throw \$e;
 		}
 
@@ -900,15 +900,15 @@ if (Propel::isInit()) {
 	 * Method perform an UPDATE on the database, given a ".$table->getPhpName()." or Criteria object.
 	 *
 	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the UPDATE statement.
-	 * @param      Connection|null \$con The connection to use (specify Connection object to exert more control over transactions).
+	 * @param      Connection|null \$connection The connection to use (specify Connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doUpdate(\$values, Connection \$con = null)
+	public static function doUpdate(\$values, Connection \$connection = null)
 	{
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		\$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -934,7 +934,7 @@ if (Propel::isInit()) {
 		// set the correct dbName
 		\$criteria->setDbName(self::DATABASE_NAME);
 
-		return {$this->basePeerClassname}::doUpdate(\$selectCriteria, \$criteria, \$con);
+		return {$this->basePeerClassname}::doUpdate(\$selectCriteria, \$criteria, \$connection);
 	}
 ";
 	}
@@ -950,34 +950,34 @@ if (Propel::isInit()) {
 	/**
 	 * Method to DELETE all rows from the ".$table->getName()." table.
 	 *
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException
 	 */
-	public static function doDeleteAll(Connection \$con = null)
+	public static function doDeleteAll(Connection \$connection = null)
 	{
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because \$criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
-			\$con->begin();
+			\$connection->begin();
 			";
 			if ($this->isDeleteCascadeEmulationNeeded()) {
-				$script .="\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(new Criteria(), \$con);
+				$script .="\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(new Criteria(), \$connection);
 			";
 			}
 			if ($this->isDeleteSetNullEmulationNeeded()) {
-				$script .= $this->getPeerClassname() . "::doOnDeleteSetNull(new Criteria(), \$con);
+				$script .= $this->getPeerClassname() . "::doOnDeleteSetNull(new Criteria(), \$connection);
 			";
 			}
-			$script .= "\$affectedRows += BasePeer::doDeleteAll(".$this->getPeerClassname()."::TABLE_NAME, \$con);
-			\$con->commit();
+			$script .= "\$affectedRows += BasePeer::doDeleteAll(".$this->getPeerClassname()."::TABLE_NAME, \$connection);
+			\$connection->commit();
 			return \$affectedRows;
 		} catch (PropelException \$e) {
-			\$con->rollback();
+			\$connection->rollback();
 			throw \$e;
 		}
 	}
@@ -997,16 +997,16 @@ if (Propel::isInit()) {
 	 *
 	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection|null \$connection the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
 	 *				if supported by native driver or if emulated using Propel.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	 public static function doDelete(\$values, Connection \$con = null)
+	 public static function doDelete(\$values, Connection \$connection = null)
 	 {
-		if (\$con === null) {
-			\$con = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME);
 		}
 
 		if (\$values instanceof Criteria) {
@@ -1073,22 +1073,22 @@ if (Propel::isInit()) {
 		try {
 			// use transaction because \$criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
-			\$con->begin();
+			\$connection->begin();
 			";
 
 		if ($this->isDeleteCascadeEmulationNeeded()) {
-			$script .= "\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(\$criteria, \$con);";
+			$script .= "\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(\$criteria, \$connection);";
 		}
 		if ($this->isDeleteSetNullEmulationNeeded()) {
-			$script .= $this->getPeerClassname() . "::doOnDeleteSetNull(\$criteria, \$con);";
+			$script .= $this->getPeerClassname() . "::doOnDeleteSetNull(\$criteria, \$connection);";
 		}
 
 		$script .= "
-			\$affectedRows += {$this->basePeerClassname}::doDelete(\$criteria, \$con);
-			\$con->commit();
+			\$affectedRows += {$this->basePeerClassname}::doDelete(\$criteria, \$connection);
+			\$connection->commit();
 			return \$affectedRows;
 		} catch (PropelException \$e) {
-			\$con->rollback();
+			\$connection->rollback();
 			throw \$e;
 		}
 	}
@@ -1113,16 +1113,16 @@ if (Propel::isInit()) {
 	 * This method should be used within a transaction if possible.
 	 *
 	 * @param      Criteria \$criteria
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
-	protected static function doOnDeleteCascade(Criteria \$criteria, Connection \$con)
+	protected static function doOnDeleteCascade(Criteria \$criteria, Connection \$connection)
 	{
 		// initialize var to track total num of affected rows
 		\$affectedRows = 0;
 
 		// first find the objects that are implicated by the \$criteria
-		\$objects = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
+		\$objects = ".$this->getPeerClassname()."::doSelect(\$criteria, \$connection);
 		foreach(\$objects as \$obj) {
 ";
 
@@ -1165,7 +1165,7 @@ if (Propel::isInit()) {
 					}
 
 					$script .= "
-			\$affectedRows += ".$joinedTablePeerBuilder->getPeerClassname()."::doDelete(\$c, \$con);";
+			\$affectedRows += ".$joinedTablePeerBuilder->getPeerClassname()."::doDelete(\$c, \$connection);";
 
 				} // if cascade && fkey table name != curr table name
 
@@ -1196,14 +1196,14 @@ if (Propel::isInit()) {
 	 * This method should be used within a transaction if possible.
 	 *
 	 * @param      Criteria \$criteria
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     void
 	 */
-	protected static function doOnDeleteSetNull(Criteria \$criteria, Connection \$con)
+	protected static function doOnDeleteSetNull(Criteria \$criteria, Connection \$connection)
 	{
 
 		// first find the objects that are implicated by the \$criteria
-		\$objects = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
+		\$objects = ".$this->getPeerClassname()."::doSelect(\$criteria, \$connection);
 		foreach(\$objects as \$obj) {
 ";
 
@@ -1247,7 +1247,7 @@ if (Propel::isInit()) {
 					}
 
 					$script .= "
-			{$this->basePeerClassname}::doUpdate(\$selectCriteria, \$updateValues, \$con); // use BasePeer because generated Peer doUpdate() methods only update using pkey
+			{$this->basePeerClassname}::doUpdate(\$selectCriteria, \$updateValues, \$connection); // use BasePeer because generated Peer doUpdate() methods only update using pkey
 ";
 				} // if setnull && fkey table name != curr table name
 			} // if not for ref only
@@ -1331,15 +1331,15 @@ if (Propel::isInit()) {
 	 * Retrieve a single object by pkey.
 	 *
 	 * @param      mixed \$pk the primary key.
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection|null \$connection the connection to use
 	 * @return     $className|null
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function ".$this->getRetrieveMethodName()."(\$pk, Connection \$con = null)
+	public static function ".$this->getRetrieveMethodName()."(\$pk, Connection \$connection = null)
 	{
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		\$criteria = new Criteria(".$this->getPeerClassname()."::DATABASE_NAME);
@@ -1363,7 +1363,7 @@ if (Propel::isInit()) {
 		} /* if count(table.PrimaryKeys) */
 		$script .= "
 
-		\$v = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
+		\$v = ".$this->getPeerClassname()."::doSelect(\$criteria, \$connection);
 
 		return !empty(\$v) > 0 ? \$v[0] : null;
 	}
@@ -1383,15 +1383,15 @@ if (Propel::isInit()) {
 	 * Retrieve multiple objects by pkey.
 	 *
 	 * @param      array \$pks List of primary keys
-	 * @param      Connection|null \$con the connection to use
+	 * @param      Connection|null \$connection the connection to use
 	 * @return     {$className}[]
 	 * @throws PropelException
      * @throws SQLException
 	 */
-	public static function ".$this->getRetrieveMethodName()."s(\$pks, Connection \$con = null)
+	public static function ".$this->getRetrieveMethodName()."s(\$pks, Connection \$connection = null)
 	{
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 
 		\$objs = null;
@@ -1424,7 +1424,7 @@ if (Propel::isInit()) {
 			}";
 		} /* if count prim keys == 1 */
 		$script .= "
-			\$objs = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
+			\$objs = ".$this->getPeerClassname()."::doSelect(\$criteria, \$connection);
 		}
 		return \$objs;
 	}
@@ -1449,7 +1449,7 @@ if (Propel::isInit()) {
 	   ";
 	   }
 	   $script .= "
-	 * @param      Connection|null \$con
+	 * @param      Connection|null \$connection
 	 * @return     ".$table->getPhpName()."
 	 */
 	public static function ".$this->getRetrieveMethodName()."(";
@@ -1458,9 +1458,9 @@ if (Propel::isInit()) {
 			$clo = strtolower($col->getName());
 			$script .= ($co++ ? "," : "") . " $".$clo;
 		} /* foreach */
-		$script .= ", Connection \$con = null) {
-		if (\$con === null) {
-			\$con = Propel::getConnection(self::DATABASE_NAME);
+		$script .= ", Connection \$connection = null) {
+		if (\$connection === null) {
+			\$connection = Propel::getConnection(self::DATABASE_NAME);
 		}
 		\$criteria = new Criteria();";
 		foreach ($table->getPrimaryKey() as $col) {
@@ -1469,7 +1469,7 @@ if (Propel::isInit()) {
 		\$criteria->add(".$this->getColumnConstant($col).", $".$clo.");";
 		}
 		$script .= "
-		\$v = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
+		\$v = ".$this->getPeerClassname()."::doSelect(\$criteria, \$connection);
 
 		return !empty(\$v) ? \$v[0] : null;
 	}";

@@ -22,7 +22,7 @@ class sfPropelData extends sfData
   protected
     $maps           = array(),
     $deletedClasses = array(),
-    $con            = null;
+    $connection            = null;
 
   // symfony load-data (file|dir)
   /**

@@ -164,11 +164,11 @@ foreach ($table->getColumns() as $col) {
 	 * @return mixed Formatted date/time value as string or integer unix timestamp (if format is NULL).
 	 * @throws PropelException - if unable to convert the date/time to timestamp.
 	 */
-	public function get<?php echo $cfc ?>($format = '<?php echo $defaultfmt ?>'<?php if ($col->isLazyLoad()) echo ', Connection $con = null'; ?>)
+	public function get<?php echo $cfc ?>($format = '<?php echo $defaultfmt ?>'<?php if ($col->isLazyLoad()) echo ', Connection $connection = null'; ?>)
 	{
 <?php if ($col->isLazyLoad()) { ?>
 		if (!$this-><?php echo $clo ?>_isLoaded && $this-><?php echo $clo ?> === null && !$this->isNew()) {
-			$this->load<?php echo $cfc ?>($con);
+			$this->load<?php echo $cfc ?>($connection);
 		}
 <?php } ?>
 		if ($this-><?php echo $clo ?> === null || $this-><?php echo $clo ?> === '') {
@@ -196,11 +196,11 @@ foreach ($table->getColumns() as $col) {
 	 * <?php echo $col->getDescription() ?>
 	 * @return <?php echo $cptype ?>
 	 */
-	public function get<?php echo $cfc ?>(<?php if ($col->isLazyLoad()) echo 'Connection $con = null'; ?>)
+	public function get<?php echo $cfc ?>(<?php if ($col->isLazyLoad()) echo 'Connection $connection = null'; ?>)
 	{
 <?php if ($col->isLazyLoad()) { ?>
 		if (!$this-><?php echo $clo ?>_isLoaded && $this-><?php echo $clo ?> === null && !$this->isNew()) {
-			$this->load<?php echo $cfc ?>($con);
+			$this->load<?php echo $cfc ?>($connection);
 		}
 <?php } ?>
 		return $this-><?php echo $clo ?>;
@@ -219,12 +219,12 @@ foreach ($table->getColumns() as $col) {
 	 * @return void
 	 * @throws PropelException - any underlying error will be wrapped and re-thrown.
 	 */
-	protected function load<?php echo $cfc ?>(Connection $con = null)
+	protected function load<?php echo $cfc ?>(Connection $connection = null)
 	{
 		$c = $this->buildPkeyCriteria();
 		$c->addSelectColumn(<?php echo PeerBuilder::getColumnName($col, $table->getPhpName()) ?>);
 		try {
-			$rs = <?php echo $table->getPhpName()?>Peer::doSelectRS($c, $con);
+			$rs = <?php echo $table->getPhpName()?>Peer::doSelectRS($c, $connection);
 			$rs->next();
 <?php
 		$affix = CreoleTypes::getAffix(CreoleTypes::getCreoleCode($col->getType()));
@@ -602,7 +602,7 @@ if ($complexObjectModel) {
 	 * @return <?php echo $className ?> The associated <?php echo $className ?> object.
 	 * @throws PropelException
 	 */
-	public function get<?php echo $pVarName ?>(Connection $con = null)
+	public function get<?php echo $pVarName ?>(Connection $connection = null)
 	{
 		// include the Peer class
 		include_once '<?php echo $tblFKPackagePath . $className ?>Peer.php';
@@ -613,18 +613,18 @@ if ($complexObjectModel) {
 			if ($argsize > 1) {
 ?>
 
-			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieve<?php echo $className ?>ByPK(<?php echo $arglist ?>, $con);
+			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieve<?php echo $className ?>ByPK(<?php echo $arglist ?>, $connection);
 	<?php	} else { ?>
 
-			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieve<?php echo $className ?>ByPK(<?php echo $arglist ?>, $con);
+			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieve<?php echo $className ?>ByPK(<?php echo $arglist ?>, $connection);
 	<?php	}
 		} else {
 			if ($argsize > 1) { ?>
 
-			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieveByPK(<?php echo $arglist ?>, $con);
+			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieveByPK(<?php echo $arglist ?>, $connection);
 	<?php	} else { ?>
 
-			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieveByPK(<?php echo $arglist ?>, $con);
+			$this-><?php echo $varName ?> = <?php echo $className ?>Peer::retrieveByPK(<?php echo $arglist ?>, $connection);
 	<?php }
 		} // if tblFK->isAlias ?>
 
@@ -634,7 +634,7 @@ if ($complexObjectModel) {
 			   may be undesirable in many circumstances.
 			   As it can lead to a db query with many results that may
 			   never be used.
-			   $obj = <?php echo $className ?>Peer::retrieveByPK(<?php echo $arglist ?>, $con);
+			   $obj = <?php echo $className ?>Peer::retrieveByPK(<?php echo $arglist ?>, $connection);
 			   $obj->add<?php echo $pCollName ?>($this);
 			 */
 		}
@@ -762,10 +762,10 @@ if ($complexObjectModel) {
 	 *
 	 * @param Criteria $criteria
 	 * @param boolean $distinct
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @throws PropelException
 	 */
-	public function count<?php echo $relCol ?>($criteria = null, $distinct = false, Connection $con = null)
+	public function count<?php echo $relCol ?>($criteria = null, $distinct = false, Connection $connection = null)
 	{
 		// include the Peer class
 		include_once '<?php echo $tblFKPackagePath . $className ?>Peer.php';
@@ -785,7 +785,7 @@ if ($complexObjectModel) {
 <?php
 	} // end foreach ($fk->getForeignColumns()
 ?>
-		return <?php echo $className ?>Peer::doCount($criteria, $distinct, $con);
+		return <?php echo $className ?>Peer::doCount($criteria, $distinct, $connection);
 	}
 
 	/**
@@ -797,11 +797,11 @@ if ($complexObjectModel) {
 	 * an empty collection or the current collection, the criteria
 	 * is ignored on a new object.
 	 *
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @param Criteria $criteria
 	 * @throws PropelException
 	 */
-	public function get<?php echo $relCol ?>($criteria = null, Connection $con = null)
+	public function get<?php echo $relCol ?>($criteria = null, Connection $connection = null)
 	{
 		// include the Peer class
 		include_once '<?php echo $tblFKPackagePath . $className ?>Peer.php';
@@ -828,7 +828,7 @@ if ($complexObjectModel) {
 	} // end foreach ($fk->getForeignColumns()
 ?>
 
-				$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelect($criteria, $con);
+				$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelect($criteria, $connection);
 			}
 		} else {
 			// criteria has no effect for a new object
@@ -850,7 +850,7 @@ if ($complexObjectModel) {
 ?>
 
 				if (!isset($this->last<?php echo $relCol ?>Criteria) || !$this->last<?php echo $relCol ?>Criteria->equals($criteria)) {
-					$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelect($criteria, $con);
+					$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelect($criteria, $connection);
 				}
 			}
 		}
@@ -932,7 +932,7 @@ if ($complexObjectModel) {
 	 * api reasonable.  You can provide public methods for those you
 	 * actually need in <?php echo $table->getPhpName() ?>.
 	 */
-	public function get<?php echo $relCol ?>Join<?php echo $relCol2 ?>($criteria = null, Connection $con = null)
+	public function get<?php echo $relCol ?>Join<?php echo $relCol2 ?>($criteria = null, Connection $connection = null)
 	{
 		// include the Peer class
 		include_once '<?php echo $tblFKPackagePath . $className ?>Peer.php';
@@ -955,7 +955,7 @@ if ($complexObjectModel) {
 <?php
 		} // end foreach ($fk->getForeignColumns()
 ?>
-				$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelectJoin<?php echo $relCol2 ?>($criteria, $con);
+				$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelectJoin<?php echo $relCol2 ?>($criteria, $connection);
 			}
 		} else {
 			// the following code is to determine if a new query is
@@ -973,7 +973,7 @@ if ($complexObjectModel) {
 			} /* end foreach ($fk->getForeignColumns() */
 ?>
 			if (!isset($this->last<?php echo $relCol ?>Criteria) || !$this->last<?php echo $relCol ?>Criteria->equals($criteria)) {
-				$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelectJoin<?php echo $relCol2 ?>($criteria, $con);
+				$this-><?php echo $collName ?> = <?php echo $className ?>Peer::doSelectJoin<?php echo $relCol2 ?>($criteria, $connection);
 			}
 		}
 		$this->last<?php echo $relCol ?>Criteria = $criteria;
@@ -1261,28 +1261,28 @@ if (!$table->isAlias() && ($addGenericAccessors || ($addGenericMutators && !$tab
 	/**
 	 * Removes this object from datastore and sets delete attribute.
 	 *
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return void
 	 * @throws PropelException
 	 * @see BaseObject::setDeleted()
 	 * @see BaseObject::isDeleted()
 	 */
-	public function delete(Connection $con = null)
+	public function delete(Connection $connection = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
 		}
 
-		if ($con === null)
-			$con = Propel::getConnection(<?php echo $table->getPhpName()?>Peer::DATABASE_NAME);
+		if ($connection === null)
+			$connection = Propel::getConnection(<?php echo $table->getPhpName()?>Peer::DATABASE_NAME);
 
 		try {
-			$con->begin();
-			<?php echo $table->getPhpName() ?>Peer::doDelete($this, $con);
+			$connection->begin();
+			<?php echo $table->getPhpName() ?>Peer::doDelete($this, $connection);
 			$this->setDeleted(true);
-			$con->commit();
+			$connection->commit();
 		} catch (PropelException $e) {
-			$con->rollback();
+			$connection->rollback();
 			throw $e;
 		}
 	}
@@ -1303,25 +1303,25 @@ if ($complexObjectModel) {
 	 * it inserts it; otherwise an update is performed.  This method
 	 * wraps the doSave() worker method in a transaction.
 	 *
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return void
 	 * @throws PropelException
 	 */
-	public function save(Connection $con = null)
+	public function save(Connection $connection = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
 		}
 
-		if ($con === null)
-			$con = Propel::getConnection(<?php echo $table->getPhpName()?>Peer::DATABASE_NAME);
+		if ($connection === null)
+			$connection = Propel::getConnection(<?php echo $table->getPhpName()?>Peer::DATABASE_NAME);
 
 		try {
-			$con->begin();
-			$this->doSave($con);
-			$con->commit();
+			$connection->begin();
+			$this->doSave($connection);
+			$connection->commit();
 		} catch (PropelException $e) {
-			$con->rollback();
+			$connection->rollback();
 			throw $e;
 		}
 	}
@@ -1333,17 +1333,17 @@ if ($complexObjectModel) {
 	 * Stores the object in the database.  If the object is new,
 	 * it inserts it; otherwise an update is performed.
 	 *
-	 * @param Connection $con
+	 * @param Connection $connection
 	 * @return void
 	 * @throws PropelException
 	 */
 <?php
 if($complexObjectModel) {
 ?>
-		protected function doSave($con)<?php
+		protected function doSave($connection)<?php
 } else {
 ?>
-		public function save(Connection $con = null)<?php
+		public function save(Connection $connection = null)<?php
 }
 ?>
 	{
@@ -1354,8 +1354,8 @@ if(!$complexObjectModel) {
 			throw new PropelException("You cannot save an object that has been deleted.");
 		}
 
-		if ($con === null) {
-			$con = Propel::getConnection(<?php echo $basePrefix . $table->getPhpName() ?>Peer::DATABASE_NAME);
+		if ($connection === null) {
+			$connection = Propel::getConnection(<?php echo $basePrefix . $table->getPhpName() ?>Peer::DATABASE_NAME);
 		}
 <?php
 }
@@ -1378,7 +1378,7 @@ if ($complexObjectModel) {
 			$aVarName = $aVars[$i];
 ?>
 			if ($this-><?php echo $aVarName ?> !== null) {
-				if ($this-><?php echo $aVarName ?>->isModified()) $this-><?php echo $aVarName ?>->save($con);
+				if ($this-><?php echo $aVarName ?>->isModified()) $this-><?php echo $aVarName ?>->save($connection);
 				$this->set<?php echo $pVars[$i] ?>($this-><?php echo $aVarName ?>);
 			}
 <?php
@@ -1390,7 +1390,7 @@ if ($complexObjectModel) {
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
-					$pk = <?php echo $table->getPhpName() ?>Peer::doInsert($this, $con);
+					$pk = <?php echo $table->getPhpName() ?>Peer::doInsert($this, $connection);
 <?php
 	if ($table->getIdMethod() != "none") {
 
@@ -1407,7 +1407,7 @@ if ($complexObjectModel) {
 ?>
 					$this->setNew(false);
 				} else {
-					<?php echo $table->getPhpName() ?>Peer::doUpdate($this, $con);
+					<?php echo $table->getPhpName() ?>Peer::doUpdate($this, $connection);
 				}
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
@@ -1435,7 +1435,7 @@ if ($complexObjectModel) {
 ?>
 			if ($this-><?php echo $collName ?> !== null) {
 				for ($i=0,$size=count($this-><?php echo $collName ?>); $i < $size; $i++) {
-					$this-><?php echo $collName ?>[$i]->save($con);
+					$this-><?php echo $collName ?>[$i]->save($connection);
 				}
 			  }
 <?php

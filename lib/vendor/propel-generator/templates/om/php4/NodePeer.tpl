@@ -60,16 +60,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
     /**
      * Temp function for CodeBase hacks that will go away.
      */
-    function isCodeBase(Connection $con = null)
+    function isCodeBase(Connection $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'isCodeBase', 1);
-		$con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'isCodeBase', 1);
+		$connection =& Param::get($connection);
 
-		if ($con === null)
-	        $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
+		if ($connection === null)
+	        $connection =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
-        return (get_class($con) == 'ODBCConnection' &&
-                get_class($con->getAdapter()) == 'CodeBaseAdapter');
+        return (get_class($connection) == 'ODBCConnection' &&
+                get_class($connection->getAdapter()) == 'CodeBaseAdapter');
     }
 
     /**
@@ -83,32 +83,32 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @return <?php echo $table->getPhpName() ?>Node
      * @throws PropelException
      */
-    function & createNewRootNode(&$obj, Connection $con = null)
+    function & createNewRootNode(&$obj, Connection $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'createNewRootNode', 2);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'createNewRootNode', 2);
+	    $connection =& Param::get($connection);
 
-        if ($con === null)
-            $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
+        if ($connection === null)
+            $connection =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
-        if (Propel::isError($con)) {
-            return $con;
+        if (Propel::isError($connection)) {
+            return $connection;
         }
 
-        $e = $con->begin();
-        if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
+        $e = $connection->begin();
+        if (Creole::isError($e)) { $connection->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
 
-        $e = <?php echo $table->getPhpName() ?>NodePeer::deleteNodeSubTree('1', Param::set($con));
-        if (Propel::isError($e)) { $con->rollback(); return $e; }
+        $e = <?php echo $table->getPhpName() ?>NodePeer::deleteNodeSubTree('1', Param::set($connection));
+        if (Propel::isError($e)) { $connection->rollback(); return $e; }
 
         $setNodePath = 'set' . <?php echo $table->getPhpName() ?>NodePeer::NPATH_PHPNAME();
         $obj->$setNodePath('1');
 
-        $e = $obj->save(Param::set($con));
-        if (Propel::isError($e)) { $con->rollback(); return $e; }
+        $e = $obj->save(Param::set($connection));
+        if (Propel::isError($e)) { $connection->rollback(); return $e; }
 
-        $e = $con->commit();
-        if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
+        $e = $connection->commit();
+        if (Creole::isError($e)) { $connection->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
 
         return new <?php echo $table->getPhpName() ?>Node(Param::set($obj));
     }
@@ -123,35 +123,35 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @return <?php echo $table->getPhpName() ?>Node
      * @throws PropelException
      */
-    function & insertNewRootNode(&$obj, Connection $con = null)
+    function & insertNewRootNode(&$obj, Connection $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'insertNewRootNode', 2);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'insertNewRootNode', 2);
+	    $connection =& Param::get($connection);
 
-		if ($con === null)
-            $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
+		if ($connection === null)
+            $connection =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
-        $e = $con->begin();
-        if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
+        $e = $connection->begin();
+        if (Creole::isError($e)) { $connection->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
 
         // Move root tree to an invalid node path.
-        $e = <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree('1', '0', Param::set($con));
-        if (Propel::isError($e)) { $con->rollback(); return $e; }
+        $e = <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree('1', '0', Param::set($connection));
+        if (Propel::isError($e)) { $connection->rollback(); return $e; }
 
         $setNodePath = 'set' . <?php echo $table->getPhpName() ?>NodePeer::NPATH_PHPNAME();
 
         // Insert the new root node.
         $obj->$setNodePath('1');
 
-        $e = $obj->save(Param::set($con));
-        if (Propel::isError($e)) { $con->rollback(); return $e; }
+        $e = $obj->save(Param::set($connection));
+        if (Propel::isError($e)) { $connection->rollback(); return $e; }
 
         // Move the old root tree as a child of the new root.
-        $e = <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree('0', '1' . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . '1', Param::set($con));
-        if (Propel::isError($e)) { $con->rollback(); return $e; }
+        $e = <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree('0', '1' . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . '1', Param::set($connection));
+        if (Propel::isError($e)) { $connection->rollback(); return $e; }
 
-        $e = $con->commit();
-        if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
+        $e = $connection->commit();
+        if (Creole::isError($e)) { $connection->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
 
         return new <?php echo $table->getPhpName() ?>Node(Param::set($obj));
     }
@@ -166,12 +166,12 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return array Array of root nodes.
      */
-    function & retrieveNodes(&$criteria, $ancestors = false, $descendants = false, Connection $con = null)
+    function & retrieveNodes(&$criteria, $ancestors = false, $descendants = false, Connection $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'retrieveNodes', 4);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'retrieveNodes', 4);
+	    $connection =& Param::get($connection);
         $criteria =& <?php echo $table->getPhpName() ?>NodePeer::buildFamilyCriteria($criteria, $ancestors, $descendants);
-        $rs =& <?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, Param::set($con));
+        $rs =& <?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, Param::set($connection));
         return <?php echo $table->getPhpName() ?>NodePeer::populateNodes($rs, $criteria);
     }
 
@@ -185,10 +185,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & retrieveNodeByPK($pk, $ancestors = false, $descendants = false, $con = null)
+    function & retrieveNodeByPK($pk, $ancestors = false, $descendants = false, $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'retrieveNodeByPK', 4);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'retrieveNodeByPK', 4);
+	    $connection =& Param::get($connection);
         return new PropelException(PROPEL_ERROR, 'retrieveNodeByPK() not implemented yet.');
     }
 
@@ -202,14 +202,14 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & retrieveNodeByNP($np, $ancestors = false, $descendants = false, $con = null)
+    function & retrieveNodeByNP($np, $ancestors = false, $descendants = false, $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'retrieveNodeByNP', 4);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'retrieveNodeByNP', 4);
+	    $connection =& Param::get($connection);
         $criteria =& new Criteria(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
         $criteria->add(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME(), $np, Criteria::EQUAL());
         $criteria =& <?php echo $table->getPhpName() ?>NodePeer::buildFamilyCriteria($criteria, $ancestors, $descendants);
-        $rs =& <?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, Param::set($con));
+        $rs =& <?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, Param::set($connection));
         $nodes =& <?php echo $table->getPhpName() ?>NodePeer::populateNodes($rs, $criteria);
         return (count($nodes) == 1 ? $nodes[0] : null);
     }
@@ -222,11 +222,11 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & retrieveRootNode($descendants = false, $con = null)
+    function & retrieveRootNode($descendants = false, $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'retrieveRootNode', 2);
-	    $con =& Param::get($con);
-        return <?php echo $table->getPhpName() ?>NodePeer::retrieveNodeByNP('1', false, $descendants, Param::set($con));
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'retrieveRootNode', 2);
+	    $connection =& Param::get($connection);
+        return <?php echo $table->getPhpName() ?>NodePeer::retrieveNodeByNP('1', false, $descendants, Param::set($connection));
     }
 
     /**
@@ -247,16 +247,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      *       seem to be standardized (i.e. mssql), so maybe it needs to be moved
      *       to DBAdapter.
      */
-    function moveNodeSubTree($srcPath, $dstPath, $con = null)
+    function moveNodeSubTree($srcPath, $dstPath, $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'moveNodeSubTree', 3);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'moveNodeSubTree', 3);
+	    $connection =& Param::get($connection);
 
         if (substr($dstPath, 0, strlen($srcPath)) == $srcPath)
             return new PropelException(PROPEL_ERROR, 'Cannot move a node subtree within itself.');
 
-		if ($con === null)
-            $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
+		if ($connection === null)
+            $connection =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
         /**
          * Example:
@@ -272,7 +272,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
         $db = Propel::getDb(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
         // <hack>
-        if (<?php echo $table->getPhpName() ?>NodePeer::isCodeBase(Param::set($con)))
+        if (<?php echo $table->getPhpName() ?>NodePeer::isCodeBase(Param::set($connection)))
         {
             // This is a hack to get CodeBase working. It will eventually be removed.
             // It is a workaround for the following CodeBase bug:
@@ -281,7 +281,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
                    "SET $setcol=" . $db->concatString("'$dstPath'", $db->subString($npath, strlen($srcPath)+1, $setcollen)) . " " .
                    "WHERE $npath = '$srcPath' OR $npath LIKE '$srcPath" . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . "%'";
 
-            $con->executeUpdate($sql);
+            $connection->executeUpdate($sql);
         }
         else
         {
@@ -290,7 +290,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
                    "SET $setcol=" . $db->concatString('?', $db->subString($npath, '?', '?')) . " " .
                    "WHERE $npath = ? OR $npath LIKE ?";
 
-            $stmt =& $con->prepareStatement($sql);
+            $stmt =& $connection->prepareStatement($sql);
             $stmt->setString(1, $dstPath);
             $stmt->setInt(2, strlen($srcPath)+1);
             $stmt->setInt(3, $setcollen);
@@ -311,13 +311,13 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @throws PropelException
      * @todo This is currently broken for simulated "onCascadeDelete"s.
      */
-    function deleteNodeSubTree($nodePath, $con = null)
+    function deleteNodeSubTree($nodePath, $connection = null)
     {
-        Propel::assertParam($con, '<?php echo $CLASS; ?>', 'deleteNodeSubTree', 2);
-	    $con =& Param::get($con);
+        Propel::assertParam($connection, '<?php echo $CLASS; ?>', 'deleteNodeSubTree', 2);
+	    $connection =& Param::get($connection);
 
-		if ($con === null)
-            $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
+		if ($connection === null)
+            $connection =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
         /**
          * DELETE FROM table
@@ -329,8 +329,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
         $criteria->addOr(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME(), $nodePath . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . '%', Criteria::LIKE());
         // For now, we call BasePeer directly since <?php echo $table->getPhpName() ?>Peer tries to
         // do a cascade delete.
-        //          <?php echo $table->getPhpName() ?>Peer::doDelete($criteria, Param::set($con));
-        BasePeer::doDelete($criteria, $con);
+        //          <?php echo $table->getPhpName() ?>Peer::doDelete($criteria, Param::set($connection));
+        BasePeer::doDelete($criteria, $connection);
     }
 
     /**

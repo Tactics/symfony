@@ -94,7 +94,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
    * @throws PropelException Any exceptions caught during processing will be
    *     rethrown wrapped into a PropelException.
    */
-  public static function doSelectWithI18n(Criteria \$c, \$culture = null, Connection \$con = null)
+  public static function doSelectWithI18n(Criteria \$c, \$culture = null, Connection \$connection = null)
   {
     // we're going to modify criteria, so copy it first
     \$c = clone \$c;
@@ -117,7 +117,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     \$c->addJoin(".$pk.", ".$i18nPk.");
     \$c->add(".$cultureColumnName.", \$culture);
 
-    \$rs = ".$this->basePeerClassname."::doSelect(\$c, \$con);
+    \$rs = ".$this->basePeerClassname."::doSelect(\$c, \$connection);
     \$results = array();
 
     while(\$rs->next()) {
@@ -190,7 +190,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:addDoSelectRS:addDoSelectRS') as \$callable)
     {
-      call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$con);
+      call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$connection);
     }
 
 ";
@@ -212,7 +212,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doUpdate:pre') as \$callable)
     {
-      \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con);
+      \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$connection);
       if (false !== \$ret)
       {
         return \$ret;
@@ -225,7 +225,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doUpdate:post') as \$callable)
     {
-      call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con, \$ret);
+      call_user_func(\$callable, '{$this->getClassname()}', \$values, \$connection, \$ret);
     }
 
     return \$ret;
@@ -250,7 +250,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doInsert:pre') as \$callable)
     {
-      \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con);
+      \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$connection);
       if (false !== \$ret)
       {
         return \$ret;
@@ -262,7 +262,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       $post_mixer_script = "
     foreach (sfMixer::getCallables('{$this->getClassname()}:doInsert:post') as \$callable)
     {
-      call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con, \$pk);
+      call_user_func(\$callable, '{$this->getClassname()}', \$values, \$connection, \$pk);
     }
 
     return";

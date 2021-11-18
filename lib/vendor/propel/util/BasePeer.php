@@ -105,7 +105,7 @@ class BasePeer
 	 * Criteria.
 	 *
 	 * @param      Criteria $criteria The criteria to use.
-	 * @param      Connection $con A Connection.
+	 * @param      Connection $connection A Connection.
 	 * @return     int	The number of rows affected by last statement execution.  For most
 	 * 				uses there is only one delete statement executed, so this number
 	 * 				will correspond to the number of rows affected by the call to this
@@ -113,7 +113,7 @@ class BasePeer
 	 * 				is returned (supported) by the Creole db driver.
 	 * @throws     PropelException
 	 */
-	public static function doDelete(Criteria $criteria, Connection $con)
+	public static function doDelete(Criteria $criteria, Connection $connection)
 	{
 		$db = Propel::getDB($criteria->getDbName());
 		$dbMap = Propel::getDatabaseMap($criteria->getDbName());
@@ -161,7 +161,7 @@ class BasePeer
 
 				if ($criteria->isSingleRecord()) {
 					$sql = "SELECT COUNT(*) FROM " . $tableName . " WHERE " . $sqlSnippet;
-					$stmt = $con->prepareStatement($sql);
+					$stmt = $connection->prepareStatement($sql);
 					self::populateStmtValues($stmt, $selectParams, $dbMap);
 					$rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
 					$rs->next();
@@ -174,7 +174,7 @@ class BasePeer
 
 				$sql = "DELETE FROM " . $tableName . " WHERE " .  $sqlSnippet;
 				Propel::log($sql, Propel::LOG_DEBUG);
-				$stmt = $con->prepareStatement($sql);
+				$stmt = $connection->prepareStatement($sql);
 				self::populateStmtValues($stmt, $selectParams, $dbMap);
 				$affectedRows = $stmt->executeUpdate();
 			} catch (Exception $e) {
@@ -192,26 +192,26 @@ class BasePeer
 	 *
 	 * This method is invoked from generated Peer classes like this:
 	 * <code>
-	 * public static function doDeleteAll(Connection $con = null)
+	 * public static function doDeleteAll(Connection $connection = null)
 	 * {
-	 *   if ($con === null) $con = Propel::getConnection(self::DATABASE_NAME);
-	 *   BasePeer::doDeleteAll(self::TABLE_NAME, $con);
+	 *   if ($connection === null) $connection = Propel::getConnection(self::DATABASE_NAME);
+	 *   BasePeer::doDeleteAll(self::TABLE_NAME, $connection);
 	 * }
 	 * </code>
 	 *
 	 * @param      string $tableName The name of the table to empty.
-	 * @param      Connection $con A Connection.
+	 * @param      Connection $connection A Connection.
 	 * @return     int	The number of rows affected by the statement.  Note
 	 * 				that the return value does require that this information
 	 * 				is returned (supported) by the Creole db driver.
 	 * @throws     PropelException - wrapping SQLException caught from statement execution.
 	 */
-	public static function doDeleteAll($tableName, Connection $con)
+	public static function doDeleteAll($tableName, Connection $connection)
 	{
 		try {
 			$sql = "DELETE FROM " . $tableName;
 			Propel::log($sql, Propel::LOG_DEBUG);
-			$stmt = $con->prepareStatement($sql);
+			$stmt = $connection->prepareStatement($sql);
 			return $stmt->executeUpdate();
 		} catch (Exception $e) {
 			Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -237,12 +237,12 @@ class BasePeer
 	 * inserted as specified in Criteria and null will be returned.
 	 *
 	 * @param      Criteria $criteria Object containing values to insert.
-	 * @param      Connection $con A Connection.
+	 * @param      Connection $connection A Connection.
 	 * @return     mixed The primary key for the new row if (and only if!) the primary key
 	 *				is auto-generated.  Otherwise will return <code>null</code>.
 	 * @throws     PropelException
 	 */
-	public static function doInsert(Criteria $criteria, Connection $con) {
+	public static function doInsert(Criteria $criteria, Connection $connection) {
 
 		// the primary key
 		$id = null;
@@ -260,7 +260,7 @@ class BasePeer
 		$tableMap = $dbMap->getTable($tableName);
 		$keyInfo = $tableMap->getPrimaryKeyMethodInfo();
 		$useIdGen = $tableMap->isUseIdGenerator();
-		$keyGen = $con->getIdGenerator();
+		$keyGen = $connection->getIdGenerator();
 
 		$pk = self::getPrimaryKey($criteria);
 
@@ -299,7 +299,7 @@ class BasePeer
 
 			Propel::log($sql, Propel::LOG_DEBUG);
 
-			$stmt = $con->prepareStatement($sql);
+			$stmt = $connection->prepareStatement($sql);
 			self::populateStmtValues($stmt, self::buildParams($qualifiedCols, $criteria), $dbMap);
 			$stmt->executeUpdate();
 
@@ -334,7 +334,7 @@ class BasePeer
 	 *		clause.
 	 * @param      $updateValues A Criteria object containing values used in set
 	 *		clause.
-	 * @param      $con 	The Connection to use.
+	 * @param      $connection 	The Connection to use.
 	 * @return     int	The number of rows affected by last update statement.  For most
 	 * 				uses there is only one update statement executed, so this number
 	 * 				will correspond to the number of rows affected by the call to this
@@ -342,7 +342,7 @@ class BasePeer
 	 * 				is returned (supported) by the Creole db driver.
 	 * @throws     PropelException
 	 */
-	public static function doUpdate(Criteria $selectCriteria, Criteria $updateValues, Connection $con) {
+	public static function doUpdate(Criteria $selectCriteria, Criteria $updateValues, Connection $connection) {
 
 		$db = Propel::getDB($selectCriteria->getDbName());
 		$dbMap = Propel::getDatabaseMap($selectCriteria->getDbName());
@@ -375,7 +375,7 @@ class BasePeer
 				if ($selectCriteria->isSingleRecord()) {
 					// Get affected records.
 					$sql = "SELECT COUNT(*) FROM " . $tableName . " WHERE " . $sqlSnippet;
-					$stmt = $con->prepareStatement($sql);
+					$stmt = $connection->prepareStatement($sql);
 					self::populateStmtValues($stmt, $selectParams, $dbMap);
 					$rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
 					$rs->next();
@@ -395,7 +395,7 @@ class BasePeer
 
 				Propel::log($sql, Propel::LOG_DEBUG);
 
-				$stmt = $con->prepareStatement($sql);
+				$stmt = $connection->prepareStatement($sql);
 
 				// Replace '?' with the actual values
 				self::populateStmtValues($stmt, array_merge(self::buildParams($updateTablesColumns[$tableName], $updateValues), $selectParams), $dbMap);
@@ -419,17 +419,17 @@ class BasePeer
      * Executes query build by createSelectSql() and returns ResultSet.
      *
      * @param      Criteria $criteria A Criteria.
-     * @param      Connection|null $con A connection to use.
+     * @param      Connection|null $connection A connection to use.
      * @return     ResultSet The resultset.
      * @throws     PropelException
      * @see        createSelectSql()
      */
-    public static function doSelect(Criteria $criteria, Connection $con = null)
+    public static function doSelect(Criteria $criteria, Connection $connection = null)
     {
         $dbMap = Propel::getDatabaseMap($criteria->getDbName());
 
-        if ($con === null)
-            $con = Propel::getConnection($criteria->getDbName());
+        if ($connection === null)
+            $connection = Propel::getConnection($criteria->getDbName());
 
         $stmt = null;
 
@@ -438,52 +438,52 @@ class BasePeer
             // Transaction support exists for (only?) Postgres, which must
             // have SELECT statements that include bytea columns wrapped w/
             // transactions.
-            if ($criteria->isUseTransaction()) $con->begin();
+            if ($criteria->isUseTransaction()) $connection->begin();
 
             $params = array();
             $sql = self::createSelectSql($criteria, $params);
 
-            $stmt = $con->prepareStatement($sql);
+            $stmt = $connection->prepareStatement($sql);
             $stmt->setLimit($criteria->getLimit());
             $stmt->setOffset($criteria->getOffset());
 
             self::populateStmtValues($stmt, $params, $dbMap);
 
             $rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
-            if ($criteria->isUseTransaction()) $con->commit();
+            if ($criteria->isUseTransaction()) $connection->commit();
         } catch (Exception $e) {
 
             // Fallback to STATIC
-            if(method_exists($con, 'getPointerType') && (! $con->getPointerType() || $con->getPointerType() == SQLSRV_CURSOR_CLIENT_BUFFERED))
+            if(method_exists($connection, 'getPointerType') && (! $connection->getPointerType() || $connection->getPointerType() == SQLSRV_CURSOR_CLIENT_BUFFERED))
             {
                 try {
-                    $con->setPointerType(SQLSRV_CURSOR_STATIC);
+                    $connection->setPointerType(SQLSRV_CURSOR_STATIC);
 
                     // Transaction support exists for (only?) Postgres, which must
                     // have SELECT statements that include bytea columns wrapped w/
                     // transactions.
-                    if ($criteria->isUseTransaction()) $con->begin();
+                    if ($criteria->isUseTransaction()) $connection->begin();
 
                     $params = array();
                     $sql = self::createSelectSql($criteria, $params);
 
-                    $stmt = $con->prepareStatement($sql);
+                    $stmt = $connection->prepareStatement($sql);
                     $stmt->setLimit($criteria->getLimit());
                     $stmt->setOffset($criteria->getOffset());
 
                     self::populateStmtValues($stmt, $params, $dbMap);
 
                     $rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
-                    if ($criteria->isUseTransaction()) $con->commit();
+                    if ($criteria->isUseTransaction()) $connection->commit();
                 } catch (Exception $e) {
                     if ($stmt) $stmt->close();
-                    if ($criteria->isUseTransaction()) $con->rollback();
+                    if ($criteria->isUseTransaction()) $connection->rollback();
                     Propel::log($e->getMessage(), Propel::LOG_ERR);
                     throw new PropelException($e);
                 }
             } else {
                 if ($stmt) $stmt->close();
-                if ($criteria->isUseTransaction()) $con->rollback();
+                if ($criteria->isUseTransaction()) $connection->rollback();
                 Propel::log($e->getMessage(), Propel::LOG_ERR);
                 throw new PropelException($e);
             }
