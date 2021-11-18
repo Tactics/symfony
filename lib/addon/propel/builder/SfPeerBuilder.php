@@ -94,7 +94,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
    * @throws PropelException Any exceptions caught during processing will be
    *     rethrown wrapped into a PropelException.
    */
-  public static function doSelectWithI18n(Criteria \$c, \$culture = null, \$con = null)
+  public static function doSelectWithI18n(Criteria \$c, \$culture = null, Connection \$con = null)
   {
     // we're going to modify criteria, so copy it first
     \$c = clone \$c;

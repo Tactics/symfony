@@ -387,7 +387,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      Connection|null Connection to use if retrieving from database.
 	 * @return     ".$this->getStubNodeBuilder()->getClassname()."
 	 */
-	public function getChildNodeAt(\$i, \$querydb = false, \$con = null)
+	public function getChildNodeAt(\$i, \$querydb = false, Connection \$con = null)
 	{
 		if (\$querydb &&
 			!\$this->obj->isNew() &&
@@ -416,7 +416,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      Connection|null Connection to use if retrieving from database.
 	 * @return     ".$this->getStubNodeBuilder()->getClassname()."
 	 */
-	public function getFirstChildNode(\$querydb = false, \$con = null)
+	public function getFirstChildNode(\$querydb = false, Connection \$con = null)
 	{
 		return \$this->getChildNodeAt(1, \$querydb, \$con);
 	}
@@ -435,7 +435,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      boolean True if child should be retrieved from database.
 	 * @param      Connection|null Connection to use if retrieving from database.
 	 */
-	public function getLastChildNode(\$querydb = false, \$con = null)
+	public function getLastChildNode(\$querydb = false, Connection \$con = null)
 	{
 		\$lastNode = null;
 
@@ -496,7 +496,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      Connection|null Connection to use if retrieving from database.
 	 * @return     ".$this->getStubNodeBuilder()->getClassname()."
 	 */
-	public function getSiblingNode(\$prev = false, \$querydb = false, \$con = null)
+	public function getSiblingNode(\$prev = false, \$querydb = false, Connection \$con = null)
 	{
 		\$nidx = \$this->getNodeIndex();
 
@@ -535,7 +535,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      Connection|null Connection to use if retrieving from database.
 	 * @return     ".$this->getStubNodeBuilder()->getClassname()."
 	 */
-	public function getParentNode(\$querydb = true, \$con = null)
+	public function getParentNode(\$querydb = true, Connection \$con = null)
 	{
 		if (\$querydb &&
 			\$this->parentNode === null &&
@@ -573,7 +573,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      Connection|null Connection to use if retrieving from database.
 	 * @return     array
 	 */
-	public function getAncestors(\$querydb = false, \$con = null)
+	public function getAncestors(\$querydb = false, Connection \$con = null)
 	{
 		\$ancestors = array();
 		\$parentNode = \$this;
@@ -651,7 +651,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      ".$this->getStubNodeBuilder()->getClassname()." Node to insert before.
 	 * @param      Connection|null Connection to use.
 	 */
-	public function addChildNode(\$node, \$beforeNode = null, \$con = null)
+	public function addChildNode(\$node, \$beforeNode = null, Connection \$con = null)
 	{
 		if (\$this->obj->isNew() && !\$node->obj->isNew())
 			throw new PropelException('Cannot add stored nodes to a new node.');

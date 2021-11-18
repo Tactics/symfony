@@ -192,7 +192,7 @@ class BasePeer
 	 *
 	 * This method is invoked from generated Peer classes like this:
 	 * <code>
-	 * public static function doDeleteAll($con = null)
+	 * public static function doDeleteAll(Connection $con = null)
 	 * {
 	 *   if ($con === null) $con = Propel::getConnection(self::DATABASE_NAME);
 	 *   BasePeer::doDeleteAll(self::TABLE_NAME, $con);
@@ -419,12 +419,12 @@ class BasePeer
      * Executes query build by createSelectSql() and returns ResultSet.
      *
      * @param      Criteria $criteria A Criteria.
-     * @param      Connection $con A connection to use.
+     * @param      Connection|null $con A connection to use.
      * @return     ResultSet The resultset.
      * @throws     PropelException
      * @see        createSelectSql()
      */
-    public static function doSelect(Criteria $criteria, $con = null)
+    public static function doSelect(Criteria $criteria, Connection $con = null)
     {
         $dbMap = Propel::getDatabaseMap($criteria->getDbName());
 

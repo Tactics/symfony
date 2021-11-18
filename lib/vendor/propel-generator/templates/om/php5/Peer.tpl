@@ -217,7 +217,7 @@ if (!$table->isAlias()) {
      * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doCount(Criteria $criteria, $distinct = false, $con = null)
+	public static function doCount(Criteria $criteria, $distinct = false, Connection $con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -253,7 +253,7 @@ if (!$table->isAlias()) {
      * @throws PropelException
      * @throws SQLException
 	 */
-	public static function doSelectOne(Criteria $criteria, $con = null)
+	public static function doSelectOne(Criteria $criteria, Connection $con = null)
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
@@ -273,7 +273,7 @@ if (!$table->isAlias()) {
      * @throws PropelException
      * @throws SQLException
      */
-	public static function doSelect(Criteria $criteria, $con = null)
+	public static function doSelect(Criteria $criteria, Connection $con = null)
 	{
 		return <?php echo $table->getPhpName() ?>Peer::populateObjects(<?php echo $table->getPhpName() ?>Peer::doSelectRS($criteria, $con));
 	}
@@ -292,7 +292,7 @@ if (!$table->isAlias()) {
 	 * @return ResultSet The resultset object with numerically-indexed fields.
 	 * @see <?php echo $basePeerClassname ?>::doSelect()
 	 */
-	public static function doSelectRS(Criteria $criteria, $con = null)
+	public static function doSelectRS(Criteria $criteria, Connection $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(self::DATABASE_NAME);
@@ -447,7 +447,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doInsert($values, $con = null)
+	public static function doInsert($values, Connection $con = null)
 	{
 		if ($con === null)
 			$con = Propel::getConnection(self::DATABASE_NAME);
@@ -521,7 +521,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doUpdate($values, $con = null)
+	public static function doUpdate($values, Connection $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(self::DATABASE_NAME);
@@ -556,7 +556,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 *
 	 * @return int The number of affected rows (if supported by underlying database driver).
 	 */
-	public static function doDeleteAll($con = null)
+	public static function doDeleteAll(Connection $con = null)
 	{
 		if ($con === null) $con = Propel::getConnection(self::DATABASE_NAME);
 		$affectedRows = 0; // initialize var to track total num of affected rows
@@ -586,7 +586,7 @@ if (!$table->isAlias() && !$table->isReadOnly()) {
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	 public static function doDelete($values, $con = null)
+	 public static function doDelete($values, Connection $con = null)
 	 {
 		if ($con === null)
 			$con = Propel::getConnection(self::DATABASE_NAME);
@@ -862,7 +862,7 @@ if (count($table->getPrimaryKey()) === 1) {  ?>
 	 * @param Connection $con the connection to use
          * @return <?php echo $table->getPhpName() . "\n" ?>
 	 */
-	public static function <?php echo $retrieveMethod ?>($pk, $con = null)
+	public static function <?php echo $retrieveMethod ?>($pk, Connection $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(self::DATABASE_NAME);

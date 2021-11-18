@@ -40,7 +40,7 @@ require_once '<?php echo ClassTools::getFilePath($package, $table->getPhpName() 
 
 
 /**
- * Base static class for performing query operations on the tree contained by the 
+ * Base static class for performing query operations on the tree contained by the
  * '<?php echo $table->getPhpName() ?>' table.
  *
 <?php if ($addTimeStamp) { ?>
@@ -49,7 +49,7 @@ require_once '<?php echo ClassTools::getFilePath($package, $table->getPhpName() 
  * [<?php echo $now ?>]
  *
 <?php } ?>
- * @package <?php echo $package ?> 
+ * @package <?php echo $package ?>
  */
 class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 {
@@ -57,24 +57,24 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
     function NPATH_PHPNAME() { return '<?php echo $npath_phpname ?>'; }
 	function NPATH_SEP() { return '<?php echo $npath_sep ?>'; }
 
-    /** 
+    /**
      * Temp function for CodeBase hacks that will go away.
      */
-    function isCodeBase($con = null)
+    function isCodeBase(Connection $con = null)
     {
         Propel::assertParam($con, '<?php echo $CLASS; ?>', 'isCodeBase', 1);
 		$con =& Param::get($con);
-		
+
 		if ($con === null)
 	        $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
-            
-        return (get_class($con) == 'ODBCConnection' && 
+
+        return (get_class($con) == 'ODBCConnection' &&
                 get_class($con->getAdapter()) == 'CodeBaseAdapter');
     }
-    
+
     /**
-     * Create a new Node at the top of tree. This method will destroy any 
-     * existing root node (along with its children). 
+     * Create a new Node at the top of tree. This method will destroy any
+     * existing root node (along with its children).
      *
      * Use at your own risk!
      *
@@ -83,14 +83,14 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @return <?php echo $table->getPhpName() ?>Node
      * @throws PropelException
      */
-    function & createNewRootNode(&$obj, $con = null)
+    function & createNewRootNode(&$obj, Connection $con = null)
     {
         Propel::assertParam($con, '<?php echo $CLASS; ?>', 'createNewRootNode', 2);
 	    $con =& Param::get($con);
-	    
+
         if ($con === null)
             $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
-  
+
         if (Propel::isError($con)) {
             return $con;
         }
@@ -112,10 +112,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 
         return new <?php echo $table->getPhpName() ?>Node(Param::set($obj));
     }
-    
+
     /**
      * Inserts a new Node at the top of tree. Any existing root node (along with
-     * its children) will be made a child of the new root node. This is a 
+     * its children) will be made a child of the new root node. This is a
      * safer alternative to createNewRootNode().
      *
      * @param <?php echo $table->getPhpName() ?> Object wrapped by new node.
@@ -123,14 +123,14 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @return <?php echo $table->getPhpName() ?>Node
      * @throws PropelException
      */
-    function & insertNewRootNode(&$obj, $con = null)
+    function & insertNewRootNode(&$obj, Connection $con = null)
     {
         Propel::assertParam($con, '<?php echo $CLASS; ?>', 'insertNewRootNode', 2);
 	    $con =& Param::get($con);
-	    
+
 		if ($con === null)
             $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
-        
+
         $e = $con->begin();
         if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
 
@@ -139,11 +139,11 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
         if (Propel::isError($e)) { $con->rollback(); return $e; }
 
         $setNodePath = 'set' . <?php echo $table->getPhpName() ?>NodePeer::NPATH_PHPNAME();
-        
+
         // Insert the new root node.
         $obj->$setNodePath('1');
 
-        $e = $obj->save(Param::set($con));        
+        $e = $obj->save(Param::set($con));
         if (Propel::isError($e)) { $con->rollback(); return $e; }
 
         // Move the old root tree as a child of the new root.
@@ -152,12 +152,12 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 
         $e = $con->commit();
         if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
-        
+
         return new <?php echo $table->getPhpName() ?>Node(Param::set($obj));
     }
 
     /**
-     * Retrieves an array of tree nodes based on specified criteria. Optionally 
+     * Retrieves an array of tree nodes based on specified criteria. Optionally
      * includes all parent and/or child nodes of the matching nodes.
      *
      * @param Criteria Criteria to use.
@@ -166,7 +166,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return array Array of root nodes.
      */
-    function & retrieveNodes(&$criteria, $ancestors = false, $descendants = false, $con = null)
+    function & retrieveNodes(&$criteria, $ancestors = false, $descendants = false, Connection $con = null)
     {
         Propel::assertParam($con, '<?php echo $CLASS; ?>', 'retrieveNodes', 4);
 	    $con =& Param::get($con);
@@ -176,7 +176,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
     }
 
     /**
-     * Retrieves a tree node based on a primary key. Optionally includes all 
+     * Retrieves a tree node based on a primary key. Optionally includes all
      * parent and/or child nodes of the matching node.
      *
      * @param mixed <?php echo $table->getPhpName() ?> primary key (array for composite keys)
@@ -193,7 +193,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
     }
 
     /**
-     * Retrieves a tree node based on a node path. Optionally includes all 
+     * Retrieves a tree node based on a node path. Optionally includes all
      * parent and/or child nodes of the matching node.
      *
      * @param string Node path to retrieve.
@@ -221,7 +221,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param boolean True if descendants should also be retrieved.
      * @param Connection Connection to use.
      * @return <?php echo $table->getPhpName() ?>Node
-     */ 
+     */
     function & retrieveRootNode($descendants = false, $con = null)
     {
         Propel::assertParam($con, '<?php echo $CLASS; ?>', 'retrieveRootNode', 2);
@@ -231,9 +231,9 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 
     /**
      * Moves the node subtree at srcpath to the dstpath. This method is intended
-     * for internal use by the BaseNode object. Note that it does not check for 
-     * preexisting nodes at the dstpath. It also does not update the  node path 
-     * of any Node objects that might currently be in memory. 
+     * for internal use by the BaseNode object. Note that it does not check for
+     * preexisting nodes at the dstpath. It also does not update the  node path
+     * of any Node objects that might currently be in memory.
      *
      * Use at your own risk!
      *
@@ -242,11 +242,11 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return void
      * @throws PropelException
-     * @todo This is currently broken for simulated "onCascadeDelete"s. 
-     * @todo Need to abstract the SQL better. The CONCAT sql function doesn't 
+     * @todo This is currently broken for simulated "onCascadeDelete"s.
+     * @todo Need to abstract the SQL better. The CONCAT sql function doesn't
      *       seem to be standardized (i.e. mssql), so maybe it needs to be moved
      *       to DBAdapter.
-     */    
+     */
     function moveNodeSubTree($srcPath, $dstPath, $con = null)
     {
         Propel::assertParam($con, '<?php echo $CLASS; ?>', 'moveNodeSubTree', 3);
@@ -254,31 +254,31 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 
         if (substr($dstPath, 0, strlen($srcPath)) == $srcPath)
             return new PropelException(PROPEL_ERROR, 'Cannot move a node subtree within itself.');
-        
+
 		if ($con === null)
             $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
 
         /**
          * Example:
-         * UPDATE table 
-         * SET npath = CONCAT('1.3', SUBSTRING(npath, 6, 74)) 
+         * UPDATE table
+         * SET npath = CONCAT('1.3', SUBSTRING(npath, 6, 74))
          * WHERE npath = '1.2.2' OR npath LIKE '1.2.2.%'
          */
-         
+
         $npath = <?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME();
 		//the following dot isn`t mean`t a nodeKeySeperator
         $setcol = substr($npath, strpos($npath, '.')+1);
         $setcollen = <?php echo $npath_len ?>;
         $db = Propel::getDb(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
-        
-        // <hack> 
+
+        // <hack>
         if (<?php echo $table->getPhpName() ?>NodePeer::isCodeBase(Param::set($con)))
         {
             // This is a hack to get CodeBase working. It will eventually be removed.
             // It is a workaround for the following CodeBase bug:
             //   -Prepared statement parameters cannot be embedded in SQL functions (i.e. CONCAT)
             $sql = "UPDATE " . <?php echo $table->getPhpName() ?>Peer::TABLE_NAME() . " " .
-                   "SET $setcol=" . $db->concatString("'$dstPath'", $db->subString($npath, strlen($srcPath)+1, $setcollen)) . " " . 
+                   "SET $setcol=" . $db->concatString("'$dstPath'", $db->subString($npath, strlen($srcPath)+1, $setcollen)) . " " .
                    "WHERE $npath = '$srcPath' OR $npath LIKE '$srcPath" . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . "%'";
 
             $con->executeUpdate($sql);
@@ -287,7 +287,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
         {
         // </hack>
             $sql = "UPDATE " . <?php echo $table->getPhpName() ?>Peer::TABLE_NAME() . " " .
-                   "SET $setcol=" . $db->concatString('?', $db->subString($npath, '?', '?')) . " " . 
+                   "SET $setcol=" . $db->concatString('?', $db->subString($npath, '?', '?')) . " " .
                    "WHERE $npath = ? OR $npath LIKE ?";
 
             $stmt =& $con->prepareStatement($sql);
@@ -309,7 +309,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
      * @param Connection Connection to use.
      * @return void
      * @throws PropelException
-     * @todo This is currently broken for simulated "onCascadeDelete"s. 
+     * @todo This is currently broken for simulated "onCascadeDelete"s.
      */
     function deleteNodeSubTree($nodePath, $con = null)
     {
@@ -323,17 +323,17 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
          * DELETE FROM table
          * WHERE npath = '1.2.2' OR npath LIKE '1.2.2.%'
          */
-        
+
         $criteria =& new Criteria(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
         $criteria->add(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME(), $nodePath, Criteria::EQUAL());
         $criteria->addOr(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME(), $nodePath . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . '%', Criteria::LIKE());
-        // For now, we call BasePeer directly since <?php echo $table->getPhpName() ?>Peer tries to 
+        // For now, we call BasePeer directly since <?php echo $table->getPhpName() ?>Peer tries to
         // do a cascade delete.
         //          <?php echo $table->getPhpName() ?>Peer::doDelete($criteria, Param::set($con));
         BasePeer::doDelete($criteria, $con);
     }
-      
-    /** 
+
+    /**
      * Builds the criteria needed to retrieve node ancestors and/or descendants.
      *
      * @param Criteria Criteria to start with
@@ -345,12 +345,12 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
     {
         /*
             Example SQL to retrieve nodepath '1.2.3' with both ancestors and descendants:
-            
-            SELECT L.NPATH, L.LABEL, test.NPATH, UCASE(L.NPATH) 
-            FROM test L, test 
-            WHERE test.NPATH='1.2.3' AND 
-                 (L.NPATH=SUBSTRING(test.NPATH, 1, LENGTH(L.NPATH)) OR 
-                  test.NPATH=SUBSTRING(L.NPATH, 1, LENGTH(test.NPATH))) 
+
+            SELECT L.NPATH, L.LABEL, test.NPATH, UCASE(L.NPATH)
+            FROM test L, test
+            WHERE test.NPATH='1.2.3' AND
+                 (L.NPATH=SUBSTRING(test.NPATH, 1, LENGTH(L.NPATH)) OR
+                  test.NPATH=SUBSTRING(L.NPATH, 1, LENGTH(test.NPATH)))
             ORDER BY UCASE(L.NPATH) ASC
         */
 
@@ -364,26 +364,26 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 
         if (($ancestors || $descendants) && $criteria->size())
         {
-            // If we are retrieving ancestors/descendants, we need to do a 
+            // If we are retrieving ancestors/descendants, we need to do a
             // self-join to locate them. The exception to this is if no search
-            // criteria is specified. In this case we're retrieving all nodes 
-            // anyway, so there is no need to do a self-join. 
-            
+            // criteria is specified. In this case we're retrieving all nodes
+            // anyway, so there is no need to do a self-join.
+
             // The left-side of the self-join will contain the columns we'll
             // use to build node objects (target node records along with their
             // ancestors and/or descendants). The right-side of the join will
             // contain the target node records specified by the initial criteria.
             // These are used to match the appropriate ancestor/descendant on
-            // the left. 
+            // the left.
 
             // Specify an alias for the left-side table to use.
             $criteria->addAlias('L', <?php echo $table->getPhpName() ?>Peer::TABLE_NAME());
-            
+
             // Make sure we have select columns to begin with.
             if (!$criteria->getSelectColumns())
                 <?php echo $table->getPhpName() ?>Peer::addSelectColumns($criteria);
-            
-            // Replace any existing columns for the right-side table with the 
+
+            // Replace any existing columns for the right-side table with the
             // left-side alias.
             $selectColumns = $criteria->getSelectColumns();
             $criteria->clearSelectColumns();
@@ -392,23 +392,23 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 
             $a = null;
             $d = null;
-            
+
             $npathL = <?php echo $table->getPhpName() ?>Peer::alias('L', <?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME());
             $npathR = <?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME();
             $npath_len = <?php echo $npath_len ?>;
-            
+
             if ($ancestors)
             {
-                // For ancestors, match left-side node paths which are contained 
+                // For ancestors, match left-side node paths which are contained
                 // by right-side node paths.
-                $a =& $criteria->getNewCriterion($npathL, 
+                $a =& $criteria->getNewCriterion($npathL,
                                                 "$npathL=" . $db->subString($npathR, 1, $db->strLength($npathL), $npath_len),
-                                                Criteria::CUSTOM());                                                        
+                                                Criteria::CUSTOM());
             }
-            
+
             if ($descendants)
             {
-                // For descendants, match left-side node paths which contain 
+                // For descendants, match left-side node paths which contain
                 // right-side node paths.
                 $d =& $criteria->getNewCriterion($npathR,
                                                 "$npathR=" . $db->subString($npathL, 1, $db->strLength($npathR), $npath_len),
@@ -424,10 +424,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
             {
                 $criteria->addAnd($d);
             }
-            
+
             // Add the target node path column. This is used by populateNodes().
             $criteria->addSelectColumn($npathR);
-            
+
             // Sort by node path to speed up tree construction in populateNodes()
             $criteria->addAsColumn('npathlen', $db->strLength($npathL));
             $criteria->addAscendingOrderByColumn('npathlen');
@@ -443,17 +443,17 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
             $criteria->addAscendingOrderByColumn('npathlen');
             $criteria->addAscendingOrderByColumn(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME());
         }
-        
+
         return $criteria;
-    }    
-    
+    }
+
     /**
      * This method reconstructs as much of the tree structure as possible from
-     * the given array of objects. Depending on how you execute your query, it 
+     * the given array of objects. Depending on how you execute your query, it
      * is possible for the ResultSet to contain multiple tree fragments (i.e.
      * subtrees). The array returned by this method will contain one entry
      * for each subtree root node it finds. The remaining subtree nodes are
-     * accessible from the <?php echo $table->getPhpName() ?>Node methods of the 
+     * accessible from the <?php echo $table->getPhpName() ?>Node methods of the
      * subtree root nodes.
      *
      * @param array Array of <?php echo $table->getPhpName() ?>Node objects
@@ -497,15 +497,15 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
     }
 
     /**
-     * Populates the <?php echo $table->getPhpName() ?> objects from the 
-     * specified ResultSet, wraps them in <?php echo $table->getPhpName() ?>Node 
+     * Populates the <?php echo $table->getPhpName() ?> objects from the
+     * specified ResultSet, wraps them in <?php echo $table->getPhpName() ?>Node
      * objects and build the appropriate node relationships.
-     * The array returned by this method will only include the initial targets 
-     * of the query, even if ancestors/descendants were also requested. 
+     * The array returned by this method will only include the initial targets
+     * of the query, even if ancestors/descendants were also requested.
      * The ancestors/descendants will be cached in memory and are accessible via
-     * the getNode() methods. 
+     * the getNode() methods.
      *
-     * @param ResultSet 
+     * @param ResultSet
      * @param Criteria
      * @return array Array of <?php $table->getPhpName() ?>Node objects.
      */
@@ -515,7 +515,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
         $targets = array();
         $values = array();
 		$targetfld = count($criteria->getSelectColumns());
-        
+
 <?php if (!$table->getChildrenColumn()) { ?>
 		// set the class once to avoid overhead in the loop
 		$cls = <?php echo $table->getPhpName() ?>Peer::getOMClass();
@@ -523,9 +523,9 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 		  return $cls;
 		}
 <?php } ?>
-        
+
         // populate the object(s)
-        while($rs->next()) 
+        while($rs->next())
         {
             if (!isset($nodes[$rs->getString(1)]))
             {
@@ -537,7 +537,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
 				}
 <?php } ?>
 				$obj =& new $cls();
-				
+
 				if (Propel::isError($e =& $obj->hydrate($rs))) {
 					return $e;
 				}
@@ -545,16 +545,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>NodePeer
                 $nodes[$rs->getString(1)] =& new <?php echo $table->getPhpName() ?>Node(Param::set($obj));
 			}
             $node =& $nodes[$rs->getString(1)];
-            
+
             if ($node->getNodePath() == $rs->getString($targetfld))
                 $targets[$node->getNodePath()] =& $node;
         }
 
         <?php echo $table->getPhpName() ?>NodePeer::buildTree($nodes);
-        
+
         foreach($targets as $key => $value)
                 $values[] =& $targets[$key];
-                
+
         return $values;
     }
 

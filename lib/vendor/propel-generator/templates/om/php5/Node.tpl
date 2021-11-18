@@ -26,9 +26,9 @@ require_once '<?php echo ClassTools::getFilePath($package, $table->getPhpName() 
  * This class will wrap these objects within a "node" interface. It provides a
  * method overload mechanism which allows you to use a <?php echo $table->getPhpName() ?>Node
  * object just like a <?php $table->getPhpName() ?> object.
- * 
+ *
  * To avoid tree corruption, you should always use this class to make changes to
- * the tree and objects within it rather than using the <?php echo $table->getPhpName() ?> 
+ * the tree and objects within it rather than using the <?php echo $table->getPhpName() ?>
  * class directly.
  *
 <?php if (isset($addTimeStamp)) { ?>
@@ -37,7 +37,7 @@ require_once '<?php echo ClassTools::getFilePath($package, $table->getPhpName() 
  * [<?php echo $now ?>]
  *
 <?php } ?>
- * @package <?php echo $package ?> 
+ * @package <?php echo $package ?>
  *
  */
 class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAggregate
@@ -46,7 +46,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @var <?php echo $table->getPhpName() ?> Object wrapped by this node.
      */
     protected $obj = null;
-    
+
     /**
      * The parent node for this node.
      * @var <?php echo $table->getPhpName() ?>Node
@@ -64,7 +64,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      *
      * @param <?php echo $table->getPhpName() ?> Object wrapped by this node.
      */
-    public function __construct($obj = null) 
+    public function __construct($obj = null)
     {
         if ($obj !== null)
         {
@@ -96,7 +96,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
 
     /**
      * Sets the default options for iterators created from this object.
-     * The options are specified in map format. The following options 
+     * The options are specified in map format. The following options
      * are supported by all iterators. Some iterators may support other
      * options:
      *
@@ -107,13 +107,13 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param array Map of option name => value.
      * @return void
      * @todo Implement other iterator types (i.e. post-order, level, etc.)
-     */ 
+     */
     public function setIteratorOptions($type, $opts)
     {
         $this->itType = $type;
         $this->itOpts = $opts;
     }
-    
+
     /**
      * Returns a pre-order iterator for this node and its children.
      *
@@ -125,16 +125,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         if ($type === null)
             $type = (isset($this->itType) ? $this->itType : 'Pre');
-                
+
         if ($opts === null)
             $opts = (isset($this->itOpts) ? $this->itOpts : array());
-            
+
         $itclass = ucfirst(strtolower($type)) . 'OrderNodeIterator';
-        
+
         require_once('propel/om/' . $itclass . '.php');
         return new $itclass($this, $opts);
     }
-        
+
     /**
      * Returns the object wrapped by this class.
      * @return <?php echo $table->getPhpName() . "\n" ?>
@@ -143,7 +143,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         return $this->obj;
     }
-        
+
     /**
      * Convenience method for retrieving nodepath.
      * @return string
@@ -164,7 +164,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
         $sep = strrpos($npath, <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP);
         return (int) ($sep !== false ? substr($npath, $sep+1) : $npath);
     }
-    
+
     /**
      * Returns one-based node level within tree (root node is level 1).
      * @return int
@@ -173,8 +173,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         return (substr_count($this->getNodePath(), <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP) + 1);
     }
-    
-    /** 
+
+    /**
      * Returns true if specified node is a child of this node. If recurse is
      * true, checks if specified node is a descendant of this node.
      *
@@ -189,16 +189,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
         {
             if ($childNode->equals($node, $strict))
                 return true;
-                
+
             if ($recurse && $childNode->hasChildNode($node, $recurse))
                 return true;
         }
-        
+
         return false;
     }
 
     /**
-     * Returns child node at one-based index. Retrieves from database if not 
+     * Returns child node at one-based index. Retrieves from database if not
      * loaded yet.
      *
      * @param int One-based child node index.
@@ -206,11 +206,11 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    public function getChildNodeAt($i, $querydb = false, $con = null)
+    public function getChildNodeAt($i, $querydb = false, Connection $con = null)
     {
-        if ($querydb && 
-            !$this->obj->isNew() && 
-            !$this->obj->isDeleted() && 
+        if ($querydb &&
+            !$this->obj->isNew() &&
+            !$this->obj->isDeleted() &&
             !isset($this->childNodes[$i]))
         {
             $criteria = new Criteria(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME);
@@ -230,18 +230,18 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    public function getFirstChildNode($querydb = false, $con = null)
+    public function getFirstChildNode($querydb = false, Connection $con = null)
     {
         return $this->getChildNodeAt(1, $querydb, $con);
     }
-        
+
     /**
-     * Returns last child node (if any). 
+     * Returns last child node (if any).
      *
      * @param boolean True if child should be retrieved from database.
      * @param Connection Connection to use if retrieving from database.
      */
-    public function getLastChildNode($querydb = false, $con = null)
+    public function getLastChildNode($querydb = false, Connection $con = null)
     {
         $lastNode = null;
 
@@ -259,16 +259,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
             $criteria->addAsColumn('npathlen', $db->strLength(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME));
             $criteria->addDescendingOrderByColumn('npathlen');
             $criteria->addDescendingOrderByColumn(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME);
-          
+
             $lastObj = <?php echo $table->getPhpName() ?>Peer::doSelectOne($criteria, $con);
-            
+
             if ($lastObj !== null)
             {
                 $lastNode = new <?php echo $table->getPhpName() ?>Node($lastObj);
-                
+
                 end($this->childNodes);
                 $endNode = (count($this->childNodes) ? current($this->childNodes) : null);
-                
+
                 if ($endNode)
                 {
                     if ($endNode->getNodePath() > $lastNode->getNodePath())
@@ -289,7 +289,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     }
 
     /**
-     * Returns next (or previous) sibling node or null. Retrieves from database if 
+     * Returns next (or previous) sibling node or null. Retrieves from database if
      * not loaded yet.
      *
      * @param boolean True if previous sibling should be returned.
@@ -297,10 +297,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    public function getSiblingNode($prev = false, $querydb = false, $con = null)
+    public function getSiblingNode($prev = false, $querydb = false, Connection $con = null)
     {
         $nidx = $this->getNodeIndex();
-        
+
         if ($this->isRootNode())
         {
             return null;
@@ -328,50 +328,50 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    public function getParentNode($querydb = true, $con = null)
+    public function getParentNode($querydb = true, Connection $con = null)
     {
         if ($querydb &&
-            $this->parentNode === null && 
+            $this->parentNode === null &&
             !$this->isRootNode() &&
-            !$this->obj->isNew() && 
+            !$this->obj->isNew() &&
             !$this->obj->isDeleted())
         {
             $npath =& $this->getNodePath();
             $sep = strrpos($npath, <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP);
             $ppath = substr($npath, 0, $sep);
-            
+
             $criteria = new Criteria(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME);
             $criteria->add(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME, $ppath, Criteria::EQUAL);
-            
+
             if ($parentObj = <?php echo $table->getPhpName() ?>Peer::doSelectOne($criteria, $con))
             {
                 $parentNode = new <?php echo $table->getPhpName() ?>Node($parentObj);
                 $parentNode->attachChildNode($this);
             }
         }
-        
+
         return $this->parentNode;
     }
 
-    /** 
-     * Returns an array of all ancestor nodes, starting with the root node 
+    /**
+     * Returns an array of all ancestor nodes, starting with the root node
      * first.
      *
      * @param boolean True if ancestors should be retrieved from database.
      * @param Connection Connection to use if retrieving from database.
      * @return array
      */
-    public function getAncestors($querydb = false, $con = null)
+    public function getAncestors($querydb = false, Connection $con = null)
     {
         $ancestors = array();
         $parentNode = $this;
-        
+
         while ($parentNode = $parentNode->getParentNode($querydb, $con))
             array_unshift($ancestors, $parentNode);
-        
+
         return $ancestors;
     }
-    
+
     /**
      * Returns true if node is the root node of the tree.
      * @return boolean
@@ -383,7 +383,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
 
     /**
      * Changes the state of the object and its descendants to 'new'.
-     * Also changes the node path to '0' to indicate that it is not a 
+     * Also changes the node path to '0' to indicate that it is not a
      * stored node.
      *
      * @param boolean
@@ -394,7 +394,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
         $this->adjustStatus('new', $b);
         $this->adjustNodePath($this->getNodePath(), '0');
     }
-    
+
     /**
      * Changes the state of the object and its descendants to 'deleted'.
      *
@@ -405,10 +405,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         $this->adjustStatus('deleted', $b);
     }
-     
+
     /**
      * Adds the specified node (and its children) as a child to this node. If a
-     * valid $beforeNode is specified, the node will be inserted in front of 
+     * valid $beforeNode is specified, the node will be inserted in front of
      * $beforeNode. If $beforeNode is not specified the node will be appended to
      * the end of the child nodes.
      *
@@ -416,27 +416,27 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param <?php echo $table->getPhpName() ?>Node Node to insert before.
      * @param Connection Connection to use.
      */
-    public function addChildNode($node, $beforeNode = null, $con = null)
+    public function addChildNode($node, $beforeNode = null, Connection $con = null)
     {
         if ($this->obj->isNew() && !$node->obj->isNew())
             throw new PropelException('Cannot add stored nodes to a new node.');
-            
+
         if ($this->obj->isDeleted() || $node->obj->isDeleted())
             throw new PropelException('Cannot add children in a deleted state.');
-        
+
         if ($this->hasChildNode($node))
             throw new PropelException('Node is already a child of this node.');
 
         if ($beforeNode && !$this->hasChildNode($beforeNode))
             throw new PropelException('Invalid beforeNode.');
-            
+
         if ($con === null)
             $con = Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME);
-            
+
         try {
-                
+
             if (!$this->obj->isNew()) $con->begin();
-                
+
             if ($beforeNode)
             {
                 // Inserting before a node.
@@ -462,10 +462,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
             {
                 // $this->isNew() && $node->isNew() ||
                 // !$this->isNew() && !node->isNew()
-                
+
                 $srcPath = $node->getNodePath();
                 $dstPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . $childIdx;
-                
+
                 if (!$node->obj->isNew())
                 {
                     <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree($srcPath, $dstPath, $con);
@@ -475,13 +475,13 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
                 {
                     $parentNode = $node->getParentNode();
                 }
-                
+
                 if ($parentNode)
                 {
                     $parentNode->detachChildNode($node);
                     $parentNode->shiftChildNodes(-1, $node->getNodeIndex()+1, $con);
                 }
-            
+
                 $node->adjustNodePath($srcPath, $dstPath);
             }
 
@@ -503,37 +503,37 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param Connection Connection to use.
      * @throws PropelException
      */
-    public function moveChildNode($node, $direction, $con = null)
+    public function moveChildNode($node, $direction, Connection $con = null)
     {
         throw new PropelException('moveChildNode() not implemented yet.');
     }
-    
+
     /**
      * Saves modified object data to the datastore.
      *
      * @param boolean If true, descendants will be saved as well.
      * @param Connection Connection to use.
      */
-    public function save($recurse = false, $con = null)
+    public function save($recurse = false, Connection $con = null)
     {
         if ($this->obj->isDeleted())
             throw new PropelException('Cannot save deleted node.');
-            
+
         if (substr($this->getNodePath(), 0, 1) == '0')
             throw new PropelException('Cannot save unattached node.');
 
         if ($this->obj->isColumnModified(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME))
             throw new PropelException('Cannot save manually modified node path.');
-        
+
         $this->obj->save($con);
-        
+
         if ($recurse)
         {
             foreach ($this->childNodes as $childNode)
                 $childNode->save($recurse, $con);
         }
     }
-    
+
     /**
      * Removes this object and all descendants from datastore.
      *
@@ -541,7 +541,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @return void
      * @throws PropelException
      */
-    public function delete($con = null)
+    public function delete(Connection $con = null)
     {
         if ($this->obj->isDeleted())
             throw new PropelException('This node has already been deleted.');
@@ -550,19 +550,19 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
         {
             <?php echo $table->getPhpName() ?>NodePeer::deleteNodeSubTree($this->getNodePath(), $con);
         }
-        
+
         if ($parentNode = $this->getParentNode(true, $con))
         {
             $parentNode->detachChildNode($this);
             $parentNode->shiftChildNodes(-1, $this->getNodeIndex()+1, $con);
         }
-        
+
         $this->setDeleted(true);
     }
 
     /**
-     * Compares the object wrapped by this node with that of another node. Use 
-     * this instead of equality operators to prevent recursive dependency 
+     * Compares the object wrapped by this node with that of another node. Use
+     * this instead of equality operators to prevent recursive dependency
      * errors.
      *
      * @param <?php echo $table->getPhpName() ?>Node Node to compare.
@@ -578,8 +578,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     }
 
     /**
-     * This method is used internally when constructing the tree structure 
-     * from the database. To set the parent of a node, you should call 
+     * This method is used internally when constructing the tree structure
+     * from the database. To set the parent of a node, you should call
      * addChildNode() on the parent.
      *
      * @param <?php echo $table->getPhpName() ?>Node Parent node to attach.
@@ -595,9 +595,9 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     }
 
     /**
-     * This method is used internally when constructing the tree structure 
-     * from the database. To add a child to a node you should call the 
-     * addChildNode() method instead. 
+     * This method is used internally when constructing the tree structure
+     * from the database. To add a child to a node you should call the
+     * addChildNode() method instead.
      *
      * @param <?php echo $table->getPhpName() ?>Node Child node to attach.
      * @return void
@@ -607,10 +607,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         if ($this->hasChildNode($node))
             throw new PropelException('Failed to attach child node. Node already exists.');
-        
+
         if ($this->obj->isDeleted() || $node->obj->isDeleted())
             throw new PropelException('Failed to attach node in deleted state.');
-            
+
         if ($this->obj->isNew() && !$node->obj->isNew())
             throw new PropelException('Failed to attach non-new child to new node.');
 
@@ -619,10 +619,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
 
         if ($this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . $node->getNodeIndex() != $node->getNodePath())
             throw new PropelException('Failed to attach child node. Node path mismatch.');
-        
+
         $this->childNodes[$node->getNodeIndex()] = $node;
         ksort($this->childNodes);
-        
+
         $node->attachParentNode($this);
     }
 
@@ -639,9 +639,9 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
             throw new PropelException('Failed to detach parent node from non-child.');
 
         unset($node->childNodes[$this->getNodeIndex()]);
-        $this->parentNode = null;        
+        $this->parentNode = null;
     }
-    
+
     /**
      * This method is used internally when deleting nodes. It is used to break
      * the link to this between this node and the specified child.
@@ -653,15 +653,15 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         if (!$this->hasChildNode($node, true))
             throw new PropelException('Failed to detach non-existent child node.');
-        
+
         unset($this->childNodes[$node->getNodeIndex()]);
         $node->parentNode = null;
     }
-    
+
     /**
-     * Shifts child nodes in the specified direction and offset index. This 
-     * method assumes that there is already space available in the 
-     * direction/offset indicated. 
+     * Shifts child nodes in the specified direction and offset index. This
+     * method assumes that there is already space available in the
+     * direction/offset indicated.
      *
      * @param int Direction/# spaces to shift. 1=leftshift, 1=rightshift
      * @param int Node index to start shift at.
@@ -673,7 +673,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     {
         if ($this->obj->isDeleted())
             throw new PropelException('Cannot shift nodes for deleted object');
-                    
+
         $lastNode = $this->getLastChildNode(true, $con);
         $lastIdx = ($lastNode !== null ? $lastNode->getNodeIndex() : 0);
 
@@ -682,38 +682,38 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
 
         if ($con === null)
             $con = Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME);
-            
+
         if (!$this->obj->isNew())
         {
             // Shift nodes in database.
-            
+
             try {
-                
+
                 $con->begin();
-                 
+
                 $n = $lastIdx - $offsetIdx + 1;
                 $i = $direction < 1 ? $offsetIdx : $lastIdx;
-                
+
                 while ($n--)
                 {
                     $srcPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . $i;              // 1.2.2
                     $dstPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . ($i+$direction); // 1.2.3
 
                     <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree($srcPath, $dstPath, $con);
-                    
+
                     $i -= $direction;
                 }
-                
+
                 $con->commit();
-                
+
             } catch (SQLException $e) {
                 $con->rollback();
                 throw new PropelException($e);
             }
         }
-        
+
         // Shift the in-memory objects.
-        
+
         $n = $lastIdx - $offsetIdx + 1;
         $i = $direction < 1 ? $offsetIdx : $lastIdx;
 
@@ -723,19 +723,19 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
             {
                 $srcPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . $i;              // 1.2.2
                 $dstPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . ($i+$direction); // 1.2.3
-                
+
                 $this->childNodes[$i+$direction] = $this->childNodes[$i];
                 $this->childNodes[$i+$direction]->adjustNodePath($srcPath, $dstPath);
 
                 unset($this->childNodes[$i]);
             }
-            
+
             $i -= $direction;
         }
-        
+
         ksort($this->childNodes);
     }
-    
+
     /**
      * Inserts the node and its children at the specified childIdx.
      *
@@ -753,14 +753,14 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
 
         $node->obj->$setNodePath($this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP . $childIdx);
         $node->obj->save($con);
-        
+
         $i = 1;
         foreach ($node->childNodes as $childNode)
-            $node->insertNewChildNode($childNode, $i++, $con);        
+            $node->insertNewChildNode($childNode, $i++, $con);
     }
 
     /**
-     * Adjust new/deleted status of node and all children. 
+     * Adjust new/deleted status of node and all children.
      *
      * @param string Status to change ('New' or 'Deleted')
      * @param boolean Value for status.
@@ -769,15 +769,15 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     protected function adjustStatus($status, $b)
     {
         $setStatus = 'set' . $status;
-        
+
         $this->obj->$setStatus($b);
-        
+
         foreach ($this->childNodes as $childNode)
-            $childNode->obj->$setStatus($b);            
+            $childNode->obj->$setStatus($b);
     }
-    
+
     /**
-     * Adjust path of node and all children. This is used internally when 
+     * Adjust path of node and all children. This is used internally when
      * inserting/moving nodes.
      *
      * @param string Section of old path to change.
@@ -787,8 +787,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
     protected function adjustNodePath($oldBasePath, $newBasePath)
     {
         $setNodePath = "set" . <?php echo $table->getPhpName() ?>NodePeer::NPATH_PHPNAME;
-        
-        $this->obj->$setNodePath($newBasePath . 
+
+        $this->obj->$setNodePath($newBasePath .
                                  substr($this->getNodePath(), strlen($oldBasePath)));
         $this->obj->resetModified(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME);
 

@@ -175,7 +175,7 @@ abstract class ".$this->getClassname()." {
 	/**
 	 * Temp function for CodeBase hacks that will go away.
 	 */
-	public static function isCodeBase(\$con = null)
+	public static function isCodeBase(Connection \$con = null)
 	{
 		if (\$con === null)
 			\$con = Propel::getConnection($peerClassname::DATABASE_NAME);
@@ -207,7 +207,7 @@ abstract class ".$this->getClassname()." {
 	 * @return     $nodeObjectClassname
 	 * @throws     PropelException
 	 */
-	public static function createNewRootNode(\$obj, \$con = null)
+	public static function createNewRootNode(\$obj, Connection \$con = null)
 	{
 		if (\$con === null)
 			\$con = Propel::getConnection($peerClassname::DATABASE_NAME);
@@ -254,7 +254,7 @@ abstract class ".$this->getClassname()." {
 	 * @return     $nodeObjectClassname
 	 * @throws     PropelException
 	 */
-	public static function insertNewRootNode(\$obj, \$con = null)
+	public static function insertNewRootNode(\$obj, Connection \$con = null)
 	{
 		if (\$con === null)
 			\$con = Propel::getConnection($peerClassname::DATABASE_NAME);
@@ -315,7 +315,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      Connection|null Connection to use.
 	 * @return     array Array of root nodes.
 	 */
-	public static function retrieveNodes(\$criteria, \$ancestors = false, \$descendants = false, \$con = null)
+	public static function retrieveNodes(\$criteria, \$ancestors = false, \$descendants = false, Connection \$con = null)
 	{
 		\$criteria = $nodePeerClassname::buildFamilyCriteria(\$criteria, \$ancestors, \$descendants);
 		\$rs = ".$this->getStubPeerBuilder()->getClassname()."::doSelectRS(\$criteria, \$con);
@@ -343,7 +343,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      Connection|null Connection to use.
 	 * @return     $nodeObjectClassname
 	 */
-	public static function retrieveNodeByPK(\$pk, \$ancestors = false, \$descendants = false, \$con = null)
+	public static function retrieveNodeByPK(\$pk, \$ancestors = false, \$descendants = false, Connection \$con = null)
 	{
 		throw new PropelException('retrieveNodeByPK() not implemented yet.');
 	}
@@ -369,7 +369,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      Connection|null Connection to use.
 	 * @return     $objectClassname
 	 */
-	public static function retrieveNodeByNP(\$np, \$ancestors = false, \$descendants = false, \$con = null)
+	public static function retrieveNodeByNP(\$np, \$ancestors = false, \$descendants = false, Connection \$con = null)
 	{
 		\$criteria = new Criteria($peerClassname::DATABASE_NAME);
 		\$criteria->add(self::NPATH_COLNAME, \$np, Criteria::EQUAL);
@@ -392,7 +392,7 @@ abstract class ".$this->getClassname()." {
 	 * @param      Connection|null Connection to use.
 	 * @return     ".$this->getStubNodeBuilder()->getClassname()."
 	 */
-	public static function retrieveRootNode(\$descendants = false, \$con = null)
+	public static function retrieveRootNode(\$descendants = false, Connection \$con = null)
 	{
 		return self::retrieveNodeByNP('1', false, \$descendants, \$con);
 	}
@@ -426,7 +426,7 @@ abstract class ".$this->getClassname()." {
 	 *       seem to be standardized (i.e. mssql), so maybe it needs to be moved
 	 *       to DBAdapter.
 	 */
-	public static function moveNodeSubTree(\$srcPath, \$dstPath, \$con = null)
+	public static function moveNodeSubTree(\$srcPath, \$dstPath, Connection \$con = null)
 	{
 		if (substr(\$dstPath, 0, strlen(\$srcPath)) == \$srcPath)
 			throw new PropelException('Cannot move a node subtree within itself.');
@@ -498,7 +498,7 @@ abstract class ".$this->getClassname()." {
 	 * @throws     PropelException
 	 * @todo       This is currently broken for simulated 'onCascadeDelete's.
 	 */
-	public static function deleteNodeSubTree(\$nodePath, \$con = null)
+	public static function deleteNodeSubTree(\$nodePath, Connection \$con = null)
 	{
 		if (\$con === null)
 			\$con = Propel::getConnection($peerClassname::DATABASE_NAME);

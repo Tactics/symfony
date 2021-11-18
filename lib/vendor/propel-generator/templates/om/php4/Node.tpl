@@ -27,9 +27,9 @@ require_once '<?php echo ClassTools::getFilePath($package, $table->getPhpName() 
  * This class will wrap these objects within a "node" interface. It provides a
  * method overload mechanism which allows you to use a <?php echo $table->getPhpName() ?>Node
  * object just like a <?php $table->getPhpName() ?> object.
- * 
+ *
  * To avoid tree corruption, you should always use this class to make changes to
- * the tree and objects within it rather than using the <?php echo $table->getPhpName() ?> 
+ * the tree and objects within it rather than using the <?php echo $table->getPhpName() ?>
  * class directly.
  *
 <?php if ($addTimeStamp) { ?>
@@ -38,7 +38,7 @@ require_once '<?php echo ClassTools::getFilePath($package, $table->getPhpName() 
  * [<?php echo $now ?>]
  *
 <?php } ?>
- * @package <?php echo $package ?> 
+ * @package <?php echo $package ?>
  *
  */
 class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements IteratorAggregate*/
@@ -47,7 +47,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @var <?php echo $table->getPhpName() ?> Object wrapped by this node.
      */
     var $obj = null;
-    
+
     /**
      * The parent node for this node.
      * @var <?php echo $table->getPhpName() ?>Node
@@ -69,7 +69,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     {
         Propel::assertParam($obj, '<?php echo $CLASS; ?>', '<?php echo $table->getPhpName() ?>Node', 1);
         $obj =& Param::get($obj);
-        
+
         if ($obj !== null)
         {
             $this->obj =& $obj;
@@ -112,7 +112,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
     /**
      * Sets the default options for iterators created from this object.
-     * The options are specified in map format. The following options 
+     * The options are specified in map format. The following options
      * are supported by all iterators. Some iterators may support other
      * options:
      *
@@ -123,13 +123,13 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param array Map of option name => value.
      * @return void
      * @todo Implement other iterator types (i.e. post-order, level, etc.)
-     */ 
+     */
     function setIteratorOptions($type, $opts)
     {
         $this->itType = $type;
         $this->itOpts = $opts;
     }
-    
+
     /**
      * Returns a pre-order iterator for this node and its children.
      *
@@ -144,13 +144,13 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
         if ($opts === null)
             $opts = (isset($this->itOpts) ? $this->itOpts : array());
-            
+
         $itclass = ucfirst(strtolower($type)) . 'OrderNodeIterator';
-        
+
         require_once('propel/om/' . $itclass . '.php');
         return new $itclass($this, $opts);
     }
-        
+
     /**
      * Returns the object wrapped by this class.
      * @return <?php echo $table->getPhpName() . "\n" ?>
@@ -159,7 +159,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     {
         return $this->obj;
     }
-        
+
     /**
      * Convenience method for retrieving nodepath.
      * @return string
@@ -184,7 +184,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 		}
         return (int) ($sep != 0 ? substr($npath, $sep) : $npath);
     }
-    
+
     /**
      * Returns one-based node level within tree (root node is level 1).
      * @return int
@@ -193,8 +193,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     {
         return (substr_count($this->getNodePath(), <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP()) + 1);
     }
-    
-    /** 
+
+    /**
      * Returns true if specified node is a child of this node. If recurse is
      * true, checks if specified node is a descendant of this node.
      *
@@ -209,16 +209,16 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
         {
             if ($this->childNodes[$key]->equals($node, $strict))
                 return true;
-                
+
             if ($recurse && $this->childNodes[$key]->hasChildNode($node, $recurse))
                 return true;
         }
-        
+
         return false;
     }
 
     /**
-     * Returns child node at one-based index. Retrieves from database if not 
+     * Returns child node at one-based index. Retrieves from database if not
      * loaded yet.
      *
      * @param int One-based child node index.
@@ -226,14 +226,14 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & getChildNodeAt($i, $querydb = false, $con = null)
+    function & getChildNodeAt($i, $querydb = false, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'getChildNodeAt', 3);
     	$con =& Param::get($con);
-    	
-        if ($querydb && 
-            !$this->obj->isNew() && 
-            !$this->obj->isDeleted() && 
+
+        if ($querydb &&
+            !$this->obj->isNew() &&
+            !$this->obj->isDeleted() &&
             !isset($this->childNodes[$i]))
         {
             $criteria =& new Criteria(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
@@ -255,20 +255,20 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & getFirstChildNode($querydb = false, $con = null)
+    function & getFirstChildNode($querydb = false, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'getFirstChildNode', 2);
     	$con =& Param::get($con);
         return $this->getChildNodeAt(1, $querydb, Param::set($con));
     }
-        
+
     /**
-     * Returns last child node (if any). 
+     * Returns last child node (if any).
      *
      * @param boolean True if child should be retrieved from database.
      * @param Connection Connection to use if retrieving from database.
      */
-    function & getLastChildNode($querydb = false, $con = null)
+    function & getLastChildNode($querydb = false, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'getLastChildNode', 2);
 		$con =& Param::get($con);
@@ -306,7 +306,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 					end($this->childNodes);
                 	$endNode =& $this->childNodes[key($this->childNodes)];
 				}
-                
+
                 if ($endNode)
                 {
                     if ($endNode->getNodePath() > $lastNode->getNodePath())
@@ -327,7 +327,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     }
 
     /**
-     * Returns next (or previous) sibling node or null. Retrieves from database if 
+     * Returns next (or previous) sibling node or null. Retrieves from database if
      * not loaded yet.
      *
      * @param boolean True if previous sibling should be returned.
@@ -335,12 +335,12 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & getSiblingNode($prev = false, $querydb = false, $con = null)
+    function & getSiblingNode($prev = false, $querydb = false, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'getSiblingNode', 3);
     	$con =& Param::get($con);
         $nidx = $this->getNodeIndex();
-        
+
         if ($this->isRootNode())
         {
             return null;
@@ -368,15 +368,15 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param Connection Connection to use if retrieving from database.
      * @return <?php echo $table->getPhpName() ?>Node
      */
-    function & getParentNode($querydb = true, $con = null)
+    function & getParentNode($querydb = true, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'getParentNode', 2);
     	$con =& Param::get($con);
-		
+
         if ($querydb &&
-            $this->parentNode === null && 
+            $this->parentNode === null &&
             !$this->isRootNode() &&
-            !$this->obj->isNew() && 
+            !$this->obj->isNew() &&
             !$this->obj->isDeleted())
         {
             $npath =& $this->getNodePath();
@@ -396,32 +396,32 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
                 $parentNode->attachChildNode($this);
             }
         }
-        
+
         return $this->parentNode;
     }
 
-    /** 
-     * Returns an array of all ancestor nodes, starting with the root node 
+    /**
+     * Returns an array of all ancestor nodes, starting with the root node
      * first.
      *
      * @param boolean True if ancestors should be retrieved from database.
      * @param Connection Connection to use if retrieving from database.
      * @return array
      */
-    function & getAncestors($querydb = false, $con = null)
+    function & getAncestors($querydb = false, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'getAncestors', 2);
     	$con =& Param::get($con);
-		
+
         $ancestors = array();
         $parentNode = $this;
-        
+
         while ($parentNode =& $parentNode->getParentNode($querydb, Param::set($con)))
             array_unshift($ancestors, $parentNode);
-        
+
         return $ancestors;
     }
-    
+
     /**
      * Returns true if node is the root node of the tree.
      * @return boolean
@@ -433,7 +433,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
     /**
      * Changes the state of the object and its descendants to 'new'.
-     * Also changes the node path to '0' to indicate that it is not a 
+     * Also changes the node path to '0' to indicate that it is not a
      * stored node.
      *
      * @param boolean
@@ -444,7 +444,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
         $this->adjustStatus('new', $b);
         $this->adjustNodePath($this->getNodePath(), '0');
     }
-    
+
     /**
      * Changes the state of the object and its descendants to 'deleted'.
      *
@@ -455,10 +455,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     {
         $this->adjustStatus('deleted', $b);
     }
-     
+
     /**
      * Adds the specified node (and its children) as a child to this node. If a
-     * valid $beforeNode is specified, the node will be inserted in front of 
+     * valid $beforeNode is specified, the node will be inserted in front of
      * $beforeNode. If $beforeNode is not specified the node will be appended to
      * the end of the child nodes.
      *
@@ -466,7 +466,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param <?php echo $table->getPhpName() ?>Node Node to insert before.
      * @param Connection Connection to use.
      */
-    function addChildNode(&$node, $beforeNode = null, $con = null)
+    function addChildNode(&$node, $beforeNode = null, Connection $con = null)
     {
 		Propel::assertParam($beforeNode, '<?php echo $CLASS; ?>', 'addChildNode', 2);
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'addChildNode', 3);
@@ -475,19 +475,19 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
         if ($this->obj->isNew() && !$node->obj->isNew())
             return new PropelException(PROPEL_ERROR, 'Cannot add stored nodes to a new node.');
-            
+
         if ($this->obj->isDeleted() || $node->obj->isDeleted())
             return new PropelException(PROPEL_ERROR, 'Cannot add children in a deleted state.');
-        
+
         if ($this->hasChildNode($node))
             return new PropelException(PROPEL_ERROR, 'Node is already a child of this node.');
 
         if ($beforeNode && !$this->hasChildNode($beforeNode))
             return new PropelException(PROPEL_ERROR, 'Invalid beforeNode.');
-            
+
         if ($con === null)
             $con =& Propel::getConnection(<?php echo $table->getPhpName() ?>Peer::DATABASE_NAME());
-            
+
         if (Propel::isError($con))
             return $con;
 
@@ -523,10 +523,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
         {
             // $this->isNew() && $node->isNew() ||
             // !$this->isNew() && !node->isNew()
-                
+
             $srcPath = $node->getNodePath();
             $dstPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . $childIdx;
-                
+
             if (!$node->obj->isNew())
             {
                 $e = <?php echo $table->getPhpName() ?>NodePeer::moveNodeSubTree($srcPath, $dstPath, Param::set($con));
@@ -545,7 +545,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
                 $e = $parentNode->shiftChildNodes(-1, $node->getNodeIndex()+1, $con);
                 if (Propel::isError($e)) { $con->rollback(); return $e; }
             }
-            
+
             $node->adjustNodePath($srcPath, $dstPath);
         }
 
@@ -565,13 +565,13 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
      * @param Connection Connection to use.
      * @throws PropelException
      */
-    function moveChildNode(&$node, $direction, $con = null)
+    function moveChildNode(&$node, $direction, Connection $con = null)
     {
 		Propel::assertParam($con, '<?php echo $CLASS; ?>', 'moveChildNode', 3);
 		$con =& Param::get($con);
         return new PropelException(PROPEL_ERROR, 'moveChildNode() not implemented yet.');
     }
-    
+
     /**
      * Saves modified object data to the datastore.
      *
@@ -585,22 +585,22 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
         if ($this->obj->isDeleted())
             return new PropelException(PROPEL_ERROR, 'Cannot save deleted node.');
-            
+
         if (substr($this->getNodePath(), 0, 1) == '0')
             return new PropelException(PROPEL_ERROR, 'Cannot save unattached node.');
 
         if ($this->obj->isColumnModified(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME()))
             return new PropelException(PROPEL_ERROR, 'Cannot save manually modified node path.');
-        
+
         $this->obj->save(Param::set($con));
-        
+
         if ($recurse)
         {
             foreach ($this->childNodes as $key => $childNode)
                 $this->childNodes[$key]->save($recurse, Param::set($con));
         }
     }
-    
+
     /**
      * Removes this object and all descendants from datastore.
      *
@@ -620,19 +620,19 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
         {
             <?php echo $table->getPhpName() ?>NodePeer::deleteNodeSubTree($this->getNodePath(), Param::set($con));
         }
-        
+
         if ($parentNode =& $this->getParentNode(true, Param::set($con)))
         {
             $parentNode->detachChildNode($this);
             $parentNode->shiftChildNodes(-1, $this->getNodeIndex()+1, $con);
         }
-        
+
         $this->setDeleted(true);
     }
 
     /**
-     * Compares the object wrapped by this node with that of another node. Use 
-     * this instead of equality operators to prevent recursive dependency 
+     * Compares the object wrapped by this node with that of another node. Use
+     * this instead of equality operators to prevent recursive dependency
      * errors.
      *
      * @param <?php echo $table->getPhpName() ?>Node Node to compare.
@@ -648,8 +648,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     }
 
     /**
-     * This method is used internally when constructing the tree structure 
-     * from the database. To set the parent of a node, you should call 
+     * This method is used internally when constructing the tree structure
+     * from the database. To set the parent of a node, you should call
      * addChildNode() on the parent.
      * @param <?php echo $table->getPhpName() ?>Node Parent node to attach.
      * @return void
@@ -664,9 +664,9 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     }
 
     /**
-     * This method is used internally when constructing the tree structure 
-     * from the database. To add a child to a node you should call the 
-     * addChildNode() method instead. 
+     * This method is used internally when constructing the tree structure
+     * from the database. To add a child to a node you should call the
+     * addChildNode() method instead.
      *
      * @param <?php echo $table->getPhpName() ?>Node Child node to attach.
      * @return void
@@ -676,10 +676,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     {
         if ($this->hasChildNode($node))
             return new PropelException(PROPEL_ERROR, 'Failed to attach child node. Node already exists.');
-        
+
         if ($this->obj->isDeleted() || $node->obj->isDeleted())
             return new PropelException(PROPEL_ERROR, 'Failed to attach node in deleted state.');
-            
+
         if ($this->obj->isNew() && !$node->obj->isNew())
             return new PropelException(PROPEL_ERROR, 'Failed to attach non-new child to new node.');
 
@@ -688,10 +688,10 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
         if ($this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . $node->getNodeIndex() != $node->getNodePath())
             return new PropelException(PROPEL_ERROR, 'Failed to attach child node. Node path mismatch.');
-        
+
         $this->childNodes[$node->getNodeIndex()] =& $node;
         ksort($this->childNodes);
-        
+
         $node->attachParentNode($this);
     }
 
@@ -710,7 +710,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
         unset($node->childNodes[$this->getNodeIndex()]);
         $this->parentNode = null;
     }
-    
+
     /**
      * This method is used internally when deleting nodes. It is used to break
      * the link to this between this node and the specified child.
@@ -727,11 +727,11 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
         unset($this->childNodes[$node->getNodeIndex()]);
         $node->parentNode =& Propel::null();
     }
-    
+
     /**
-     * Shifts child nodes in the specified direction and offset index. This 
-     * method assumes that there is already space available in the 
-     * direction/offset indicated. 
+     * Shifts child nodes in the specified direction and offset index. This
+     * method assumes that there is already space available in the
+     * direction/offset indicated.
      *
      * @param int Direction/# spaces to shift. 1=leftshift, 1=rightshift
      * @param int Node index to start shift at.
@@ -781,9 +781,9 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
             $e = $con->commit();
             if (Creole::isError($e)) { $con->rollback(); return new PropelException(PROPEL_ERROR_DB, $e); }
         }
-        
+
         // Shift the in-memory objects.
-        
+
         $n = $lastIdx - $offsetIdx + 1;
         $i = $direction < 1 ? $offsetIdx : $lastIdx;
 
@@ -793,19 +793,19 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
             {
                 $srcPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . $i;              // 1.2.2
                 $dstPath = $this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . ($i+$direction); // 1.2.3
-                
+
                 $this->childNodes[$i+$direction] =& $this->childNodes[$i];
                 $this->childNodes[$i+$direction]->adjustNodePath($srcPath, $dstPath);
 
                 unset($this->childNodes[$i]);
             }
-            
+
             $i -= $direction;
         }
-        
+
         ksort($this->childNodes);
     }
-    
+
     /**
      * Inserts the node and its children at the specified childIdx.
      *
@@ -823,14 +823,14 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
 
         $node->obj->$setNodePath($this->getNodePath() . <?php echo $table->getPhpName() ?>NodePeer::NPATH_SEP() . $childIdx);
         $node->obj->save(Param::set($con));
-        
+
         $i = 1;
         foreach($node->childNodes as $key => $childNode)
             $node->insertNewChildNode($node->childNodes[$key], $i++, $con);
     }
 
     /**
-     * Adjust new/deleted status of node and all children. 
+     * Adjust new/deleted status of node and all children.
      *
      * @param string Status to change ('New' or 'Deleted')
      * @param boolean Value for status.
@@ -839,15 +839,15 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     function adjustStatus($status, $b)
     {
         $setStatus = 'set' . $status;
-        
+
         $this->obj->$setStatus($b);
-        
+
         foreach ($this->childNodes as $key => $childNode)
             $this->childNodes[$key]->obj->$setStatus($b);
     }
-    
+
     /**
-     * Adjust path of node and all children. This is used internally when 
+     * Adjust path of node and all children. This is used internally when
      * inserting/moving nodes.
      *
      * @param string Section of old path to change.
@@ -857,8 +857,8 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node /*implements Iterator
     function adjustNodePath($oldBasePath, $newBasePath)
     {
         $setNodePath = "set" . <?php echo $table->getPhpName() ?>NodePeer::NPATH_PHPNAME();
-        
-        $this->obj->$setNodePath($newBasePath . 
+
+        $this->obj->$setNodePath($newBasePath .
                                  substr($this->getNodePath(), strlen($oldBasePath)));
         $this->obj->resetModified(<?php echo $table->getPhpName() ?>NodePeer::NPATH_COLNAME());
 
