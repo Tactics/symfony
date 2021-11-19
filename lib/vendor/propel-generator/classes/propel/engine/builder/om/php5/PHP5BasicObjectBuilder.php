@@ -256,13 +256,13 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             $isPrimary = $col->isPrimaryKey();
             $isBoolean = ($col->getPhpNative() === 'bool');
             $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
-            $isReference = $col->isLazyLoad();
-            $nullAllowed = !$col->isNotNull();
+            $isReference = $col->isLazyLoad() || $col->isForeignKey();
+            $isNullAllowed = !$col->isNotNull();
 
             if ($isBoolean) {
                 $isOptional = FALSE;
             } else {
-                $isOptional = $isPrimary || $isReference || $isDate || $nullAllowed;
+                $isOptional = $isPrimary || $isReference || $isDate || $isNullAllowed;
             }
 
             $extraDoc = $isOptional  ? '|null' : '';
@@ -442,7 +442,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$cfc=$col->getPhpName();
 		$clo=strtolower($col->getName());
 
-        $allowNull = !$col->isNotNull() && !$col->isLazyLoad(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
+        $allowNull = !$col->isNotNull() && !$col->isForeignKey(); // True when NULL not allowed. Fo foreignKeys we always allow NULL
         $isBoolean = ($col->getPhpNative() === 'bool');
         $isPrimary = $col->isPrimaryKey();
 
@@ -724,12 +724,12 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         $isBoolean = ($col->getPhpNative() === 'bool');
         $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP]);
         $isReference = $col->isLazyLoad();
-        $nullAllowed = !$col->isNotNull();
+        $isNullAllowed = !$col->isNotNull();
 
         if ($isBoolean) {
             $isOptional = FALSE;
         } else {
-            $isOptional = $isPrimary || $isReference || $isDate || $nullAllowed;
+            $isOptional = $isPrimary || $isReference || $isDate || $isNullAllowed;
         }
 
 		// Perform some smart checking here to handle possible type discrepancies
@@ -778,28 +778,36 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	{
 		try {
 ";
-			$n = 0;
-			foreach($table->getColumns() as $col) {
-				if(!$col->isLazyLoad()) {
-					$affix = CreoleTypes::getAffix(CreoleTypes::getCreoleCode($col->getType()));
-					$clo = strtolower($col->getName());
-					switch($col->getType()) {
+            $n = 0;
+            foreach($table->getColumns() as $col) {
+                if(!$col->isLazyLoad()) {
+                    $affix = CreoleTypes::getAffix(CreoleTypes::getCreoleCode($col->getType()));
+                    $clo = strtolower($col->getName());
+                    
+                    $isNullAllowed = !$col->isNotNull();
+                    // It doesn't make sense to return NULL for strings ('') or boolean (false)
+                    // because a generic default value can be used without problems.
+                    if ($isNullAllowed && !in_array($col->getType(), [PropelTypes::BOOLEAN, PropelTypes::VARCHAR])) {
+                        $affix .= 'OrNull';
+                    }
 
-						case PropelTypes::DATE:
-						case PropelTypes::TIME:
-						case PropelTypes::TIMESTAMP:
-							$script .= "
-			\$this->$clo = \$rs->get$affix(\$startcol + $n, null);
-";
-							break;
-						default:
-							$script .= "
-			\$this->$clo = \$rs->get$affix(\$startcol + $n);
-";
-					}
-					$n++;
-				} // if col->isLazyLoad()
-			} /* foreach */
+                    switch ($col->getType()) {
+
+                        case PropelTypes::DATE:
+                        case PropelTypes::TIME:
+                        case PropelTypes::TIMESTAMP:
+                            $script .= "
+                \$this->$clo = \$rs->get$affix(\$startcol + $n, null);
+    ";
+                            break;
+                        default:
+                                $script .= "
+                \$this->$clo = \$rs->get$affix(\$startcol + $n);
+    ";
+                    }
+                }
+                $n++;
+            } // if col->isLazyLoad()
 
 			if ($this->getBuildProperty("addSaveMethod")) {
 				$script .= "

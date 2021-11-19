@@ -284,89 +284,159 @@ abstract class ResultSetCommon {
     }
 
     /**
+     * @throws SQLException
      * @see ResultSet::get()
      */
     public function get($column)
     {
         $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
+        if (!array_key_exists($idx, $this->fields)) {
+            throw new SQLException("Invalid resultset column: " . $column);
+        }
         return $this->fields[$idx];
     }
 
     /**
+     * @throws SQLException
      * @see ResultSet::getArray()
      */
-    public function getArray($column)
+    public function getArray($column): array
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return []; }
-        return (array) unserialize($this->fields[$idx]);
+        $value = $this->get($column);
+        if ($value === null) {
+            return [];
+        }
+        return (array) unserialize($value);
     }
 
     /**
+     * @throws SQLException
      * @see ResultSet::getBoolean()
      */
-    public function getBoolean($column)
+    public function getBoolean($column): bool
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return false; }
-        return (boolean) $this->fields[$idx];
+        $value = $this->get($column);
+        if ($value === null) {
+            return false;
+        }
+        return (boolean) $value;
     }
 
     /**
+     * @throws SQLException
+     * @see ResultSet::getString()
+     */
+    public function getString($column): string
+    {
+        $value = $this->get($column);
+        if ($value === null) {
+            return '';
+        }
+
+        return ($this->rtrimString ? rtrim($value) : (string) $value);
+    }
+
+    /**
+     * @throws SQLException
      * @see ResultSet::getBlob()
      */
-    public function getBlob($column)
+    public function getBlobOrNull($column): ?Blob
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return new Blob(); }
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->getBlob($column);
+    }
+
+    /**
+     * @throws SQLException
+     * @see ResultSet::getBlob()
+     */
+    public function getBlob($column): Blob
+    {
         require_once 'creole/util/Blob.php';
+
+        $value = $this->get($column);
+        if ($value === null) {
+            return new Blob();
+        }
+
         $b = new Blob();
-        $b->setContents($this->fields[$idx]);
+        $b->setContents($value);
         return $b;
     }
 
     /**
      * @see ResultSet::getClob()
      */
-    public function getClob($column)
+    public function getClobOrNull($column): ?Clob
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return new Clob(); }
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->getClob($column);
+    }
+
+    /**
+     * @see ResultSet::getClob()
+     */
+    public function getClob($column): Clob
+    {
         require_once 'creole/util/Clob.php';
+
+        $value = $this->get($column);
+        if ($value === null) {
+            return new Clob();
+        }
+
         $c = new Clob();
-        $c->setContents($this->fields[$idx]);
+        $c->setContents($value);
         return $c;
     }
 
     /**
+     * @throws SQLException
+     */
+    public function getDateOrNull($column, $format = '%x') {
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->getDate($column, $format);
+    }
+
+    /**
+     * @throws SQLException
      * @see ResultSet::getDate()
      */
     public function getDate($column, $format = '%x')
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
 
-        if ($this->fields[$idx] instanceof DateTime)
-        {
-            $ts = $this->fields[$idx]->getTimestamp();
+        $value = $this->get($column);
+        if ($value === null) {
+            throw new SQLException("Invalid resultset column: " . $column);
         }
-        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $this->fields[$idx]))
+
+        if ($value instanceof DateTime)
         {
-            $ts = DateTime::createFromFormat('M d Y H:i:s:A', $this->fields[$idx])->getTimestamp();
+            $ts = $value->getTimestamp();
+        }
+        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $value))
+        {
+            $ts = DateTime::createFromFormat('M d Y H:i:s:A', $value)->getTimestamp();
         }
         else
         {
-            $ts = strtotime($this->fields[$idx]);
+            $ts = strtotime($value);
         }
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
-            throw new SQLException("Unable to convert value at column " . $column . " to timestamp: " . $this->fields[$idx]);
+            throw new SQLException("Unable to convert value at column " . $column . " to timestamp: " . $value);
         }
         if ($format === null) {
             return $ts;
@@ -379,62 +449,104 @@ abstract class ResultSetCommon {
     }
 
     /**
+     * @throws SQLException
      * @see ResultSet::getFloat()
      */
-    public function getFloat($column)
+    public function getFloatOrNull($column): ?float
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return 0.00; }
-        return (float) $this->fields[$idx];
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->getFloat($column);
     }
 
     /**
+     * @throws SQLException
+     * @see ResultSet::getFloat()
+     */
+    public function getFloat($column): float
+    {
+        $idx = (is_int($column) ? $column - 1 : $column);
+        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
+
+        $value = $this->get($column);
+        if ($value === null) {
+            return 0;
+        }
+
+        return (float) $value;
+    }
+
+    /**
+     * @throws SQLException
      * @see ResultSet::getInt()
      */
-    public function getInt($column)
+    public function getIntOrNull($column): ?int
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return 0; }
-        return (int) $this->fields[$idx];
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return (int) $value;
     }
 
     /**
-     * @see ResultSet::getString()
+     * @throws SQLException
+     * @see ResultSet::getInt()
      */
-    public function getString($column)
+    public function getInt($column): int
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return ''; }
-		return ($this->rtrimString ? rtrim($this->fields[$idx]) : (string) $this->fields[$idx]);
+        $value = $this->get($column);
+        if ($value === null) {
+            return 0;
+        }
+
+        return (int) $value;
     }
 
     /**
+     * @throws SQLException
+     * @see ResultSet::getTime()
+     */
+    public function getTimeOrNull($column, $format = '%X')
+    {
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->getTime($column, $format);
+    }
+
+    /**
+     * @throws SQLException
      * @see ResultSet::getTime()
      */
     public function getTime($column, $format = '%X')
     {
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
-
-        if ($this->fields[$idx] instanceof DateTime)
-        {
-            $ts = $this->fields[$idx]->getTimestamp();
+        $value = $this->get($column);
+        if ($value === null) {
+            throw new SQLException("Invalid resultset column: " . $column);
         }
-        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $this->fields[$idx]))
+
+        if ($value instanceof DateTime)
         {
-            $ts = DateTime::createFromFormat('M d Y H:i:s:A', $this->fields[$idx])->getTimestamp();
+            $ts = $value->getTimestamp();
+        }
+        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $value))
+        {
+            $ts = DateTime::createFromFormat('M d Y H:i:s:A', $value)->getTimestamp();
         }
         else
         {
-            $ts = strtotime($this->fields[$idx]);
+            $ts = strtotime($value);
         }
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
-            throw new SQLException("Unable to convert value at column " . (is_int($column) ? $column + 1 : $column) . " to timestamp: " . $this->fields[$idx]);
+            throw new SQLException("Unable to convert value at column " . (is_int($column) ? $column + 1 : $column) . " to timestamp: " . $value);
         }
         if ($format === null) {
             return $ts;
@@ -447,30 +559,46 @@ abstract class ResultSetCommon {
     }
 
     /**
+     * @throws SQLException
+     * @see ResultSet::getTimestampOrNull()
+     */
+    public function getTimestampOrNull($column, $format = 'Y-m-d H:i:s')
+    {
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->getTimestamp($column, $format);
+    }
+
+    /**
+     * @throws SQLException
      * @see ResultSet::getTimestamp()
      */
     public function getTimestamp($column, $format = 'Y-m-d H:i:s')
     {
 
-        $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-        if ($this->fields[$idx] === null) { return null; }
-
-        if ($this->fields[$idx] instanceof DateTime)
-        {
-            $ts = $this->fields[$idx]->getTimestamp();
+        $value = $this->get($column);
+        if ($value === null) {
+            throw new SQLException("Invalid resultset column: " . $column);
         }
-        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $this->fields[$idx]))
+
+        if ($value instanceof DateTime)
         {
-            $ts = DateTime::createFromFormat('M d Y H:i:s:A', $this->fields[$idx])->getTimestamp();
+            $ts = $value->getTimestamp();
+        }
+        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $value))
+        {
+            $ts = DateTime::createFromFormat('M d Y H:i:s:A', $value)->getTimestamp();
         }
         else
         {
-            $ts = strtotime($this->fields[$idx]);
+            $ts = strtotime($value);
         }
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
-            throw new SQLException("Unable to convert value at column " . $column . " to timestamp: " . $this->fields[$idx]);
+            throw new SQLException("Unable to convert value at column " . $column . " to timestamp: " . $value);
         }
         if ($format === null) {
             return $ts;
