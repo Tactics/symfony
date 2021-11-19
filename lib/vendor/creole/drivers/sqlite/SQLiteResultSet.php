@@ -97,7 +97,7 @@ class SQLiteResultSet extends ResultSetCommon implements ResultSet {
      * Performs sqlite_udf_decode_binary on binary data.
      * @see ResultSet::getBlob()
      */
-    public function getBlob($column)
+    public function getBlob($column) : Blob
     {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }

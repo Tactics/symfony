@@ -179,7 +179,7 @@ class ODBCResultSet extends ODBCResultSetCommon implements ResultSet
     /**
      * @see ResultSet::getBlob()
      */
-    public function getBlob($column)
+    public function getBlob($column) : Blob
     {
         require_once 'creole/util/Blob.php';
         $idx = (is_int($column) ? $column - 1 : $column);
@@ -194,7 +194,7 @@ class ODBCResultSet extends ODBCResultSetCommon implements ResultSet
     /**
      * @see ResultSet::getClob()
      */
-    public function getClob($column)
+    public function getClob($column) : Clob
     {
         require_once 'creole/util/Clob.php';
         $idx = (is_int($column) ? $column - 1 : $column);

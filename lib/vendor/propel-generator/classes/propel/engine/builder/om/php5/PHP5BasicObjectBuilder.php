@@ -851,8 +851,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
                     $isNullAllowed = FALSE;
                 }
 
-                // For foreign keys we always allow NULL;
-                $isNullAllowed = !$col->isNotNull() || ($col->isForeignKey() || $col->isLazyLoad());
                 if ($isNullAllowed) {
                     $affix .= 'OrNull';
                 }

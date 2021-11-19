@@ -192,22 +192,4 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
     return print_r( sqlsrv_errors(), true);
   }
 
-  /**
-   * @see ResultSet::getString()
-   */
-  public function getString($column)
-  {
-      $idx = (is_int($column) ? $column - 1 : $column);
-      if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
-      if ($this->fields[$idx] === null) { return ''; }
-
-      // Fixes BU_DATE
-      // treated as text by propel, return as DateTime by SQLServer Driver
-      if ($this->fields[$idx] instanceof \DateTime)
-      {
-          return $this->fields[$idx]->getTimestamp();
-      }
-
-      return ($this->rtrimString ? rtrim($this->fields[$idx]) : (string) $this->fields[$idx]);
-  }
 }

@@ -97,7 +97,7 @@ interface ResultSet extends IteratorAggregate {
      * reason for this behavior is some drivers (e.g. SQLite) do the case conversions internally
      * based on a PHP ini value; it would not be possible to change the behavior from the ResultSet
      * (since query has already been executed).
-	 *
+     *
      * @return boolean
      */
     public function isLowerAssocCase();
@@ -272,7 +272,7 @@ interface ResultSet extends IteratorAggregate {
      * @return array value or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getArray($column);
+    public function getArray($column) : array;
 
     /**
      * Returns value translated to boolean.
@@ -281,7 +281,7 @@ interface ResultSet extends IteratorAggregate {
      * @return boolean value or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getBoolean($column);
+    public function getBoolean($column) : bool;
 
     /**
      * Returns Blob with contents of column value.
@@ -290,7 +290,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Blob New Blob with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getBlob($column);
+    public function getBlob($column) : Blob;
 
     /**
      * Returns Blob with contents of column value.
@@ -299,7 +299,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Blob New Blob with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getBlobOrNull($column);
+    public function getBlobOrNull($column) : ?Blob;
 
     /**
      * Returns Clob with contents of column value.
@@ -308,7 +308,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Clob New Clob object with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getClob($column);
+    public function getClob($column) : Clob;
 
     /**
      * Returns Clob with contents of column value.
@@ -317,7 +317,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Clob New Clob object with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getClobOrNull($column);
+    public function getClobOrNull($column) : ?Clob;
 
 
     /**
@@ -357,7 +357,7 @@ interface ResultSet extends IteratorAggregate {
      * @return float value or null if database returned null
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getFloat($column);
+    public function getFloat($column) : float;
 
     /**
      * Returns value cast as a float (in PHP this is same as double).
@@ -366,7 +366,7 @@ interface ResultSet extends IteratorAggregate {
      * @return float value or null if database returned null
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getFloatOrNull($column);
+    public function getFloatOrNull($column) : ?float;
 
     /**
      * Returns value cast as integer.
@@ -376,7 +376,7 @@ interface ResultSet extends IteratorAggregate {
      * @see getInteger()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getInt($column);
+    public function getInt($column) : int;
 
     /**
      * Returns value cast as integer.
@@ -386,7 +386,7 @@ interface ResultSet extends IteratorAggregate {
      * @see getInteger()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getIntOrNull($column);
+    public function getIntOrNull($column) : ?int;
 
     /**
      * Returns value cast as string.
@@ -396,7 +396,7 @@ interface ResultSet extends IteratorAggregate {
      * @see get()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getString($column);
+    public function getString($column) : string;
 
     /**
      * Returns value cast as string.
@@ -406,7 +406,7 @@ interface ResultSet extends IteratorAggregate {
      * @see get()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getStringOrNull($column);
+    public function getStringOrNull($column) : ?string;
 
     /**
      * Return a formatted time.

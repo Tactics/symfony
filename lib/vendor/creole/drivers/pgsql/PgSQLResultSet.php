@@ -163,7 +163,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	 * @return array
 	 * @throws SQLException - If the column specified is not a valid key in current field array.
 	 */
-	public function getArray($column)
+	public function getArray($column) : array
 	{
 		if (is_int($column)) { $column--; } // because Java convention is to start at 1
 		if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
@@ -178,7 +178,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	 * @return Blob New Blob with data from column.
 	 * @throws SQLException - If the column specified is not a valid key in current field array.
 	 */
-	public function getBlob($column)
+	public function getBlob($column) : Blob
 	{
 		if (is_int($column)) { $column--; } // because Java convention is to start at 1
 		if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
@@ -194,7 +194,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	 * @return boolean
 	 * @throws SQLException - If the column specified is not a valid key in current field array.
 	 */
-	public function getBoolean($column)
+	public function getBoolean($column) : bool
 	{
 		if (is_int($column)) { $column--; } // because Java convention is to start at 1
 		if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
