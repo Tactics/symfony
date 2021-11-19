@@ -326,6 +326,20 @@ abstract class ResultSetCommon {
      * @throws SQLException
      * @see ResultSet::getString()
      */
+    public function getStringOrNull($column): ?string
+    {
+        $value = $this->get($column);
+        if ($value === null) {
+            return null;
+        }
+
+        return ($this->rtrimString ? rtrim($value) : (string) $value);
+    }
+
+    /**
+     * @throws SQLException
+     * @see ResultSet::getString()
+     */
     public function getString($column): string
     {
         $value = $this->get($column);
