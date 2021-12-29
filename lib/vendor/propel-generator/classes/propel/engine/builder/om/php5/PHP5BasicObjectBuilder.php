@@ -1447,7 +1447,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @param      $ctype \$key Primary key.
 	 * @return     void
 	 */
-	public function setPrimaryKey(\$key)
+	public function setPrimaryKey(\$key): void
 	{
 		\$this->set".$col->getPhpName()."(\$key);
 	}
@@ -1504,7 +1504,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 *
 	 * @deprecated
 	 */
-	 public function setPrimaryKey(\$pk)
+	 public function setPrimaryKey(\$pk): void
 	 {
 		 // do nothing, because this object doesn't have any primary keys
 	 }
