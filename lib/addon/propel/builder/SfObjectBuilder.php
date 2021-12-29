@@ -28,7 +28,7 @@ class SfObjectBuilder extends PHP5ComplexObjectBuilder
     return parent::build();
   }
 
-  protected function addIncludes(&$script)
+  protected function addIncludes(string &$script)
   {
     if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
     {
@@ -91,7 +91,7 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
 ";
   }
 
-  protected function addAttributes(&$script)
+  protected function addAttributes(string &$script)
   {
     parent::addAttributes($script);
 
@@ -201,7 +201,7 @@ $script .= '
     }
   }
 
-  protected function addDoSave(&$script)
+  protected function addDoSave(string &$script)
   {
     $tmp = '';
     parent::addDoSave($tmp);
@@ -272,7 +272,7 @@ $script .= '
     $script .= $tmp;
   }
 
-  protected function addSave(&$script)
+  protected function addSave(string &$script)
   {
     $tmp = '';
     parent::addSave($tmp);

@@ -32,8 +32,6 @@ interface Persistent {
 
 	/**
 	 * getter for the object primaryKey.
-	 *
-	 * @return     ObjectKey the object primaryKey as an Object
 	 */
 	public function getPrimaryKey();
 
@@ -42,9 +40,9 @@ interface Persistent {
 	 *
 	 * @param      mixed $primaryKey The new PrimaryKey object or string (result of PrimaryKey.toString()).
 	 * @return     void
-	 * @throws     Exception, This method might throw an exceptions
+	 * @throws     Exception This method might throw an exceptions
 	 */
-	public function setPrimaryKey($primaryKey);
+	public function setPrimaryKey($primaryKey): void;
 
 
 	/**
@@ -53,15 +51,15 @@ interface Persistent {
 	 *
 	 * @return     boolean True if the object has been modified.
 	 */
-	public function isModified();
+	public function isModified(): bool;
 
 	/**
 	 * Has specified column been modified?
 	 *
-	 * @param      string $col
+	 * @param string $col
 	 * @return     boolean True if $col has been modified.
 	 */
-	public function isColumnModified($col);
+	public function isColumnModified(string $col): bool;
 
 	/**
 	 * Returns whether the object has ever been saved.  This will
@@ -70,35 +68,35 @@ interface Persistent {
 	 *
 	 * @return     boolean True, if the object has never been persisted.
 	 */
-	public function isNew();
+	public function isNew(): bool;
 
 	/**
 	 * Setter for the isNew attribute.  This method will be called
 	 * by Propel-generated children and Peers.
 	 *
-	 * @param      boolean $b the state of the object.
+	 * @param bool $b the state of the object.
 	 */
-	public function setNew($b);
+	public function setNew(bool $b);
 
 	/**
 	 * Resets (to false) the "modified" state for this object.
 	 *
 	 * @return     void
 	 */
-	public function resetModified();
+	public function resetModified() : void;
 
 	/**
 	 * Whether this object has been deleted.
-	 * @return     boolean The deleted state of this object.
+	 * @return     bool The deleted state of this object.
 	 */
-	public function isDeleted();
+	public function isDeleted(): bool;
 
 	/**
 	 * Specify whether this object has been deleted.
-	 * @param      boolean $b The deleted state of this object.
+	 * @param bool $b The deleted state of this object.
 	 * @return     void
 	 */
-	public function setDeleted($b);
+	public function setDeleted(bool $b) : void;
 
     /**
      * Deletes the object.
@@ -106,7 +104,7 @@ interface Persistent {
      * @return     void
      * @throws     Exception
      */
-	public function delete(Connection $connection = null);
+	public function delete(Connection $connection = null): void;
 
     /**
      * Saves the object.
@@ -114,5 +112,5 @@ interface Persistent {
      * @return     void
      * @throws     Exception
      */
-	public function save(Connection $connection = null);
+	public function save(Connection $connection = null): void;
 }

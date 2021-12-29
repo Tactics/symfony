@@ -32,46 +32,46 @@ require_once 'propel/om/Persistent.php';
  * @version    $Revision: 536 $
  * @package    propel.om
  */
-abstract class BaseObject {
+abstract class BaseObject implements Persistent {
 
 	/**
 	 * attribute to determine if this object has previously been saved.
 	 * @var        boolean
 	 */
-	private $_new = true;
+	private bool $_new = true;
 
 	/**
 	 * attribute to determine whether this object has been deleted.
 	 * @var        boolean
 	 */
-	private $_deleted = false;
+	private bool $_deleted = false;
 
 	/**
 	 * The columns that have been modified in current object.
 	 * Tracking modified columns allows us to only update modified columns.
 	 * @var        array
 	 */
-	protected $modifiedColumns = array();
+	protected array $modifiedColumns = [];
 
 	/**
 	 * Returns whether the object has been modified.
 	 *
-	 * @return     boolean True if the object has been modified.
+	 * @return     bool True if the object has been modified.
 	 */
-	public function isModified()
-	{
+	public function isModified(): bool
+    {
 		return !empty($this->modifiedColumns);
 	}
 
 	/**
 	 * Has specified column been modified?
 	 *
-	 * @param      string $col
-	 * @return     boolean True if $col has been modified.
+	 * @param string $col
+	 * @return     bool True if $col has been modified.
 	 */
-	public function isColumnModified($col)
-	{
-		return in_array($col, $this->modifiedColumns);
+	public function isColumnModified(string $col): bool
+    {
+		return in_array($col, $this->modifiedColumns, true);
 	}
 
 	/**
@@ -79,9 +79,9 @@ abstract class BaseObject {
 	 * be false, if the object was retrieved from storage or was created
 	 * and then saved.
 	 *
-	 * @return     true, if the object has never been persisted.
+	 * @return bool true if the object has never been persisted.
 	 */
-	public function isNew()
+	public function isNew() : bool
 	{
 		return $this->_new;
 	}
@@ -90,43 +90,44 @@ abstract class BaseObject {
 	 * Setter for the isNew attribute.  This method will be called
 	 * by Propel-generated children and Peers.
 	 *
-	 * @param      boolean $b the state of the object.
+	 * @param boolean $b the state of the object.
 	 */
-	public function setNew($b)
+	public function setNew(bool $b) : void
 	{
-		$this->_new = (boolean) $b;
+		$this->_new = $b;
 	}
 
 	/**
 	 * Whether this object has been deleted.
-	 * @return     boolean The deleted state of this object.
+	 * @return bool The deleted state of this object.
 	 */
-	public function isDeleted()
-	{
+	public function isDeleted(): bool
+    {
 		return $this->_deleted;
 	}
 
 	/**
 	 * Specify whether this object has been deleted.
-	 * @param      boolean $b The deleted state of this object.
+	 * @param boolean $b The deleted state of this object.
 	 * @return     void
 	 */
-	public function setDeleted($b)
-	{
-		$this->_deleted = (boolean) $b;
+	public function setDeleted(bool $b): void
+    {
+		$this->_deleted = $b;
 	}
 
 	/**
 	 * Sets the modified state for the object to be false.
-	 * @param      string $col If supplied, only the specified column is reset.
+	 * @param string|null $col If supplied, only the specified column is reset.
 	 * @return     void
 	 */
-	public function resetModified($col = null)
-	{
+	public function resetModified(string $col = null): void
+    {
 		if ($col !== null)
 		{
-			while (($offset = array_search($col, $this->modifiedColumns)) !== false)
-				array_splice($this->modifiedColumns, $offset, 1);
+			while (($offset = array_search($col, $this->modifiedColumns, true)) !== false) {
+                array_splice($this->modifiedColumns, $offset, 1);
+            }
 		}
 		else
 		{
@@ -139,23 +140,25 @@ abstract class BaseObject {
 	 * <code>obj</code> is an instance of <code>BaseObject</code>, delegates to
 	 * <code>equals(BaseObject)</code>.  Otherwise, returns <code>false</code>.
 	 *
-	 * @param      obj The object to compare to.
-	 * @return     Whether equal to the object specified.
+	 * @param      object The object to compare to.
+	 * @return     bool equal to the object specified.
 	 */
-	public function equals($obj)
-	{
+	public function equals($obj): bool
+    {
 		if (is_object($obj)) {
-			if ($this === $obj) {
-				return true;
-			} elseif ($this->getPrimaryKey() === null || $obj->getPrimaryKey() === null)  {
-				return false;
-			} else {
-				return ($this->getPrimaryKey() === $obj->getPrimaryKey());
-			}
-		} else {
-			return false;
-		}
-	}
+            if ($this === $obj) {
+                return true;
+            }
+
+            if ($this->getPrimaryKey() === null || $obj->getPrimaryKey() === null) {
+                return false;
+            }
+
+            return ($this->getPrimaryKey() === $obj->getPrimaryKey());
+        }
+
+        return false;
+    }
 
 	/**
 	 * If the primary key is not <code>null</code>, return the hashcode of the
@@ -163,8 +166,8 @@ abstract class BaseObject {
 	 *
 	 * @return     int Hashcode
 	 */
-	public function hashCode()
-	{
+	public function hashCode(): int
+    {
 		$ok = $this->getPrimaryKey();
 		if ($ok === null) {
 			return crc32(serialize($this));
@@ -175,12 +178,12 @@ abstract class BaseObject {
 	/**
 	 * Logs a message using Propel::log().
 	 *
-	 * @param      string $msg
-	 * @param      int $priority One of the Propel::LOG_* logging levels
+	 * @param string $msg
+	 * @param int $priority One of the Propel::LOG_* logging levels
 	 * @return     boolean
 	 */
-	protected function log($msg, $priority = Propel::LOG_INFO)
-	{
+	protected function log(string $msg, int $priority = Propel::LOG_INFO): bool
+    {
 		return Propel::log(get_class($this) . ': ' . $msg, $priority);
 	}
 
