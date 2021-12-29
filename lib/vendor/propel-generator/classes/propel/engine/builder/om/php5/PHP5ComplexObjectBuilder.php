@@ -1025,7 +1025,7 @@ $script .= "
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(Connection \$connection = null)
+	public function save(Connection \$connection = null) : void
 	{
 		if (\$this->isDeleted()) {
 			throw new PropelException(\"You cannot save an object that has been deleted.\");

@@ -628,7 +628,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      boolean
 	 * @return     void
 	 */
-	public function setDeleted(\$b)
+	public function setDeleted(\$b) : void
 	{
 		\$this->adjustStatus('deleted', \$b);
 	}
@@ -762,7 +762,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @param      boolean If true, descendants will be saved as well.
 	 * @param      Connection|null Connection to use.
 	 */
-	public function save(\$recurse = false, \$connection = null)
+	public function save(\$recurse = false, \$connection = null) : void
 	{
 		if (\$this->obj->isDeleted())
 			throw new PropelException('Cannot save deleted node.');
@@ -796,7 +796,7 @@ abstract class ".$this->getClassname()." implements IteratorAggregate {
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public function delete(\$connection = null)
+	public function delete(\$connection = null) : void
 	{
 		if (\$this->obj->isDeleted())
 			throw new PropelException('This node has already been deleted.');

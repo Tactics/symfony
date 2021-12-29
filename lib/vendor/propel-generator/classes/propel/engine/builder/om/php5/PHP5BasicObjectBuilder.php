@@ -1159,7 +1159,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(Connection \$connection = null)
+	public function delete(Connection \$connection = null) : void
 	{
 		if (\$this->isDeleted()) {
 			throw new PropelException(\"This object has already been deleted.\");
@@ -1220,7 +1220,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @return     int The number of rows affected by this insert/update operation (for non-complex OM this will be at most 1).
 	 * @throws     PropelException
 	 */
-	public function save(Connection \$connection = null)
+	public function save(Connection \$connection = null) : void
 	{
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 

@@ -1267,7 +1267,7 @@ if (!$table->isAlias() && ($addGenericAccessors || ($addGenericMutators && !$tab
 	 * @see BaseObject::setDeleted()
 	 * @see BaseObject::isDeleted()
 	 */
-	public function delete(Connection $connection = null)
+	public function delete(Connection $connection = null) : void
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
@@ -1307,7 +1307,7 @@ if ($complexObjectModel) {
 	 * @return void
 	 * @throws PropelException
 	 */
-	public function save(Connection $connection = null)
+	public function save(Connection $connection = null) : void
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
@@ -1343,7 +1343,7 @@ if($complexObjectModel) {
 		protected function doSave($connection)<?php
 } else {
 ?>
-		public function save(Connection $connection = null)<?php
+		public function save(Connection $connection = null) : void<?php
 }
 ?>
 	{

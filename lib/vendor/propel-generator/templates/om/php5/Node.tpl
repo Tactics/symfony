@@ -401,7 +401,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param boolean
      * @return void
      */
-    public function setDeleted($b)
+    public function setDeleted($b) : void
     {
         $this->adjustStatus('deleted', $b);
     }
@@ -514,7 +514,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param boolean If true, descendants will be saved as well.
      * @param Connection Connection to use.
      */
-    public function save($recurse = false, Connection $connection = null)
+    public function save($recurse = false, Connection $connection = null) : void
     {
         if ($this->obj->isDeleted())
             throw new PropelException('Cannot save deleted node.');
@@ -541,7 +541,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @return void
      * @throws PropelException
      */
-    public function delete(Connection $connection = null)
+    public function delete(Connection $connection = null) : void
     {
         if ($this->obj->isDeleted())
             throw new PropelException('This node has already been deleted.');
