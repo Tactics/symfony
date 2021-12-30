@@ -230,9 +230,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        ".$this->getPeerClassname()."
+	 * @var        ".$this->getPeerClassname()."|null
 	 */
-	protected static {$this->getPeerClassname()} \$peer;
+	protected static ?{$this->getPeerClassname()} \$peer = null;
 ";
         if (!$this->getTable()->isAlias()) {
             $this->addColumnAttributes($script);
