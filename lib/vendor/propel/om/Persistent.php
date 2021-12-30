@@ -112,5 +112,5 @@ interface Persistent {
      * @return     void
      * @throws     Exception
      */
-	public function save(Connection $connection = null): void;
+	public function save(Connection $connection = null): int;
 }

@@ -1220,7 +1220,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @return     int The number of rows affected by this insert/update operation (for non-complex OM this will be at most 1).
 	 * @throws     PropelException
 	 */
-	public function save(Connection \$connection = null) : void
+	public function save(Connection \$connection = null) : int
 	{
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 
