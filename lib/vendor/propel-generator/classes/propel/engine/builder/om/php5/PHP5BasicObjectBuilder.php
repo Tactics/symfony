@@ -1468,7 +1468,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @param      array \$keys The elements of the composite key (order must match the order in XML file).
 	 * @return     void
 	 */
-	public function setPrimaryKey(\$keys)
+	public function setPrimaryKey(\$keys) : void
 	{
 ";
         $i = 0;
