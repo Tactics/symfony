@@ -121,7 +121,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 				$script .= "
 
 		// update associated ".$tblFK->getPhpName()."
-		if (\$this->$collName !== null) {
+		if (\$this->$collName !== []) {
 			foreach(\$this->$collName as \$referrerObject) {
 				  \$referrerObject->set".$colFK->getPhpName()."(\$v);
 			  }
@@ -564,9 +564,9 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 			\$criteria = clone \$criteria;
 		}
 
-		if (\$this->$collName === null) {
+		if (\$this->$collName === []) {
 			if (\$this->isNew()) {
-				\$this->$collName = array();
+				\$this->$collName = [];
 			} else {
 ";
 				foreach ($refFK->getForeignColumns() as $columnName) {
@@ -690,8 +690,8 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 */
 	public function init$relCol()
 	{
-		if (\$this->$collName === null) {
-			\$this->$collName = array();
+		if (\$this->$collName === []) {
+			\$this->$collName = [];
 		}
 	}
 ";
@@ -816,9 +816,9 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 			\$criteria = clone \$criteria;
 		}
 
-		if (\$this->$collName === null) {
+		if (\$this->$collName === []) {
 			if (\$this->isNew()) {
-			   \$this->$collName = array();
+			   \$this->$collName = [];
 			} else {
 ";
 		foreach ($refFK->getLocalColumns() as $colFKName) {
@@ -972,7 +972,7 @@ $script .= "
 			//		it seems to work as expected and is desireable since we are also enabling the copy()ing of these related rows
 			//if ( $fk->getTable()->getName() != $table->getName() ) {
 				$script .= "
-			if (\$this->$collName !== null) {
+			if (\$this->$collName !== []) {
 				foreach(\$this->$collName as \$referrerFK) {
 					if (!\$referrerFK->isDeleted()) {
 						\$affectedRows += \$referrerFK->save(\$connection);
@@ -1158,7 +1158,7 @@ $script .= "
 			if ( $tblFK->getName() !== $table->getName() ) {
 				$collName = $this->getRefFKCollVarName($fk);
 				$script .= "
-				if (\$this->$collName !== null) {
+				if (\$this->$collName !== []) {
 					foreach(\$this->$collName as \$referrerFK) {
 						if (!\$referrerFK->validate(\$columns)) {
 							\$failureMap = array_merge(\$failureMap, \$referrerFK->getValidationFailures());
