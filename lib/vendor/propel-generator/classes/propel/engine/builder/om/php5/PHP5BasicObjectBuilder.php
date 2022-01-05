@@ -391,12 +391,12 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Get the [optionally formatted] [$clo] column value.
 	 * ".$col->getDescription()."
-	 * @param      string \$format The date/time format string (either date()-style or strftime()-style).
+	 * @param      string|null \$format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the integer unix timestamp will be returned.
 	 * @return     false|int|string|null Formatted date/time value as string or integer unix timestamp (if format is NULL).
 	 * @throws     PropelException - if unable to convert the date/time to timestamp.
 	 */
-	public function get$cfc(\$format = ".var_export($defaultfmt, true);
+	public function get$cfc(?string \$format = ".var_export($defaultfmt, true);
         if ($col->isLazyLoad()) {
             $script .= ", Connection \$connection = null";
         }
