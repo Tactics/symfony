@@ -720,7 +720,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 */
 	public function add".$this->getRefFKPhpNameAffix($refFK, false)."($className \$l)
 	{
-		\$this->coll".$this->getRefFKPhpNameAffix($refFK, true)."[] = \$l;
+		\$this->coll".$this->getRefFKPhpNameAffix($refFK, false)."[] = \$l;
 		\$l->set".$this->getFKPhpNameAffix($refFK, false)."(\$this);
 	}
 ";
