@@ -81,13 +81,13 @@ class Win32FileSystem extends FileSystem {
      */
     function normalizePrefix($strPath, $len, $sb) {
         $src = 0;
-        while (($src < $len) && $this->isSlash($strPath{$src})) {
+        while (($src < $len) && $this->isSlash($strPath[$src])) {
             $src++;
         }
         $c = "";
         if (($len - $src >= 2)
-                && $this->isLetter($c = $strPath{$src})
-                && $strPath{$src + 1} === ':') {
+                && $this->isLetter($c = $strPath[$src])
+                && $strPath[$src + 1] === ':') {
             /* Remove leading slashes if followed by drive specifier.
              * This hack is necessary to support file URLs containing drive
              * specifiers (e.g., "file://c:/path").  As a side effect,
@@ -138,15 +138,15 @@ class Win32FileSystem extends FileSystem {
         // Remove redundant slashes from the remainder of the path, forcing all
         // slashes into the preferred slash
         while ($src < $len) {
-            $c = $strPath{$src++};
+            $c = $strPath[$src++];
             if ($this->isSlash($c)) {
-                while (($src < $len) && $this->isSlash($strPath{$src})) {
+                while (($src < $len) && $this->isSlash($strPath[$src])) {
                     $src++;
                 }
                 if ($src === $len) {
                     /* Check for trailing separator */
                     $sn = (int) strlen($sb);
-                    if (($sn == 2) && ($sb{1} === ':')) {
+                    if (($sn == 2) && ($sb[1] === ':')) {
                         // "z:\\"
                         $sb .= $slash;
                         break;
@@ -230,7 +230,7 @@ class Win32FileSystem extends FileSystem {
         }
 
         if ($this->isLetter($c0) && ($c1 === ':')) {
-            if (($n > 2) && ($path{2}) === $slash) {
+            if (($n > 2) && ($path[2]) === $slash) {
                 return 3;            // Absolute local pathname "z:\\foo" */
             }
             return 2;                // Directory-relative "z:foo"
@@ -265,7 +265,7 @@ class Win32FileSystem extends FileSystem {
         }
 
         $p = $parent;
-        if ($p{$pn - 1} === $slash) {
+        if ($p[$pn - 1] === $slash) {
             $p = substr($p, 0, $pn - 1);
         }
         return $p.$this->slashify($c);
@@ -277,7 +277,7 @@ class Win32FileSystem extends FileSystem {
 
     function fromURIPath($strPath) {
         $p = (string) $strPath;
-        if ((strlen($p) > 2) && ($p{2} === ':')) {
+        if ((strlen($p) > 2) && ($p[2] === ':')) {
 
             // "/c:/foo" --> "c:/foo"
             $p = substr($p,1);
