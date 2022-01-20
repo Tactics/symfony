@@ -108,7 +108,7 @@ class pakeGetopt
         $this->arguments = array_merge($this->arguments, array($arg), $this->args);
         break;
       }
-      elseif (strlen($arg) > 1 && $arg{1} == '-')
+      elseif (strlen($arg) > 1 && $arg[1] == '-')
       {
         $this->parse_long_option(substr($arg, 2));
       }

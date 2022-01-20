@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information please see
  * <http://phing.info>.
  */
- 
+
 require_once 'phing/Task.php';
 include_once 'phing/system/io/PhingFile.php';
 include_once 'phing/util/FileUtils.php';
@@ -37,7 +37,7 @@ include_once 'phing/mappers/FlattenMapper.php';
  * @package  phing.tasks.system
  */
 class CopyTask extends Task {
-    
+
     protected $file          = null;   // the source file (from xml attribute)
     protected $destFile      = null;   // the destiantion file (from xml attribute)
     protected $destDir       = null;   // the destination dir (from xml attribute)
@@ -89,7 +89,7 @@ class CopyTask extends Task {
             $this->verbosity = PROJECT_MSG_VERBOSE;
         }
     }
-    
+
     /**
      * Set the preserve timestmap flag. IntrospectionHelper takes care of
      * booleans in set* methods so we can assume that the right
@@ -127,7 +127,7 @@ class CopyTask extends Task {
      * @return void
      * @access public
      */
-    function setFile(PhingFile $file) {        
+    function setFile(PhingFile $file) {
         $this->file = $file;
     }
 
@@ -141,7 +141,7 @@ class CopyTask extends Task {
      * @return void
      * @access public
      */
-    function setTofile(PhingFile $file) {       
+    function setTofile(PhingFile $file) {
         $this->destFile = $file;
     }
 
@@ -155,7 +155,7 @@ class CopyTask extends Task {
      * @return void
      * @access public
      */
-    function setTodir(PhingFile $dir) {        
+    function setTodir(PhingFile $dir) {
         $this->destDir = $dir;
     }
 
@@ -204,7 +204,7 @@ class CopyTask extends Task {
      * @throws  BuildException
      */
     function main() {
-    
+
         $this->validateAttributes();
 
         if ($this->file !== null) {
@@ -250,7 +250,7 @@ class CopyTask extends Task {
      * @throws  BuildException
      */
     private function validateAttributes() {
-    
+
         if ($this->file === null && count($this->filesets) === 0) {
             throw new BuildException("CopyTask. Specify at least one source - a file or a fileset.");
         }
@@ -337,14 +337,14 @@ class CopyTask extends Task {
      * @throws  BuildException
      */
     private function doWork() {
-		
-		// These "slots" allow filters to retrieve information about the currently-being-process files		
+
+		// These "slots" allow filters to retrieve information about the currently-being-process files
 		$fromSlot = $this->getRegisterSlot("currentFromFile");
-		$fromBasenameSlot = $this->getRegisterSlot("currentFromFile.basename");	
+		$fromBasenameSlot = $this->getRegisterSlot("currentFromFile.basename");
 
 		$toSlot = $this->getRegisterSlot("currentToFile");
-		$toBasenameSlot = $this->getRegisterSlot("currentToFile.basename");	
-		
+		$toBasenameSlot = $this->getRegisterSlot("currentToFile.basename");
+
         $mapSize = count($this->fileCopyMap);
         $total = $mapSize;
         if ($mapSize > 0) {
@@ -359,18 +359,18 @@ class CopyTask extends Task {
                 }
                 $this->log("From ".$from." to ".$to, $this->verbosity);
                 try { // try to copy file
-				
+
 					$fromFile = new PhingFile($from);
 					$toFile = new PhingFile($to);
-					
+
                     $fromSlot->setValue($fromFile->getPath());
 					$fromBasenameSlot->setValue($fromFile->getName());
 
 					$toSlot->setValue($toFile->getPath());
 					$toBasenameSlot->setValue($toFile->getName());
-					
-                    $this->fileUtils->copyFile($fromFile, $toFile, $this->overwrite, $this->preserveLMT, $this->filterChains, $this->getProject());
-			
+
+                    $this->fileUtils->copyFile($fromFile, $toFile, $this->getProject(), $this->overwrite, $this->preserveLMT, $this->filterChains);
+
                     $count++;
                 } catch (IOException $ioe) {
                     $this->log("Failed to copy " . $from . " to " . $to . ": " . $ioe->getMessage(), PROJECT_MSG_ERR);

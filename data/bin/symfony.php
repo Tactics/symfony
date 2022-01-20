@@ -16,6 +16,9 @@ if (!isset($sf_symfony_lib_dir))
 // set magic_quotes_runtime to off
 ini_set('magic_quotes_runtime', 'Off');
 
+// Set autoloader to remove __autoload() function which no longer works in php 8
+spl_autoload_register('legacyAutoload');
+
 // force populating $argc and $argv in the case PHP does not automatically create them (fixes #2943)
 $argv = $_SERVER['argv'];
 $argc = $_SERVER['argc'];
@@ -106,7 +109,7 @@ class simpleAutoloader
   }
 }
 
-function __autoload($class)
+function legacyAutoload($class)
 {
   static $initialized = false;
 

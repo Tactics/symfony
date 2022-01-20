@@ -109,7 +109,7 @@ class UnixFileSystem extends FileSystem {
             return $pathname;
         }
         $n = (int) $len;
-        while (($n > 0) && ($pathname{$n-1} === '/')) {
+        while (($n > 0) && ($pathname[$n-1] === '/')) {
             $n--;
         }
         if ($n === 0) {
@@ -140,7 +140,7 @@ class UnixFileSystem extends FileSystem {
         if (strlen($pathname === 0)) {
             return 0;
         }
-        return (($pathname{0} === '/') ? 1 : 0);
+        return (($pathname[0] === '/') ? 1 : 0);
     }
 
     /**
