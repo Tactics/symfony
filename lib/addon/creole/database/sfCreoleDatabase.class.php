@@ -65,9 +65,11 @@ class sfCreoleDatabase extends sfDatabase
       switch ($method)
       {
         case 'normal':
+
+          $h = ($this->getParameter('host') ? $this->getParameter('hostspec') : null);
           // get parameters normally, and all are required
           $database = $this->getParameter('database', null);
-          $hostspec = $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('hostspec') : null);
+          $hostspec = $this->getParameter('hostspec') ?: $h;
           $password = $this->getParameter('password', null);
           $phptype  = $this->getParameter('phptype',  null);
           $username = $this->getParameter('username', null);
@@ -86,7 +88,7 @@ class sfCreoleDatabase extends sfDatabase
         case 'dsn':
           $dsn = $this->getParameter('dsn');
 
-          if ($dsn == null)
+          if ($dsn === null)
           {
             // missing required dsn parameter
             $error = 'Database configuration specifies method "dsn", but is missing dsn parameter';
@@ -120,7 +122,7 @@ class sfCreoleDatabase extends sfDatabase
       $classPath = $this->getParameter('classpath');
 
       // include the creole file
-      if ($classPath == null)
+      if ($classPath === null)
       {
         require_once('creole/Creole.php');
       }

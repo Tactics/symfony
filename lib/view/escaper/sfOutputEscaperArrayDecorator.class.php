@@ -16,12 +16,12 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @var int
    */
-  private $count;
+  private int $count;
 
   /**
    * Reset the array to the beginning (as required for the Iterator interface).
    */
-  public function rewind()
+  public function rewind() : void
   {
     reset($this->value);
 
@@ -33,7 +33,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return string The key
    */
-  public function key()
+  public function key() : mixed
   {
     return key($this->value);
   }
@@ -46,7 +46,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return mixed The escaped value
    */
-  public function current()
+  public function current() : mixed
   {
     return sfOutputEscaper::escape($this->escapingMethod, current($this->value));
   }
@@ -54,7 +54,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
   /**
    * Moves to the next element (as required by the Iterator interface).
    */
-  public function next()
+  public function next(): void
   {
     next($this->value);
 
@@ -70,7 +70,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return boolean The validity of the current element; true if it is valid
    */
-  public function valid()
+  public function valid(): bool
   {
     return $this->count > 0;
   }
@@ -82,7 +82,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return boolean true if the offset exists; false otherwise
    */
-  public function offsetExists($offset)
+  public function offsetExists($offset): bool
   {
     return array_key_exists($offset, $this->value);
   }
@@ -94,7 +94,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return mixed The escaped value
    */
-  public function offsetGet($offset)
+  public function offsetGet($offset): mixed
   {
     return sfOutputEscaper::escape($this->escapingMethod, $this->value[$offset]);
   }
@@ -111,7 +111,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @throws <b>sfException</b>
    */
-  public function offsetSet($offset, $value)
+  public function offsetSet($offset, $value): void
   {
     throw new sfException('Cannot set values.');
   }
@@ -127,7 +127,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @throws sfException
    */
-  public function offsetUnset($offset)
+  public function offsetUnset($offset): void
   {
     throw new sfException('Cannot unset values.');
   }
@@ -137,7 +137,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return int The size of the array
    */
-  public function count()
+  public function count(): int
   {
     return count($this->value);
   }
@@ -149,7 +149,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    *
    * @return mixed The value
    */
-  public function getRaw($key)
+  public function getRaw($key): mixed
   {
     return $this->value[$key];
   }

@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -30,7 +30,7 @@ abstract class sfAction extends sfComponent
    *
    * @return bool true, if initialization completes successfully, otherwise false
    */
-  public function initialize($context)
+  public function initialize($context): bool
   {
     parent::initialize($context);
 
@@ -254,9 +254,9 @@ abstract class sfAction extends sfComponent
    *
    * @param  string Text to append to the response
    *
-   * @return sfView::NONE
+   * @return string
    */
-  public function renderText($text)
+  public function renderText($text): string
   {
     $this->getResponse()->setContent($this->getResponse()->getContent().$text);
 
@@ -293,7 +293,7 @@ abstract class sfAction extends sfComponent
            | sfRequest::POST
            | sfRequest::PUT
            | sfRequest::DELETE
-           | sfRequest::HEAD 
+           | sfRequest::HEAD
            | sfRequest::NONE;
   }
 
@@ -320,9 +320,9 @@ abstract class sfAction extends sfComponent
   /**
    * Returns the security configuration for this module.
    *
-   * @return string Current security configuration as an array
+   * @return array Current security configuration as an array
    */
-  public function getSecurityConfiguration()
+  public function getSecurityConfiguration(): array
   {
     return $this->security;
   }

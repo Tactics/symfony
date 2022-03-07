@@ -135,19 +135,19 @@ class sfDebugConnection implements Connection
   /**
    * @see Connection::applyLimit()
    */
-  public function applyLimit(&$sql, $offset, $limit)
+  public function applyLimit(&$sql, $offset, $limit) : void
   {
     $this->log("{sfCreole} applyLimit(): $sql, offset: $offset, limit: $limit");
-    return $this->childConnection->applyLimit($sql, $offset, $limit);
+    $this->childConnection->applyLimit($sql, $offset, $limit);
   }
 
   /**
    * @see Connection::close()
    */
-  public function close()
+  public function close() : void
   {
     $this->log("{sfCreole} close(): Closing connection.");
-    return $this->childConnection->close();
+    $this->childConnection->close();
   }
 
   /**
@@ -282,10 +282,10 @@ class sfDebugConnection implements Connection
   /**
    * @see Connection::setAutoCommit()
    */
-  public function setAutoCommit($bit)
+  public function setAutoCommit($bit) : void
   {
     $this->log("{sfCreole} setting autocommit to: ".var_export($bit, true));
-    return $this->childConnection->setAutoCommit($bit);
+    $this->childConnection->setAutoCommit($bit);
   }
 
   /**

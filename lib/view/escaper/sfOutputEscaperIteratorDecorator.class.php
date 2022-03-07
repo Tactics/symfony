@@ -56,9 +56,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return boolean true, if the iterator rewinds successfully otherwise false
    */
-  public function rewind()
+  public function rewind() : void
   {
-    return $this->iterator->rewind();
+     $this->iterator->rewind();
   }
 
   /**
@@ -66,7 +66,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return mixed The escaped value
    */
-  public function current()
+  public function current() : mixed
   {
     return sfOutputEscaper::escape($this->escapingMethod, $this->iterator->current());
   }
@@ -76,7 +76,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return string Iterator key
    */
-  public function key()
+  public function key() : mixed
   {
     return $this->iterator->key();
   }
@@ -84,9 +84,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
   /**
    * Moves to the next element in the iterator (as required by the Iterator interface).
    */
-  public function next()
+  public function next() : void
   {
-    return $this->iterator->next();
+     $this->iterator->next();
   }
 
   /**
@@ -95,7 +95,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return boolean true if the current element is valid; false otherwise
    */
-  public function valid()
+  public function valid() : bool
   {
     return $this->iterator->valid();
   }
@@ -108,7 +108,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return boolean true if the offset exists; false otherwise
    */
-  public function offsetExists($offset)
+  public function offsetExists($offset) : bool
   {
     return array_key_exists($offset, $this->value);
   }
@@ -120,7 +120,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return mixed The escaped value
    */
-  public function offsetGet($offset)
+  public function offsetGet($offset) : mixed
   {
     return sfOutputEscaper::escape($this->escapingMethod, $this->value[$offset]);
   }
@@ -137,7 +137,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @throws <b>sfException</b>
    */
-  public function offsetSet($offset, $value)
+  public function offsetSet($offset, $value): void
   {
     throw new sfException('Cannot set values.');
   }
@@ -153,7 +153,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @throws <b>sfException</b>
    */
-  public function offsetUnset($offset)
+  public function offsetUnset($offset) : void
   {
     throw new sfException('Cannot unset values.');
   }
@@ -163,7 +163,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
    *
    * @return int The size of the array
    */
-  public function count()
+  public function count() : int
   {
     return count($this->value);
   }
@@ -180,7 +180,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
      *
      * @throws <b>sfException</b> if the object does not have a callable get() method
      */
-    public function getRaw($key)
+    public function getRaw($key) : mixed
     {
         if (!is_callable(array($this->value, 'get')))
         {

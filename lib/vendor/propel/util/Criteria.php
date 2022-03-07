@@ -473,7 +473,7 @@ class Criteria implements IteratorAggregate {
 	{
 		return $this->getValue($key);
 	}
-    
+
     /**
      * Overrides Hashtable put, so that this object is returned
      * instead of the value previously in the Criteria object.
@@ -1142,23 +1142,23 @@ class CriterionIterator implements Iterator {
 		$this->criteriaSize = count($this->criteriaKeys);
 	}
 
-	public function rewind() {
+	public function rewind() : void {
 		$this->idx = 0;
 	}
 
-	public function valid() {
+	public function valid() : bool {
 		return $this->idx < $this->criteriaSize;
 	}
 
-	public function key() {
+	public function key() : mixed {
 		return $this->criteriaKeys[$this->idx];
 	}
 
-	public function current() {
+	public function current() : mixed {
 		return $this->criteria->getCriterion($this->criteriaKeys[$this->idx]);
 	}
 
-	public function next() {
+	public function next() : void {
 		$this->idx++;
 	}
 
@@ -1371,7 +1371,7 @@ class Criterion  {
 	{
 		return $this->conjunctions;
 	}
-    
+
     /**
      * Append an AND Criterion onto this Criterion's list.
      * @param Criterion $criterion
@@ -1383,7 +1383,7 @@ class Criterion  {
 		$this->conjunctions[] = self::UND;
 		return $this;
 	}
-    
+
     /**
      * Append an OR Criterion onto this Criterion's list.
      * @param Criterion $criterion
@@ -1699,7 +1699,7 @@ class Join
 	{
 		return $this->joinType;
 	}
-    
+
     /**
      * the left column of the join condition
      *
@@ -1709,7 +1709,7 @@ class Join
 	{
 		return $this->leftColumn;
 	}
-    
+
     /**
      * @return bool|string
      */
@@ -1717,7 +1717,7 @@ class Join
     {
         return substr($this->leftColumn, strpos($this->leftColumn, '.') + 1);
     }
-    
+
     /**
      * @return bool|string
      */
@@ -1725,7 +1725,7 @@ class Join
     {
         return substr($this->leftColumn, 0, strpos($this->leftColumn, '.'));
     }
-    
+
     /**
      * @return null|string the right column of the join condition
      */
@@ -1733,7 +1733,7 @@ class Join
 	{
 		return $this->rightColumn;
 	}
-    
+
     /**
      * @return bool|string
      */
@@ -1741,7 +1741,7 @@ class Join
     {
         return substr($this->rightColumn, strpos($this->rightColumn, '.') + 1);
     }
-    
+
     /**
      * @return bool|string
      */
