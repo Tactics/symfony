@@ -26,13 +26,13 @@ abstract class sfActions extends sfAction
    * This method try to execute the executeXXX() method of the current object where XXX is the
    * defined action name.
    *
-   * @return string A string containing the view name associated with this action
+   * @return mixed A string containing the view name associated with this action
    *
    * @throws sfInitializationException
    *
    * @see sfAction
    */
-  public function execute(): string
+  public function execute(): mixed
   {
     // dispatch action
     $actionToRun = 'execute'.ucfirst($this->getActionName());
