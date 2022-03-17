@@ -130,7 +130,6 @@ class DefaultLogger implements BuildListener {
                 print($error->getMessage());
             }
         }
-        print($this->lSep . "Total time: " .$this->_formatTime(Phing::currentTimeMillis() - $this->startTime) . $this->lSep);
     }
 
     /**
@@ -197,25 +196,6 @@ class DefaultLogger implements BuildListener {
             }
             $msg .= $event->getMessage();
             $this->printMessage($msg, $event->getPriority());
-        }
-    }
-
-    /**
-     *  Formats a time micro integer to human readable format.
-     *
-     * @param integer The time stamp
-     * @access private
-     * @return string
-     */
-    function _formatTime($micros) {
-        $seconds = $micros;
-        $minutes = $seconds / 60;
-        if ($minutes > 1) {
-            return sprintf("%1.0f minute%s %0.2f second%s",
-                                    $minutes, ($minutes === 1 ? " " : "s "),
-                                    $seconds - floor($seconds/60) * 60, ($seconds%60 === 1 ? "" : "s"));
-        } else {
-            return sprintf("%0.4f second%s", $seconds, ($seconds%60 === 1 ? "" : "s"));
         }
     }
 
