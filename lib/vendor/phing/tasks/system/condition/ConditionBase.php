@@ -46,7 +46,7 @@ abstract class ConditionBase extends ProjectComponent implements IteratorAggrega
     /**
      * Required for IteratorAggregate
      */
-    function getIterator() {
+    function getIterator() : \Traversable {
         return new ConditionEnumeration($this);
     }
 

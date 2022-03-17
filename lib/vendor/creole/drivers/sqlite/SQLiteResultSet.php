@@ -39,7 +39,7 @@ class SQLiteResultSet extends ResultSetCommon implements ResultSet {
      * Gets optimized SQLiteResultSetIterator.
      * @return SQLiteResultSetIterator
      */
-    public function getIterator()
+    public function getIterator() : \Traversable
     {
         require_once 'creole/drivers/sqlite/SQLiteResultSetIterator.php';
         return new SQLiteResultSetIterator($this);

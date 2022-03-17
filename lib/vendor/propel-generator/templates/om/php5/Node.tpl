@@ -121,7 +121,7 @@ class <?php echo $basePrefix . $table->getPhpName() ?>Node implements IteratorAg
      * @param array Map of option name => value.
      * @return NodeIterator
      */
-    public function getIterator($type = null, $opts = null)
+    public function getIterator($type = null, $opts = null) : \Traversable
     {
         if ($type === null)
             $type = (isset($this->itType) ? $this->itType : 'Pre');
