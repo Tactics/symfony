@@ -138,7 +138,7 @@ class sfNumberFormat
     ini_set('precision', $precision);
 
     list($number, $decimal) = $this->formatDecimal($string);
-    $integer = $this->formatInteger($this->fixFloat(abs($number)));
+    $integer = $this->formatInteger($this->fixFloat(abs((float)$number)));
 
     $result = (strlen($decimal) > 0) ? $integer.$decimal : $integer;
 
