@@ -771,6 +771,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         $isFloat = ($col->getPhpNative() === 'float');
 
         $isPrimary = $col->isPrimaryKey();
+        $isString = ($col->getPhpNative() === 'string');
         $isBoolean = ($col->getPhpNative() === 'bool');
         $isDate = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP], true);
         $isReference = $col->isLazyLoad() || $col->isForeignKey();
@@ -792,11 +793,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         // Perform some smart checking here to handle possible type discrepancies
         // between the passed-in value and the value from the DB
 
-        // When size is declared is schema we don't allow saving more chars since this will
-        // make our object hydration crash. Also we use mb_substr to take into account the
+        // When size is declared for varchar in schema we don't allow saving more chars since this will
+        // make our object hydration crash. Also, we use mb_substr to take into account the
         // 2 byte storage for special chars ë.
-        if (!empty($col->getSize())) {
-            $script .= "\$v = mb_substr(\$v, 0, " . (int) $col->getSize() . ");";
+        if ($isString && !empty($col->getSize())) {
+            $script .= "    \$v = mb_substr(\$v, 0, " . (int) $col->getSize() . ");";
         }
 
         $script .= "
