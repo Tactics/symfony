@@ -792,6 +792,13 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         // Perform some smart checking here to handle possible type discrepancies
         // between the passed-in value and the value from the DB
 
+        // When size is declared is schema we don't allow saving more chars since this will
+        // make our object hydration crash. Also we use mb_substr to take into account the
+        // 2 byte storage for special chars ë.
+        if (!empty($col->getSize())) {
+            $script .= "\$v = mb_substr(\$v, 0, " . (int) $col->getSize() . ");";
+        }
+
         $script .= "
 		if (\$this->$clo !== \$v";
         if ($defaultValue !== null) {
