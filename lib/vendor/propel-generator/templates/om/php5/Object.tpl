@@ -184,8 +184,6 @@ foreach ($table->getColumns() as $col) {
 		}
 		if ($format === null) {
 			return $ts;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $ts);
 		} else {
 			return date($format, $ts);
 		}

@@ -139,11 +139,8 @@ class MySQLResultSet extends ResultSetCommon implements ResultSet {
         if ($format === null) {
             return $ts;
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
+
+        return date($format, $ts);
     }
 
     /**

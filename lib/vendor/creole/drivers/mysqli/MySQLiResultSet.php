@@ -164,11 +164,7 @@ class MySQLiResultSet extends ResultSetCommon implements ResultSet {
             return $ts;
         }
 
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
+        return date($format, $ts);
     }
 
     /**

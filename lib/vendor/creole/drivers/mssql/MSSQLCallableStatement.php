@@ -378,24 +378,21 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
     /**
      * @see CallableStatement::getDate()
      */
-    function getDate($paramIndex, $fmt = '%Y-%m-%d')
+    function getDate($paramIndex, $format = 'Y-m-d')
     {
         if (!array_key_exists($paramIndex, $this->boundOutVars)) {
             throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
         }
-        if ($this->boundOutVars[$paramIndex] === null) { return null; }
+        if ($this->boundOutVars[$paramIndex] === null) {
+            return null;
+        }
 
         $ts = strtotime($this->boundOutVars[$paramIndex]);
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
 
-        return $this->boundOutVars[$paramIndex];
+        return date($format, $ts);
     }
 
     /**
@@ -438,7 +435,7 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
     /**
      * @see CallableStatement::getTime()
      */
-    function getTime($paramIndex, $format='%X')
+    function getTime($paramIndex, $format='Y-m-d  H:i:s')
     {
         if (!array_key_exists($paramIndex, $this->boundOutVars)) {
             throw new SQLException('Requesting variable not bound to output var: '.$paramIndex);
@@ -449,12 +446,8 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
         if ($ts === -1  || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
 
+        return date($format, $ts);
     }
 
     /**
@@ -471,11 +464,8 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
+
+        return date($format, $ts);
     }
 
 }

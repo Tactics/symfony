@@ -428,7 +428,7 @@ abstract class ResultSetCommon {
      * @throws SQLException
      * @see ResultSet::getDate()
      */
-    public function getDate($column, $format = '%x')
+    public function getDate($column, $format = 'Y-m-d')
     {
 
         $value = $this->get($column);
@@ -455,11 +455,8 @@ abstract class ResultSetCommon {
         if ($format === null) {
             return $ts;
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
+
+        return date($format, $ts);
     }
 
     /**
@@ -539,7 +536,7 @@ abstract class ResultSetCommon {
      * @throws SQLException
      * @see ResultSet::getTime()
      */
-    public function getTime($column, $format = '%X')
+    public function getTime($column, $format = 'Y-m-d H:i:s')
     {
         $value = $this->get($column);
         if ($value === null) {
@@ -565,11 +562,8 @@ abstract class ResultSetCommon {
         if ($format === null) {
             return $ts;
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
+
+        return date($format, $ts);
     }
 
     /**
@@ -617,10 +611,7 @@ abstract class ResultSetCommon {
         if ($format === null) {
             return $ts;
         }
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $ts);
-        } else {
-            return date($format, $ts);
-        }
+
+        return date($format, $ts);
     }
 }

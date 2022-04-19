@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -61,7 +61,8 @@ class sfFileLogger
    */
   public function log($message, $priority, $priorityName)
   {
-    $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
+    $time = date('Y-m-d H:i:s', time());
+    $line = sprintf("%s %s [%s] %s%s", $time, 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
 
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, $line);
