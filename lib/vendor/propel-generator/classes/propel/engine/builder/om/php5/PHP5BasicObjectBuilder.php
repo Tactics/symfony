@@ -376,11 +376,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         // these default values are based on the Creole defaults
         // the date and time default formats are locale-sensitive
         if ($col->getType() === PropelTypes::DATE) {
-            $defaultfmt = 'Y-m-d H:i:s';
+            $defaultfmt = 'Y-m-d';
         } elseif ($col->getType() === PropelTypes::TIME) {
             $defaultfmt = 'H:i:s';
         } elseif ($col->getType() === PropelTypes::TIMESTAMP) {
-            $defaultfmt = 'Y-m-d';
+            $defaultfmt = 'Y-m-d H:i:s';
         }
 
         // if the default format property was an empty string, then we'll set it
