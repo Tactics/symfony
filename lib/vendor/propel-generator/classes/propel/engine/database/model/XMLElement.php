@@ -65,29 +65,25 @@ abstract class XMLElement {
 	 */
 	public function getAttribute($name, $defaultValue = null) {
 		$name = strtolower($name);
-		if (isset($this->attributes[$name])) {
-			return $this->attributes[$name];
-		} else {
-			return $defaultValue;
-		}
-	}
+        return $this->attributes[$name] ?? $defaultValue;
+    }
 
 	/**
 	 * Converts value specified in XML to a boolean value.
 	 * This is to support the default value when used w/ a boolean column.
-	 * @return     value
+	 * @return bool
 	 */
 	protected function booleanValue($val) {
 		if (is_numeric($val)) {
 			return (bool) $val;
-		} else {
-            if (!$val) {
-                return false;
-            }
-
-			return (in_array(strtolower($val), array('true', 't', 'y', 'yes'), true) ? true : false);
 		}
-	}
+
+        if (!$val) {
+            return false;
+        }
+
+        return in_array(strtolower($val), array('true', 't', 'y', 'yes'), true);
+    }
 
 	/**
 	 * Sets vendor specific parameter that applies to this object.
