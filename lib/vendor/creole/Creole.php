@@ -246,7 +246,8 @@ class Creole {
         try {
             $obj->connect($dsninfo, $flags);
         } catch(SQLException $sqle) {
-            $sqle->setUserInfo($dsninfo);
+            $info = is_array($dsninfo) ? implode(',', $dsninfo) : $dsninfo;
+            $sqle->setUserInfo($info);
             throw $sqle;
         }
 		$persistent = ($flags & Creole::PERSISTENT) === Creole::PERSISTENT;

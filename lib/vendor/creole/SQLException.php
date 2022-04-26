@@ -50,17 +50,17 @@ class SQLException extends Exception {
             $this->setUserInfo($userinfo);
         }
     }
-    
+
     /**
      * Sets additional user / debug information for this error.
      *
-     * @param array $info
+     * @param string $info
      * @return void
      */
     public function setUserInfo($info)
     {
         $this->userInfo = $info;
-        $this->message .= " [User Info: " . implode(',' , $this->userInfo) . "]";
+        $this->message .= " [User Info: " . $this->userInfo . "]";
     }
 
     /**
