@@ -795,7 +795,15 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         // make our object hydration crash. Also, we use mb_substr to take into account the
         // 2 byte storage for special chars ë.
         if ($isString && !empty($col->getSize())) {
+            if ($isNullAllowed) {
+                $script .= "if (\$v !== null) {";
+            }
+            
             $script .= "    \$v = mb_substr(\$v, 0, " . (int) $col->getSize() . ");";
+
+            if ($isNullAllowed) {
+                $script .= "}";
+            }
         }
 
         $script .= "
