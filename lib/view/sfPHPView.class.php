@@ -52,27 +52,7 @@ class sfPHPView extends sfView
 
     return $shortcuts;
   }
-
-  /**
-   * Load core and standard helpers to be use in the template.
-   */
-  protected function loadCoreAndStandardHelpers()
-  {
-    static $coreHelpersLoaded = 0;
-
-    if ($coreHelpersLoaded)
-    {
-      return;
-    }
-
-    $coreHelpersLoaded = 1;
-    $core_helpers = array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
-    $standard_helpers = sfConfig::get('sf_standard_helpers');
-
-    $helpers = array_unique(array_merge($core_helpers, $standard_helpers));
-    sfLoader::loadHelpers($helpers);
-  }
-
+  
   /**
    * Renders the presentation.
    *
@@ -86,8 +66,6 @@ class sfPHPView extends sfView
     {
       $this->getContext()->getLogger()->info('{sfView} render "'.$_sfFile.'"');
     }
-
-    $this->loadCoreAndStandardHelpers();
 
     $_escaping = $this->getEscaping();
     if ($_escaping === false || $_escaping === 'bc')
