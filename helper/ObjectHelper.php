@@ -1,7 +1,5 @@
 <?php
 
-use_helper('Form');
-
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -292,7 +290,7 @@ function _get_object_value($object, $method, $default_value = null, $param = nul
     $param = ($param == null ? array() : array($param));
     $method = array($method, $param);
   }
-  
+
   // method exists?
   if (!is_callable(array($object, $method[0])))
   {

@@ -1,5 +1,3 @@
-[?php use_helper('Object') ?]
-
 [?php echo form_tag('<?php echo $this->getModuleName() ?>/update') ?]
 
 <?php foreach ($this->getPrimaryKey() as $pk): ?>

@@ -1,5 +1,3 @@
-[?php use_helper('I18N', 'Date') ?]
-
 [?php use_stylesheet('<?php echo $this->getParameterValue('css', sfConfig::get('sf_admin_web_dir').'/css/main') ?>') ?]
 
 <div id="sf_admin_container">

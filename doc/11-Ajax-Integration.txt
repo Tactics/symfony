@@ -23,7 +23,6 @@ Paradoxically, you will see very little JavaScript code in this chapter. This is
 All of the helpers described here are available in templates, provided that you declare the use of the `Javascript` helper group.
 
     [php]
-    <?php use_helper('Javascript') ?>
 
 As you'll soon learn, some of these helpers output HTML code, and some of them output JavaScript code.
 
@@ -588,9 +587,9 @@ containing the following array:
 
      {"title":"My basic letter","name":"Mr Brown"}
 
-Then the remote call can easily interpret this response and update several 
-fields in a row, with a little help from JavaScript. The code in Listing 
-11-28 shows what could be added to the template of Listing 11-27 to achieve 
+Then the remote call can easily interpret this response and update several
+fields in a row, with a little help from JavaScript. The code in Listing
+11-28 shows what could be added to the template of Listing 11-27 to achieve
 this effect.
 
 Listing 11-28 - Updating More Than One Element from a Remote Response
@@ -614,7 +613,7 @@ Listing 11-28 - Updating More Than One Element from a Remote Response
     ") ?>
 
 The `complete` callback has access to the Ajax response and can pass it to a
-third-party function. This custom `updateJSON()` function iterates over the 
+third-party function. This custom `updateJSON()` function iterates over the
 JSON obtained from the response via `responseJSON` and for each member of the
 array, updates the element named by the key with the content of the value.
 

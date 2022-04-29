@@ -1,4 +1,3 @@
-[?php use_helper('Object') ?]
 
 <?php if ($this->getParameterValue('list.filters')): ?>
 <div class="sf_admin_filters">

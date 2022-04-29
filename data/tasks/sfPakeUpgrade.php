@@ -433,15 +433,12 @@ function _upgrade_1_0_date_form_helpers($template_dirs)
 
     if (preg_match($regex, $content) && false === strpos($content, 'DateForm'))
     {
-      $content = "<?php use_helper('DateForm') ?>\n\n".$content;
-
       $updated = true;
       if (!$seen)
       {
         $seen = true;
 
         pake_echo_comment('date form helpers has been moved to the DateForm helper group');
-        pake_echo_comment(' add use_helper(\'DateForm\')');
       }
     }
 

@@ -631,8 +631,6 @@ function input_date_tag($name, $value = null, $options = array())
   // rich control?
   if (!_get_option($options, 'rich', false))
   {
-    use_helper('DateForm');
-
     // set culture for month tag
     $options['culture'] = $culture;
 

@@ -21,6 +21,28 @@
         "ext-bcmath": "*",
         "ext-intl": "*"
     },
+    "autoload": {
+        "files": [
+            "helper/AssetHelper.php",
+            "helper/CacheHelper.php",
+            "helper/FormHelper.php",
+            "helper/DateFormHelper.php",
+            "helper/I18NHelper.php",
+            "helper/DateHelper.php",
+            "helper/DebugHelper.php",
+            "helper/EscapingHelper.php",
+            "helper/FormHelper.php",
+            "helper/HelperHelper.php",
+            "helper/JavascriptHelper.php",
+            "helper/NumberHelper.php",
+            "helper/ObjectAdminHelper.php",
+            "helper/ObjectHelper.php",
+            "helper/TagHelper.php",
+            "helper/TextHelper.php",
+            "helper/UrlHelper.php",
+            "helper/ValidationHelper.php"
+        ]
+    },
     "require-dev": {
         "rector/rector": "^0.11.60"
     },

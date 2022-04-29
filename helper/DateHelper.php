@@ -153,8 +153,6 @@ function distance_of_time_in_words($from_time, $to_time = null, $include_seconds
 
   if (sfConfig::get('sf_i18n'))
   {
-    use_helper('I18N');
-
     return __($string, $parameters);
   }
   else
