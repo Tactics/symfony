@@ -52,7 +52,7 @@ class sfPHPView extends sfView
 
     return $shortcuts;
   }
-  
+
   /**
    * Renders the presentation.
    *

@@ -37,6 +37,7 @@
             "helper/NumberHelper.php",
             "helper/ObjectAdminHelper.php",
             "helper/ObjectHelper.php",
+            "helper/PartialHelper.php",
             "helper/TagHelper.php",
             "helper/TextHelper.php",
             "helper/UrlHelper.php",
