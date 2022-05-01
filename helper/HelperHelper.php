@@ -16,8 +16,3 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: HelperHelper.php 2165 2006-09-25 14:22:15Z fabien $
  */
-
-function use_helper()
-{
-  sfLoader::loadHelpers(func_get_args(), sfContext::getInstance()->getModuleName());
-}

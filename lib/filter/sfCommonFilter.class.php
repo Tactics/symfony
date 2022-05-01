@@ -35,7 +35,6 @@ class sfCommonFilter extends sfFilter
     $content = $response->getContent();
     if (false !== ($pos = strpos($content, '</head>')))
     {
-      sfLoader::loadHelpers(array('Tag', 'Asset'));
       $html = '';
       if (!$response->getParameter('javascripts_included', false, 'symfony/view/asset'))
       {

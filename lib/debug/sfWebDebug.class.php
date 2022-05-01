@@ -108,14 +108,6 @@ class sfWebDebug
   }
 
   /**
-   * Loads helpers needed for the web debug toolbar.
-   */
-  protected function loadHelpers()
-  {
-    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
-  }
-
-  /**
    * Formats a log line.
    *
    * @param string The log line to format
