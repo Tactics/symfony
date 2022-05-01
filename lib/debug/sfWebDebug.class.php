@@ -160,8 +160,6 @@ class sfWebDebug
       return '';
     }
 
-    $this->loadHelpers();
-
     $result = '';
 
     // max priority
@@ -415,7 +413,6 @@ class sfWebDebug
     }
 
     $cache = $context->getViewCacheManager();
-    $this->loadHelpers();
 
     $bg_color      = $new ? '#9ff' : '#ff9';
     $last_modified = $cache->lastModified($internalUri);
