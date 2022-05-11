@@ -290,7 +290,8 @@ abstract class ResultSetCommon {
     public function get($column)
     {
         $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) {
+        $fields = is_array($this->fields) ? $this->fields : [];
+        if (!array_key_exists($idx, $fields)) {
             throw new SQLException("Invalid resultset column: " . $column);
         }
         return $this->fields[$idx];
@@ -480,7 +481,8 @@ abstract class ResultSetCommon {
     public function getFloat($column): float
     {
         $idx = (is_int($column) ? $column - 1 : $column);
-        if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
+        $fields = is_array($this->fields) ? $this->fields : [];
+        if (!array_key_exists($idx, $fields)) { throw new SQLException("Invalid resultset column: " . $column); }
 
         $value = $this->get($column);
         if ($value === null) {
