@@ -34,6 +34,7 @@ class MSSQLSRVTableInfo extends TableInfo {
     /**
      * Loads the columns for this table.
      * @return void
+     * @throws SQLException
      */
     protected function initColumns()
     {
@@ -77,9 +78,11 @@ class MSSQLSRVTableInfo extends TableInfo {
 
         while ($row = sqlsrv_fetch_array($res, SQLSRV_FETCH_ASSOC)) {
             $name = $row['INDEX_NAME'];
+            $isUnique = $row['UNIQUE'];
+
             // All primary keys are indexes (right...?)
             if (!isset($this->indexes[$name])) {
-                $this->indexes[$name] = new IndexInfo($name);
+                $this->indexes[$name] = new IndexInfo($name, $isUnique, $row);
             }
             $this->indexes[$name]->addColumn($this->columns[ $row['COLUMN_NAME'] ]);
         }
@@ -97,13 +100,13 @@ class MSSQLSRVTableInfo extends TableInfo {
         if (!$this->colsLoaded) $this->initColumns();
         include_once 'creole/metadata/ForeignKeyInfo.php';
 
-        $res = sqlsrv_query("SELECT     ccu1.TABLE_NAME, ccu1.COLUMN_NAME, ccu2.TABLE_NAME AS FK_TABLE_NAME, ccu2.COLUMN_NAME AS FK_COLUMN_NAME
+        $res = sqlsrv_query($this->conn->getResource(), "SELECT     ccu1.TABLE_NAME, ccu1.COLUMN_NAME, ccu2.TABLE_NAME AS FK_TABLE_NAME, ccu2.COLUMN_NAME AS FK_COLUMN_NAME
                             FROM         INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu1 INNER JOIN
                                       INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc1 ON tc1.CONSTRAINT_NAME = ccu1.CONSTRAINT_NAME AND
                                       CONSTRAINT_TYPE = 'Foreign Key' INNER JOIN
                                       INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc1 ON rc1.CONSTRAINT_NAME = tc1.CONSTRAINT_NAME INNER JOIN
                                       INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu2 ON ccu2.CONSTRAINT_NAME = rc1.UNIQUE_CONSTRAINT_NAME
-                            WHERE     (ccu1.table_name = '".$this->name."')", $this->conn->getResource());
+                            WHERE     (ccu1.table_name = '".$this->name."')");
 
         while ($row = sqlsrv_fetch_array($res, SQLSRV_FETCH_ASSOC)) {
             $name = $row['COLUMN_NAME'];
@@ -116,7 +119,7 @@ class MSSQLSRVTableInfo extends TableInfo {
                 if ($this->database->hasTable($ftbl)) {
                     $foreignTable = $this->database->getTable($ftbl);
                 } else {
-                    $foreignTable = new TableInfo($ltbl);
+                    $foreignTable = new MSSQLSRVTableInfo($this->database, $ftbl);
                     $this->database->addTable($foreignTable);
                 }
 
@@ -144,12 +147,12 @@ class MSSQLSRVTableInfo extends TableInfo {
         if (!$this->colsLoaded) $this->initColumns();
         include_once 'creole/metadata/PrimaryKeyInfo.php';
 
-        $res = mssql_query("SELECT COLUMN_NAME
+        $res = sqlsrv_query($this->conn->getResource(), "SELECT COLUMN_NAME
                         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
                                 INNER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ON
                       INFORMATION_SCHEMA.TABLE_CONSTRAINTS.CONSTRAINT_NAME = INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE.constraint_name
                         WHERE     (INFORMATION_SCHEMA.TABLE_CONSTRAINTS.CONSTRAINT_TYPE = 'PRIMARY KEY') AND
-                      (INFORMATION_SCHEMA.TABLE_CONSTRAINTS.TABLE_NAME = '".$this->name."')", $this->conn->getResource());
+                      (INFORMATION_SCHEMA.TABLE_CONSTRAINTS.TABLE_NAME = '".$this->name."')");
 
         // Loop through the returned results, grouping the same key_name together.
         // name of the primary key will be the first column name in the key.

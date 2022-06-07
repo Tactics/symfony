@@ -131,9 +131,10 @@ class MySQLiTableInfo extends TableInfo {
         // adding each column for that key.
         while($row = mysqli_fetch_assoc($res)) {
             $name = $row["Column_name"];
+            $isUnique = ($row["Non_unique"] == 0);
 
             if (!isset($this->indexes[$name])) {
-                $this->indexes[$name] = new IndexInfo($name);
+                $this->indexes[$name] = new IndexInfo($name, $isUnique, $row);
             }
 
             $this->indexes[$name]->addColumn($this->columns[ $name ]);
