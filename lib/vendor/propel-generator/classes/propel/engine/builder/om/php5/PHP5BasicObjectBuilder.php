@@ -1584,7 +1584,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         $ucols = array();
         /** @var Unique $unice **/
         foreach ($table->getUnices() as $unice) {
-            $ucols[] = $unice->getName();
+            $uniceCols = $unice->getColumns();
+            /** @var Column $uniceCol */
+            foreach ($uniceCols as $uniceCol) {
+                $ucols[] = $uniceCol->getName();
+            }
         }
 
         foreach ($table->getColumns() as $col) {
