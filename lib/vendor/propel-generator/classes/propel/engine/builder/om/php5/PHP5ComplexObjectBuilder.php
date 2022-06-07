@@ -1246,8 +1246,15 @@ $script .= "
 			}
 		}
 
+        $ucols = array();
+        /** @var Unique $unice **/
+        foreach ($table->getUnices() as $unice) {
+            $ucols[] = $unice->getName();
+        }
+
 		foreach ($table->getColumns() as $col) {
-			if (!in_array($col->getName(), $pkcols, true)) {
+            // Primary keys and unique keys should never be copied into new object, since they are by definition unique.
+			if (!in_array($col->getName(), $pkcols, true) && !in_array($col->getName(), $ucols, true)) {
 				$script .= "
 		\$copyObj->set".$col->getPhpName()."(\$this->".strtolower($col->getName()).");
 ";

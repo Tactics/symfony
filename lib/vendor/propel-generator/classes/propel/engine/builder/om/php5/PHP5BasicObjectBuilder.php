@@ -798,7 +798,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             if ($isNullAllowed) {
                 $script .= "if (\$v !== null) {";
             }
-            
+
             $script .= "    \$v = mb_substr(\$v, 0, " . (int) $col->getSize() . ");";
 
             if ($isNullAllowed) {
@@ -1581,8 +1581,15 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             }
         }
 
+        $ucols = array();
+        /** @var Unique $unice **/
+        foreach ($table->getUnices() as $unice) {
+            $ucols[] = $unice->getName();
+        }
+
         foreach ($table->getColumns() as $col) {
-            if (!in_array($col->getName(), $pkcols, true)) {
+            // Primary keys and unique keys should never be copied into new object, since they are by definition unique.
+            if (!in_array($col->getName(), $pkcols, true) && !in_array($col->getName(), $ucols, true)) {
                 $script .= "
 		\$copyObj->set<?php echo $col->getPhpName()?>(\$this-><?php echo strtolower($col->getName()) ?>);";
             }
