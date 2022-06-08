@@ -117,7 +117,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   public function createStatement()
   {
-    require_once 'creole/drivers/mssql/MSSQLStatement.php';
+    require_once 'creole/drivers/mssqlsrv/MSSQLSRVStatement.php';
     return new MSSQLSRVStatement($this);
   }
 
