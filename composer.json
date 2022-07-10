@@ -41,7 +41,12 @@
             "helper/TagHelper.php",
             "helper/TextHelper.php",
             "helper/UrlHelper.php",
-            "helper/ValidationHelper.php"
+            "helper/ValidationHelper.php",
+            "includes/pakeFunction.php",
+            "includes/util.php"
+        ],
+        "classmap": [
+            "lib/"
         ]
     },
     "require-dev": {

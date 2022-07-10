@@ -10,31 +10,6 @@
    */
 
 /**
- * A node, used by Spyc for parsing YAML.
- * @package Spyc
- */
-class YAMLNode
-{
-  public $parent;
-  public $id;
-  public $data;
-  public $indent;
-  public $children = false;
-
-  static protected $lastNodeId = 0;
-
-  /**
-   * The constructor assigns the node a unique ID.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    $this->id = ++self::$lastNodeId;
-  }
-}
-
-/**
  * The Simple PHP YAML Class.
  *
  * This class can be used to read a YAML file and convert its contents

@@ -35,17 +35,17 @@ include_once 'phing/util/StringHelper.php';
  * @package   phing.tasks.ext
  */
 class TarTask extends MatchingTask {
-    
+
     const TAR_NAMELEN = 100;
-    
+
     const WARN = "warn";
-    const FAIL = "fail";   
-    const OMIT = "omit";    
-    
+    const FAIL = "fail";
+    const OMIT = "omit";
+
     private $tarFile;
     private $baseDir;
 	private $includeEmpty = true; // Whether to include empty dirs in the TAR
-	
+
     private $longFileMode = "warn";
 
     private $filesets = array();
@@ -55,12 +55,12 @@ class TarTask extends MatchingTask {
      * Indicates whether the user has been warned about long files already.
      */
     private $longWarningGiven = false;
-    
+
     /**
      * Compression mode.  Available options "gzip", "bzip2", "none" (null).
      */
     private $compression = null;
-    
+
     /**
      * Ensures that PEAR lib exists.
      */
@@ -70,7 +70,7 @@ class TarTask extends MatchingTask {
             throw new BuildException("You must have installed the PEAR Archive_Tar class in order to use TarTask.");
         }
     }
-    
+
     /**
      * Add a new fileset
      * @return FileSet
@@ -80,7 +80,7 @@ class TarTask extends MatchingTask {
         $this->filesets[] = $this->fileset;
         return $this->fileset;
     }
-    
+
     /**
      * Add a new fileset.  Alias to createTarFileSet() for backwards compatibility.
      * @return FileSet
@@ -144,7 +144,7 @@ class TarTask extends MatchingTask {
      * <li>  bzip2 - Bzip2 compression
      * </ul>
      */
-    public function setCompression($mode) {        
+    public function setCompression($mode) {
         switch($mode) {
             case "gzip":
                 $this->compression = "gz";
@@ -160,13 +160,13 @@ class TarTask extends MatchingTask {
                 $this->compression = null;
         }
     }
-    
+
     /**
      * do the work
      * @throws BuildException
      */
     public function main() {
-    
+
         if ($this->tarFile === null) {
             throw new BuildException("tarfile attribute must be set!", $this->getLocation());
         }
@@ -182,7 +182,7 @@ class TarTask extends MatchingTask {
         // shouldn't need to clone, since the entries in filesets
         // themselves won't be modified -- only elements will be added
         $savedFileSets = $this->filesets;
-        
+
         try {
             if ($this->baseDir !== null) {
                 if (!$this->baseDir->exists()) {
@@ -200,8 +200,8 @@ class TarTask extends MatchingTask {
                 throw new BuildException("You must supply either a basedir "
                                          . "attribute or some nested filesets.",
                                          $this->getLocation());
-            }                        
-            
+            }
+
             // check if tar is out of date with respect to each fileset
             if($this->tarFile->exists()) {
 	            $upToDate = true;
@@ -221,15 +221,15 @@ class TarTask extends MatchingTask {
 	                return;
 	            }
 			}
-			
+
             $this->log("Building tar: " . $this->tarFile->__toString(), PROJECT_MSG_INFO);
-            
+
             $tar = new Archive_Tar($this->tarFile->getAbsolutePath(), $this->compression);
-            
+
             // print errors
             $tar->setErrorHandling(PEAR_ERROR_PRINT);
-            
-            foreach($this->filesets as $fs) {                                
+
+            foreach($this->filesets as $fs) {
                     $files = $fs->getFiles($this->project, $this->includeEmpty);
                     if (count($files) > 1 && strlen($fs->getFullpath()) > 0) {
                         throw new BuildException("fullpath attribute may only "
@@ -241,21 +241,21 @@ class TarTask extends MatchingTask {
                     $filesToTar = array();
                     for ($i=0, $fcount=count($files); $i < $fcount; $i++) {
                         $f = new PhingFile($fsBasedir, $files[$i]);
-                        $filesToTar[] = $f->getAbsolutePath();                        
-                    }                    
-                    $tar->addModify($filesToTar, '', $fsBasedir->getAbsolutePath());            
+                        $filesToTar[] = $f->getAbsolutePath();
+                    }
+                    $tar->addModify($filesToTar, '', $fsBasedir->getAbsolutePath());
             }
-                         
-                
+
+
         } catch (IOException $ioe) {
                 $msg = "Problem creating TAR: " . $ioe->getMessage();
                 $this->filesets = $savedFileSets;
                 throw new BuildException($msg, $ioe, $this->getLocation());
         }
-        
+
         $this->filesets = $savedFileSets;
     }
-           
+
     /**
      * @param array $files array of filenames
      * @param PhingFile $dir
@@ -267,159 +267,6 @@ class TarTask extends MatchingTask {
         $mm->setTo($this->tarFile->getAbsolutePath());
         return count($sfs->restrict($files, $dir, null, $mm)) == 0;
     }
-   
+
 }
 
-
-/**
- * This is a FileSet with the option to specify permissions.
- * 
- * Permissions are currently not implemented by PEAR Archive_Tar,
- * but hopefully they will be in the future.
- * 
- */
-class TarFileSet extends FileSet {
-
-    private $files = null;
-
-    private $mode = 0100644;
-
-    private $userName = "";
-    private $groupName = "";
-    private $prefix = "";
-    private $fullpath = "";
-    private $preserveLeadingSlashes = false;
-
-    /**
-     *  Get a list of files and directories specified in the fileset.
-     *  @return array a list of file and directory names, relative to
-     *    the baseDir for the project.
-     */
-    public function getFiles(Project $p, $includeEmpty = true) {
-    
-        if ($this->files === null) {
-        
-            $ds = $this->getDirectoryScanner($p);
-            $this->files = $ds->getIncludedFiles();
-            
-            if ($includeEmpty) {
-            
-	            // first any empty directories that will not be implicitly added by any of the files
-				$implicitDirs = array();
-				foreach($this->files as $file) {
-					$implicitDirs[] = dirname($file);
-				} 
-				
-				$incDirs = $ds->getIncludedDirectories();
-				
-				// we'll need to add to that list of implicit dirs any directories
-				// that contain other *directories* (and not files), since otherwise
-				// we get duplicate directories in the resulting tar
-				foreach($incDirs as $dir) {
-					foreach($incDirs as $dircheck) {
-						if (!empty($dir) && $dir == dirname($dircheck)) {
-							$implicitDirs[] = $dir;
-						}
-					}
-				}
-				
-				$implicitDirs = array_unique($implicitDirs);
-				
-				// Now add any empty dirs (dirs not covered by the implicit dirs)
-				// to the files array. 
-				
-				foreach($incDirs as $dir) { // we cannot simply use array_diff() since we want to disregard empty/. dirs
-					if ($dir != "" && $dir != "." && !in_array($dir, $implicitDirs)) {
-						// it's an empty dir, so we'll add it.
-						$this->files[] = $dir;
-					}
-				}
-			} // if $includeEmpty
-			
-        } // if ($this->files===null)
-        
-        return $this->files;
-    }
-
-    /**
-     * A 3 digit octal string, specify the user, group and 
-     * other modes in the standard Unix fashion; 
-     * optional, default=0644
-     * @param string $octalString
-     */
-    public function setMode($octalString) {
-        $octal = (int) $octalString;
-        $this->mode = 0100000 | $octal;
-    }
-
-    public function getMode() {
-        return $this->mode;
-    }
-
-    /**
-     * The username for the tar entry 
-     * This is not the same as the UID, which is
-     * not currently set by the task.
-     */
-    public function setUserName($userName) {
-        $this->userName = $userName;
-    }
-
-    public function getUserName() {
-        return $this->userName;
-    }
-
-    /**
-     * The groupname for the tar entry; optional, default=""
-     * This is not the same as the GID, which is
-     * not currently set by the task.
-     */
-    public function setGroup($groupName) {
-        $this->groupName = $groupName;
-    }
-
-    public function getGroup() {
-        return $this->groupName;
-    }
-
-    /**
-     * If the prefix attribute is set, all files in the fileset
-     * are prefixed with that path in the archive.
-     * optional.
-     */
-    public function setPrefix($prefix) {
-        $this->prefix = $prefix;
-    }
-
-    public function getPrefix() {
-        return $this->prefix;
-    }
-
-    /**
-     * If the fullpath attribute is set, the file in the fileset
-     * is written with that path in the archive. The prefix attribute,
-     * if specified, is ignored. It is an error to have more than one file specified in
-     * such a fileset.
-     */
-    public function setFullpath($fullpath) {
-        $this->fullpath = $fullpath;
-    }
-
-    public function getFullpath() {
-        return $this->fullpath;
-    }
-
-    /**
-     * Flag to indicates whether leading `/'s should
-     * be preserved in the file names.
-     * Optional, default is <code>false</code>.
-     * @return void
-     */
-    public function setPreserveLeadingSlashes($b) {
-        $this->preserveLeadingSlashes = (boolean) $b;
-    }
-
-    public function getPreserveLeadingSlashes() {
-        return $this->preserveLeadingSlashes;
-    }
-}

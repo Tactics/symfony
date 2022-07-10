@@ -231,7 +231,7 @@ class Path extends DataType {
                 $o = $o->getReferencedObject($this->project);
                 // we only support references to paths right now
                 if (!($o instanceof Path)) {
-                    $msg = $r->getRefId() . " doesn't denote a path";
+                    $msg = " doesn't denote a path";
                     throw new BuildException($msg);
                 }
             }
@@ -261,7 +261,7 @@ class Path extends DataType {
                 $ds = $dset->getDirectoryScanner($this->project);
                 $dirstrs = $ds->getIncludedDirectories();
                 $dir = $dset->getDir($this->project);
-                $this->addUnlessPresent($result, $dir, $s);
+                $this->addUnlessPresent($result, $dir);
 
                 foreach($dirstrs as $dstr) {
                     $d = new PhingFile($dir, $dstr);
@@ -319,9 +319,6 @@ class Path extends DataType {
             try {
                 $element .= self::resolveFile($project, $pathElement);
             } catch (BuildException $e) {
-                $this->project->log("Dropping path element " . $pathElement
-                    . " as it is not valid relative to the project",
-                    PROJECT_MSG_VERBOSE);
             }
 
             for ($i = 0, $_i=strlen($element); $i < $_i; $i++) {
@@ -379,7 +376,6 @@ class Path extends DataType {
     public function __clone() {
         $p = new Path($this->project);
         $p->append($this);
-        return $p;
     }
 
     /**
@@ -428,30 +424,3 @@ class Path extends DataType {
     }
 
 }
-
-
-/**
- * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
- */
-class PathElement {
-
-    private $parts = array();
-    private $outer;
-
-    public function __construct(Path $outer) {
-        $this->outer = $outer;
-    }
-
-    public function setDir(PhingFile $loc) {
-        $this->parts = array(Path::translateFile($loc->getAbsolutePath()));
-    }
-
-    public function setPath($path) {
-        $this->parts = Path::translatePath($this->outer->getProject(), $path);
-    }
-
-    public function getParts() {
-        return $this->parts;
-    }
-}
-?>

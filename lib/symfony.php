@@ -51,9 +51,6 @@ else
   require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
 }
 
-// autoloading
-sfCore::initAutoload();
-
 try
 {
   $configCache = sfConfigCache::getInstance();
@@ -96,12 +93,6 @@ try
   if (sfConfig::get('sf_i18n'))
   {
     include($configCache->checkConfig($sf_app_config_dir_name.'/i18n.yml'));
-  }
-
-  // add autoloading callables
-  foreach ((array) sfConfig::get('sf_autoloading_functions', array()) as $callable)
-  {
-    sfCore::addAutoloadCallable($callable);
   }
 
   // error settings

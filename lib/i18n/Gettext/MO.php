@@ -1,28 +1,5 @@
 <?php
 
-// +----------------------------------------------------------------------+
-// | PEAR :: File :: Gettext :: MO                                        |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 3.0 of the PHP license,       |
-// | that is available at http://www.php.net/license/3_0.txt              |
-// | If you did not receive a copy of the PHP license and are unable      |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
-// +----------------------------------------------------------------------+
-//
-// $Id: MO.php 9858 2008-06-25 11:34:30Z fabien $
-
-/**
- * File::Gettext::MO
- *
- * @author      Michael Wallner <mike@php.net>
- * @license     PHP License
- */
-
-require_once dirname(__FILE__).'/TGettext.class.php';
-
 /**
  * File_Gettext_MO
  *
@@ -33,7 +10,7 @@ require_once dirname(__FILE__).'/TGettext.class.php';
  * @access      public
  * @package System.I18N.core
  */
-class TGettext_MO extends TGettext
+class MO extends TGettext
 {
     /**
      * file handle
