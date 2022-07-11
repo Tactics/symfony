@@ -51,6 +51,10 @@ else
   require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
 }
 
+// propel initialization
+Propel::setConfiguration(sfPropelDatabase::getConfiguration());
+Propel::initialize();
+
 try
 {
   $configCache = sfConfigCache::getInstance();

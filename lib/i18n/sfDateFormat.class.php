@@ -20,7 +20,6 @@
 /**
  * Gets the encoding utilities
  */
-require_once(dirname(__FILE__).'/util.php');
 
 /**
  * sfDateFormat class.

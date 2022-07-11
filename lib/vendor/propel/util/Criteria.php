@@ -180,7 +180,7 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function getIterator() : \Traversable
 	{
-		return new CriterionIterator($this);
+		return new \CriterionIterator($this);
 	}
 
 		/**
@@ -364,7 +364,7 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function getNewCriterion($column, $value, $comparison = null)
 	{
-		return new Criterion($this, $column, $value, $comparison);
+		return new \Criterion($this, $column, $value, $comparison);
 	}
 
 	/**
@@ -562,7 +562,7 @@ class Criteria implements IteratorAggregate {
 			$this->map[$c->getTable() . '.' . $c->getColumn()] = $c;
 		} else {
 			$column = $p1;
-			$this->map[$column] = new Criterion($this, $column, $value, $comparison);
+			$this->map[$column] = new \Criterion($this, $column, $value, $comparison);
 		}
 		return $this;
 	}
@@ -1027,7 +1027,7 @@ class Criteria implements IteratorAggregate {
 		if ($p3 !== null) {
 			// addAnd(column, value, comparison)
 			$oc = $this->getCriterion($p1);
-			$nc = new Criterion($this, $p1, $p2, $p3);
+			$nc = new \Criterion($this, $p1, $p2, $p3);
 			if ($oc === null) {
 				$this->map[$p1] = $nc;
 			} else {
@@ -1088,7 +1088,7 @@ class Criteria implements IteratorAggregate {
 		if ($p3 !== null) {
 			// addOr(column, value, comparison)
 			$oc = $this->getCriterion($p1);
-			$nc = new Criterion($this, $p1, $p2, $p3);
+			$nc = new \Criterion($this, $p1, $p2, $p3);
 			if ($oc === null) {
 				$this->map[$p1] = $nc;
 			} else {

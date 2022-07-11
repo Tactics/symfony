@@ -21,14 +21,13 @@
 /**
  * Gets the encoding utilities
  */
-require_once(dirname(__FILE__).'/util.php');
 
 /**
  * sfMessageFormat class.
- * 
- * Format a message, that is, for a particular message find the 
- * translated message. The following is an example using 
- * a SQLite database to store the translation message. 
+ *
+ * Format a message, that is, for a particular message find the
+ * translated message. The following is an example using
+ * a SQLite database to store the translation message.
  * Create a new message format instance and echo "Hello"
  * in simplified Chinese. This assumes that the world "Hello"
  * is translated in the database.
@@ -38,8 +37,8 @@ require_once(dirname(__FILE__).'/util.php');
  *  $source->setCulture('zh_CN');
  *  $source->setCache(new sfMessageCache('./tmp'));
  *
- *  $formatter = new sfMessageFormat($source); 
- *  
+ *  $formatter = new sfMessageFormat($source);
+ *
  *  echo $formatter->format('Hello');
  * </code>
  *
@@ -82,7 +81,7 @@ class sfMessageFormat
 
   /**
    * Set the default catalogue.
-   * @var string 
+   * @var string
    */
   public $Catalogue;
 
@@ -106,7 +105,7 @@ class sfMessageFormat
     $this->setCharset($charset);
   }
 
-  /** 
+  /**
    * Sets the charset for message output.
    *
    * @param string charset, default is UTF-8
@@ -125,7 +124,7 @@ class sfMessageFormat
   {
     return $this->charset;
   }
-  
+
   /**
    * Loads the message from a particular catalogue. A listed
    * loaded catalogues is kept to prevent reload of the same
@@ -233,7 +232,7 @@ class sfMessageFormat
       // we found it, so return the target translation
       if (isset($variant[$string]))
       {
-        $target = $variant[$string]; 
+        $target = $variant[$string];
 
         // check if it contains only strings.
         if (is_array($target))
@@ -270,16 +269,16 @@ class sfMessageFormat
   /**
    * Gets the message source.
    *
-   * @return MessageSource 
+   * @return MessageSource
    */
   function getSource()
   {
     return $this->source;
   }
-  
+
   /**
    * Sets the prefix and suffix to append to untranslated messages.
-   * e.g. $postscript=array('[T]','[/T]'); will output 
+   * e.g. $postscript=array('[T]','[/T]'); will output
    * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
    *
    * @param array first element is the prefix, second element the suffix.

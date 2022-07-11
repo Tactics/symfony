@@ -21,7 +21,6 @@
 /**
  * Get the encoding utilities
  */
-require_once(dirname(__FILE__).'/util.php');
 
 /**
  * sfNumberFormat class.

@@ -21,11 +21,10 @@
 /**
  * Get the I18N utility file, contains the DSN parser.
  */
-require_once(dirname(__FILE__).'/util.php');
 
 /**
  * sfMessageSource_SQLite class.
- * 
+ *
  * Retrieve the message translation from a SQLite database.
  *
  * See the MessageSource::factory() method to instantiate this class.
@@ -94,7 +93,7 @@ class sfMessageSource_SQLite extends sfMessageSource
 {
   /**
    * The SQLite datasource, the filename of the database.
-   * @var string 
+   * @var string
    */
   protected $source;
 
@@ -120,11 +119,11 @@ class sfMessageSource_SQLite extends sfMessageSource
   {
     $variant = sqlite_escape_string($variant);
 
-    $statement = 
+    $statement =
       "SELECT t.id, t.source, t.target, t.comments
         FROM trans_unit t, catalogue c
         WHERE c.cat_id =  t.cat_id
-          AND c.name = '{$variant}' 
+          AND c.name = '{$variant}'
         ORDER BY id ASC";
 
     $db = sqlite_open($this->source);
@@ -251,7 +250,7 @@ class sfMessageSource_SQLite extends sfMessageSource
   /**
    * Updates the catalogue last modified time.
    *
-   * @return boolean true if updated, false otherwise. 
+   * @return boolean true if updated, false otherwise.
    */
   protected function updateCatalogueTime($cat_id, $variant, $db)
   {
@@ -268,7 +267,7 @@ class sfMessageSource_SQLite extends sfMessageSource
   }
 
   /**
-   * Saves the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -331,7 +330,7 @@ class sfMessageSource_SQLite extends sfMessageSource
    * @param string the new translation string.
    * @param string comments
    * @param string the catalogue of the translation.
-   * @return boolean true if translation was updated, false otherwise. 
+   * @return boolean true if translation was updated, false otherwise.
    */
   function update($text, $target, $comments, $catalogue = 'messages')
   {
@@ -372,7 +371,7 @@ class sfMessageSource_SQLite extends sfMessageSource
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
-   * @return boolean true if deleted, false otherwise. 
+   * @return boolean true if deleted, false otherwise.
    */
   function delete($message, $catalogue = 'messages')
   {
@@ -405,7 +404,7 @@ class sfMessageSource_SQLite extends sfMessageSource
   /**
    * Returns a list of catalogue as key and all it variants as value.
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   function catalogues()
   {
