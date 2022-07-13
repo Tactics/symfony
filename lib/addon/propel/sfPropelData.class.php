@@ -200,14 +200,6 @@ class sfPropelData extends sfData
         }
 
         $peer_class = $class.'Peer';
-
-        if (!$classPath = sfCore::getClassPath($peer_class))
-        {
-          throw new sfException(sprintf('Unable to find path for class "%s".', $peer_class));
-        }
-
-        require_once($classPath);
-
         call_user_func(array($peer_class, 'doDeleteAll'), $this->con);
 
         $this->deletedClasses[] = $class;
@@ -227,12 +219,6 @@ class sfPropelData extends sfData
     $mapBuilderClass = $class.'MapBuilder';
     if (!isset($this->maps[$class]))
     {
-      if (!$classPath = sfCore::getClassPath($mapBuilderClass))
-      {
-        throw new sfException(sprintf('Unable to find path for class "%s".', $mapBuilderClass));
-      }
-
-      require_once($classPath);
       $this->maps[$class] = new $mapBuilderClass();
       $this->maps[$class]->doBuild();
     }
