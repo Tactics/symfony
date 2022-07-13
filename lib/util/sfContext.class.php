@@ -61,6 +61,10 @@ class sfContext
       // setup our database connections
       $this->databaseManager = new sfDatabaseManager();
       $this->databaseManager->initialize();
+
+      // propel initialization
+      Propel::setConfiguration(sfPropelDatabase::getConfiguration());
+      Propel::initialize();
     }
 
     // create a new action stack
