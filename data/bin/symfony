@@ -17,12 +17,90 @@ if (file_exists('config/config.php'))
 
 if (!isset($sf_symfony_lib_dir))
 {
-    throw new Exception('Unable to find symfony libraries due to missing config $sf_symfony_lib_dir');
+    throw new \RuntimeException('Unable to find symfony libraries due to missing config $sf_symfony_lib_dir');
 }
 
 if (!isset($sf_symfony_data_dir))
 {
-    throw new Exception('Unable to find symfony libraries due to missing config $sf_symfony_data_dir');
+    throw new \RuntimeException('Unable to find symfony libraries due to missing config $sf_symfony_data_dir');
 }
 
-include($sf_symfony_data_dir.'/bin/symfony.php');
+if (isset($GLOBALS['_composer_autoload_path'])) {
+    define('PHPUNIT_COMPOSER_INSTALL', $GLOBALS['_composer_autoload_path']);
+
+    unset($GLOBALS['_composer_autoload_path']);
+} else {
+    foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
+        if (file_exists($file)) {
+            define('PHPUNIT_COMPOSER_INSTALL', $file);
+
+            break;
+        }
+    }
+
+    unset($file);
+}
+
+// set magic_quotes_runtime to off
+ini_set('magic_quotes_runtime', 'Off');
+
+// force populating $argc and $argv in the case PHP does not automatically create them (fixes #2943)
+$argv = $_SERVER['argv'];
+$argc = $_SERVER['argc'];
+
+// check if we are using an old project
+
+// trap -V before pake
+if (in_array('-V', $argv) || in_array('--version', $argv))
+{
+    printf("symfony version %s\n", pakeColor::colorize(trim(file_get_contents($sf_symfony_lib_dir.'/VERSION')), 'INFO'));
+    exit(0);
+}
+
+if (count($argv) <= 1)
+{
+    $argv[] = '-T';
+}
+
+require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
+
+sfConfig::add(array(
+    'sf_root_dir'         => getcwd(),
+    'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
+    'sf_symfony_data_dir' => $sf_symfony_data_dir,
+));
+
+// directory layout
+include($sf_symfony_data_dir.'/config/constants.php');
+
+// include path
+set_include_path(
+    sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
+    sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
+    sfConfig::get('sf_model_dir').PATH_SEPARATOR.
+    sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
+    get_include_path()
+);
+
+// register tasks
+$dirs = array(
+    sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'tasks'         => 'myPake*.php', // project tasks
+    sfConfig::get('sf_symfony_data_dir').DIRECTORY_SEPARATOR.'tasks' => 'sfPake*.php', // symfony tasks
+    sfConfig::get('sf_root_dir').'/plugins/*/data/tasks'             => '*.php',       // plugin tasks
+);
+foreach ($dirs as $globDir => $name)
+{
+    if ($dirs = glob($globDir))
+    {
+        $tasks = pakeFinder::type('file')->ignore_version_control()->name($name)->in($dirs);
+        foreach ($tasks as $task)
+        {
+            include_once($task);
+        }
+    }
+}
+
+// run task
+pakeApp::get_instance()->run(null, null, false);
+
+exit(0);
