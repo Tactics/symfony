@@ -43,12 +43,15 @@
             "helper/UrlHelper.php",
             "helper/ValidationHelper.php",
             "includes/pakeFunction.php",
-            "includes/util.php"
+            "includes/util.php",
         ],
         "classmap": [
             "lib/"
         ]
     },
+    "bin": [
+        "/data/bin/symfony.php"
+    ],
     "require-dev": {
         "rector/rector": "^0.11.60"
     },
