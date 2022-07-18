@@ -375,7 +375,7 @@ abstract class OMBuilder extends DataModelBuilder {
 		} else {
 			$const = strtoupper($col->getName());
 		}
-		return $classname.'::'.$const;
+		return 'Base' . $classname.'::'.$const;
 	}
 
 	/**
