@@ -1,13 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-/*
- * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Require composer autoloader
+if (file_exists(__DIR__ . '/../../../../autoload.php')) {
+    require(__DIR__ . '/../../../../autoload.php');
+} else {
+    throw new \RuntimeException('Unable to find composer autoload file, try running composer install first.');
+}
+
 
 // project exists?
 if (file_exists('config/config.php'))
@@ -25,21 +25,6 @@ if (!isset($sf_symfony_data_dir))
     throw new \RuntimeException('Unable to find symfony libraries due to missing config $sf_symfony_data_dir');
 }
 
-if (isset($GLOBALS['_composer_autoload_path'])) {
-    define('PHPUNIT_COMPOSER_INSTALL', $GLOBALS['_composer_autoload_path']);
-
-    unset($GLOBALS['_composer_autoload_path']);
-} else {
-    foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
-        if (file_exists($file)) {
-            define('PHPUNIT_COMPOSER_INSTALL', $file);
-
-            break;
-        }
-    }
-
-    unset($file);
-}
 
 // set magic_quotes_runtime to off
 ini_set('magic_quotes_runtime', 'Off');
@@ -61,8 +46,6 @@ if (count($argv) <= 1)
 {
     $argv[] = '-T';
 }
-
-require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
 sfConfig::add(array(
     'sf_root_dir'         => getcwd(),

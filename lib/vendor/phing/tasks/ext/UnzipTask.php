@@ -20,7 +20,7 @@
 
 require_once 'phing/tasks/ext/ExtractBaseTask.php';
 require_once 'phing/system/io/FileSystem.php';
-require_once 'phing/lib/Zip.php';
+require_once 'phing/lib/Zip_Archive.php';
 
 /**
  * Extracts one or several zip archive using PEAR Archive_Zip (which is presently unreleased
@@ -32,7 +32,7 @@ require_once 'phing/lib/Zip.php';
  * @since     2.2.0
  */
 class UnzipTask extends ExtractBaseTask {
-    
+
     protected function extractArchive(PhingFile $zipfile)
     {
         $extractParams = array('add_path' => $this->todir->getAbsolutePath());
@@ -40,12 +40,12 @@ class UnzipTask extends ExtractBaseTask {
         {
             $extractParams['remove_path'] = $this->removepath;
         }
-        
+
         $this->log("Extracting zip: " . $zipfile->__toString() . ' to ' . $this->todir->__toString(), PROJECT_MSG_INFO);
-        
+
     	try {
         	$zip = new Archive_Zip($zipfile->getAbsolutePath());
-        	
+
         	$extractResponse = $zip->extract($extractParams);
         	if(is_array($extractResponse)) {
         	    foreach ($extractResponse as $extractedPath) {
@@ -59,7 +59,7 @@ class UnzipTask extends ExtractBaseTask {
             throw new BuildException($msg, $ioe, $this->getLocation());
         }
     }
-    
+
     protected function listArchiveContent(PhingFile $zipfile)
     {
         $zip = new Archive_Zip($zipfile->getAbsolutePath());
