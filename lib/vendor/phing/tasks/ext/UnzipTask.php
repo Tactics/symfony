@@ -20,7 +20,7 @@
 
 require_once 'phing/tasks/ext/ExtractBaseTask.php';
 require_once 'phing/system/io/FileSystem.php';
-require_once 'phing/lib/Zip_Archive.php';
+require_once 'phing/lib/Archive_Zip.php';
 
 /**
  * Extracts one or several zip archive using PEAR Archive_Zip (which is presently unreleased
