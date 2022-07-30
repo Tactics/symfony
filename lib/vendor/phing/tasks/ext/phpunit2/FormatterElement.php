@@ -19,10 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/ext/phpunit2/XMLPHPUnit2ResultFormatter.php';
-require_once 'phing/tasks/ext/phpunit2/PlainPHPUnit2ResultFormatter.php';
-require_once 'phing/system/io/PhingFile.php';
-
 /**
  * A wrapper for the implementations of PHPUnit2ResultFormatter.
  *
@@ -34,13 +30,13 @@ require_once 'phing/system/io/PhingFile.php';
 class FormatterElement
 {
 	protected $formatter = NULL;
-	
+
 	protected $type = "";
-	
+
 	protected $useFile = true;
-	
+
 	protected $toDir = ".";
-	
+
 	protected $outfile = "";
 
 	function setType($type)
@@ -74,17 +70,17 @@ class FormatterElement
 	{
 		$this->useFile = $useFile;
 	}
-	
+
 	function getUseFile()
 	{
 		return $this->useFile;
 	}
-	
+
 	function setToDir($toDir)
 	{
 		$this->toDir = $toDir;
 	}
-	
+
 	function getToDir()
 	{
 		return $this->toDir;
@@ -94,7 +90,7 @@ class FormatterElement
 	{
 		$this->outfile = $outfile;
 	}
-	
+
 	function getOutfile()
 	{
 		if ($this->outfile)
@@ -106,7 +102,7 @@ class FormatterElement
 			return $this->formatter->getPreferredOutfile() . $this->getExtension();
 		}
 	}
-	
+
 	function getExtension()
 	{
 		return $this->formatter->getExtension();

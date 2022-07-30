@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-require_once 'phing/tasks/ext/ioncube/IoncubeComment.php';
-
 /**
  * Invokes the ionCube Encoder (PHP4 or PHP5)
  *
@@ -35,20 +32,20 @@ class IoncubeEncoderTask extends Task
 	private $phpVersion = "5";
 	private $ioncubePath = "/usr/local/ioncube";
 	private $encoderName = "ioncube_encoder";
-	
+
 	private $fromDir = "";
 	private $toDir = "";
-	
+
 	private $encrypt = "";
-	
+
 	private $targetOption = "";
 	private $binary = false;
 	private $optimize = "";
 	private $withoutRuntimeLoaderSupport = false;
-	
+
 	private $licensePath = "";
 	private $passPhrase = "";
-	
+
 	private $comments = array();
 
 	/**
@@ -82,7 +79,7 @@ class IoncubeEncoderTask extends Task
 	{
 		return $this->phpVersion;
 	}
-	
+
 	/**
 	 * Sets the source directory
 	 */
@@ -98,7 +95,7 @@ class IoncubeEncoderTask extends Task
 	{
 		return $this->fromDir;
 	}
-	
+
 	/**
 	 * Sets the target directory
 	 */
@@ -122,7 +119,7 @@ class IoncubeEncoderTask extends Task
 	{
 		$this->encrypt = $encrypt;
 	}
-	
+
 	/**
 	 * Returns regexps of additional files to encrypt (separated by space)
 	 */
@@ -130,7 +127,7 @@ class IoncubeEncoderTask extends Task
 	{
 		return $this->encrypt;
 	}
-	
+
 	/**
 	 * Sets the binary option
 	 */
@@ -138,7 +135,7 @@ class IoncubeEncoderTask extends Task
 	{
 		$this->binary = $binary;
 	}
-	
+
 	/**
 	 * Returns the binary option
 	 */
@@ -154,7 +151,7 @@ class IoncubeEncoderTask extends Task
 	{
 		$this->optimize = $optimize;
 	}
-	
+
 	/**
 	 * Returns the optimize option
 	 */
@@ -170,7 +167,7 @@ class IoncubeEncoderTask extends Task
 	{
 		$this->withoutRuntimeLoaderSupport = $withoutRuntimeLoaderSupport;
 	}
-	
+
 	/**
 	 * Returns the without-runtime-loader-support option
 	 */
@@ -178,7 +175,7 @@ class IoncubeEncoderTask extends Task
 	{
 		return $this->withoutRuntimeLoaderSupport;
 	}
-	
+
 	/**
 	 * Sets the option to use when encoding target directory already exists (defaults to none)
 	 */
@@ -194,7 +191,7 @@ class IoncubeEncoderTask extends Task
 	{
 		return $this->targetOption;
 	}
-	
+
 	/**
 	 * Sets the path to the license file to use
 	 */
@@ -243,17 +240,17 @@ class IoncubeEncoderTask extends Task
 	function main()
 	{
 		$arguments = $this->constructArguments();
-		
+
 		$encoder = new PhingFile($this->ioncubePath, $this->encoderName . ($this->phpVersion == 5 ? '5' : ''));
-		
+
 		$this->log("Running ionCube Encoder...");
-		
+
 		exec($encoder->__toString() . " " . $arguments . " 2>&1", $output, $return);
-		
+
         if ($return != 0)
         {
 			throw new BuildException("Could not execute ionCube Encoder: " . implode(' ', $output));
-        }       
+        }
 	}
 
 	/**
@@ -262,22 +259,22 @@ class IoncubeEncoderTask extends Task
 	private function constructArguments()
 	{
 		$arguments = "";
-		
+
 		if ($this->binary)
 		{
 			$arguments.= "--binary ";
 		}
-		
+
 		if (!empty($this->optimize))
 		{
 			$arguments.= "--optimize " . $this->optimize . " ";
 		}
-		
+
 		if ($this->withoutRuntimeLoaderSupport)
 		{
 			$arguments.= "--without-runtime-loader-support ";
 		}
-		
+
 		if (!empty($this->targetOption))
 		{
 			switch ($this->targetOption)
@@ -289,14 +286,14 @@ class IoncubeEncoderTask extends Task
 				{
 					$arguments.= "--" . $this->targetOption . "-target ";
 				} break;
-				
+
 				default:
 				{
 					throw new BuildException("Unknown target option '" . $this->targetOption . "'");
 				} break;
 			}
 		}
-		
+
 		if (!empty($this->encrypt))
 		{
 			foreach (explode(" ", $this->encrypt) as $encrypt)
@@ -304,7 +301,7 @@ class IoncubeEncoderTask extends Task
 				$arguments.= "--encrypt '$encrypt' ";
 			}
 		}
-		
+
 		if (!empty($this->licensePath))
 		{
 			$arguments.= "--with-license '" . $this->licensePath . "' ";
@@ -314,12 +311,12 @@ class IoncubeEncoderTask extends Task
 		{
 			$arguments.= "--passphrase '" . $this->passPhrase . "' ";
 		}
-		
+
 		foreach ($this->comments as $comment)
 		{
 			$arguments.= "--add-comment '" . $comment->getValue() . "' ";
 		}
-		
+
 		if ($this->fromDir != "")
 		{
 			$arguments .= $this->fromDir . " ";

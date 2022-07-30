@@ -121,16 +121,6 @@ class sfCreoleDatabase extends sfDatabase
       // get creole class path
       $classPath = $this->getParameter('classpath');
 
-      // include the creole file
-      if ($classPath === null)
-      {
-        require_once('creole/Creole.php');
-      }
-      else
-      {
-        require_once($classPath);
-      }
-
       // set our flags
       $noAssocLower = $this->getParameter('no_assoc_lower', false);
       $persistent   = $this->getParameter('persistent', false);

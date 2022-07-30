@@ -19,9 +19,6 @@
  * <http://creole.phpdb.org>.
  */
 
-require_once 'creole/ResultSet.php';
-require_once 'creole/common/ResultSetCommon.php';
-
 /**
  * MSSQL implementation of ResultSet.
  *

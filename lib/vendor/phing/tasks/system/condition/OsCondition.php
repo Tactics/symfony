@@ -19,8 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/system/condition/ConditionBase.php';
-
 /**
  *  Condition that tests the OS type.
  *
@@ -40,7 +38,7 @@ class OsCondition implements Condition {
 
     function evaluate() {
         $osName = strtolower(Phing::getProperty("os.name"));
-		
+
         if ($this->family !== null) {
             if ($this->family === "windows") {
                 return StringHelper::startsWith("win", $osName);

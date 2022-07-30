@@ -19,8 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/input/InputRequest.php';
-
 /**
  * Encapsulates an input request.
  *
@@ -38,7 +36,7 @@ class MultipleChoiceInputRequest extends InputRequest {
      *                Must not be null.
      */
     public function __construct($prompt, $choices) {
-        parent::__construct($prompt);        
+        parent::__construct($prompt);
         $this->choices = $choices;
     }
 

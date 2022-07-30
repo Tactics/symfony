@@ -19,11 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-require_once 'phing/system/io/PhingFile.php';
-require_once 'phing/system/io/Writer.php';
-require_once 'phing/system/util/Properties.php';
-require_once 'phing/tasks/ext/coverage/CoverageMerger.php';
 
 /**
  * Merges code coverage snippets into a code coverage database
@@ -63,28 +58,28 @@ class CoverageMergerTask extends Task
 			$ds->scan();
 
 			$includedFiles = $ds->getIncludedFiles();
-			
+
 			foreach ($includedFiles as $file)
 			{
 				$fs = new PhingFile(basename($ds->getBaseDir()), $file);
-					
+
 				$files[] = $fs->getAbsolutePath();
 			}
 		}
 
 		return $files;
 	}
-	
+
 	function main()
 	{
 		$files = $this->getFilenames();
-		
+
 		$this->log("Merging " . count($files) . " coverage files");
 
 		foreach ($files as $file)
 		{
 			$coverageInformation = unserialize(file_get_contents($file));
-			
+
 			CoverageMerger::merge($this->project, array($coverageInformation));
 		}
 	}

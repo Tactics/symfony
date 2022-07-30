@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-include_once 'phing/tasks/system/condition/ConditionBase.php';
-
 /**
  *  <available> task.
  *
@@ -36,13 +33,13 @@ class AvailableTask extends Task {
 
     /** Property to check for. */
     private $property;
-    
+
     /** Value property should be set to. */
     private $value = "true";
-    
+
     /** Resource to check for */
     private $resource;
-    
+
     private $type = null;
     private $filepath = null;
 
@@ -77,13 +74,13 @@ class AvailableTask extends Task {
 
     function evaluate() {
         if ($this->file === null && $this->resource === null) {
-            throw new BuildException("At least one of (file|resource) is required", $this->location);            
+            throw new BuildException("At least one of (file|resource) is required", $this->location);
         }
 
         if ($this->type !== null && ($this->type !== "file" && $this->type !== "dir")) {
             throw new BuildException("Type must be one of either dir or file", $this->location);
         }
-        
+
         if (($this->file !== null) && !$this->_checkFile()) {
             $this->log("Unable to find " . $this->file->__toString() . " to set property " . $this->property, PROJECT_MSG_VERBOSE);
             return false;

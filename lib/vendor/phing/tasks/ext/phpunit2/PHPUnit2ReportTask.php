@@ -19,16 +19,11 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-require_once 'phing/system/io/PhingFile.php';
-require_once 'phing/system/io/FileWriter.php';
-require_once 'phing/util/ExtendedFileStream.php';
-
 /**
  * Transform a PHPUnit2 xml report using XSLT.
  * This transformation generates an html report in either framed or non-framed
- * style. The non-framed style is convenient to have a concise report via mail, 
- * the framed report is much more convenient if you want to browse into 
+ * style. The non-framed style is convenient to have a concise report via mail,
+ * the framed report is much more convenient if you want to browse into
  * different packages or testcases since it is a Javadoc like report.
  *
  * @author Michiel Rook <michiel.rook@gmail.com>
@@ -70,14 +65,14 @@ class PHPUnit2ReportTask extends Task
 	}
 
 	/**
-	 * Set the directory where the files resulting from the 
+	 * Set the directory where the files resulting from the
 	 * transformation should be written to.
 	 */
 	function setToDir($toDir)
 	{
 		$this->toDir = $toDir;
 	}
-	
+
 	/**
 	 * Returns the path to the XSL stylesheet
 	 */
@@ -92,7 +87,7 @@ class PHPUnit2ReportTask extends Task
 		else
 		{
 			$path = Phing::getResourcePath("phing/etc/$xslname");
-			
+
 			if ($path === NULL)
 			{
 				$path = Phing::getResourcePath("etc/$xslname");
@@ -102,7 +97,7 @@ class PHPUnit2ReportTask extends Task
 					throw new BuildException("Could not find $xslname in resource path");
 				}
 			}
-			
+
 			$file = new PhingFile($path);
 		}
 
@@ -113,19 +108,19 @@ class PHPUnit2ReportTask extends Task
 
 		return $file;
 	}
-	
+
 	/**
 	 * Transforms the DOM document
 	 */
 	private function transform(DOMDocument $document)
 	{
 		$dir = new PhingFile($this->toDir);
-		
+
 		if (!$dir->exists())
 		{
 			throw new BuildException("Directory '" . $this->toDir . "' does not exist");
 		}
-		
+
 		$xslfile = $this->getStyleSheet();
 
 		$xsl = new DOMDocument();
@@ -151,7 +146,7 @@ class PHPUnit2ReportTask extends Task
 			$proc->transformToXML($document);
 		}
 	}
-	
+
 	/**
 	 * Fixes 'testsuite' elements with no package attribute, adds
 	 * package="default" to those elements.
@@ -159,7 +154,7 @@ class PHPUnit2ReportTask extends Task
 	private function fixPackages(DOMDocument $document)
 	{
 		$testsuites = $document->getElementsByTagName('testsuite');
-		
+
 		foreach ($testsuites as $testsuite)
 		{
 			if (!$testsuite->hasAttribute('package'))
@@ -178,9 +173,9 @@ class PHPUnit2ReportTask extends Task
 	{
 		$testSuitesDoc = new DOMDocument();
 		$testSuitesDoc->load($this->inFile);
-		
+
 		$this->fixPackages($testSuitesDoc);
-		
+
 		$this->transform($testSuitesDoc);
 	}
 }

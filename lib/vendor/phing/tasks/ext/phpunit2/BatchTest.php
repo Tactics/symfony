@@ -19,7 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/types/FileSet.php';
 
 /**
  * Scans a list of (.php) files given by the fileset attribute, extracts
@@ -40,10 +39,10 @@ class BatchTest
 
 	/** the classpath to use with Phing::__import() calls */
 	private $classpath = NULL;
-	
+
 	/** names of classes to exclude */
 	private $excludeClasses = array();
-	
+
 	/**
 	 * Create a new batchtest instance
 	 *
@@ -53,7 +52,7 @@ class BatchTest
 	{
 		$this->project = $project;
 	}
-	
+
 	/**
 	 * Sets the classes to exclude
 	 */
@@ -132,7 +131,7 @@ class BatchTest
 
 		return $filenames;
 	}
-	
+
 	/**
 	 * Filters an array of classes, removes all classes that are not subclasses of PHPUnit2_Framework_TestCase,
 	 * or classes that are declared abstract
@@ -140,7 +139,7 @@ class BatchTest
 	private function filterTests($input)
 	{
 		$reflect = new ReflectionClass($input);
-		
+
 		return is_subclass_of($input, 'PHPUnit2_Framework_TestCase') && (!$reflect->isAbstract());
 	}
 
@@ -153,16 +152,16 @@ class BatchTest
 	function elements()
 	{
 		$filenames = $this->getFilenames();
-		
-		$declaredClasses = array();		
+
+		$declaredClasses = array();
 
 		foreach ($filenames as $filename)
 		{
 			$definedClasses = PHPUnit2Util::getDefinedClasses($filename, $this->classpath);
-			
+
 			$declaredClasses = array_merge($declaredClasses, $definedClasses);
 		}
-		
+
 		$elements = array_filter($declaredClasses, array($this, "filterTests"));
 
 		return $elements;

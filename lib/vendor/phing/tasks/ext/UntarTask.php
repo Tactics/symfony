@@ -18,8 +18,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/ext/ExtractBaseTask.php';
-
 /**
  * Extracts one or several tar archives using PEAR Archive_Tar
  *
@@ -29,7 +27,7 @@ require_once 'phing/tasks/ext/ExtractBaseTask.php';
  * @since     2.2.0
  */
 class UntarTask extends ExtractBaseTask {
-    
+
     /**
      * Ensures that PEAR lib exists.
      */
@@ -39,11 +37,11 @@ class UntarTask extends ExtractBaseTask {
             throw new BuildException("You must have installed the PEAR Archive_Tar class in order to use UntarTask.");
         }
     }
-    
+
     protected function extractArchive(PhingFile $tarfile)
     {
         $this->log("Extracting tar file: " . $tarfile->__toString() . ' to ' . $this->todir->__toString(), PROJECT_MSG_INFO);
-        
+
     	try {
         	$tar = $this->initTar($tarfile);
         	if(!$tar->extractModify($this->todir->getAbsolutePath(), $this->removepath)) {
@@ -54,13 +52,13 @@ class UntarTask extends ExtractBaseTask {
             throw new BuildException($msg, $ioe, $this->getLocation());
         }
     }
-    
+
     protected function listArchiveContent(PhingFile $tarfile)
     {
         $tar = $this->initTar($tarfile);
         return $tar->listContent();
     }
-    
+
     /**
      * Init a Archive_Tar class with correct compression for the given file.
      *
@@ -84,7 +82,7 @@ class UntarTask extends ExtractBaseTask {
             default:
                 $this->log('Ignoring unknown compression mode: ' . $mode, PROJECT_MSG_WARN);
         }
-        
+
     	return new Archive_Tar($tarfile->getAbsolutePath(), $compression);
     }
 }

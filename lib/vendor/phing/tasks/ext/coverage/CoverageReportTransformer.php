@@ -19,11 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-require_once 'phing/system/io/PhingFile.php';
-require_once 'phing/system/io/FileWriter.php';
-require_once 'phing/util/ExtendedFileStream.php';
-
 /**
  * Transform a Phing/Xdebug code coverage xml report.
  * The default transformation generates an html report in framed style.
@@ -96,7 +91,7 @@ class CoverageReportTransformer
 		else
 		{
 			$path = Phing::getResourcePath("phing/etc/$xslname");
-			
+
 			if ($path === NULL)
 			{
 				$path = Phing::getResourcePath("etc/$xslname");
@@ -106,7 +101,7 @@ class CoverageReportTransformer
 					throw new BuildException("Could not find $xslname in resource path");
 				}
 			}
-			
+
 			$file = new PhingFile($path);
 		}
 

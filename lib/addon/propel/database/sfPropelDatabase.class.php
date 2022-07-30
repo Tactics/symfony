@@ -65,7 +65,6 @@ class sfPropelDatabase extends sfCreoleDatabase
 
     if ($dsn = $this->getParameter('dsn'))
     {
-      require_once('creole/Creole.php');
       $params = Creole::parseDSN($dsn);
 
       $options = array('phptype', 'hostspec', 'database', 'username', 'password', 'port', 'protocol', 'encoding', 'persistent', 'socket','compat_assoc_lower','compat_rtrim_string');

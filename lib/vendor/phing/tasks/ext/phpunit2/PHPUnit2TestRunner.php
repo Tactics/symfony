@@ -19,14 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'PHPUnit2/Framework/TestListener.php';
-require_once 'PHPUnit2/Framework/TestResult.php';
-require_once 'PHPUnit2/Framework/TestSuite.php';
-
-require_once 'phing/tasks/ext/coverage/CoverageMerger.php';
-
-require_once 'phing/system/util/Timer.php';
-
 /**
  * Simple Testrunner for PHPUnit2 that runs all tests of a testsuite.
  *
@@ -45,9 +37,9 @@ class PHPUnit2TestRunner
 	private $suite = NULL;
 	private $retCode = 0;
 	private $formatters = array();
-	
+
 	private $codecoverage = false;
-	
+
 	private $project = NULL;
 
 	function __construct(PHPUnit2_Framework_TestSuite $suite, Project $project)
@@ -56,7 +48,7 @@ class PHPUnit2TestRunner
 		$this->project = $project;
 		$this->retCode = self::SUCCESS;
 	}
-	
+
 	function setCodecoverage($codecoverage)
 	{
 		$this->codecoverage = $codecoverage;
@@ -82,12 +74,12 @@ class PHPUnit2TestRunner
 		}
 
 		$this->suite->run($res);
-		
+
 		if ($this->codecoverage)
 		{
 			CoverageMerger::merge($this->project, $res->getCodeCoverageInformation());
 		}
-		
+
 		if ($res->errorCount() != 0)
 		{
 			$this->retCode = self::ERRORS;

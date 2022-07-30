@@ -1,5 +1,4 @@
 <?php
-require_once 'phing/Task.php';
 
 /**
  * A PHP lint task. Checking syntax of one or more PHP source file.
@@ -19,7 +18,7 @@ class PhpLintTask extends Task {
   public function setFile(PhingFile $file) {
     $this->file = $file;
   }
-  
+
   /**
    * Nested creator, creates a FileSet for this task
    *

@@ -20,7 +20,6 @@
  * <http://propel.phpdb.org>.
  */
 
-require_once 'propel/engine/builder/sql/DDLBuilder.php';
 
 /**
  * DDL Builder class for MySQL.

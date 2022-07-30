@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/ext/CreoleTask.php';
-include_once 'phing/system/io/StringReader.php';
-
 /**
  * Executes a series of SQL statements on a database using Creole.
  *
@@ -503,4 +500,3 @@ class CreoleSQLExecTask extends CreoleTask {
         if ($out !== null) $out->newLine();
     }
 }
-

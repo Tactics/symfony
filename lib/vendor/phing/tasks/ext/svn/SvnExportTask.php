@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-require_once 'phing/tasks/ext/svn/SvnBaseTask.php';
-
 /**
  * Exports/checks out a repository to a local directory
  *
@@ -59,9 +56,9 @@ class SvnExportTask extends SvnBaseTask
 	function main()
 	{
 		$this->setup('export');
-		
+
 		$this->log("Exporting SVN repository to '" . $this->toDir . "'");
-		
+
 		$this->run(array($this->toDir));
 	}
 }

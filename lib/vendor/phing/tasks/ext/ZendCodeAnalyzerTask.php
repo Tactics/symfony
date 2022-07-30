@@ -1,9 +1,8 @@
 <?php
-require_once 'phing/Task.php';
 
 /**
  * ZendCodeAnalyzerTask analyze PHP source code using the ZendCodeAnalyzer included in Zend Studio 5.1
- * 
+ *
  * Available warnings:
  * <b>zend-error</b> - %s(line %d): %s
  * <b>oneline-comment</b> - One-line comment ends with ?> tag.
@@ -42,7 +41,7 @@ require_once 'phing/Task.php';
  * @package  phing.tasks.ext
  */
 class ZendCodeAnalyzerTask extends Task {
-  
+
   protected $analyzerPath = ""; // Path to ZendCodeAnalyzer binary
   protected $file = "";  // the source file (from xml attribute)
   protected $filesets = array(); // all fileset objects assigned to this task
@@ -50,16 +49,16 @@ class ZendCodeAnalyzerTask extends Task {
   protected $counter = 0;
   protected $disable = array();
   protected $enable = array();
-  
+
   /**
    * File to be analyzed
-   * 
+   *
    * @param PhingFile $file
    */
   public function setFile(PhingFile $file) {
     $this->file = $file;
   }
-  
+
   /**
    * Path to ZendCodeAnalyzer binary
    *
@@ -68,7 +67,7 @@ class ZendCodeAnalyzerTask extends Task {
   public function setAnalyzerPath($analyzerPath) {
     $this->analyzerPath = $analyzerPath;
   }
-  
+
   /**
    * Disable warning levels. Seperate warning levels with ','
    *
@@ -77,7 +76,7 @@ class ZendCodeAnalyzerTask extends Task {
   public function setDisable($disable) {
     $this->disable = explode(",", $disable);
   }
-  
+
   /**
    * Enable warning levels. Seperate warning levels with ','
    *
@@ -86,7 +85,7 @@ class ZendCodeAnalyzerTask extends Task {
   public function setEnable($enable) {
     $this->enable = explode(",", $enable);
   }
-  
+
   /**
    * Nested creator, creates a FileSet for this task
    *
@@ -107,7 +106,7 @@ class ZendCodeAnalyzerTask extends Task {
     if(!isset($this->file) and count($this->filesets) == 0) {
       throw new BuildException("Missing either a nested fileset or attribute 'file' set");
     }
-    
+
     if($this->file instanceof PhingFile) {
       $this->analyze($this->file->getPath());
     } else { // process filesets
@@ -133,7 +132,7 @@ class ZendCodeAnalyzerTask extends Task {
   protected function analyze($file) {
     if(file_exists($file)) {
       if(is_readable($file)) {
-      	
+
       	// Construct shell command
       	$cmd = $this->analyzerPath." ";
       	foreach($this->enable as $enable) { // Enable warning levels
@@ -143,7 +142,7 @@ class ZendCodeAnalyzerTask extends Task {
       		$cmd .= " --disable $disable ";
       	}
       	$cmd .= "$file 2>&1";
-      	
+
       	// Execute command
       	$result = shell_exec($cmd);
       	$result = explode("\n", $result);

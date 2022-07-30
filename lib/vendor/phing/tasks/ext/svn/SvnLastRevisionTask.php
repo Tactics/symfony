@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-require_once 'phing/tasks/ext/svn/SvnBaseTask.php';
-
 /**
  * Stores the number of the last revision of a workingcopy in a property
  *
@@ -59,9 +56,9 @@ class SvnLastRevisionTask extends SvnBaseTask
 	function main()
 	{
 		$this->setup('info');
-		
+
 		$output = $this->run();
-		
+
 		if (preg_match('/Rev:[\s]+([\d]+)/', $output, $matches))
 		{
 			$this->project->setProperty($this->getPropertyName(), $matches[1]);

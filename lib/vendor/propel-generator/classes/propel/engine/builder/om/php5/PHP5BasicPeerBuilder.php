@@ -20,7 +20,6 @@
  * <http://propel.phpdb.org>.
  */
 
-require_once 'propel/engine/builder/om/PeerBuilder.php';
 
 /**
  * Generates a PHP5 base Peer class for user object model (OM).

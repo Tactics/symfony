@@ -19,13 +19,11 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/system/lang/EventObject.php';
-
 /**
  * Encapsulates a build specific event.
  *
  * <p>We have three sources of events all handled by this class:
- * 
+ *
  * <ul>
  *  <li>Project level events</li>
  *  <li>Target level events</li>

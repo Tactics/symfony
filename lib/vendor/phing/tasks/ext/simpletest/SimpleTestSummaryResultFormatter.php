@@ -19,8 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/ext/simpletest/SimpleTestResultFormatter.php';
-
 /**
  * Prints short summary output of the test to Phing's logging system.
  *
@@ -34,7 +32,7 @@ class SimpleTestSummaryResultFormatter extends SimpleTestResultFormatter
 	function paintCaseEnd($test_name)
 	{
 		parent::paintCaseEnd($test_name);
-		
+
 		/* Only count suites where more than one test was run */
 		if ($this->getRunCount())
 		{

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'propel/engine/builder/om/php5/PHP5MapBuilderBuilder.php';
-
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -48,7 +46,7 @@ class SfMapBuilderBuilder extends PHP5MapBuilderBuilder
     {
       $sizes[$col->getPhpName()] = !$col->getSize() ? 'null' : $col->getSize();
     }
-    
+
     $script = preg_replace_callback("/\\\$tMap\->addColumn\('([^']+)', '([^']+)', '([^']+)', CreoleTypes\:\:VARCHAR, (false|true)\)/", function($m){
       return '"\\\$tMap->addColumn(\'$m[1]\', \'$m[2]\', \'$m[3]\', CreoleTypes::VARCHAR, $m[4], {$sizes[\'$m[2]\']})"';
     }, $script);

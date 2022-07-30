@@ -19,11 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/system/MatchingTask.php';
-include_once 'phing/util/SourceFileScanner.php';
-include_once 'phing/mappers/MergeMapper.php';
-include_once 'phing/util/StringHelper.php';
-
 /**
  * Creates a tar archive using PEAR Archive_Tar.
  *
@@ -269,4 +264,3 @@ class TarTask extends MatchingTask {
     }
 
 }
-

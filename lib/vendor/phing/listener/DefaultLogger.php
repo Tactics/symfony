@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/BuildListener.php';
-include_once 'phing/BuildEvent.php';
-
 /**
  *  Writes a build event to the console.
  *

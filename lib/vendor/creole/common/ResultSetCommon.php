@@ -125,7 +125,6 @@ abstract class ResultSetCommon {
      */
     public function getIterator(): \Traversable
     {
-        require_once 'creole/ResultSetIterator.php';
         return new ResultSetIterator($this);
     }
 
@@ -401,8 +400,6 @@ abstract class ResultSetCommon {
      */
     public function getClob($column): Clob
     {
-        require_once 'creole/util/Clob.php';
-
         $value = $this->get($column);
         if ($value === null) {
             return new Clob();

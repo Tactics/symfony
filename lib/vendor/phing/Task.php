@@ -19,9 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/ProjectComponent.php';
-include_once 'phing/RuntimeConfigurable.php';
-
 /**
  * The base class for all Tasks.
  *
@@ -37,19 +34,19 @@ abstract class Task extends ProjectComponent {
 
     /** owning Target object */
     protected $target;
-    
+
     /** description of the task */
     protected $description;
-    
+
     /** internal taskname (req) */
     protected $taskType;
-    
+
     /** taskname for logger */
     protected $taskName;
-    
+
     /** stored buildfile location */
     protected $location;
-    
+
     /** wrapper of the task */
     protected $wrapper;
 
@@ -119,15 +116,15 @@ abstract class Task extends ProjectComponent {
     function setTaskType($name) {
         $this->taskType = (string) $name;
     }
-	
+
 	/**
-	 * Returns a name 
-	 * 
+	 * Returns a name
+	 *
 	 */
 	protected function getRegisterSlot($slotName) {
 		return Register::getSlot('task.' . $this->getTaskName() . '.' . $slotName);
 	}
-	
+
     /**
      *  Provides a project level log event to the task.
      *

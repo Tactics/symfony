@@ -19,17 +19,16 @@
  * <http://creole.phpdb.org>.
  */
 
-require_once 'creole/util/Lob.php';
 
 /**
  * A class for handling binary LOBs.
- * 
+ *
  * @author    Hans Lellelid <hans@xmpl.org>
  * @version   $Revision: 1.5 $
  * @package   creole.util
  */
-class Blob extends Lob {            
-    
+class Blob extends Lob {
+
     /**
      * Dump the contents of the file using fpassthru().
      *
@@ -38,7 +37,7 @@ class Blob extends Lob {
      */
     function dump()
     {
-        if (!$this->data) {            
+        if (!$this->data) {
             // hmmm .. must be a file that needs to read in
             if ($this->inFile) {
                 $fp = @fopen($this->inFile, "rb");
@@ -50,13 +49,13 @@ class Blob extends Lob {
             } else {
                 throw new Exception('No data to dump');
             }
-        
-        } else {            
+
+        } else {
             echo $this->data;
-        }        
-        
+        }
+
     }
-    
-    
+
+
 
 }

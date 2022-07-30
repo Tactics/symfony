@@ -1,7 +1,7 @@
 <?php
 /*
- *  $Id: ConditionTask.php 3076 2006-12-18 08:52:12Z fabien $  
- * 
+ *  $Id: ConditionTask.php 3076 2006-12-18 08:52:12Z fabien $
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -18,8 +18,6 @@
  * and is licensed under the LGPL. For more information please see
  * <http://phing.info>.
 */
-
-require_once 'phing/tasks/system/condition/ConditionBase.php';
 
 /**
  *  <condition> task as a generalization of <available>
@@ -66,7 +64,7 @@ class ConditionTask extends ConditionBase {
         if ($this->countConditions() < 1) {
             throw new BuildException("You must nest a condition into <condition>");
         }
-        $cs = $this->getIterator();        
+        $cs = $this->getIterator();
         if ($cs->current()->evaluate()) {
             $this->project->setProperty($this->property, $this->value);
         }

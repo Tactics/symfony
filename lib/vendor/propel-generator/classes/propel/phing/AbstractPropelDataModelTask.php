@@ -20,11 +20,6 @@
  * <http://propel.phpdb.org>.
  */
 
-//include_once 'phing/tasks/ext/CapsuleTask.php';
-require_once 'phing/Task.php';
-include_once 'propel/engine/database/model/AppData.php';
-include_once 'propel/engine/database/model/Database.php';
-include_once 'propel/engine/database/transform/XmlToAppData.php';
 
 /**
  * An abstract base Propel task to perform work related to the XML schema file.

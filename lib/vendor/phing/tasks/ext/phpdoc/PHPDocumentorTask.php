@@ -20,15 +20,13 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/Task.php';
-
 /**
  * Task to run phpDocumentor.
  *
  * @author Michiel Rook <michiel.rook@gmail.com>
  * @version $Id: PHPDocumentorTask.php 3076 2006-12-18 08:52:12Z fabien $
  * @package phing.tasks.ext.phpdoc
- */	
+ */
 class PHPDocumentorTask extends Task
 {
 	/**
@@ -97,7 +95,7 @@ class PHPDocumentorTask extends Task
 
 	/**
 	 * Set the output type
-	 */		
+	 */
 	function setOutput($output)
 	{
 		$this->output = $output;
@@ -134,7 +132,7 @@ class PHPDocumentorTask extends Task
 		{
 			throw new BuildException("Could not execute phpDocumentor: " . implode(' ', $output));
 		}
-		
+
 		foreach($output as $line)
 		{
 			if(strpos($line, 'ERROR') !== false)
@@ -142,7 +140,7 @@ class PHPDocumentorTask extends Task
 				$this->log($line, PROJECT_MSG_ERR);
 				continue;
 			}
-			
+
 			$this->log($line, PROJECT_MSG_VERBOSE);
 		}
 	}

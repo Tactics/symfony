@@ -19,9 +19,7 @@
 	 * and is licensed under the LGPL. For more information please see
 	 * <http://phing.info>.
 	 */
-	
-	require_once 'phing/system/io/Writer.php';
-	require_once 'phing/Task.php';
+
 
 	/**
 	 * Extends the Writer class to output messages to Phing's log
@@ -33,9 +31,9 @@
 	class LogWriter extends Writer
 	{
 		private $task = NULL;
-		
+
 		private $level = NULL;
-		
+
 		/**
 		 * Constructs a new LogWriter object
 		 */
@@ -44,25 +42,25 @@
 			$this->task = $task;
 			$this->level = $level;
 		}
-		
+
 		/**
 		 * @see Writer::write()
 		 */
 		function write($buf, $off = null, $len = null)
 		{
 			$lines = explode("\n", $buf);
-			
+
 			foreach ($lines as $line)
 			{
 				if ($line == "")
 				{
 					continue;
 				}
-				
+
 				$this->task->log($line, $this->level);
 			}
 		}
-		
+
 		/**
 		 * @see Writer::reset()
 		 */
@@ -76,14 +74,14 @@
 		function close()
 		{
 		}
-		
+
 		/**
 		 * @see Writer::open()
 		 */
 		function open()
 		{
 		}
-		
+
 		/**
 		 * @see Writer::getResource()
 		 */

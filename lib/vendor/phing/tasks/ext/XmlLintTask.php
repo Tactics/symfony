@@ -1,5 +1,4 @@
 <?php
-require_once 'phing/Task.php';
 
 /**
  * A XML lint task. Checking syntax of one or more XML files against an XML Schema using the DOM extension.
@@ -30,7 +29,7 @@ class XmlLintTask extends Task {
   public function setSchema(PhingFile $schema) {
     $this->schema = $schema;
   }
-  
+
   /**
    * Nested creator, creates a FileSet for this task
    *

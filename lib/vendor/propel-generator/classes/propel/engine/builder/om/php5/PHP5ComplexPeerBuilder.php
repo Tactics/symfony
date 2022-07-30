@@ -20,8 +20,6 @@
  * <http://propel.phpdb.org>.
  */
 
-require_once 'propel/engine/builder/om/php5/PHP5BasicPeerBuilder.php';
-
 /**
  * Generates a PHP5 base Peer class with complex object model methods.
  *

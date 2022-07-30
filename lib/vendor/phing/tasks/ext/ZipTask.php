@@ -19,12 +19,6 @@
  * <http://phing.info>.
  */
 
-require_once 'phing/tasks/system/MatchingTask.php';
-include_once 'phing/util/SourceFileScanner.php';
-include_once 'phing/mappers/MergeMapper.php';
-include_once 'phing/util/StringHelper.php';
-include_once 'phing/lib/Archive_Zip.php';
-
 /**
  * Creates a zip archive using PEAR Archive_Zip (which is presently unreleased
  * and included with Phing).
