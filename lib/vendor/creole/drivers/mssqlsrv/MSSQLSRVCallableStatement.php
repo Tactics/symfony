@@ -372,7 +372,6 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     if ($this->boundOutVars[$paramIndex] === null) {
         return new Blob();
     }
-    require_once 'creole/util/Blob.php';
     $b = new Blob();
     $b->setContents($this->boundOutVars[$paramIndex]);
     return $b;

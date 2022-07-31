@@ -102,7 +102,6 @@ class SQLiteResultSet extends ResultSetCommon implements ResultSet {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
         if ($this->fields[$idx] === null) { return new Blob(); }
-        require_once 'creole/util/Blob.php';
         $b = new Blob();
         $b->setContents(sqlite_udf_decode_binary($this->fields[$idx]));
         return $b;

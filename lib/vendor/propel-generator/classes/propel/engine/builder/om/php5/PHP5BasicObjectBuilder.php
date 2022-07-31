@@ -92,10 +92,7 @@ require_once '".$this->getFilePath($interface)."';
             }
 
             if($includes_lobs) {
-                $script .= "
-include_once 'creole/util/Clob.php';
-include_once 'creole/util/Blob.php';
-";
+                $script .= "";
             }
         } // if table is not alias
 

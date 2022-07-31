@@ -370,7 +370,6 @@ abstract class ResultSetCommon {
      */
     public function getBlob($column): Blob
     {
-        require_once 'creole/util/Blob.php';
 
         $value = $this->get($column);
         if ($value === null) {

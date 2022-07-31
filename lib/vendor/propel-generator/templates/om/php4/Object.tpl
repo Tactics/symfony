@@ -43,8 +43,6 @@ if (! $table->isAlias())
   if($includes_lobs)
   {
 ?>
-include_once 'creole/util/Clob.php';
-include_once 'creole/util/Blob.php';
 <?php
   }
 }
