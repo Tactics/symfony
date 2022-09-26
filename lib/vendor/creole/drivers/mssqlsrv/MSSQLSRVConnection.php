@@ -126,14 +126,14 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   public function applyLimit(&$sql, $offset, $limit)
   {
-    if($limit > 0)
-    {
-      $sql .= ' offset ' . ($offset?: 0) . ' rows ';
-      $sql .= ' fetch next ' . $limit . ' rows only ';
-    }
-    else if($offset > 0) {
-      $sql .= ' offset ' . ($offset?: 0) . ' rows ';
-    }
+      // MSSQL doesn't support this method.
+      // It could however do a 'cursor' based query.
+      // The only problem is you can not do this in a generic way
+      // since a cursor query requires an order by clause on a unique table.
+      // (ex. "name" is not unique so applying this by default would break the query)
+
+      // Therefor we don't apply this method anymore until we have a way of letting the
+      // query itself pass to this method if it can use cursor query.
   }
 
   /**

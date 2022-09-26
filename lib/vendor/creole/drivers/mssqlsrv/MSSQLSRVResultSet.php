@@ -87,7 +87,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
       return false;
     }
 
-    if (($this->limit > 0 && $rownum >= $this->limit) || $rownum < 0) {
+    if (($this->limit > 0 && $rownum >= $this->limit)) {
       // have to check for rownum < 0, because mssql_seek() won't
       // complain if the $actual is valid.
       return false;
@@ -96,7 +96,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
     // MSSQL rows start w/ 0, but this works, because we are
     // looking to move the position _before_ the next desired position
     if (!sqlsrv_fetch($this->result, SQLSRV_SCROLL_ABSOLUTE, $rownum + $this->offset)) {
-        return false;
+      return false;
     }
 
     $this->cursorPos = $rownum;

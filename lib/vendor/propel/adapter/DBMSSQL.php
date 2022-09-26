@@ -38,6 +38,8 @@ class DBMSSQL extends DBSybase {
     */
     public function applyLimit(&$sql, $offset, $limit)
     {
+
+
         // make sure offset and limit are numeric
         if(!is_numeric($offset) || !is_numeric($limit)){
             throw new Exception("DBMSSQL ::applyLimit() expects a number for argument 2 and 3");

@@ -61,44 +61,27 @@ class MSSQLSRVPreparedStatement extends PreparedStatementCommon implements Prepa
    */
   public function executeQuery($p1 = null, $fetchmode = null)
   {
-    $params = null;
-    if ($fetchmode !== null) {
-      $params = $p1;
-    } elseif ($p1 !== null) {
-      if (is_array($p1)) $params = $p1;
-      else $fetchmode = $p1;
-    }
-
-    if ($params) {
-      for($i=0,$cnt=count($params); $i < $cnt; $i++) {
-        $this->set($i+1, $params[$i]);
+      $params = null;
+      if ($fetchmode !== null) {
+          $params = $p1;
+      } elseif ($p1 !== null) {
+          if (is_array($p1)) $params = $p1;
+          else $fetchmode = $p1;
       }
-    }
 
-    $this->updateCount = null; // reset
-    $sql = $this->replaceParams();
-
-    if(stripos($sql, 'ORDER BY'))
-      $offsetBefore = true;
-    else
-      $offsetBefore = false;
-
-    if($offsetBefore)
-    {
-      if ($this->limit > 0 || $this->offset > 0) {
-        $this->conn->applyLimit($sql, $this->offset, $this->limit);
+      if ($params) {
+          for($i=0,$cnt=count($params); $i < $cnt; $i++) {
+              $this->set($i+1, $params[$i]);
+          }
       }
-    }
 
-    $this->resultSet = $this->conn->executeQuery($sql, $fetchmode);
+      $this->updateCount = null; // reset
+      $sql = $this->replaceParams();
 
-    if(!$offsetBefore)
-    {
+      $this->resultSet = $this->conn->executeQuery($sql, $fetchmode);
       $this->resultSet->_setOffset($this->offset);
       $this->resultSet->_setLimit($this->limit);
-    }
-
-    return $this->resultSet;
+      return $this->resultSet;
   }
 
   /**
