@@ -289,7 +289,7 @@ class sfFileCache extends sfCache
   *
   * @see sfCache
   */
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
+  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data = '')
   {
     list($path, $file) = $this->getFileName($id, $namespace);
 
