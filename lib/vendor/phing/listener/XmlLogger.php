@@ -18,7 +18,7 @@
 	 * and is licensed under the LGPL. For more information please see
 	 * <http://phing.info>.
 	 */
-	
+
 	require_once 'phing/listener/BuildLogger.php';
 	require_once 'phing/listener/DefaultLogger.php';
 	require_once 'phing/system/util/Timer.php';
@@ -31,7 +31,7 @@
 	 * @author Michiel Rook <michiel.rook@gmail.com>
 	 * @version $Id: XmlLogger.php 3076 2006-12-18 08:52:12Z fabien $
 	 * @package phing.listener
-	 */	
+	 */
 	class XmlLogger implements BuildLogger
 	{
 		/** XML element name for a build. */
@@ -54,17 +54,17 @@
 		const ERROR_ATTR = "error";
 		/** XML element name for a stack trace. */
 		const STACKTRACE_TAG = "stacktrace";
-		
+
 		private $doc = NULL;
-		
+
 		private $buildStartTime = 0;
 		private $targetStartTime = 0;
 		private $taskStartTime = 0;
-		
+
 		private $buildElement = NULL;
-		
-		private $msgOutputLevel = PROJECT_MSG_DEBUG;
-		
+
+		private $msgOutputLevel = Project::PROJECT_MSG_DEBUG;
+
 		/**
 		 *  Constructs a new BuildListener that logs build events to an XML file.
 		 */
@@ -72,12 +72,12 @@
 		{
 			$this->doc = new DOMDocument();
 			$this->doc->formatOutput = true;
-			
+
 			$this->buildTimer = new Timer();
 			$this->targetTimer = new Timer();
 			$this->taskTimer = new Timer();
 		}
-		
+
 		/**
 		 * Fired when the build starts, this builds the top-level element for the
 		 * document and remembers the time of the start of the build.
@@ -89,7 +89,7 @@
 			$this->buildTimerStart = Phing::currentTimeMillis();
 			$this->buildElement = $this->doc->createElement(XmlLogger::BUILD_TAG);
 		}
-		
+
 		/**
 		 * Fired when the build finishes, this adds the time taken and any
 		 * error stacktrace to the build element and writes the document to disk.
@@ -100,29 +100,29 @@
 		function buildFinished(BuildEvent $event)
 		{
 			$this->buildTimer->stop();
-			
+
 			$elapsedTime = Phing::currentTimeMillis() - $this->buildTimerStart;
-			
+
 			$this->buildElement->setAttribute(XmlLogger::TIME_ATTR, DefaultLogger::_formatTime($elapsedTime));
-			
+
 			if ($event->getException() != null)
 			{
 				$this->buildElement->setAttribute(XmlLogger::ERROR_ATTR, $event->getException()->toString());
-				
+
 				$errText = $this->doc->createCDATASection($event->getException()->getTraceAsString());
 				$stacktrace = $this->doc->createElement(XmlLogger::STACKTRACE_TAG);
 				$stacktrace->appendChild($errText);
 				$this->buildElement->appendChild($stacktrace);
 			}
-			
+
 			$outFilename = $event->getProject()->getProperty("XmlLogger.file");
-			
+
 			if ($outFilename == "")
 			{
 				$outFilename = "log.xml";
 			}
 			$writer = new FileWriter($outFilename);
-			
+
 			$writer->write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 			$writer->write($this->doc->saveXML($this->buildElement));
 			$writer->close();
@@ -136,13 +136,13 @@
 		function targetStarted(BuildEvent $event)
 		{
 			$target = $event->getTarget();
-			
+
 			$this->targetTimerStart = Phing::currentTimeMillis();
-			
+
 			$this->targetElement = $this->doc->createElement(XmlLogger::TARGET_TAG);
 			$this->targetElement->setAttribute(XmlLogger::NAME_ATTR, $target->getName());
 		}
-		
+
 		/**
 		 * Fired when a target finishes building, this adds the time taken
 		 * to the appropriate target element in the log.
@@ -153,14 +153,14 @@
 		function targetFinished(BuildEvent $event)
 		{
 			$target = $event->getTarget();
-			
+
 			$elapsedTime = Phing::currentTimeMillis() - $this->targetTimerStart;
-			
+
 			$this->targetElement->setAttribute(XmlLogger::TIME_ATTR, DefaultLogger::_formatTime($elapsedTime));
-			
+
 			$this->buildElement->appendChild($this->targetElement);
 		}
-		
+
 		/**
 		 * Fired when a task starts building, remembers the current time and the name of the task.
 		 *
@@ -170,9 +170,9 @@
 		function taskStarted(BuildEvent $event)
 		{
 			$task = $event->getTask();
-			
+
 			$this->taskTimerStart = Phing::currentTimeMillis();
-			
+
 			$this->taskElement = $this->doc->createElement(XmlLogger::TASK_TAG);
 			$this->taskElement->setAttribute(XmlLogger::NAME_ATTR, $task->getTaskName());
 			$this->taskElement->setAttribute(XmlLogger::LOCATION_ATTR, $task->getLocation()->toString());
@@ -183,17 +183,17 @@
 		 *
 		 * @param BuildEvent An event with any relevant extra information.
 		 *              Will not be <code>null</code>.
-		 */		
+		 */
 		function taskFinished(BuildEvent $event)
 		{
 			$task = $event->getTask();
-			
+
 			$elapsedTime = Phing::currentTimeMillis() - $this->taskTimerStart;
 			$this->taskElement->setAttribute(XmlLogger::TIME_ATTR, DefaultLogger::_formatTime($elapsedTime));
-			
+
 			$this->targetElement->appendChild($this->taskElement);
 		}
-		
+
 		/**
 		 * Fired when a message is logged, this adds a message element to the
 		 * most appropriate parent element (task, target or build) and records
@@ -205,39 +205,39 @@
 		function messageLogged(BuildEvent $event)
 		{
 			$priority = $event->getPriority();
-			
+
 			if ($priority > $this->msgOutputLevel)
 			{
 				return;
 			}
-			
+
 			$messageElement = $this->doc->createElement(XmlLogger::MESSAGE_TAG);
-			
+
 			switch ($priority)
 			{
-				case PROJECT_MSG_ERR: 
-					$name = "error"; 
+				case Project::PROJECT_MSG_ERR:
+					$name = "error";
 					break;
-					
-				case PROJECT_MSG_WARN:
+
+				case Project::PROJECT_MSG_WARN:
 					$name = "warn";
 					break;
-				
-				case PROJECT_MSG_INFO:
+
+				case Project::PROJECT_MSG_INFO:
 					$name = "info";
 					break;
-					
+
 				default:
 					$name = "debug";
 					break;
 			}
-			
+
 			$messageElement->setAttribute(XmlLogger::PRIORITY_ATTR, $name);
-			
+
 			$messageText = $this->doc->createCDATASection($event->getMessage());
-			
+
 			$messageElement->appendChild($messageText);
-			
+
 			if ($event->getTask() != null)
 			{
 				$this->taskElement->appendChild($messageElement);
@@ -249,11 +249,11 @@
 			}
 			else
 			if ($this->buildElement != null)
-			{			
+			{
 				$this->buildElement->appendChild($messageElement);
 			}
 		}
-		
+
 		/**
 		 * Set the logging level when using this as a Logger
 		 */

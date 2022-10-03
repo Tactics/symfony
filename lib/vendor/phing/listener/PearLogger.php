@@ -55,7 +55,7 @@ class PearLogger implements BuildListener {
      *  <code>PROJECT_MSG_VERBOSE</code>.
      *  @var int
      */
-    protected $msgOutputLevel = PROJECT_MSG_ERR;
+    protected $msgOutputLevel = Project::PROJECT_MSG_ERR;
 
     /**
      *  Time that the build started
@@ -67,11 +67,11 @@ class PearLogger implements BuildListener {
      * Maps Phing PROJECT_MSG_* constants to PEAR_LOG_* constants.
      * @var array
      */
-    protected static $levelMap = array( PROJECT_MSG_DEBUG => PEAR_LOG_DEBUG,
-                                        PROJECT_MSG_INFO => PEAR_LOG_INFO,
-                                        PROJECT_MSG_VERBOSE => PEAR_LOG_NOTICE,
-                                        PROJECT_MSG_WARN => PEAR_LOG_WARNING,
-                                        PROJECT_MSG_ERR => PEAR_LOG_ERR
+    protected static $levelMap = array( Project::PROJECT_MSG_DEBUG => PEAR_LOG_DEBUG,
+                                        Project::PROJECT_MSG_INFO => PEAR_LOG_INFO,
+                                        Project::PROJECT_MSG_VERBOSE => PEAR_LOG_NOTICE,
+                                        Project::PROJECT_MSG_WARN => PEAR_LOG_WARNING,
+                                        Project::PROJECT_MSG_ERR => PEAR_LOG_ERR
                                        );
     /**
      * Whether logging has been configured.

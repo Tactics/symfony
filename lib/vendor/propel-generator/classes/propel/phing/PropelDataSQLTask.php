@@ -210,7 +210,7 @@ class PropelDataSQLTask extends AbstractPropelDataModelTask {
 
 			} else {
 				$this->log("File '" . $dataXMLFile->getAbsolutePath()
-						. "' in datadbmap does not exist, so skipping it.", PROJECT_MSG_WARN);
+						. "' in datadbmap does not exist, so skipping it.", Project::PROJECT_MSG_WARN);
 			}
 
 		} // foreach data xml file

@@ -73,7 +73,7 @@ class BuildEvent extends EventObject {
      *  @see    $message
      *  @access private
      */
-    protected $priority = PROJECT_MSG_VERBOSE;
+    protected $priority = Project::PROJECT_MSG_VERBOSE;
 
     /**
      *  The execption that caused the event, if any

@@ -37,7 +37,7 @@ class UnzipTask extends ExtractBaseTask {
             $extractParams['remove_path'] = $this->removepath;
         }
 
-        $this->log("Extracting zip: " . $zipfile->__toString() . ' to ' . $this->todir->__toString(), PROJECT_MSG_INFO);
+        $this->log("Extracting zip: " . $zipfile->__toString() . ' to ' . $this->todir->__toString(), Project::PROJECT_MSG_INFO);
 
     	try {
         	$zip = new Archive_Zip($zipfile->getAbsolutePath());
@@ -45,7 +45,7 @@ class UnzipTask extends ExtractBaseTask {
         	$extractResponse = $zip->extract($extractParams);
         	if(is_array($extractResponse)) {
         	    foreach ($extractResponse as $extractedPath) {
-        	    	$this->log('Extracted' . $extractedPath['stored_filename'] . ' to ' . $this->todir->__toString(), PROJECT_MSG_VERBOSE);
+        	    	$this->log('Extracted' . $extractedPath['stored_filename'] . ' to ' . $this->todir->__toString(), Project::PROJECT_MSG_VERBOSE);
         	    }
         	} else if ($extractResponse === 0) {
         	    throw new BuildException('Failed to extract zipfile: ' . $zip->errorInfo(true));

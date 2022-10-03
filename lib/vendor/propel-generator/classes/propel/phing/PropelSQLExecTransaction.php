@@ -36,13 +36,13 @@ class PropelSQLExecTransaction {
     public function runTransaction($out = null)
     {
         if (!empty($this->tSqlCommand)) {
-            $this->parent->log("Executing commands", PROJECT_MSG_INFO);
+            $this->parent->log("Executing commands", Project::PROJECT_MSG_INFO);
             $this->parent->runStatements($this->tSqlCommand, $out);
         }
 
         if ($this->tSrcFile !== null) {
             $this->parent->log("Executing file: " . $this->tSrcFile->getAbsolutePath(),
-                PROJECT_MSG_INFO);
+                Project::PROJECT_MSG_INFO);
             $reader = new FileReader($this->tSrcFile);
             $this->parent->runStatements($reader, $out);
             $reader->close();

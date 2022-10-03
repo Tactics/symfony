@@ -243,7 +243,7 @@ class PropelCreoleTransformTask extends Task {
 			// eval the expression
 			eval("\$v = $v;");
 		} else {
-			$this->log("\n\nERROR: NO VALIDATORS ADDED!\n\nThere is an error in propel.addValidators build property.\n\nAllowed tokens are: " . implode(', ', array_keys(self::$validatorBitMap)) . "\n\nAllowed operators are (like in php.ini):\n\n|    bitwise OR\n&    bitwise AND\n~    bitwise NOT\n\n", PROJECT_MSG_ERR);
+			$this->log("\n\nERROR: NO VALIDATORS ADDED!\n\nThere is an error in propel.addValidators build property.\n\nAllowed tokens are: " . implode(', ', array_keys(self::$validatorBitMap)) . "\n\nAllowed operators are (like in php.ini):\n\n|    bitwise OR\n&    bitwise AND\n~    bitwise NOT\n\n", Project::PROJECT_MSG_ERR);
 			$v = self::VALIDATORS_NONE;
 		}
 		$this->validatorBits = $v;
@@ -284,7 +284,7 @@ class PropelCreoleTransformTask extends Task {
 			$out->write($xmlstr);
 			$out->close();
 		} catch (Exception $e) {
-			$this->log("There was an error building XML from metadata: " . $e->getMessage(), PROJECT_MSG_ERR);
+			$this->log("There was an error building XML from metadata: " . $e->getMessage(), Project::PROJECT_MSG_ERR);
 		}
 		$this->log("Propel - CreoleToXMLSchema finished");
 	}
@@ -463,7 +463,7 @@ class PropelCreoleTransformTask extends Task {
 		$colScale = $column->getScale();
 
 		if ($colType === CreoleTypes::OTHER) {
-			$this->log("Column [" . $table->getName() . "." . $colName . "] has a column type (".$column->getNativeType().") that Propel does not support.", PROJECT_MSG_WARN);
+			$this->log("Column [" . $table->getName() . "." . $colName . "] has a column type (".$column->getNativeType().") that Propel does not support.", Project::PROJECT_MSG_WARN);
 		}
 
 		$node->setAttribute("name", $colName);
@@ -679,7 +679,7 @@ class PropelCreoleTransformTask extends Task {
 					CreoleTypes::REAL))) {
 
 			// TODO: how to evaluate the appropriate size??
-			$this->log("WARNING: maxValue validator added for column $colName. You will have to adjust the size value manually.", PROJECT_MSG_WARN);
+			$this->log("WARNING: maxValue validator added for column $colName. You will have to adjust the size value manually.", Project::PROJECT_MSG_WARN);
 			$ruleInfo = array('type' => 'maxValue', 'value' => $colSize);
 			$this->validatorInfos[$tableName][$colName][] = $ruleInfo;
 		}

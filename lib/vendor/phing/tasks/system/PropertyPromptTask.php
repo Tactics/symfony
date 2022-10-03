@@ -24,17 +24,17 @@ include_once 'phing/system/io/ConsoleReader.php';
 
 /**
  * Deprecated task that uses console to prompt user for property values.
- * 
+ *
  * This class is very slightly simpler than the InputTask, but lacks the ability
  * to use a non-console input handler.  You should, therefore, use InputTask.  This
  * class can serve as a reference, but will be removed in the future.
- * 
+ *
  * @author    Hans Lellelid <hans@xmpl.org> (Phing)
  * @author    Anthony J. Young-Garner <ajyoung@alum.mit.edu> (Ant)
  * @version   $Revision: 1.4 $
  * @package   phing.tasks.system
  * @deprecated - in favor of the more capable InputTask
- */ 
+ */
 class PropertyPromptTask extends Task {
 
     private $propertyName;        // required
@@ -62,33 +62,33 @@ class PropertyPromptTask extends Task {
         $currentValue = $this->defaultValue;
         if ($currentValue == "" && $this->proposedValue !== null) { $currentValue = $this->proposedValue; }
         if (! (($this->useExistingValue === true) && ($this->proposedValue !== null))) {
-                        
-            $this->log("Prompting user for " . $this->propertyName . ". " . $this->getDefaultMessage(), PROJECT_MSG_VERBOSE);
-            
+
+            $this->log("Prompting user for " . $this->propertyName . ". " . $this->getDefaultMessage(), Project::PROJECT_MSG_VERBOSE);
+
             print "\n" . $this->promptText . " [" . $currentValue . "] " . $this->promptCharacter . " ";
 
             /** future version should probably have hooks for validation of user input.*/
             $reader = new ConsoleReader();
-            
+
             try {
                 $this->proposedValue  = $reader->readLine();
             } catch (IOException $e) {
                 $this->log("Prompt failed. Using default. (Failure reason: " . $e->getMessage().")");
                 $this->proposedValue = $this->defaultValue;
             }
-            
+
             if (empty($this->proposedValue)) {
-                $this->log("No value specified, using default.", PROJECT_MSG_VERBOSE);
+                $this->log("No value specified, using default.", Project::PROJECT_MSG_VERBOSE);
                 $this->proposedValue = $this->defaultValue;
             }
-            
-            if (!empty($this->proposedValue)) {                    
+
+            if (!empty($this->proposedValue)) {
                 $this->project->setProperty($this->propertyName, $this->proposedValue);
             }
-             
-        }    
+
+        }
     }
-    
+
     /**
      * Returns a string to be inserted in the log message
      * indicating whether a default response was specified
@@ -99,9 +99,9 @@ class PropertyPromptTask extends Task {
             return "No default response specified.";
         } else return "Default response is " . $this->defaultValue . ".";
     }
-    
+
     /**
-     * Returns defaultValue specified 
+     * Returns defaultValue specified
      * in this task for the Property
      * being set.
      * @return string
@@ -109,16 +109,16 @@ class PropertyPromptTask extends Task {
     public function getDefaultValue() {
         return $this->defaultValue;
     }
-    
+
     /**
-     * Returns the terminating character used to 
+     * Returns the terminating character used to
      * punctuate the prompt text.
      * @return string
      */
     public function getPromptCharacter() {
         return $this->promptCharacter;
     }
-    
+
     /**
      * Returns text of the prompt.
      * @return java.lang.String
@@ -126,7 +126,7 @@ class PropertyPromptTask extends Task {
     public function getPromptText() {
         return $this->promptText;
     }
-    
+
     /**
      * Returns name of the Ant Project Property
      * being set by this task.
@@ -144,7 +144,7 @@ class PropertyPromptTask extends Task {
         $this->promptCharacter = "?";
         $this->useExistingValue = false;
     }
-        
+
     /**
      * Insert the method's description here.
      * Creation date: (12/10/2001 8:16:16 AM)
@@ -153,7 +153,7 @@ class PropertyPromptTask extends Task {
     public function isUseExistingValue() {
         return $this->useExistingValue;
     }
-    
+
     /**
      * Sets defaultValue for the Property
      * being set by this task.
@@ -162,16 +162,16 @@ class PropertyPromptTask extends Task {
     public function setDefaultvalue($newDefaultvalue) {
         $this->defaultValue = $newDefaultvalue;
     }
-    
+
     /**
-     * Sets the terminating character used to 
+     * Sets the terminating character used to
      * punctuate the prompt text (default is "?").
      * @param newPromptcharacter java.lang.String
      */
     public function setPromptCharacter($newPromptcharacter) {
         $this->promptCharacter = $newPromptcharacter;
     }
-    
+
     /**
      * Sets text of the prompt.
      * @param newPrompttext java.lang.String
@@ -179,7 +179,7 @@ class PropertyPromptTask extends Task {
     public function setPromptText($newPrompttext) {
         $this->promptText = $newPrompttext;
     }
-    
+
     /**
      * Specifies the Phing Project Property
      * being set by this task.
@@ -188,14 +188,14 @@ class PropertyPromptTask extends Task {
     public function setPropertyName($newPropertyname) {
         $this->propertyName = $newPropertyname;
     }
-    
+
     /**
-     * 
-     * 
+     *
+     *
      * @param boolean newUseExistingValue
      */
     public function setUseExistingValue($newUseExistingValue) {
         $this->useExistingValue = $newUseExistingValue;
     }
-    
+
 }

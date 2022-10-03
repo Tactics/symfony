@@ -1,7 +1,7 @@
 <?php
 /*
- *  $Id: ReflexiveTask.php 3076 2006-12-18 08:52:12Z fabien $  
- * 
+ *  $Id: ReflexiveTask.php 3076 2006-12-18 08:52:12Z fabien $
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -23,12 +23,12 @@ require_once 'phing/Task.php';
 
 /**
  * This task is for using filter chains to make changes to files and overwrite the original files.
- * 
+ *
  * This task was created to serve the need for "cleanup" tasks -- e.g. a ReplaceRegexp task or strip task
  * being used to modify files and then overwrite the modified files.  In many (most?) cases you probably
  * should just use a copy task  to preserve the original source files, but this task supports situations
  * where there is no src vs. build directory, and modifying source files is actually desired.
- * 
+ *
  * <code>
  *    <reflexive>
  *        <fileset dir=".">
@@ -38,30 +38,30 @@ require_once 'phing/Task.php';
  *            <replaceregexp>
  *                <regexp pattern="\n\r" replace="\n"/>
  *            </replaceregexp>
- *        </filterchain> 
+ *        </filterchain>
  *    </reflexive>
  * </code>
- * 
+ *
  * @author    Hans Lellelid <hans@xmpl.org>
  * @version   $Revision: 1.11 $
  * @package   phing.tasks.system
  */
 class ReflexiveTask extends Task {
-    
+
     /** Single file to process. */
     private $file;
-    
+
     /** Any filesets that should be processed. */
     private $filesets = array();
-    
+
     /** Any filters to be applied before append happens. */
     private $filterChains = array();
-        
+
     /** Alias for setFrom() */
     function setFile(PhingFile $f) {
         $this->file = $f;
     }
-    
+
     /** Nested creator, adds a set of files (nested fileset attribute). */
     function createFileSet() {
         $num = array_push($this->filesets, new FileSet());
@@ -76,24 +76,24 @@ class ReflexiveTask extends Task {
     function createFilterChain() {
         $num = array_push($this->filterChains, new FilterChain($this->project));
         return $this->filterChains[$num-1];
-    }                    
-    
+    }
+
     /** Append the file(s). */
     function main() {
-            
+
         if ($this->file === null && empty($this->filesets)) {
             throw new BuildException("You must specify a file or fileset(s) for the <reflexive> task.");
         }
-        
+
         // compile a list of all files to modify, both file attrib and fileset elements
         // can be used.
-        
+
         $files = array();
-        
+
         if ($this->file !== null) {
             $files[] = $this->file;
         }
-        
+
         if (!empty($this->filesets)) {
             $filenames = array();
             foreach($this->filesets as $fs) {
@@ -105,27 +105,27 @@ class ReflexiveTask extends Task {
                         $files[] = new PhingFile($dir, $fname);
                     }
                 } catch (BuildException $be) {
-                    $this->log($be->getMessage(), PROJECT_MSG_WARN);
+                    $this->log($be->getMessage(), Project::PROJECT_MSG_WARN);
                 }
-            }                        
+            }
         }
-        
+
         $this->log("Applying reflexive processing to " . count($files) . " files.");
 
-		// These "slots" allow filters to retrieve information about the currently-being-process files		
+		// These "slots" allow filters to retrieve information about the currently-being-process files
 		$slot = $this->getRegisterSlot("currentFile");
-		$basenameSlot = $this->getRegisterSlot("currentFile.basename");	
+		$basenameSlot = $this->getRegisterSlot("currentFile.basename");
 
-        
+
         foreach($files as $file) {
 			// set the register slots
-			
+
 			$slot->setValue($file->getPath());
 			$basenameSlot->setValue($file->getName());
-			
+
             // 1) read contents of file, pulling through any filters
             $in = null;
-            try {                
+            try {
                 $contents = "";
                 $in = FileUtils::getChainedReader(new FileReader($file), $this->filterChains, $this->project);
                 while(-1 !== ($buffer = $in->read())) {
@@ -134,22 +134,22 @@ class ReflexiveTask extends Task {
                 $in->close();
             } catch (Exception $e) {
                 if ($in) $in->close();
-                $this->log("Erorr reading file: " . $e->getMessage(), PROJECT_MSG_WARN);
+                $this->log("Erorr reading file: " . $e->getMessage(), Project::PROJECT_MSG_WARN);
             }
-            
+
             try {
                 // now create a FileWriter w/ the same file, and write to the file
                 $out = new FileWriter($file);
                 $out->write($contents);
                 $out->close();
-                $this->log("Applying reflexive processing to " . $file->getPath(), PROJECT_MSG_VERBOSE);
+                $this->log("Applying reflexive processing to " . $file->getPath(), Project::PROJECT_MSG_VERBOSE);
             } catch (Exception $e) {
                 if ($out) $out->close();
-                $this->log("Error writing file back: " . $e->getMessage(), PROJECT_MSG_WARN);
+                $this->log("Error writing file back: " . $e->getMessage(), Project::PROJECT_MSG_WARN);
             }
-            
+
         }
-                                
-    }   
+
+    }
 
 }

@@ -1,7 +1,7 @@
 <?php
 /*
- *  $Id: PhingCallTask.php 3076 2006-12-18 08:52:12Z fabien $  
- * 
+ *  $Id: PhingCallTask.php 3076 2006-12-18 08:52:12Z fabien $
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -91,9 +91,9 @@ class PhingCallTask extends Task {
      *  @throws BuildException on validation failure or if the target didn't
      *  execute
      */
-    function main() {        
-            
-        $this->log("Running PhingCallTask for target '" . $this->subTarget . "'", PROJECT_MSG_DEBUG);
+    function main() {
+
+        $this->log("Running PhingCallTask for target '" . $this->subTarget . "'", Project::PROJECT_MSG_DEBUG);
         if ($this->callee === null) {
             $this->init();
         }
@@ -101,7 +101,7 @@ class PhingCallTask extends Task {
         if ($this->subTarget === null) {
             throw new BuildException("Attribute target is required.", $this->location);
         }
-        
+
         $this->callee->setPhingfile($this->project->getProperty("phing.file"));
         $this->callee->setTarget($this->subTarget);
         $this->callee->setInheritAll($this->inheritAll);
@@ -119,7 +119,7 @@ class PhingCallTask extends Task {
         }
         return $this->callee->createProperty();
     }
-    
+
     /**
      * Property to pass to the invoked target.
      */

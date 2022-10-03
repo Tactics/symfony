@@ -133,7 +133,7 @@ abstract class Task extends ProjectComponent {
      *  @see BuildEvent
      *  @see BuildListener
      */
-    function log($msg, $level = PROJECT_MSG_INFO) {
+    function log($msg, $level = Project::PROJECT_MSG_INFO) {
         $this->project->logObject($this, $msg, $level);
     }
 

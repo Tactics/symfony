@@ -371,7 +371,7 @@ class PropelSQLExec extends Task {
 			. ($this->userId ? " user: " . $this->userId . "\n" : "")
 			. ($this->password ? " password: " . $this->password . "\n" : "");
 
-			$this->log($buf, PROJECT_MSG_VERBOSE);
+			$this->log($buf, Project::PROJECT_MSG_VERBOSE);
 
 			$dsn = Creole::parseDSN($url);
 
@@ -394,7 +394,7 @@ class PropelSQLExec extends Task {
 
 			try {
 				if ($this->output !== null) {
-					$this->log("Opening PrintStream to output file " . $this->output->__toString(), PROJECT_MSG_VERBOSE);
+					$this->log("Opening PrintStream to output file " . $this->output->__toString(), Project::PROJECT_MSG_VERBOSE);
 					$out = new FileWriter($this->output);
 				}
 
@@ -402,7 +402,7 @@ class PropelSQLExec extends Task {
 				for ($i=0,$size=count($transactions); $i < $size; $i++) {
 					$transactions[$i]->runTransaction($out);
 					if (!$this->autocommit) {
-						$this->log("Commiting transaction", PROJECT_MSG_VERBOSE);
+						$this->log("Commiting transaction", Project::PROJECT_MSG_VERBOSE);
 						$this->conn->commit();
 					}
 				}
@@ -517,7 +517,7 @@ class PropelSQLExec extends Task {
 				if ($hasQuery || ($this->delimiterType == self::DELIM_ROW && $line == $this->delimiter)) {
 					// this assumes there is always a delimter on the end of the SQL statement.
 					$sql = StringHelper::substring($sql, 0, strlen($sql) - 1 - strlen($this->delimiter));
-					$this->log("SQL: " . $sql, PROJECT_MSG_VERBOSE);
+					$this->log("SQL: " . $sql, Project::PROJECT_MSG_VERBOSE);
 					$this->execSQL($sql, $out);
 					$sql = "";
 					$hasQuery = false;
@@ -551,7 +551,7 @@ class PropelSQLExec extends Task {
 			$this->totalSql++;
 			if (!$this->statement->execute($sql)) {
 				$this->log($this->statement->getUpdateCount() . " rows affected",
-						PROJECT_MSG_VERBOSE);
+                    Project::PROJECT_MSG_VERBOSE);
 			} else {
 				if ($this->print) {
 					$this->printResults($out);
@@ -561,11 +561,11 @@ class PropelSQLExec extends Task {
 			$this->goodSql++;
 
 		} catch (SQLException $e) {
-			$this->log("Failed to execute: " . $sql, PROJECT_MSG_ERR);
+			$this->log("Failed to execute: " . $sql, Project::PROJECT_MSG_ERR);
 			if ($this->onError != "continue") {
 				throw $e;
 			}
-			$this->log($e->getMessage(), PROJECT_MSG_ERR);
+			$this->log($e->getMessage(), Project::PROJECT_MSG_ERR);
 		}
 	}
 
@@ -584,7 +584,7 @@ class PropelSQLExec extends Task {
 
 			if ($rs !== null) {
 
-				$this->log("Processing new result set.", PROJECT_MSG_VERBOSE);
+				$this->log("Processing new result set.", Project::PROJECT_MSG_VERBOSE);
 
 				$line = "";
 

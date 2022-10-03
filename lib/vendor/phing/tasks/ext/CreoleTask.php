@@ -161,7 +161,7 @@ abstract class CreoleTask extends Task {
 
         try {
 
-            $this->log("Connecting to " . $this->getUrl(), PROJECT_MSG_VERBOSE);
+            $this->log("Connecting to " . $this->getUrl(), Project::PROJECT_MSG_VERBOSE);
             $info = new Properties();
 
             $dsn = Creole::parseDSN($this->url);

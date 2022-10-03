@@ -18,11 +18,11 @@
  * and is licensed under the LGPL. For more information please see
  * <http://phing.info>.
  */
- 
+
 require_once 'phing/tasks/system/EchoTask.php';
 
 /**
- * Simple task to echo a warning message (PROJECT_MSG_WARN) to all output devices.
+ * Simple task to echo a warning message (Project::PROJECT_MSG_WARN) to all output devices.
  *
  * @author   Hans Lellelid <hans@xmpl.org>
  * @version  $Revision: 1.1 $ $Date: 2006-04-28 16:49:47 +0200 (Fri, 28 Apr 2006) $
@@ -30,6 +30,6 @@ require_once 'phing/tasks/system/EchoTask.php';
  */
 class WarnTask extends EchoTask {
     function main() {
-        $this->log($this->msg, PROJECT_MSG_WARN);
+        $this->log($this->msg, Project::PROJECT_MSG_WARN);
     }
 }

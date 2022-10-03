@@ -19,12 +19,6 @@
  * <http://phing.info>.
  */
 
-define('PROJECT_MSG_DEBUG', 4);
-define('PROJECT_MSG_VERBOSE', 3);
-define('PROJECT_MSG_INFO', 2);
-define('PROJECT_MSG_WARN', 1);
-define('PROJECT_MSG_ERR', 0);
-
 include_once 'phing/system/io/PhingFile.php';
 include_once 'phing/util/FileUtils.php';
 include_once 'phing/TaskAdapter.php';
@@ -44,6 +38,12 @@ include_once 'phing/input/DefaultInputHandler.php';
  * @package   phing
  */
 class Project {
+
+    public const PROJECT_MSG_DEBUG = 4;
+    public const PROJECT_MSG_VERBOSE = 3;
+    public const PROJECT_MSG_INFO = 2;
+    public const PROJECT_MSG_WARN = 1;
+    public const PROJECT_MSG_ERR = 0;
 
     /** contains the targets */
     private $targets         = array();
@@ -194,15 +194,15 @@ class Project {
 
         // command line properties take precedence
         if (isset($this->userProperties[$name])) {
-            $this->log("Override ignored for user property " . $name, PROJECT_MSG_VERBOSE);
+            $this->log("Override ignored for user property " . $name, Project::PROJECT_MSG_VERBOSE);
             return;
         }
 
         if (isset($this->properties[$name])) {
-            $this->log("Overriding previous definition of property " . $name, PROJECT_MSG_VERBOSE);
+            $this->log("Overriding previous definition of property " . $name, Project::PROJECT_MSG_VERBOSE);
         }
 
-        $this->log("Setting project property: " . $name . " -> " . $value, PROJECT_MSG_DEBUG);
+        $this->log("Setting project property: " . $name . " -> " . $value, Project::PROJECT_MSG_DEBUG);
         $this->properties[$name] = $value;
     }
 
@@ -219,10 +219,10 @@ class Project {
      */
     public function setNewProperty($name, $value) {
         if (isset($this->properties[$name])) {
-            $this->log("Override ignored for property " . $name, PROJECT_MSG_DEBUG);
+            $this->log("Override ignored for property " . $name, Project::PROJECT_MSG_DEBUG);
             return;
         }
-        $this->log("Setting project property: " . $name . " -> " . $value, PROJECT_MSG_DEBUG);
+        $this->log("Setting project property: " . $name . " -> " . $value, Project::PROJECT_MSG_DEBUG);
         $this->properties[$name] = $value;
     }
 
@@ -236,7 +236,7 @@ class Project {
      * @see #setProperty()
      */
     public function setUserProperty($name, $value) {
-        $this->log("Setting ro project property: " . $name . " -> " . $value, PROJECT_MSG_DEBUG);
+        $this->log("Setting ro project property: " . $name . " -> " . $value, Project::PROJECT_MSG_DEBUG);
         $this->userProperties[$name] = $value;
         $this->properties[$name] = $value;
     }
@@ -268,7 +268,7 @@ class Project {
      */
     private function setPropertyInternal($name, $value) {
         if (isset($this->userProperties[$name])) {
-			$this->log("Override ignored for user property " . $name, PROJECT_MSG_VERBOSE);
+			$this->log("Override ignored for user property " . $name, Project::PROJECT_MSG_VERBOSE);
             return;
         }
         $this->properties[$name] = $value;
@@ -448,7 +448,7 @@ class Project {
         }
         $this->basedir = $dir;
         $this->setPropertyInternal("project.basedir", $this->basedir->getAbsolutePath());
-        $this->log("Project base dir set to: " . $this->basedir->getPath(), PROJECT_MSG_VERBOSE);
+        $this->log("Project base dir set to: " . $this->basedir->getPath(), Project::PROJECT_MSG_VERBOSE);
 
         // [HL] added this so that ./ files resolve correctly.  This may be a mistake ... or may be in wrong place.
         chdir($dir->getAbsolutePath());
@@ -506,13 +506,13 @@ class Project {
      */
     function addTaskDefinition($name, $class, $classpath = null) {
         if ($class === "") {
-            $this->log("Task $name has no class defined.", PROJECT_MSG_ERR);
+            $this->log("Task $name has no class defined.", Project::PROJECT_MSG_ERR);
         }  elseif (!isset($this->taskdefs[$name])) {
             Phing::import($class, $classpath);
             $this->taskdefs[$name] = $class;
-            $this->log("  +Task definiton: $name ($class)", PROJECT_MSG_DEBUG);
+            $this->log("  +Task definiton: $name ($class)", Project::PROJECT_MSG_DEBUG);
         } else {
-            $this->log("Task $name ($class) already registerd, skipping", PROJECT_MSG_VERBOSE);
+            $this->log("Task $name ($class) already registerd, skipping", Project::PROJECT_MSG_VERBOSE);
         }
     }
 
@@ -530,9 +530,9 @@ class Project {
         if (!isset($this->typedefs[$typeName])) {
             Phing::import($typeClass, $classpath);
             $this->typedefs[$typeName] = $typeClass;
-            $this->log("  +User datatype: $typeName ($typeClass)", PROJECT_MSG_DEBUG);
+            $this->log("  +User datatype: $typeName ($typeClass)", Project::PROJECT_MSG_DEBUG);
         } else {
-            $this->log("Type $name ($class) already registerd, skipping", PROJECT_MSG_VERBOSE);
+            $this->log("Type $name ($class) already registerd, skipping", Project::PROJECT_MSG_VERBOSE);
         }
     }
 
@@ -549,7 +549,7 @@ class Project {
     }
 
     function addOrReplaceTarget($targetName, &$target) {
-        $this->log("  +Target: $targetName", PROJECT_MSG_DEBUG);
+        $this->log("  +Target: $targetName", Project::PROJECT_MSG_DEBUG);
         $target->setProject($this);
         $this->targets[$targetName] = $target;
     }
@@ -600,7 +600,7 @@ class Project {
             if ($o instanceof Task) {
                 $task = $o;
             } else {
-                $this->log ("  (Using TaskAdapter for: $taskType)", PROJECT_MSG_DEBUG);
+                $this->log ("  (Using TaskAdapter for: $taskType)", Project::PROJECT_MSG_DEBUG);
                 // not a real task, try adapter
                 $taskA = new TaskAdapter();
                 $taskA->setProxy($o);
@@ -610,7 +610,7 @@ class Project {
             $task->setTaskType($taskType);
             // set default value, can be changed by the user
             $task->setTaskName($taskType);
-            $this->log ("  +Task: " . $taskType, PROJECT_MSG_DEBUG);
+            $this->log ("  +Task: " . $taskType, Project::PROJECT_MSG_DEBUG);
         } catch (Exception $t) {
             throw new BuildException("Could not create task of type: " . $taskType, $t);
         }
@@ -648,7 +648,7 @@ class Project {
             }
 
             $type = new $cls();
-            $this->log("  +Type: $typeName", PROJECT_MSG_DEBUG);
+            $this->log("  +Type: $typeName", Project::PROJECT_MSG_DEBUG);
             if (!($type instanceof DataType)) {
                 throw new Exception("$class is not an instance of phing.types.DataType");
             }
@@ -700,7 +700,7 @@ class Project {
                 $curTarget = $sortedTargets[$curIndex++];
                 $curTarget->performTasks();
             } catch (BuildException $exc) {
-                $this->log("Execution of target \"".$curTarget->getName()."\" failed for the following reason: ".$exc->getMessage(), PROJECT_MSG_ERR);
+                $this->log("Execution of target \"".$curTarget->getName()."\" failed for the following reason: ".$exc->getMessage(), Project::PROJECT_MSG_ERR);
                 throw $exc;
             }
         } while ($curTarget->getName() !== $targetName);
@@ -745,7 +745,7 @@ class Project {
         for ($i=0, $_i=count($ret); $i < $_i; $i++) {
             $retHuman .= $ret[$i]->toString()." ";
         }
-        $this->log("Build sequence for target '$root' is: $retHuman", PROJECT_MSG_VERBOSE);
+        $this->log("Build sequence for target '$root' is: $retHuman", Project::PROJECT_MSG_VERBOSE);
 
         $keys = array_keys($targets);
         while($keys) {
@@ -767,7 +767,7 @@ class Project {
         for ($i=0,$_i=count($ret); $i < $_i; $i++) {
             $retHuman .= $ret[$i]->toString()." ";
         }
-        $this->log("Complete build sequence is: $retHuman", PROJECT_MSG_VERBOSE);
+        $this->log("Complete build sequence is: $retHuman", Project::PROJECT_MSG_VERBOSE);
 
         return $ret;
     }
@@ -852,9 +852,9 @@ class Project {
      */
     function addReference($name, $object) {
         if (isset($this->references[$name])) {
-            $this->log("Overriding previous definition of reference to $name", PROJECT_MSG_WARN);
+            $this->log("Overriding previous definition of reference to $name", Project::PROJECT_MSG_WARN);
         }
-        $this->log("Adding reference: $name -> ".get_class($object), PROJECT_MSG_DEBUG);
+        $this->log("Adding reference: $name -> ".get_class($object), Project::PROJECT_MSG_DEBUG);
         $this->references[$name] = $object;
     }
 
@@ -882,7 +882,7 @@ class Project {
     /**
      * Abstracting and simplifyling Logger calls for project messages
      */
-    function log($msg, $level = PROJECT_MSG_INFO) {
+    function log($msg, $level = Project::PROJECT_MSG_INFO) {
         $this->logObject($this, $msg, $level);
     }
 

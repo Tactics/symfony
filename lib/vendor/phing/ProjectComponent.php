@@ -24,7 +24,7 @@
  *  the project components
  *
  * @author    Andreas Aderhold <andi@binarycloud.com>
- * @author    Hans Lellelid <hans@xmpl.org> 
+ * @author    Hans Lellelid <hans@xmpl.org>
  * @version   $Revision: 1.5 $
  * @package   phing
  */
@@ -64,7 +64,7 @@ abstract class ProjectComponent {
      *  @param  string   The message to be logged.
      *  @param  integer  The message's priority at this message should have
      */
-    public function log($msg, $level = PROJECT_MSG_INFO) {
+    public function log($msg, $level = Project::PROJECT_MSG_INFO) {
         if ($this->project !== null) {
             $this->project->log($msg, $level);
         }

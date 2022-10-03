@@ -82,12 +82,12 @@ class AvailableTask extends Task {
         }
 
         if (($this->file !== null) && !$this->_checkFile()) {
-            $this->log("Unable to find " . $this->file->__toString() . " to set property " . $this->property, PROJECT_MSG_VERBOSE);
+            $this->log("Unable to find " . $this->file->__toString() . " to set property " . $this->property, Project::PROJECT_MSG_VERBOSE);
             return false;
         }
 
         if (($this->resource !== null) && !$this->_checkResource($this->resource)) {
-            $this->log("Unable to load resource " . $this->resource . " to set property " . $this->property, PROJECT_MSG_VERBOSE);
+            $this->log("Unable to load resource " . $this->resource . " to set property " . $this->property, Project::PROJECT_MSG_VERBOSE);
             return false;
         }
 
@@ -101,7 +101,7 @@ class AvailableTask extends Task {
         } else {
             $paths = $this->filepath->listDir();
             for($i=0,$pcnt=count($paths); $i < $pcnt; $i++) {
-                $this->log("Searching " . $paths[$i], PROJECT_MSG_VERBOSE);
+                $this->log("Searching " . $paths[$i], Project::PROJECT_MSG_VERBOSE);
                 $tmp = new PhingFile($paths[$i], $this->file->getName());
                 if($tmp->isFile()) {
                     return true;

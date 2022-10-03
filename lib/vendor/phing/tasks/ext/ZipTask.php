@@ -123,7 +123,7 @@ class ZipTask extends MatchingTask {
                 return;
             }
 
-            $this->log("Building zip: " . $this->zipFile->__toString(), PROJECT_MSG_INFO);
+            $this->log("Building zip: " . $this->zipFile->__toString(), Project::PROJECT_MSG_INFO);
 
             $zip = new Archive_Zip($this->zipFile->getAbsolutePath());
 

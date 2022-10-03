@@ -365,7 +365,7 @@ class IntrospectionHelper {
         } // if is slot-listener
 
         try {
-            $project->log("    -calling setter ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", PROJECT_MSG_DEBUG);
+            $project->log("    -calling setter ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", Project::PROJECT_MSG_DEBUG);
             $method->invoke($element, $value);
         } catch(Exception $exc) {
             throw new BuildException($exc);
@@ -404,7 +404,7 @@ class IntrospectionHelper {
 
             $method = $this->nestedCreators[$createMethod];
              try { // try to invoke the creator method on object
-                $project->log("    -calling creator ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", PROJECT_MSG_DEBUG);
+                $project->log("    -calling creator ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", Project::PROJECT_MSG_DEBUG);
                 $nestedElement = $method->invoke($element);
             } catch (Exception $exc) {
                 throw new BuildException($exc);
@@ -418,7 +418,7 @@ class IntrospectionHelper {
 
             try { // try to invoke the adder method on object
 
-                $project->log("    -calling adder ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", PROJECT_MSG_DEBUG);
+                $project->log("    -calling adder ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", Project::PROJECT_MSG_DEBUG);
                 // we've already assured that correct num of params
                 // exist and that method is using class hints
                 $params = $method->getParameters();
@@ -471,7 +471,7 @@ class IntrospectionHelper {
             $method = $this->nestedStorers[$storer];
 
             try {
-                $project->log("    -calling storer ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", PROJECT_MSG_DEBUG);
+                $project->log("    -calling storer ".$method->getDeclaringClass()->getName()."::".$method->getName()."()", Project::PROJECT_MSG_DEBUG);
                 $method->invoke($element, $child);
             } catch (Exception $exc) {
                 throw new BuildException($exc);
@@ -551,7 +551,7 @@ class IntrospectionHelper {
      * Prints warning message to screen if -debug was used.
      */
     function warn($msg) {
-        if (Phing::getMsgOutputLevel() === PROJECT_MSG_DEBUG) {
+        if (Phing::getMsgOutputLevel() === Project::PROJECT_MSG_DEBUG) {
             print("[IntrospectionHelper] " . $msg . "\n");
         }
     }

@@ -282,7 +282,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 	public function setOutputDirectory(PhingFile $outputDirectory) {
 		try {
 			if (!$outputDirectory->exists()) {
-				$this->log("Output directory does not exist, creating: " . $outputDirectory->getPath(),PROJECT_MSG_VERBOSE);
+				$this->log("Output directory does not exist, creating: " . $outputDirectory->getPath(),Project::PROJECT_MSG_VERBOSE);
 				if (!$outputDirectory->mkdirs()) {
 					throw new IOException("Unable to create Ouptut directory: " . $outputDirectory->getAbsolutePath());
 				}
@@ -403,9 +403,9 @@ abstract class AbstractPropelDataModelTask extends Task {
 
 				// normalize (or transform) the XML document using XSLT
 				if ($this->xslFile) {
-					$this->log("Transforming " . $xmlFile->getPath() . " using stylesheet " . $this->xslFile->getPath(), PROJECT_MSG_VERBOSE);
+					$this->log("Transforming " . $xmlFile->getPath() . " using stylesheet " . $this->xslFile->getPath(), Project::PROJECT_MSG_VERBOSE);
 					if (!class_exists('XSLTProcessor')) {
-						$this->log("Could not perform XLST transformation.  Make sure PHP has been compiled/configured to support XSLT.", PROJECT_MSG_ERR);
+						$this->log("Could not perform XLST transformation.  Make sure PHP has been compiled/configured to support XSLT.", Project::PROJECT_MSG_ERR);
 					} else {
 						// normalize the document using normalizer stylesheet
 
@@ -421,7 +421,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 						// now overwrite previous vars to point to newly transformed file
 						$xmlFile = new PhingFile($srcDir, $newXmlFilename);
 						$transformed->save($xmlFile->getAbsolutePath());
-						$this->log("\t- Using new (post-transformation) XML file: " . $xmlFile->getPath(), PROJECT_MSG_VERBOSE);
+						$this->log("\t- Using new (post-transformation) XML file: " . $xmlFile->getPath(), Project::PROJECT_MSG_VERBOSE);
 
 						$dom = new DomDocument('1.0', 'UTF-8');
 						$dom->load($xmlFile->getAbsolutePath());
@@ -430,7 +430,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 
 				// validate the XML document using XSD schema
 				if ($this->validate && $this->xsdFile) {
-					$this->log("Validating XML doc (".$xmlFile->getPath().") using schema file " . $this->xsdFile->getPath(), PROJECT_MSG_VERBOSE);
+					$this->log("Validating XML doc (".$xmlFile->getPath().") using schema file " . $this->xsdFile->getPath(), Project::PROJECT_MSG_VERBOSE);
 					if (!$dom->schemaValidate($this->xsdFile->getAbsolutePath())) {
 						throw new BuildException("XML schema file (".$xmlFile->getPath().") does not validate.  See warnings above for reasons validation failed (make sure error_reporting is set to show E_WARNING if you don't see any).");		throw new EngineException("XML schema does not validate (using schema file $xsdFile).  See warnings above for reasons validation failed (make sure error_reporting is set to show E_WARNING if you don't see any).", $this->getLocation());
 					}
@@ -601,7 +601,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 	public function populateContextProperties(Capsule $context)
 	{
 		foreach ($this->getPropelProperties() as $key => $propValue) {
-			$this->log('Adding property ${' . $key . '} to context', PROJECT_MSG_DEBUG);
+			$this->log('Adding property ${' . $key . '} to context', Project::PROJECT_MSG_DEBUG);
 			$context->put($key, $propValue);
 		}
 	}

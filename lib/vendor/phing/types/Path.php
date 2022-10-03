@@ -207,7 +207,7 @@ class Path extends DataType {
                 $this->setDir($f);
             } else {
                 $this->log("dropping " . $f->__toString() . " from path as it doesn't exist",
-                    PROJECT_MSG_VERBOSE);
+                    Project::PROJECT_MSG_VERBOSE);
             }
         }
     }
