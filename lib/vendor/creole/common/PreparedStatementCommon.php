@@ -595,7 +595,7 @@ abstract class PreparedStatementCommon {
 	    if ( is_object ( $value ) ) {
             	$this->boundInVars[$paramIndex] = "'" . $this->escape($value->__toString()) . "'";
 	    } else {
-            	$this->boundInVars[$paramIndex] = "'" . $this->escape((string)$value) . "'";
+            	$this->boundInVars[$paramIndex] = "N'" . $this->escape((string)$value) . "'";
 	    }
         }
     } 
