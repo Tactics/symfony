@@ -3,7 +3,7 @@
 /*
  * This file is part of the pake package.
  * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -46,18 +46,18 @@ class pakeException extends Exception
 
     $messages[] = str_repeat(' ', $len);
 
-    fwrite(STDERR, "\n");
+    fwrite(pake_STDERR(), "\n");
     foreach ($messages as $message)
     {
-      fwrite(STDERR, pakeColor::colorize($message, 'ERROR', STDERR)."\n");
+      fwrite(pake_STDERR(), pakeColor::colorize($message, 'ERROR', pake_STDERR())."\n");
     }
-    fwrite(STDERR, "\n");
+    fwrite(pake_STDERR(), "\n");
 
     $pake = pakeApp::get_instance();
 
     if ($pake->get_trace())
     {
-      fwrite(STDERR, "exception trace:\n");
+      fwrite(pake_STDERR(), "exception trace:\n");
 
       $trace = $this->trace($e);
       for ($i = 0, $count = count($trace); $i < $count; $i++)
@@ -68,11 +68,11 @@ class pakeException extends Exception
         $file = isset($trace[$i]['file']) ? $trace[$i]['file'] : 'n/a';
         $line = isset($trace[$i]['line']) ? $trace[$i]['line'] : 'n/a';
 
-        fwrite(STDERR, sprintf(" %s%s%s at %s:%s\n", $class, $type, $function, pakeColor::colorize($file, 'INFO', STDERR), pakeColor::colorize($line, 'INFO', STDERR)));
+        fwrite(pake_STDERR(), sprintf(" %s%s%s at %s:%s\n", $class, $type, $function, pakeColor::colorize($file, 'INFO', pake_STDERR()), pakeColor::colorize($line, 'INFO', pake_STDERR())));
       }
     }
 
-    fwrite(STDERR, "\n");
+    fwrite(pake_STDERR(), "\n");
   }
 
   function trace($exception)

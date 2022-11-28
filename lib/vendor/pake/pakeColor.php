@@ -29,8 +29,9 @@ class pakeColor
     self::$styles[$name] = $options;
   }
 
-  static function colorize($text = '', $parameters = array(), $stream = STDOUT)
+  static function colorize($text = '', $parameters = array(), $stream)
   {
+      $stream = $stream ?: pake_STDOUT();
     // disable colors if not supported (windows or non tty console)
     if (DIRECTORY_SEPARATOR == '\\' || !function_exists('posix_isatty') || !@posix_isatty($stream))
     {

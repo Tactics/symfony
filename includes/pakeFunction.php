@@ -390,6 +390,18 @@ function pake_exception_default_handler($exception)
 }
 set_exception_handler('pake_exception_default_handler');
 
+function pake_STDIN() {
+    return fopen('php://stdin', 'rb');
+}
+
+function pake_STDOUT() {
+    return fopen('php://stdout', 'wb');
+}
+
+function pake_STDERR() {
+    return fopen('php://stderr', 'wb');
+}
+
 // fix php behavior if using cgi php
 // from http://www.sitepoint.com/article/php-command-line-1/3
 if (false !== strpos(PHP_SAPI, 'cgi'))
@@ -403,11 +415,6 @@ if (false !== strpos(PHP_SAPI, 'cgi'))
    ini_set('track_errors', true);
    ini_set('html_errors', false);
    ini_set('magic_quotes_runtime', false);
-
-   // define stream constants
-   define('STDIN', fopen('php://stdin', 'r'));
-   define('STDOUT', fopen('php://stdout', 'w'));
-   define('STDERR', fopen('php://stderr', 'w'));
 
    // change directory
    if (isset($_SERVER['PWD']))
