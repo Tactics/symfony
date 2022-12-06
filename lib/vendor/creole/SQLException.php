@@ -60,7 +60,7 @@ class SQLException extends Exception {
     public function setUserInfo($info)
     {
         $this->userInfo = $info;
-        $this->message .= " [User Info: " . $this->userInfo . "]";
+        $this->message .= " [User Info: " . print_r($this->userInfo) . "]";
     }
 
     /**
@@ -82,7 +82,7 @@ class SQLException extends Exception {
     public function setNativeError($msg)
     {
         $this->nativeError = $msg;
-        $this->message .= " [Native Error: " .$this->nativeError . "]";
+        $this->message .= " [Native Error: " . print_r($this->nativeError) . "]";
     }
 
     /**
