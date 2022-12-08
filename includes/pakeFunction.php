@@ -377,7 +377,7 @@ function pake_echo_comment($text)
 {
   if (pakeApp::get_instance()->get_verbose())
   {
-    echo sprintf(pakeColor::colorize('   # %s', 'COMMENT'), $text, pake_STDOUT())."\n";
+      echo sprintf(pakeColor::colorize('   # %s', 'COMMENT', pake_STDOUT()), $text)."\n";
   }
 }
 
@@ -424,9 +424,9 @@ if (false !== strpos(PHP_SAPI, 'cgi'))
 
    // close the streams on script termination
    register_shutdown_function(function () {
-       fclose(STDIN);
-       fclose(STDOUT);
-       fclose(STDERR);
+       fclose(pake_STDIN());
+       fclose(pake_STDOUT());
+       fclose(pake_STDERR());
        return true;
    });
 }

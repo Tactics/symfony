@@ -42,7 +42,7 @@ class pakePhingTask
       $args[] = $target;
     }
 
-    if (DIRECTORY_SEPARATOR != '\\' && (function_exists('posix_isatty') && @posix_isatty(STDOUT)))
+    if (DIRECTORY_SEPARATOR != '\\' && (function_exists('posix_isatty') && @posix_isatty(pake_STDOUT())))
     {
       $args[] = '-logger';
       $args[] = 'phing.listener.AnsiColorLogger';
