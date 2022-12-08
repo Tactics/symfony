@@ -347,8 +347,8 @@ function pake_format_action($section, $text, $size = null)
 {
   if (pakeApp::get_instance()->get_verbose())
   {
-    $width = 9 + strlen(pakeColor::colorize('', 'INFO'));
-    return sprintf('>> %-'.$width.'s %s', pakeColor::colorize($section, 'INFO'), pakeApp::excerpt($text, $size))."\n";
+    $width = 9 + strlen(pakeColor::colorize('', 'INFO', pake_STDOUT()));
+    return sprintf('>> %-'.$width.'s %s', pakeColor::colorize($section, 'INFO', pake_STDOUT()), pakeApp::excerpt($text, $size))."\n";
   }
 }
 
@@ -377,7 +377,7 @@ function pake_echo_comment($text)
 {
   if (pakeApp::get_instance()->get_verbose())
   {
-    echo sprintf(pakeColor::colorize('   # %s', 'COMMENT'), $text)."\n";
+    echo sprintf(pakeColor::colorize('   # %s', 'COMMENT'), $text, pake_STDOUT())."\n";
   }
 }
 

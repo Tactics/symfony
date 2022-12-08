@@ -82,7 +82,7 @@ function run_upgrade_1_0($task, $args)
   foreach ($apps as $app_module_dir)
   {
     $app = str_replace(DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_dir_name'), '', $app_module_dir);
-    pake_echo_action('upgrade 1.0', pakeColor::colorize(sprintf('upgrading application "%s"', $app), array('fg' => 'cyan')));
+    pake_echo_action('upgrade 1.0', pakeColor::colorize(sprintf('upgrading application "%s"', $app), array('fg' => 'cyan'), pake_STDOUT()));
 
     $app_dir = sfConfig::get('sf_apps_dir_name').'/'.$app;
 

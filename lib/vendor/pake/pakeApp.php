@@ -245,7 +245,7 @@ class pakeApp
         $this->verbose = true;
         break;
       case 'version':
-        echo sprintf('pake version %s', pakeColor::colorize(pakeApp::VERSION, 'INFO'))."\n";
+        echo sprintf('pake version %s', pakeColor::colorize(pakeApp::VERSION, 'INFO', pake_STDOUT()))."\n";
         exit();
       default:
         throw new pakeException(sprintf("Unknown option: %s", $opt));
@@ -255,7 +255,7 @@ class pakeApp
   // Display the program usage line.
   public function usage()
   {
-    echo "pake [-f pakefile] {options} targets...\n".pakeColor::colorize("Try pake -H for more information", 'INFO')."\n";
+    echo "pake [-f pakefile] {options} targets...\n".pakeColor::colorize("Try pake -H for more information", 'INFO', pake_STDOUT())."\n";
   }
 
   // Display the rake command line help.
@@ -274,7 +274,7 @@ class pakeApp
         if (preg_match('/\b([A-Z]{2,})\b/', $comment, $match))
           $long .= '='.$match[1];
       }
-      printf("  %-20s (%s)\n", pakeColor::colorize($long, 'INFO'), pakeColor::colorize($short, 'INFO'));
+      printf("  %-20s (%s)\n", pakeColor::colorize($long, 'INFO', pake_STDOUT()), pakeColor::colorize($short, 'INFO', pake_STDOUT()));
       printf("      %s\n", $comment);
     }
   }
@@ -289,7 +289,7 @@ class pakeApp
       $w = strlen(pakeTask::get_mini_task_name($name));
       if ($w > $width) $width = $w;
     }
-    $width += strlen(pakeColor::colorize(' ', 'INFO'));
+    $width += strlen(pakeColor::colorize(' ', 'INFO', pake_STDOUT()));
 
     echo "available pake tasks:\n";
 
@@ -306,7 +306,7 @@ class pakeApp
       if (!$task->get_alias() && $task->get_comment())
       {
         $mini_name = pakeTask::get_mini_task_name($name);
-        printf('  %-'.$width.'s > %s'."\n", pakeColor::colorize($mini_name, 'INFO'), $task->get_comment().($mini_name != $name ? ' ['.$name.']' : ''));
+        printf('  %-'.$width.'s > %s'."\n", pakeColor::colorize($mini_name, 'INFO', pake_STDOUT()), $task->get_comment().($mini_name != $name ? ' ['.$name.']' : ''));
       }
     }
 
@@ -320,7 +320,7 @@ class pakeApp
         if ($task->get_alias())
         {
           $mini_name = pakeTask::get_mini_task_name($name);
-          printf('  %-'.$width.'s = pake %s'."\n", pakeColor::colorize(pakeTask::get_mini_task_name($name), 'INFO'), $task->get_alias().($mini_name != $name ? ' ['.$name.']' : ''));
+          printf('  %-'.$width.'s = pake %s'."\n", pakeColor::colorize(pakeTask::get_mini_task_name($name), 'INFO', pake_STDOUT()), $task->get_alias().($mini_name != $name ? ' ['.$name.']' : ''));
         }
       }
     }
@@ -386,7 +386,7 @@ class pakeApp
 
     $subsize = floor(($size - 3) / 2);
 
-    return substr($text, 0, $subsize).pakeColor::colorize('...', 'INFO').substr($text, -$subsize);
+    return substr($text, 0, $subsize).pakeColor::colorize('...', 'INFO', pake_STDOUT()).substr($text, -$subsize);
   }
 
   /* see perl Text::Abbrev module */
