@@ -49,6 +49,16 @@ class sfPropelDatabase extends sfCreoleDatabase
     {
       $this->setDefaultConfig();
     }
+
+    // Add debug database connections
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+          // register debug driver
+          Creole::registerDriver('*', 'symfony.addon.creole.drivers.sfDebugConnection');
+
+          // register our logger
+          sfDebugConnection::setLogger(sfLogger::getInstance());
+    }
   }
 
   public function setDefaultConfig()
