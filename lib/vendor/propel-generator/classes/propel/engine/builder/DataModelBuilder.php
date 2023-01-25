@@ -91,19 +91,18 @@ abstract class DataModelBuilder {
 		// This is a slight hack to workaround camel case inconsistencies for the DDL classes.
 		// Basically, we want to turn ?.?.?.sqliteDDLBuilder into ?.?.?.SqliteDDLBuilder
 		$lastdotpos = strrpos($classpath, '.');
-        if ($lastdotpos) $classpath[$lastdotpos+1] = strtoupper($classpath[$lastdotpos+1]);
+		if ($lastdotpos) $classpath{$lastdotpos+1} = strtoupper($classpath{$lastdotpos+1});
 		else ucfirst($classpath);
 
 		return Phing::import($classpath);
 	}
 
-    /**
-     * Factory method to load a new builder instance based on specified type.
-     * @param Table $table
-     * @param      $type The "key" for class to load.
-     * @return mixed
-     * @throws     BuildException if specified class cannot be found / loaded.
-     */
+	/**
+	 * Factory method to load a new builder instance based on specified type.
+	 * @param      Table $table
+	 * @param      $type The "key" for class to load.
+	 * @throws     BuildException if specified class cannot be found / loaded.
+	 */
 	public static function builderFactory(Table $table, $type)
 	{
 		$classname = self::getBuilderClass($type);

@@ -150,13 +150,12 @@ class AppData {
 		return null;
 	}
 
-    /**
-     * Add a database to the list and sets the AppData property to this
-     * AppData
-     *
-     * @param db the database to add
-     * @return Database
-     */
+	/**
+	 * Add a database to the list and sets the AppData property to this
+	 * AppData
+	 *
+	 * @param      db the database to add
+	 */
 	public function addDatabase($db)
 	{
 		if ($db instanceof Database) {

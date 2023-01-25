@@ -25,7 +25,7 @@ require_once 'propel/engine/builder/sql/DDLBuilder.php';
 /**
  * DDL Builder class for MySQL.
  *
- * @author     David Zï¿½lke
+ * @author     David Zülke
  * @author     Hans Lellelid <hans@xmpl.org>
  * @package    propel.engine.builder.sql.mysql
  */
@@ -262,12 +262,11 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 
 	}
 
-    /**
-     * Checks whether passed-in array of Column objects contains a column with specified name.
-     * @param array Column[] or string[]
-     * @param string $searchcol Column name to search for
-     * @return bool
-     */
+	/**
+	 * Checks whether passed-in array of Column objects contains a column with specified name.
+	 * @param      array Column[] or string[]
+	 * @param      string $searchcol Column name to search for
+	 */
 	private function containsColname($columns, $searchcol)
 	{
 		foreach($columns as $col) {

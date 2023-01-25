@@ -82,7 +82,7 @@ class sfContext
   {
     if (!isset(self::$instance))
     {
-      $class = self::class;
+      $class = __CLASS__;
       self::$instance = new $class();
       self::$instance->initialize();
     }

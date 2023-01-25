@@ -415,12 +415,11 @@ class sfPropelData extends sfData
     }
   }
 
-    /**
-     * Fixes the ordering of foreign key data, by outputting data a foreign key depends on before the table with the foreign key.
-     *
-     * @param array The array with the class names.
-     * @return
-     */
+  /**
+   * Fixes the ordering of foreign key data, by outputting data a foreign key depends on before the table with the foreign key.
+   *
+   * @param array The array with the class names.
+   */
   public function fixOrderingOfForeignKeyData($classes)
   {
     // reordering classes to take foreign keys into account

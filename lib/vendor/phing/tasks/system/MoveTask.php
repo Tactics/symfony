@@ -25,7 +25,7 @@ include_once 'phing/system/io/IOException.php';
 
 /**
  * Moves a file or directory to a new file or directory.
- *
+ * 
  * By default, the destination file is overwritten if it
  * already exists.  When overwrite is turned off, then files
  * are only moved if the source file is newer than the
@@ -44,9 +44,9 @@ class MoveTask extends CopyTask {
         parent::__construct();
         $this->forceOverwrite = true;
     }
-
+    
     protected function doWork() {
-
+    
         $copyMapSize = count($this->fileCopyMap);
         if ($copyMapSize > 0) {
             // files to move
@@ -61,9 +61,9 @@ class MoveTask extends CopyTask {
                 $moved = false;
                 $f = new PhingFile($from);
                 $d = new PhingFile($to);
-
+                
                 $moved = false;
-                try { // try to rename
+                try { // try to rename                    
                     $this->log("Attempting to rename $from to $to", $this->verbosity);
                     $this->renameFile($f, $d, $this->forceOverwrite);
                     $moved = true;
@@ -72,11 +72,11 @@ class MoveTask extends CopyTask {
                     $this->log("Failed to rename $from to $to: " . $ioe->getMessage(), $this->verbosity);
                 }
 
-                if (!$moved) {
+                if (!$moved) {                    
                     try { // try to move
                         $this->log("Moving $from to $to", $this->verbosity);
 
-                        $this->fileUtils->copyFile($f, $d, $this->getProject(), $this->forceOverwrite, $this->preserveLMT, $this->filterChains);
+                        $this->fileUtils->copyFile($f, $d, $this->forceOverwrite, $this->preserveLMT, $this->filterChains, $this->getProject());                        
 
                         $f = new PhingFile($fromFile);
                         $f->delete();
@@ -124,7 +124,7 @@ class MoveTask extends CopyTask {
         if ($list === null) {
             return false;     // maybe io error?
         }
-
+        
         foreach($list as $s) {
             $f = new PhingFile($d, $s);
             if ($f->isDirectory()) {
@@ -141,12 +141,12 @@ class MoveTask extends CopyTask {
 
     /** Go and delete the directory tree. */
     private function deleteDir($d) {
-
+    
         $list = $d->listDir();
         if ($list === null) {
             return;      // on an io error list() can return null
         }
-
+        
         foreach($list as $fname) {
             $f = new PhingFile($d, $fname);
             if ($f->isDirectory()) {

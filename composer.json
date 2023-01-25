@@ -1,6 +1,5 @@
 {
-    "name": "tactics/symfony",
-    "description": "The Tactics fork of symfony 1",
+    "name": "symfony",
     "license": "MIT",
     "authors": [
         {
@@ -8,18 +7,5 @@
             "email": "fabpot@sensio.com"
         }
     ],
-    "require": {
-        "ext-dom": "*",
-        "ext-json": "*",
-        "ext-curl": "*",
-        "ext-bcmath": "*",
-        "ext-intl": "*"
-    },
-    "require-dev": {
-        "rector/rector": "^0.8.56"
-    },
-    "scripts": {
-        "rector:dryrun": "./vendor/bin/rector process --config rector.php --dry-run",
-        "rector": "./vendor/bin/rector process --config rector.php"
-    }
+    "require": {}
 }

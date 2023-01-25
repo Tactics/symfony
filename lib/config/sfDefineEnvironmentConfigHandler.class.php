@@ -66,16 +66,15 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-    /**
-     * Gets values from the configuration array.
-     *
-     * @param string The prefix name
-     * @param string The category name
-     * @param mixed  The key/value array
-     *
-     * @param array The new key/value array
-     * @return array
-     */
+  /**
+   * Gets values from the configuration array.
+   *
+   * @param string The prefix name
+   * @param string The category name
+   * @param mixed  The key/value array
+   *
+   * @param array The new key/value array
+   */
   protected function getValues($prefix, $category, $keys)
   {
     if (!is_array($keys))
@@ -99,16 +98,15 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     return $values;
   }
 
-    /**
-     * Fixes the category name and replaces constants in the value.
-     *
-     * @param string The category name
-     * @param string The key name
-     * @param string The value
-     *
-     * @param string Return the new key and value
-     * @return array
-     */
+  /**
+   * Fixes the category name and replaces constants in the value.
+   *
+   * @param string The category name
+   * @param string The key name
+   * @param string The value
+   *
+   * @param string Return the new key and value
+   */
   protected function fixCategoryValue($category, $key, $value)
   {
     // prefix the key
@@ -143,14 +141,13 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     return $category;
   }
 
-    /**
-     * Merges default, all and current environment configurations.
-     *
-     * @param array The main configuratino array
-     *
-     * @param array The merged configuration
-     * @return array|false|mixed
-     */
+  /**
+   * Merges default, all and current environment configurations.
+   *
+   * @param array The main configuratino array
+   *
+   * @param array The merged configuration
+   */
   protected function mergeEnvironment($config)
   {
     return sfToolkit::arrayDeepMerge(

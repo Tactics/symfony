@@ -662,10 +662,12 @@ class Archive_Zip
         $v_const_list = get_defined_constants();
 
       	// ----- Extract error constants from all const.
-        foreach ($v_const_list as $v_key => $v_value) {
-            if (substr($v_key, 0, strlen('ARCHIVE_ZIP_ERR_')) =='ARCHIVE_ZIP_ERR_') {
-                $v_error_list[$v_key] = $v_value;
-            }
+        for (reset($v_const_list);
+		     list($v_key, $v_value) = each($v_const_list);) {
+     	    if (substr($v_key, 0, strlen('ARCHIVE_ZIP_ERR_'))
+			    =='ARCHIVE_ZIP_ERR_') {
+    		    $v_error_list[$v_key] = $v_value;
+    	    }
         }
 
         // ----- Search the name form the code value
@@ -729,14 +731,13 @@ class Archive_Zip
   //   true on success,
   //   false on error, the error code is set.
   // ---------------------------------------------------------------------------
-    /**
-     * Archive_Zip::_checkFormat()
-     *
-     * { Description }
-     *
-     * @param integer $p_level
-     * @return bool
-     */
+  /**
+  * Archive_Zip::_checkFormat()
+  *
+  * { Description }
+  *
+  * @param integer $p_level
+  */
   function _checkFormat($p_level=0)
   {
     $v_result = true;
@@ -884,7 +885,7 @@ class Archive_Zip
     }
 
     // ----- Swap the file descriptor
-    // Here is a trick : I swap the temporary fd with the zip fd, in order to
+    // Here is a trick : I swap the temporary fd with the zip fd, in order to 
     // use the following methods on the temporary fil and not the real archive
     $v_swap = $this->_zip_fd;
     $this->_zip_fd = $v_zip_temp_fd;
@@ -2922,14 +2923,13 @@ class Archive_Zip
   //    1 : OK
   //   -1 : Unable to create directory
   // ---------------------------------------------------------------------------
-    /**
-     * Archive_Zip::_dirCheck()
-     *
-     * { Description }
-     *
-     * @param [type] $p_is_dir
-     * @return int
-     */
+  /**
+  * Archive_Zip::_dirCheck()
+  *
+  * { Description }
+  *
+  * @param [type] $p_is_dir
+  */
   function _dirCheck($p_dir, $p_is_dir=false)
   {
     $v_result = 1;
@@ -3211,15 +3211,14 @@ class Archive_Zip
   }
   // ---------------------------------------------------------------------------
 
-    /**
-     * Archive_Zip::_check_parameters()
-     *
-     * { Description }
-     *
-     * @param integer $p_error_code
-     * @param string $p_error_string
-     * @return int
-     */
+  /**
+  * Archive_Zip::_check_parameters()
+  *
+  * { Description }
+  *
+  * @param integer $p_error_code
+  * @param string $p_error_string
+  */
   function _check_parameters(&$p_params, $p_default)
   {
 
@@ -3231,20 +3230,20 @@ class Archive_Zip
     }
 
     // ----- Check that all the params are valid
-    foreach ($p_params as $v_key => $v_value)  {
-        if (!isset($p_default[$v_key])) {
+    for (reset($p_params); list($v_key, $v_value) = each($p_params); ) {
+    	if (!isset($p_default[$v_key])) {
             $this->_errorLog(ARCHIVE_ZIP_ERR_INVALID_PARAMETER,
-                'Unsupported parameter with key \''.$v_key.'\'');
+			                 'Unsupported parameter with key \''.$v_key.'\'');
 
             return Archive_Zip::errorCode();
-        }
+    	}
     }
 
 	// ----- Set the default values
-    foreach ($p_default as $v_key => $v_value) {
-        if (!isset($p_params[$v_key])) {
-            $p_params[$v_key] = $p_default[$v_key];
-        }
+    for (reset($p_default); list($v_key, $v_value) = each($p_default); ) {
+    	if (!isset($p_params[$v_key])) {
+    		$p_params[$v_key] = $p_default[$v_key];
+    	}
     }
 
     // ----- Check specific parameters
@@ -3448,14 +3447,13 @@ class Archive_Zip
   //             3 : src & dest gzip
   // Return Values :
   // ---------------------------------------------------------------------------
-    /**
-     * _tool_CopyBlock()
-     *
-     * { Description }
-     *
-     * @param integer $p_mode
-     * @return int
-     */
+  /**
+  * _tool_CopyBlock()
+  *
+  * { Description }
+  *
+  * @param integer $p_mode
+  */
   function _tool_CopyBlock($p_src, $p_dest, $p_size, $p_mode=0)
   {
     $v_result = 1;
@@ -3560,14 +3558,13 @@ class Archive_Zip
   // Return Values :
   //   The path translated.
   // ---------------------------------------------------------------------------
-    /**
-     * _tool_TranslateWinPath()
-     *
-     * { Description }
-     *
-     * @param [type] $p_remove_disk_letter
-     * @return false|string
-     */
+  /**
+  * _tool_TranslateWinPath()
+  *
+  * { Description }
+  *
+  * @param [type] $p_remove_disk_letter
+  */
   function _tool_TranslateWinPath($p_path, $p_remove_disk_letter=true)
   {
     if (stristr(php_uname(), 'windows')) {

@@ -124,6 +124,8 @@ class sfViewCacheManager
       {
         $vary .= $request->getHttpHeader($header).'|';
       }
+
+      $vary = $vary;
     }
     else
     {
@@ -316,12 +318,12 @@ class sfViewCacheManager
 
   /**
    * Returns true if the action is cacheable.
-   *
+   * 
    * @param  string $moduleName A module name
    * @param  string $actionName An action or partial template name
-   *
+   * 
    * @return boolean True if the action is cacheable
-   *
+   * 
    * @see isCacheable()
    */
   public function isActionCacheable($moduleName, $actionName)

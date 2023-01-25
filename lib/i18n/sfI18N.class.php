@@ -30,7 +30,7 @@ class sfI18N
   {
     if (!isset(self::$instance))
     {
-      $class = self::class;
+      $class = __CLASS__;
       self::$instance = new $class();
     }
 

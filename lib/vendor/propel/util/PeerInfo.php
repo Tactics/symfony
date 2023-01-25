@@ -75,27 +75,25 @@ class PeerInfo
 		}
 
 
-    /**
-     * Get a Peer from the Peer List
-     *
-     * @param string $peer The Propel Peer to add
-     * @return mixed
-     */
+	/**
+	 * Get a Peer from the Peer List
+	 *
+	 * @param      string $peer The Propel Peer to add
+	 */
 		public static function getPeer($peer) {
 		self::addPeer($peer);
 				return self::$peers[$peer];
 		}
 
 
-    /**
-     * Load a Peer
-     *
-     * You may wat to override this method if your Peers
-     * are not in the include_path.
-     *
-     * @param string $peerName the name of the Peer
-     * @return mixed
-     */
+	/**
+	 * Load a Peer
+	 *
+	 * You may wat to override this method if your Peers
+	 * are not in the include_path.
+	 *
+	 * @param      string $peerName the name of the Peer
+	 */
 	public static function loadPeer($peerName)
 	{
 		$peerFile = $peerName . ".php";

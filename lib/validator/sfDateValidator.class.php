@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -66,7 +66,7 @@ class sfDateValidator extends sfValidator
             break;
           case '==':
             $valid = $value1 == $value2;
-            break;
+            break;          
           case '<=':
             $valid = $value1 <= $value2;
             break;
@@ -90,15 +90,14 @@ class sfDateValidator extends sfValidator
     return true;
   }
 
-    /**
-     * Converts the given date into a Unix timestamp.
-     *
-     * Returns null if the date is invalid
-     *
-     * @param $value    Date to convert
-     * @param $culture  Language culture to use
-     * @return false|int|null
-     */
+  /**
+   * Converts the given date into a Unix timestamp.
+   * 
+   * Returns null if the date is invalid
+   * 
+   * @param $value    Date to convert
+   * @param $culture  Language culture to use
+   */
   protected function getValidDate($value, $culture)
   {
     // Use the language culture date format

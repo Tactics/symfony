@@ -17,10 +17,11 @@
  * @package    symfony
  * @subpackage i18n
  */
+
 /**
  * Defines how DateTime values are formatted and displayed, depending 
  * on the culture.
- *
+ * 
  * This class contains information, such as date patterns, time patterns, 
  * and AM/PM designators. 
  *
@@ -31,7 +32,7 @@
  * $culture = new sfCultureInfo('en_AU');
  * $dtfi = $culture->DateTimeFormat;
  * </code>
- *
+ * 
  * To create a sfDateTimeFormatInfo for the invariant culture, use 
  * <code>
  * sfDateTimeFormatInfo::getInstance($culture=null);
@@ -41,7 +42,7 @@
  *
  * sfDateTime values are formatted using standard or custom patterns stored in 
  * the properties of a sfDateTimeFormatInfo.
- *
+ * 
  * The standard patterns can be replaced with custom patterns by setting the 
  * associated properties of sfDateTimeFormatInfo.
  *

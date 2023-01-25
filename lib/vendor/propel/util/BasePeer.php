@@ -415,91 +415,59 @@ class BasePeer
 		return $affectedRows;
 	}
 
-    /**
-     * Executes query build by createSelectSql() and returns ResultSet.
-     *
-     * @param      Criteria $criteria A Criteria.
-     * @param      Connection $con A connection to use.
-     * @return     ResultSet The resultset.
-     * @throws     PropelException
-     * @see        createSelectSql()
-     */
-    public static function doSelect(Criteria $criteria, $con = null)
-    {
-        $dbMap = Propel::getDatabaseMap($criteria->getDbName());
+	/**
+	 * Executes query build by createSelectSql() and returns ResultSet.
+	 *
+	 * @param      Criteria $criteria A Criteria.
+	 * @param      Connection $con A connection to use.
+	 * @return     ResultSet The resultset.
+	 * @throws     PropelException
+	 * @see        createSelectSql()
+	 */
+	public static function doSelect(Criteria $criteria, $con = null)
+	{
+		$dbMap = Propel::getDatabaseMap($criteria->getDbName());
 
-        if ($con === null)
-            $con = Propel::getConnection($criteria->getDbName());
+		if ($con === null)
+			$con = Propel::getConnection($criteria->getDbName());
 
-        $stmt = null;
+		$stmt = null;
 
-        try {
+		try {
 
-            // Transaction support exists for (only?) Postgres, which must
-            // have SELECT statements that include bytea columns wrapped w/
-            // transactions.
-            if ($criteria->isUseTransaction()) $con->begin();
+			// Transaction support exists for (only?) Postgres, which must
+			// have SELECT statements that include bytea columns wrapped w/
+			// transactions.
+			if ($criteria->isUseTransaction()) $con->begin();
 
-            $params = array();
-            $sql = self::createSelectSql($criteria, $params);
+			$params = array();
+			$sql = self::createSelectSql($criteria, $params);
 
-            $stmt = $con->prepareStatement($sql);
-            $stmt->setLimit($criteria->getLimit());
-            $stmt->setOffset($criteria->getOffset());
+			$stmt = $con->prepareStatement($sql);
+			$stmt->setLimit($criteria->getLimit());
+			$stmt->setOffset($criteria->getOffset());
 
-            self::populateStmtValues($stmt, $params, $dbMap);
+			self::populateStmtValues($stmt, $params, $dbMap);
 
-            $rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
-            if ($criteria->isUseTransaction()) $con->commit();
-        } catch (Exception $e) {
+			$rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
+			if ($criteria->isUseTransaction()) $con->commit();
+		} catch (Exception $e) {
+			if ($stmt) $stmt->close();
+			if ($criteria->isUseTransaction()) $con->rollback();
+			Propel::log($e->getMessage(), Propel::LOG_ERR);
+			throw new PropelException($e);
+		}
 
-            // Fallback to STATIC
-            if(method_exists($con, 'getPointerType') && (! $con->getPointerType() || $con->getPointerType() == SQLSRV_CURSOR_CLIENT_BUFFERED))
-            {
-                try {
-                    $con->setPointerType(SQLSRV_CURSOR_STATIC);
+		return $rs;
+	}
 
-                    // Transaction support exists for (only?) Postgres, which must
-                    // have SELECT statements that include bytea columns wrapped w/
-                    // transactions.
-                    if ($criteria->isUseTransaction()) $con->begin();
-
-                    $params = array();
-                    $sql = self::createSelectSql($criteria, $params);
-
-                    $stmt = $con->prepareStatement($sql);
-                    $stmt->setLimit($criteria->getLimit());
-                    $stmt->setOffset($criteria->getOffset());
-
-                    self::populateStmtValues($stmt, $params, $dbMap);
-
-                    $rs = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
-                    if ($criteria->isUseTransaction()) $con->commit();
-                } catch (Exception $e) {
-                    if ($stmt) $stmt->close();
-                    if ($criteria->isUseTransaction()) $con->rollback();
-                    Propel::log($e->getMessage(), Propel::LOG_ERR);
-                    throw new PropelException($e);
-                }
-            } else {
-                if ($stmt) $stmt->close();
-                if ($criteria->isUseTransaction()) $con->rollback();
-                Propel::log($e->getMessage(), Propel::LOG_ERR);
-                throw new PropelException($e);
-            }
-        }
-
-        return $rs;
-    }
-
-    /**
-     * Applies any validators that were defined in the schema to the specified columns.
-     *
-     * @param string $dbName The name of the database
-     * @param string $tableName The name of the table
-     * @param array $columns Array of column names as key and column values as value.
-     * @return array|bool
-     */
+	/**
+	 * Applies any validators that were defined in the schema to the specified columns.
+	 *
+	 * @param      string $dbName The name of the database
+	 * @param      string $tableName The name of the table
+	 * @param      array $columns Array of column names as key and column values as value.
+	 */
 	public static function doValidate($dbName, $tableName, $columns)
 	{
 		$dbMap = Propel::getDatabaseMap($dbName);

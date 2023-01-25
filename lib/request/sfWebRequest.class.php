@@ -488,6 +488,10 @@ class sfWebRequest extends sfRequest
   protected function loadParameters()
   {
     // merge GET parameters
+    if (get_magic_quotes_gpc())
+    {
+      $_GET = sfToolkit::stripslashesDeep($_GET);
+    }
     $this->getParameterHolder()->addByRef($_GET);
 
     $pathInfo = $this->getPathInfo();
@@ -527,6 +531,11 @@ class sfWebRequest extends sfRequest
 
     $this->filesInfos = $this->convertFileInformation($_FILES);
 
+    // merge POST parameters
+    if (get_magic_quotes_gpc())
+    {
+      $_POST = sfToolkit::stripslashesDeep((array) $_POST);
+    }
     $this->getParameterHolder()->addByRef($_POST);
 
     // move symfony parameters in a protected namespace (parameters prefixed with _sf_)
@@ -799,7 +808,7 @@ class sfWebRequest extends sfRequest
 
     if (isset($_COOKIE[$name]))
     {
-      $retval = $_COOKIE[$name];
+      $retval = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_COOKIE[$name]) : $_COOKIE[$name];
     }
 
     return $retval;
@@ -854,12 +863,11 @@ class sfWebRequest extends sfRequest
   {
   }
 
-    /**
-     * Splits an HTTP header for the current web request.
-     *
-     * @param string Header to split
-     * @return array
-     */
+  /**
+   * Splits an HTTP header for the current web request.
+   *
+   * @param string Header to split
+   */
   public function splitHttpAcceptHeader($header)
   {
     $values = array();

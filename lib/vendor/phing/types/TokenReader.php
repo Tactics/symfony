@@ -19,33 +19,48 @@
  * <http://phing.info>.
 */
 
-include_once 'phing/system/io/Reader.php';
-include_once 'phing/filters/ReplaceTokens.php'; // for class Token
+// include_once 'phing/system/io/Reader.php'; // really this is unrelated to Reader
+include_once 'phing/system/io/IOException.php';
+include_once 'phing/filters/ReplaceTokens.php'; // For class Token
 
 /**
- * Abstract class for reading Tokens from a resource
- *
+ * Abstract class for TokenReaders.
+ * 
  * @author    Manuel Holtgewe
- * @version   $Revision: 1.3 $
- * @access    public
- * @package   phing.system.io
+ * @version   $Revision: 1.5 $
+ * @package   phing.filters.util
  */
-class TokenReader extends Reader {
+abstract class TokenReader {
+
+    /**
+     * Reference to the Project the TokenReader is used in.
+     * @var Project 
+     */
+    protected $project;
 
     /**
      * Constructor
+     * @param   object  Reference to the project the TokenReader is used in.
      */
-    function __construct() {
+    function __construct(Project $project) {
+        $this->project = $project;
     }
 
     /**
-     * Reads a token from the resource and returns it as a
-     * Token object.
-     *
-     * @access  public
+     * Utility function for logging
      */
-    function readToken() {
+    function log($level, $msg) {
+        $this->project->log($level, $msg);
     }
+
+    /**
+     * Reads the next token from the Reader
+     *
+     * @throws IOException - On error
+     * @return string
+     */
+    abstract public function readToken();
+    
 }
 
 ?>

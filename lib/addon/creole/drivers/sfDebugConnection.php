@@ -151,28 +151,6 @@ class sfDebugConnection implements Connection
   }
 
   /**
-   *
-   */
-  public function setPointerType($value)
-  {
-    if(method_exists($this->childConnection, 'setPointerType'))
-    {
-      $this->childConnection->setPointerType($value);
-    }
-  }
-
-  /**
-   *
-   */
-  public function getPointerType()
-  {
-    if(method_exists($this->childConnection, 'getPointerType'))
-    {
-      $this->childConnection->getPointerType();
-    }
-  }
-
-  /**
    * @see Connection::executeQuery()
    */
   public function executeQuery($sql, $fetchmode = null)
@@ -201,8 +179,8 @@ class sfDebugConnection implements Connection
   }
 
   /**
-   * @see Connection::executeUpdate()
-   **/
+  * @see Connection::executeUpdate()
+  **/
   public function executeUpdate($sql)
   {
     $this->log("{sfCreole} executeUpdate(): $sql");

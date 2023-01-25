@@ -143,7 +143,7 @@ interface PreparedStatement {
      * @return ResultSet
      * @throws SQLException if a database access error occurs.
      */
-    public function executeQuery($p1 = null, $fetchmode = null);
+    public function executeQuery();
     
     /**
      * Executes the SQL INSERT, UPDATE, or DELETE statement in this PreparedStatement object.

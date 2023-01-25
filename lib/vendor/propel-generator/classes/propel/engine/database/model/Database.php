@@ -314,11 +314,10 @@ class Database extends XMLElement {
 		return $this->dbParent;
 	}
 
-    /**
-     * Adds Domain object from <domain> tag.
-     * @param mixed XML attributes (array) or Domain object.
-     * @return Domain
-     */
+	/**
+	 * Adds Domain object from <domain> tag.
+	 * @param      mixed XML attributes (array) or Domain object.
+	 */
 	public function addDomain($data) {
 
 		if ($data instanceof Domain) {
