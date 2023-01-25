@@ -1,8 +1,4 @@
-[project-name]: Symfony 1
-[project-url]: https://github.com/Tactics/symfony1
-
 # Symfony 1
-[![Software License][ico-license]](LICENSE.md)
 
 Tactics Fork of Symfony 1 - PHP 7.4 compatible.
 
