@@ -104,6 +104,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
 
     $this->generateRegistration('GET', $data, $methods, $names, $validators);
 
+
     if (count($fillinArray))
     {
       $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
