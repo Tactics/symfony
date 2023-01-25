@@ -28,7 +28,7 @@ include_once 'phing/types/Parameter.php';
  * Base class for core filter readers.
  *
  * @author <a href="mailto:yl@seasonfive.com">Yannick Lecaillez</a>
- * @copyright © 2003 seasonfive. All rights reserved
+ * @copyright ï¿½ 2003 seasonfive. All rights reserved
  * @version   $Revision: 1.5 $ $Date: 2005/02/27 20:52:08 $
  * @access    public
  * @see       FilterReader

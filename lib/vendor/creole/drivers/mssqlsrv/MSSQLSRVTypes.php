@@ -63,7 +63,6 @@ class MSSQLSRVTypes extends CreoleTypes {
                 "uniqueidentifier" => CreoleTypes::CHAR,
                 "varbinary" => CreoleTypes::VARBINARY,
                 "varchar" => CreoleTypes::VARCHAR,
-                "uniqueidentifier" => CreoleTypes::CHAR,
                 // SQL Server 2000 only
                 "bigint identity" => CreoleTypes::BIGINT,
                 "bigint" => CreoleTypes::BIGINT,

@@ -56,7 +56,7 @@ class Creole {
 	 * @deprecated use COMPAT_ASSOC_LOWER
      */
     const NO_ASSOC_LOWER = 16;
-	
+
     /**
      * Flag to pass to the connection to indicate that a to-lower case conversion
      * should be performed by ResultSet on keys of fetched rows.
@@ -68,12 +68,12 @@ class Creole {
 	 * on strings (using ResultSet->getString(), etc.).
      */
 	const COMPAT_RTRIM_STRING = 64;
-	
+
 	/**
 	 * Flag to indicate that all compatibility flags should be set.
 	 */
 	const COMPAT_ALL = 96;
-	
+
     /**
      * Map of built-in drivers.
      * Change or add your own using registerDriver()
@@ -176,7 +176,7 @@ class Creole {
         } else {
             $dsninfo = self::parseDSN($dsn);
         }
-		
+
 		// gather any flags from the DSN
 		if ( isset ( $dsninfo['persistent'] ) && ! empty ( $dsninfo['persistent'] ) )
 			$flags |= Creole::PERSISTENT;
@@ -186,8 +186,8 @@ class Creole {
 			$flags |= Creole::COMPAT_RTRIM_STRING;
 		if ( isset ( $dsninfo['compat_all'] ) && ! empty ( $dsninfo['compat_all'] ) )
 			$flags |= Creole::COMPAT_ALL;
-		
-		if ($flags & Creole::NO_ASSOC_LOWER) {
+
+		if ($flags & Creole::COMPAT_ASSOC_LOWER) {
 			trigger_error("The Creole::NO_ASSOC_LOWER flag has been deprecated, and is now the default behavior. Use Creole::COMPAT_ASSOC_LOWER to lowercase resulset keys.", E_USER_WARNING);
 		}
 
@@ -218,9 +218,9 @@ class Creole {
 
             // if we're here, a non-persistent connection was already there, but
             // the user wants a persistent one, so it will be created
-            
+
             if ($con->isConnected())
-                return $con;            
+                return $con;
         }
 
         // support "catchall" drivers which will themselves handle the details of connecting

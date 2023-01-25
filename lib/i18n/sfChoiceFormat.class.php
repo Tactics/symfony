@@ -17,11 +17,9 @@
  * @package    symfony
  * @subpackage i18n
  */
-
-
 /**
  * sfChoiceFormat class.
- * 
+ *
  * sfChoiceFormat converts between ranges of numeric values and string 
  * names for those ranges.
  *
@@ -32,7 +30,7 @@
  *
  * <code>
  *  $string = '[0] are no files |[1] is one file |(1,Inf] are {number} files';
- *  
+ *
  *  $formatter = new sfMessageFormat(...); //init for a source
  *  $translated = $formatter->format($string);
  *

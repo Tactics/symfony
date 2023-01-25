@@ -76,13 +76,14 @@ class sfPropelManyToMany
     return call_user_func(array($relatedClass.'Peer', 'doSelect'), $criteria);
   }
 
-  /**
-   * Gets objects related by a many-to-many relationship, with a middle table.
-   *
-   * @param  $object        The object to get related objects for.
-   * @param  $middleClass   The middle class used for the many-to-many relationship.
-   * @param  $criteria      Criteria to apply to the selection.
-   */
+    /**
+     * Gets objects related by a many-to-many relationship, with a middle table.
+     *
+     * @param  $object        The object to get related objects for.
+     * @param  $middleClass   The middle class used for the many-to-many relationship.
+     * @param  $criteria      Criteria to apply to the selection.
+     * @return array
+     */
   public static function getRelatedObjects($object, $middleClass, $criteria = null)
   {
     if (null === $criteria)

@@ -30,7 +30,7 @@ include_once 'phing/filters/ReplaceTokens.php'; // for class Token
  * @access    public
  * @package   phing.system.io
  */
-class TokenReader extends Reader {
+abstract class TokenReader extends Reader {
 
     /**
      * Constructor

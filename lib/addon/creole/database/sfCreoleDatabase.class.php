@@ -136,7 +136,7 @@ class sfCreoleDatabase extends sfDatabase
       $compatRtrimString = $this->getParameter('compat_rtrim_string', false);
 
       $flags  = 0;
-      $flags |= ($noAssocLower)      ? Creole::NO_ASSOC_LOWER : 0;
+      $flags |= ($noAssocLower)      ? Creole::COMPAT_ASSOC_LOWER : 0;
       $flags |= ($persistent)        ? Creole::PERSISTENT : 0;
       $flags |= ($compatAssocLower)  ? Creole::COMPAT_ASSOC_LOWER : 0;
       $flags |= ($compatRtrimString) ? Creole::COMPAT_RTRIM_STRING : 0;

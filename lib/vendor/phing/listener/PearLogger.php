@@ -18,25 +18,25 @@
  * and is licensed under the LGPL. For more information please see
  * <http://phing.info>.
  */
- 
+
 require_once 'phing/BuildListener.php';
 include_once 'phing/BuildEvent.php';
 require_once 'Log.php';
 
 /**
  * Writes log messages to PEAR Log.
- * 
+ *
  * By default it will log to file in current directory w/ name 'phing.log'.  You can customize
  * this behavior by setting properties:
  * - pear.log.type
  * - pear.log.name
  * - pear.log.ident (note that this class changes ident to project name)
  * - pear.log.conf (note that array values are currently unsupported in Phing property files)
- * 
+ *
  * <code>
  *  phing -f build.xml -logger phing.listener.PearLogger -Dpear.log.type=file -Dpear.log.name=/path/to/log.log
  * </code>
- * 
+ *
  * @author    Hans Lellelid <hans@xmpl.org>
  * @version   $Revision: 1.3 $ $Date: 2004/03/15 14:45:06 $
  * @see       BuildEvent
@@ -62,7 +62,7 @@ class PearLogger implements BuildListener {
      *  @var int
      */
     protected $startTime;
-    
+
     /**
      * Maps Phing PROJECT_MSG_* constants to PEAR_LOG_* constants.
      * @var array
@@ -78,25 +78,25 @@ class PearLogger implements BuildListener {
      * @var boolean
      */
     protected $logConfigured = false;
-              
+
     /**
      * Configure the logger.
      */
     protected function configureLogging() {
-    
+
         $type = Phing::getDefinedProperty('pear.log.type');
         $name = Phing::getDefinedProperty('pear.log.name');
         $ident = Phing::getDefinedProperty('pear.log.ident');
         $conf = Phing::getDefinedProperty('pear.log.conf');
-        
+
         if ($type === null) $type = 'file';
         if ($name === null) $name = 'phing.log';
         if ($ident === null) $ident = 'phing';
         if ($conf === null) $conf = array();
-        
+
         $this->logger = Log::singleton($type, $name, $ident, $conf, self::$levelMap[$this->msgOutputLevel]);
-    }        
-    
+    }
+
     /**
      * Get the configured PEAR logger to use.
      * This method just ensures that logging has been configured and returns the configured logger.
@@ -108,7 +108,7 @@ class PearLogger implements BuildListener {
         }
         return $this->logger;
     }
-    
+
     /**
      *  Set the msgOutputLevel this logger is to respond to.
      *
@@ -214,7 +214,7 @@ class PearLogger implements BuildListener {
      *  @see    BuildEvent::getMessage()
      */
     function messageLogged(BuildEvent $event) {
-        if ($event->getPriority() <= $this->msgOutputLevel) {            
+        if ($event->getPriority() <= $this->msgOutputLevel) {
             $msg = "";
             if ($event->getTask() !== null) {
                 $name = $event->getTask();
@@ -229,8 +229,9 @@ class PearLogger implements BuildListener {
     /**
      *  Formats a time micro integer to human readable format.
      *
-     *  @param  integer The time stamp
-     *  @access private
+     * @param integer The time stamp
+     * @access private
+     * @return string
      */
     function _formatTime($micros) {
         $seconds = $micros;
@@ -242,5 +243,5 @@ class PearLogger implements BuildListener {
         } else {
             return sprintf("%0.4f second%s", $seconds, ($seconds%60 === 1 ? "" : "s"));
         }
-    }         
+    }
 }

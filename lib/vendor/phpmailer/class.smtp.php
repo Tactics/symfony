@@ -28,13 +28,13 @@ class SMTP
      *  @var int
      */
     public $SMTP_PORT = 25;
-    
+
     /**
      *  SMTP reply line ending
      *  @var string
      */
     public  $CRLF = "\r\n";
-    
+
     /**
      *  Sets whether debugging is turned on
      *  @var bool
@@ -321,9 +321,7 @@ class SMTP
             $in_headers = true;
         }
 
-        $max_line_length = 998; # used below; set here for ease in change
-
-        while(list(,$line) = @each($lines)) {
+        $max_line_length = 998; foreach ($lines as $line) {
             $lines_out = null;
             if($line == "" && $in_headers) {
                 $in_headers = false;
@@ -348,9 +346,7 @@ class SMTP
                 }
             }
             $lines_out[] = $line;
-
-            # now send the lines to the server
-            while(list(,$line_out) = @each($lines_out)) {
+            foreach ($lines_out as $line_out) {
                 if(strlen($line_out) > 0)
                 {
                     if(substr($line_out, 0, 1) == ".") {
@@ -434,7 +430,7 @@ class SMTP
 
         # parse the reply and place in our array to return to user
         $entries = explode($this->CRLF,$rply);
-        while(list(,$l) = @each($entries)) {
+        foreach ($entries as $l) {
             $list[] = substr($l,4);
         }
 
@@ -508,7 +504,7 @@ class SMTP
         }
 
         $this->helo_rply = $rply;
-        
+
         return true;
     }
 

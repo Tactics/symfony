@@ -38,6 +38,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
   /** LastStmt used to count last update SQL **/
   private $lastStmt = null;
 
+  private $pointer_type = SQLSRV_CURSOR_CLIENT_BUFFERED;
   /**
    * @see Connection::connect()
    */
@@ -53,7 +54,8 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
     $serverName = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : '(local)';
 
     if(!empty($dsninfo['port'])) {
-      throw new SQLException('dsninfo[\'port\'] not implemented');
+      $portDelimiter = ",";
+      $serverName .= $portDelimiter.$dsninfo['port'];
     }
 
     $connectionInfo = array();
@@ -120,11 +122,18 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
   }
 
   /**
-   * Returns false since MSSQL doesn't support this method.
+   * @see Connection::applyLimit()
    */
   public function applyLimit(&$sql, $offset, $limit)
   {
-    return false;
+    if($limit > 0)
+    {
+      $sql .= ' offset ' . ($offset?: 0) . ' rows ';
+      $sql .= ' fetch next ' . $limit . ' rows only ';
+    }
+    else if($offset > 0) {
+      $sql .= ' offset ' . ($offset?: 0) . ' rows ';
+    }
   }
 
   /**
@@ -138,13 +147,30 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
   }
 
   /**
+   * @return string
+   */
+  function getPointerType()
+  {
+    return  $this->pointer_type ?: SQLSRV_CURSOR_CLIENT_BUFFERED;
+  }
+
+  /**
+   * @param $type
+   */
+  function setPointerType($type)
+  {
+    $this->pointer_type = $type;
+  }
+
+  /**
    * @see Connection::executeQuery()
    */
   function executeQuery($sql, $fetchmode = null)
   {
     $this->lastQuery = $sql;
-    
-    $result = sqlsrv_query($this->dblink, $sql, null, array("Scrollable" => SQLSRV_CURSOR_STATIC));    
+
+    //var_dump( $this->getPointerType());
+    $result = sqlsrv_query($this->dblink, $sql, null, array("Scrollable" => $this->getPointerType()));
     if($result === false)
     {
       throw new SQLException('Could not execute query: ' . $sql,  $this->sqlError());
@@ -168,9 +194,9 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
     $this->lastQuery = $sql;
 
     $stmt = sqlsrv_query( $this->dblink, $sql);
-    
+
     if (!$stmt) {
-        throw new SQLException('Could not execute update', $this->sqlError(), $sql);
+      throw new SQLException('Could not execute update', $this->sqlError(), $sql);
     }
 
     $rows_affected = sqlsrv_rows_affected( $stmt);
@@ -274,23 +300,23 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
   {
     return print_r( sqlsrv_errors(), true);
   }
-  
+
   /**
    * returns the last inserted id
-   * 
+   *
    * @return int
    * @throws SQLException
    */
   function getLastInsertedId()
-  { 
+  {
     if (
-        (sqlsrv_next_result($this->lastStmt) !== true) || 
-        (sqlsrv_fetch($this->lastStmt) !== true) ||
-        (($lastInsertedId = sqlsrv_get_field($this->lastStmt, 0)) === false)
-       ) {
+      (sqlsrv_next_result($this->lastStmt) !== true) ||
+      (sqlsrv_fetch($this->lastStmt) !== true) ||
+      (($lastInsertedId = sqlsrv_get_field($this->lastStmt, 0)) === false)
+    ) {
       throw new SQLException('Unable to retrieve last inserted id', $this->sqlError());
     }
-    
+
     return $lastInsertedId;
   }
 }

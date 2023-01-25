@@ -897,10 +897,11 @@ class Table extends XMLElement implements IDMethod {
 		return $firstFK;
 	}
 
-	/**
-	 * Returns true if the table contains a specified column
-	 * @param      mixed $col Column or column name.
-	 */
+    /**
+     * Returns true if the table contains a specified column
+     * @param mixed $col Column or column name.
+     * @return bool
+     */
 	public function containsColumn($col)
 	{
 		if ($col instanceof Column) {

@@ -85,22 +85,22 @@ class sfMySQLDatabase extends sfDatabase
 
     // let's see if we need a persistent connection
     $persistent = $this->getParameter('persistent', false);
-    $connect    = ($persistent) ? 'mysql_pconnect' : 'mysql_connect';
+    $host       = ($persistent) ? 'p:'.$host : $host;
 
     if ($password == null)
     {
       if ($username == null)
       {
-        $this->connection = @$connect($host);
+        $this->connection = @mysqli_connect($host);
       }
       else
       {
-        $this->connection = @$connect($host, $username);
+        $this->connection = @mysqli_connect($host, $username);
       }
     }
     else
     {
-      $this->connection = @$connect($host, $username, $password);
+      $this->connection = @mysqli_connect($host, $username, $password);
     }
 
     // make sure the connection went through
@@ -113,7 +113,7 @@ class sfMySQLDatabase extends sfDatabase
     }
 
     // select our database
-    if ($database != null && !@mysql_select_db($database, $this->connection))
+    if ($database != null && !@mysqli_select_db($this->connection, $database))
     {
       // can't select the database
       $error = 'Failed to select MySQLDatabase "%s"';
@@ -160,7 +160,7 @@ class sfMySQLDatabase extends sfDatabase
   {
     if ($this->connection != null)
     {
-      @mysql_close($this->connection);
+      @mysqli_close($this->connection);
     }
   }
 }

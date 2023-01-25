@@ -39,12 +39,23 @@ class TGettext_PO extends TGettext
      * Constructor
      *
      * @access  public
+     * @param   string      path to GNU PO file
+     */
+    function __construct($file = '')
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * Constructor
+     *
+     * @access  public
      * @return  object      File_Gettext_PO
      * @param   string      path to GNU PO file
      */
     function TGettext_PO($file = '')
     {
-        $this->file = $file;
+        self::__construct($file);
     }
 
     /**

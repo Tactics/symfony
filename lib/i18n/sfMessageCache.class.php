@@ -59,23 +59,25 @@ class sfMessageCache
     $this->lifetime = intval($time);
   }
 
-  /**
-   * Gets the cache file ID based section and locale.
-   *
-   * @param string $catalogue The translation section.
-   * @param string $culture The translation locale, e.g. "en_AU".
-   */
+    /**
+     * Gets the cache file ID based section and locale.
+     *
+     * @param string $catalogue The translation section.
+     * @param string $culture The translation locale, e.g. "en_AU".
+     * @return string
+     */
   protected function getID($catalogue, $culture)
   {
     return $culture;
   }
 
-  /**
-   * Gets the cache file GROUP based section and locale.
-   *
-   * @param string $catalogue The translation section.
-   * @param string $culture The translation locale, e.g. "en_AU".
-   */
+    /**
+     * Gets the cache file GROUP based section and locale.
+     *
+     * @param string $catalogue The translation section.
+     * @param string $culture The translation locale, e.g. "en_AU".
+     * @return string
+     */
   protected function getGroup($catalogue, $culture)
   {
     return $catalogue;
@@ -103,13 +105,14 @@ class sfMessageCache
     return unserialize($this->cache->get($ID, $group));
   }
 
-  /**
-   * Saves the data to cache for the specified section and locale.
-   *
-   * @param array $data The data to save.
-   * @param string $catalogue The translation section.
-   * @param string $culture The translation locale, e.g. "en_AU".
-   */
+    /**
+     * Saves the data to cache for the specified section and locale.
+     *
+     * @param array $data The data to save.
+     * @param string $catalogue The translation section.
+     * @param string $culture The translation locale, e.g. "en_AU".
+     * @return
+     */
   public function save($data, $catalogue, $culture)
   {
     $ID = $this->getID($catalogue, $culture);

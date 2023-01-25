@@ -220,7 +220,7 @@
   padding: 0;
   margin: 0;
   border: 1px solid #999;
-  font-family: Arial;
+  font-family: Arial, 'sans-serif';
   font-size: 11px;
 }
 
@@ -259,9 +259,8 @@
 
 .sfWebDebugCache
 {
-  padding: 0;
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, 'sans-serif';
   position: absolute;
   overflow: hidden;
   z-index: 995;

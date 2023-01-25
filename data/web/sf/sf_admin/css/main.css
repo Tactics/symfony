@@ -41,9 +41,8 @@
 #sf_admin_container h1
 {
   margin: 8px 0;
-  padding: 3px;
-  padding-left: 0px;
-  color: #555;
+    padding: 3px 3px 3px 0px;
+    color: #555;
   font-family: "Trebuchet MS", Arial, Verdana, sans-serif;
   font-size: 25px;
 }
@@ -161,7 +160,7 @@
 {
   margin-bottom: 3px;
   border: 1px solid #ddd;
-  border-bottom: 0px;
+  border-bottom: 0;
   background-color: #fff;
 }
 
@@ -216,10 +215,9 @@
   color: #333;
   font-size: 11px;
   font-family: Arial, sans-serif;
-  border: 0px;
+  border: 0;
   border-right: 4px solid #999;
   background-color: #ffc;
-  cursor: hand;
   cursor: pointer;
 }
 
@@ -287,8 +285,8 @@
 {
   width: 100%;
   border: 1px solid #ddd;
-  border-bottom: 0px;
-  border-right: 0px;
+  border-bottom: 0;
+  border-right: 0;
 }
 
 #sf_admin_container .sf_admin_list th
@@ -317,7 +315,7 @@
 
 #sf_admin_container .sf_admin_row_0 td
 {
-  
+
 }
 
 #sf_admin_container .sf_admin_row_1 td
@@ -332,7 +330,7 @@
 
 #sf_admin_container .mceEditor td
 {
-  padding: 0px;
+  padding: 0;
 }
 
 #sf_admin_container select.sf_admin_multiple, #sf_admin_container select.sf_admin_multiple-selected

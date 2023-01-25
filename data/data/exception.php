@@ -4,7 +4,10 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>symfony exception</title>
   <style>
-  body { margin: 0; padding: 20px; margin-top: 20px; background-color: #eee }
+  body {
+      padding: 20px;
+      margin: 20px 0 0;
+      background-color: #eee }
   body, td, th { font: 11px Verdana, Arial, sans-serif; color: #333 }
   a { color: #333 }
   h1 { margin: 0 0 0 10px; padding: 10px 0 10px 0; font-weight: bold; font-size: 120% }
@@ -19,7 +22,9 @@
   table.vars td  { padding: 2px; font-family: monospace; white-space: pre }
   p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center; -moz-border-radius: 10px; }
   p.error a { color: #fff }
-  #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; min-width: 13em; max-width: 52em }
+  #main {
+      padding: 20px 20px 20px 70px;
+      border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; min-width: 13em; max-width: 52em }
   #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px }
   </style>
   <script type="text/javascript">

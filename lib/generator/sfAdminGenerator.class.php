@@ -568,7 +568,7 @@ EOF;
     $params      = $user_params ? array_merge($params, $user_params) : $params;
 
     $type = $column->getCreoleType();
-    
+
     $columnGetter = $this->getColumnGetter($column, true);
 
     if ($column->isComponent())
@@ -678,13 +678,14 @@ EOF;
     }
   }
 
-  /**
-   * Escapes a string.
-   *
-   * @param string
-   *
-   * @param string
-   */
+    /**
+     * Escapes a string.
+     *
+     * @param string
+     *
+     * @param string
+     * @return string|string[]|null
+     */
   protected function escapeString($string)
   {
     return preg_replace('/\'/', '\\\'', $string);

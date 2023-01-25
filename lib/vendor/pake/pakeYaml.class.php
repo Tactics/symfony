@@ -80,7 +80,7 @@
      * @access public
      * @return void
      */
-     public function pakeYAMLNode() {
+     public function __construct() {
       $this->id = uniqid('');
     }
   }
@@ -193,7 +193,7 @@
         } elseif ($this->_inBlock == true && empty($ifchk)) {
           $last =& $this->_allNodes[$this->_lastNode];
           $last->data[key($last->data)] .= "\n";
-        } elseif ($ifchk{0} != '#' && substr($ifchk,0,3) != '---') {
+        } elseif ($ifchk[0] != '#' && substr($ifchk,0,3) != '---') {
           // Create a new node and get its indent
           $node         = new pakeYAMLNode;
           $node->indent = $this->_getIndent($line);
@@ -500,7 +500,7 @@
      * @param string $line A line from the YAML file
      */
      private function _getIndent($line) {
-      preg_match('/^\s{1,}/',$line,$match);
+      preg_match('/^\s+/',$line,$match);
       if (!empty($match[0])) {
         $indent = substr_count($match[0],' ');
       } else {

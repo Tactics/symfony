@@ -98,9 +98,13 @@ class ODBCPreparedStatement extends PreparedStatementCommon implements PreparedS
     }
 
     /**
+     * @param mixed|null $p1 Either (array) Parameters that will be set using PreparedStatement::set() before query is executed or (int) fetchmode.
+     * @param int|null $fetchmode The mode to use when fetching the results (e.g. ResultSet::FETCHMODE_NUM, ResultSet::FETCHMODE_ASSOC).
+     * @return ResultSet
+     * @throws SQLException
      * @see PreparedStatement::executeQuery()
      */
-    public function executeQuery()
+    public function executeQuery($p1 = null, $fetchmode = null)
     {
         switch (func_num_args()) {
         case 2:

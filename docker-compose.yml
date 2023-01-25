@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  composer:
+    container_name: "${DOCKER_PROJECT_NAME}_composer"
+    environment:
+      COLUMNS: 80
+      PHP_FPM_GROUP: wodby
+      PHP_FPM_USER: wodby
+    env_file:
+      - .env
+    image: "wodby/php:7.4-dev-4.16.2"
+    volumes:
+      - "./:/var/www/html"
+
+  php:
+    container_name: "${DOCKER_PROJECT_NAME}_php"
+    environment:
+      COLUMNS: 80
+      PHP_FPM_GROUP: wodby
+      PHP_FPM_USER: wodby
+    env_file:
+      - .env
+    image: "wodby/php:7.4-dev-4.16.2"
+    volumes:
+      - "./:/var/www/html"

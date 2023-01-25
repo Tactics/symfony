@@ -13,24 +13,21 @@
 // +----------------------------------------------------------------------+
 //
 // $Id: TGettext.class.php 9858 2008-06-25 11:34:30Z fabien $
-
 /**
  * File::Gettext
  * 
  * @author      Michael Wallner <mike@php.net>
  * @license     PHP License
  */
-
 /**
  * Use PHPs builtin error messages
  */
 //ini_set('track_errors', true);
-
 /** 
  * File_Gettext
- * 
+ *
  * GNU gettext file reader and writer.
- * 
+ *
  * #################################################################
  * # All protected members of this class are public in its childs. #
  * #################################################################

@@ -17,15 +17,14 @@
  * @package    symfony
  * @subpackage i18n
  */
-
 /**
  * sfMessageSource_gettext class.
- * 
+ *
  * Using Gettext MO format as the message source for translation.
  * The gettext classes are based on PEAR's gettext MO and PO classes.
- * 
+ *
  * See the MessageSource::factory() method to instantiate this class.
- * 
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 24 16:18:44 EST 2004
  * @package    symfony

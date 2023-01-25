@@ -24,17 +24,17 @@ require_once(dirname(__FILE__).'/util.php');
 
 /**
  * sfDateFormat class.
- * 
- * The sfDateFormat class allows you to format dates and times with 
- * predefined styles in a locale-sensitive manner. Formatting times 
+ *
+ * The sfDateFormat class allows you to format dates and times with
+ * predefined styles in a locale-sensitive manner. Formatting times
  * with the sfDateFormat class is similar to formatting dates.
  *
- * Formatting dates with the sfDateFormat class is a two-step process. 
- * First, you create a formatter with the getDateInstance method. 
- * Second, you invoke the format method, which returns a string containing 
- * the formatted date. 
+ * Formatting dates with the sfDateFormat class is a two-step process.
+ * First, you create a formatter with the getDateInstance method.
+ * Second, you invoke the format method, which returns a string containing
+ * the formatted date.
  *
- * DateTime values are formatted using standard or custom patterns stored 
+ * DateTime values are formatted using standard or custom patterns stored
  * in the properties of a DateTimeFormatInfo.
  *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
@@ -46,7 +46,7 @@ class sfDateFormat
 {
   /**
    * A list of tokens and their function call.
-   * @var array 
+   * @var array
    */
   protected $tokens = array(
     'G'=>'Era',
@@ -70,13 +70,13 @@ class sfDateFormat
 
   /**
    * A list of methods, to be used by the token function calls.
-   * @var array 
+   * @var array
    */
   protected $methods = array();
 
   /**
    * The sfDateTimeFormatInfo, containing culture specific patterns and names.
-   * @var sfDateTimeFormatInfo   
+   * @var sfDateTimeFormatInfo
    */
   protected $formatInfo;
 
@@ -206,7 +206,7 @@ class sfDateFormat
    * Formats a date according to the pattern.
    *
    * @param mixed the time as integer or string in strtotime format.
-   * @return string formatted date time. 
+   * @return string formatted date time.
    */
   public function format($time, $pattern = 'F', $inputPattern = null, $charset = 'UTF-8')
   {
@@ -223,7 +223,7 @@ class sfDateFormat
     for ($i = 0, $max = count($tokens); $i < $max; $i++)
     {
       $pattern = $tokens[$i];
-      if ($pattern{0} == "'" && $pattern{strlen($pattern) - 1} == "'")
+      if ($pattern[0] == "'" && $pattern[strlen($pattern) - 1] == "'")
       {
         $tokens[$i] = str_replace('``````', '\'', preg_replace('/(^\')|(\'$)/', '', $pattern));
       }
@@ -260,9 +260,9 @@ class sfDateFormat
    */
   protected function getFunctionName($token)
   {
-    if (isset($this->tokens[$token{0}]))
+    if (isset($this->tokens[$token[0]]))
     {
-      return $this->tokens[$token{0}];
+      return $this->tokens[$token[0]];
     }
   }
 
@@ -270,7 +270,7 @@ class sfDateFormat
    * Gets the pattern from DateTimeFormatInfo or some predefined patterns.
    * If the $pattern parameter is an array of 2 element, it will assume
    * that the first element is the date, and second the time
-   * and try to find an appropriate pattern and apply 
+   * and try to find an appropriate pattern and apply
    * DateTimeFormatInfo::formatDateTime
    * See the tutorial documentation for futher details on the patterns.
    *
@@ -298,7 +298,7 @@ class sfDateFormat
         break;
       case 'P':
         return $this->formatInfo->FullDatePattern;
-        break;        
+        break;
       case 't':
         return $this->formatInfo->ShortTimePattern;
         break;
@@ -365,17 +365,17 @@ class sfDateFormat
   public function getInputPattern($pattern)
   {
     $pattern = $this->getPattern($pattern);
-    
+
     $pattern = strtr($pattern, array('yyyy' => 'Y', 'h'=>'H', 'z'=>'', 'a'=>''));
     $pattern = strtr($pattern, array('yy'=>'yyyy', 'Y'=>'yyyy'));
-    
+
     return trim($pattern);
   }
 
   /**
    * Tokenizes the pattern. The tokens are delimited by group of
    * similar characters, e.g. 'aabb' will form 2 tokens of 'aa' and 'bb'.
-   * Any substrings, starting and ending with a single quote (') 
+   * Any substrings, starting and ending with a single quote (')
    * will be treated as a single token.
    *
    * @param string pattern.
@@ -391,37 +391,37 @@ class sfDateFormat
 
     for ($i = 0, $max = strlen($pattern); $i < $max; $i++)
     {
-      if ($char == null || $pattern{$i} == $char || $text)
+      if ($char == null || $pattern[$i] == $char || $text)
       {
-        $token .= $pattern{$i};
+        $token .= $pattern[$i];
       }
       else
       {
         $tokens[] = str_replace("''", "'", $token);
-        $token = $pattern{$i};
+        $token = $pattern[$i];
       }
 
-      if ($pattern{$i} == "'" && $text == false)
+      if ($pattern[$i] == "'" && $text == false)
       {
         $text = true;
       }
-      else if ($text && $pattern{$i} == "'" && $char == "'")
+      else if ($text && $pattern[$i] == "'" && $char == "'")
       {
         $text = true;
       }
-      else if ($text && $char != "'" && $pattern{$i} == "'")
+      else if ($text && $char != "'" && $pattern[$i] == "'")
       {
         $text = false;
       }
 
-      $char = $pattern{$i};
+      $char = $pattern[$i];
 
     }
     $tokens[] = $token;
 
     return $tokens;
   }
-  
+
   // makes a unix date from our incomplete $date array
   protected function getUnixDate($date)
   {
@@ -446,7 +446,7 @@ class sfDateFormat
         return substr($year, 2);
       case 'yyyy':
         return $year;
-      default: 
+      default:
         throw new sfException('The pattern for year is either "yy" or "yyyy".');
     }
   }
@@ -564,7 +564,7 @@ class sfDateFormat
   }
 
   /**
-   * Gets the hours in 24 hour format, i.e. [0-23]. 
+   * Gets the hours in 24 hour format, i.e. [0-23].
    * "H" for non-padding, "HH" will always return 2 characters.
    *
    * @param array getdate format.
@@ -604,7 +604,7 @@ class sfDateFormat
   }
 
   /**
-   * Gets the hours in 12 hour format. 
+   * Gets the hours in 12 hour format.
    * "h" for non-padding, "hh" will always return 2 characters.
    *
    * @param array getdate format.
@@ -679,7 +679,7 @@ class sfDateFormat
    * @todo How to get the timezone for a different region?
    * @param array getdate format.
    * @param string a pattern.
-   * @return string time zone 
+   * @return string time zone
    */
   protected function getTimeZone($date, $pattern = 'z')
   {

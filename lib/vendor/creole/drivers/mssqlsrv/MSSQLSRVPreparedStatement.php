@@ -31,82 +31,99 @@ require_once 'creole/common/PreparedStatementCommon.php';
  */
 class MSSQLSRVPreparedStatement extends PreparedStatementCommon implements PreparedStatement {
 
-    /**
-     * @inheritdoc
-     * 
-     */
-    public function __construct(Connection $conn, $sql)
+  /**
+   * @inheritdoc
+   *
+   */
+  public function __construct(Connection $conn, $sql)
+  {
+    if (false !== stripos($sql, 'insert into'))
     {
-      if (false !== stripos($sql, 'insert into'))
-      {
-        $sql .= '; SELECT SCOPE_IDENTITY() AS ID';
+      $sql .= '; SELECT SCOPE_IDENTITY() AS ID';
+    }
+
+    parent::__construct($conn, $sql);
+  }
+
+  /**
+   * Add quotes using str_replace.
+   * This is not as thorough as MySQL.
+   */
+  protected function escape($subject)
+  {
+    // use this instead of magic_quotes_sybase + addslashes(),
+    // just in case multiple RDBMS being used at the same time
+    return str_replace("'", "''", $subject);
+  }
+
+  /**
+   * MSSQL must emulate OFFSET/LIMIT support.
+   */
+  public function executeQuery($p1 = null, $fetchmode = null)
+  {
+    $params = null;
+    if ($fetchmode !== null) {
+      $params = $p1;
+    } elseif ($p1 !== null) {
+      if (is_array($p1)) $params = $p1;
+      else $fetchmode = $p1;
+    }
+
+    if ($params) {
+      for($i=0,$cnt=count($params); $i < $cnt; $i++) {
+        $this->set($i+1, $params[$i]);
       }
-      
-      parent::__construct($conn, $sql);
     }
-    
-    /**
-     * Add quotes using str_replace.
-     * This is not as thorough as MySQL.
-     */
-    protected function escape($subject)
+
+    $this->updateCount = null; // reset
+    $sql = $this->replaceParams();
+
+    if(stripos($sql, 'ORDER BY'))
+      $offsetBefore = true;
+    else
+      $offsetBefore = false;
+
+    if($offsetBefore)
     {
-        // use this instead of magic_quotes_sybase + addslashes(),
-        // just in case multiple RDBMS being used at the same time
-        return str_replace("'", "''", $subject);
+      if ($this->limit > 0 || $this->offset > 0) {
+        $this->conn->applyLimit($sql, $this->offset, $this->limit);
+      }
     }
 
-    /**
-     * MSSQL must emulate OFFSET/LIMIT support.
-     */
-    public function executeQuery($p1 = null, $fetchmode = null)
+    $this->resultSet = $this->conn->executeQuery($sql, $fetchmode);
+
+    if(!$offsetBefore)
     {
-        $params = null;
-        if ($fetchmode !== null) {
-            $params = $p1;
-        } elseif ($p1 !== null) {
-            if (is_array($p1)) $params = $p1;
-            else $fetchmode = $p1;
-        }
-
-        if ($params) {
-            for($i=0,$cnt=count($params); $i < $cnt; $i++) {
-                $this->set($i+1, $params[$i]);
-            }
-        }
-
-        $this->updateCount = null; // reset
-        $sql = $this->replaceParams();
-
-        $this->resultSet = $this->conn->executeQuery($sql, $fetchmode);
-        $this->resultSet->_setOffset($this->offset);
-        $this->resultSet->_setLimit($this->limit); 
-        return $this->resultSet;
+      $this->resultSet->_setOffset($this->offset);
+      $this->resultSet->_setLimit($this->limit);
     }
 
-    /**
-     * MSSQL-specific implementation of setBlob().
-     *
-     * If you are having trouble getting BLOB data into the database, see the phpdoc comment
-     * in the MSSQLConnection for some PHP ini values that may need to be set. (This also
-     * applies to CLOB support.)
-     *
-     * @param int $paramIndex
-     * @param mixed $value Blob object or string.
-     * @return void
-     */
-    function setBlob($paramIndex, $blob)
-    {
-        $this->sql_cache_valid = false;
-        if ($blob === null) {
-            $this->setNull($paramIndex);
-        } else {
-            // they took magic __toString() out of PHP5.0.0; this sucks
-            if (is_object($blob)) {
-                $blob = $blob->__toString();
-            }
-            $data = unpack("H*hex", $blob);
-            $this->boundInVars[$paramIndex] = '0x'.$data['hex']; // no surrounding quotes!
-        }
+    return $this->resultSet;
+  }
+
+  /**
+   * MSSQL-specific implementation of setBlob().
+   *
+   * If you are having trouble getting BLOB data into the database, see the phpdoc comment
+   * in the MSSQLConnection for some PHP ini values that may need to be set. (This also
+   * applies to CLOB support.)
+   *
+   * @param int $paramIndex
+   * @param mixed $value Blob object or string.
+   * @return void
+   */
+  function setBlob($paramIndex, $blob)
+  {
+    $this->sql_cache_valid = false;
+    if ($blob === null) {
+      $this->setNull($paramIndex);
+    } else {
+      // they took magic __toString() out of PHP5.0.0; this sucks
+      if (is_object($blob)) {
+        $blob = $blob->__toString();
+      }
+      $data = unpack("H*hex", $blob);
+      $this->boundInVars[$paramIndex] = '0x'.$data['hex']; // no surrounding quotes!
     }
+  }
 }

@@ -67,7 +67,7 @@ class sfLogger
     if (!sfLogger::$logger)
     {
       // the class exists
-      $class = __CLASS__;
+      $class = self::class;
       sfLogger::$logger = new $class();
       sfLogger::$logger->initialize();
     }

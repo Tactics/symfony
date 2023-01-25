@@ -25,7 +25,7 @@ require_once 'phing/tasks/system/condition/ConditionBase.php';
  *  Condition that tests the OS type.
  *
  *  @author    Andreas Aderhold <andi@binarycloud.com>
- *  @copyright © 2001,2002 THYRELL. All rights reserved
+ *  @copyright ï¿½ 2001,2002 THYRELL. All rights reserved
  *  @version   $Revision: 1.8 $ $Date: 2006-04-28 16:49:47 +0200 (Fri, 28 Apr 2006) $
  *  @access    public
  *  @package   phing.tasks.system.condition

@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -53,7 +53,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    * Removes a credential.
    *
    * @param  mixed credential
-   */  
+   */
   public function removeCredential($credential)
   {
     if ($this->hasCredential($credential))
@@ -72,7 +72,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
         }
       }
     }
-  }  
+  }
 
   /**
    * Adds a credential.
@@ -110,7 +110,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
   }
 
-  
+
   /**
    * Returns true if user has credential.
    *
@@ -197,11 +197,12 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     return $this->timedout;
   }
 
-  /**
-   * Returns the timestamp of the last user request.
-   *
-   * @param  integer
-   */
+    /**
+     * Returns the timestamp of the last user request.
+     *
+     * @param integer
+     * @return null
+     */
   public function getLastRequestTime()
   {
     return $this->lastRequest;

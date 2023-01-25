@@ -70,12 +70,13 @@ class NameFactory {
 		return self::$instance;
 	}
 
-	/**
-	 * Factory method which retrieves an instance of the named generator.
-	 *
-	 * @param      name The fully qualified class name of the name
-	 * generation algorithm to retrieve.
-	 */
+    /**
+     * Factory method which retrieves an instance of the named generator.
+     *
+     * @param name The fully qualified class name of the name
+     * generation algorithm to retrieve.
+     * @return mixed|null
+     */
 	protected function getAlgorithm($name)
 	{
 		$algorithm = isset($this->algorithms[$name]) ? $this->algorithms[$name] : null;

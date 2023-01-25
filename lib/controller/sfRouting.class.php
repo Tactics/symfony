@@ -299,7 +299,7 @@ class sfRouting
         $elements[count($elements) - 1] = $matches[1];
         $route = '/'.implode('/', $elements);
       }
-      else if ($route{strlen($route) - 1} == '/')
+      else if ($route[strlen($route) - 1] == '/')
       {
         $suffix = '/';
       }
@@ -459,7 +459,7 @@ class sfRouting
 
     //$real_url = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
 	$real_url = preg_replace_callback(
-	  '/\:([^\/]+)/', 
+	  '/\:([^\/]+)/',
 	  function($matches) use ($params){
 		return urlencode($params[$matches[1]]);
 	  },
@@ -590,11 +590,6 @@ class sfRouting
 
             parse_str($found, $pass);
 
-            if (get_magic_quotes_gpc())
-            {
-              $pass = sfToolkit::stripslashesDeep((array) $pass);
-            }
-            
             foreach ($pass as $key => $value)
             {
               // we add this parameters if not in conflict with named url element (i.e. ':action')

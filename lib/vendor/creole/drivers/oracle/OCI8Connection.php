@@ -19,24 +19,24 @@
  * and is licensed under the LGPL. For more information please see
  * <http://creole.phpdb.org>.
  */
- 
+
 require_once 'creole/Connection.php';
 require_once 'creole/common/ConnectionCommon.php';
 include_once 'creole/drivers/oracle/OCI8ResultSet.php';
 
 /**
  * Oracle implementation of Connection.
- * 
+ *
  * @author    David Giffin <david@giffin.org>
  * @author    Hans Lellelid <hans@xmpl.org>
- * @author    Stig Bakken <ssb@fast.no> 
+ * @author    Stig Bakken <ssb@fast.no>
  * @author    Lukas Smith
  * @version   $Revision: 1.18 $
  * @package   creole.drivers.oracle
- */ 
+ */
 class OCI8Connection extends ConnectionCommon implements Connection
-{        
-    protected $lastStmt			= null;    
+{
+    protected $lastStmt			= null;
 
     /**
      * Auto commit mode for oci_execute
@@ -62,10 +62,10 @@ class OCI8Connection extends ConnectionCommon implements Connection
 
         $this->dsn				= $dsninfo;
         $this->flags			= $flags;
-        
+
         $persistent				=
 			( $flags & Creole::PERSISTENT === Creole::PERSISTENT );
-        
+
         $user					= $dsninfo[ 'username' ];
         $pw						= $dsninfo[ 'password' ];
         $hostspec				= $dsninfo[ 'hostspec' ];
@@ -78,7 +78,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
 		$encoding = !empty($dsninfo['encoding']) ? $dsninfo['encoding'] : null;
 
 		@ini_set( 'track_errors', true );
-		
+
 		if ( $hostspec && $port )
 		{
 		  $hostspec .= ':' . $port;
@@ -92,19 +92,19 @@ class OCI8Connection extends ConnectionCommon implements Connection
 		{
 			$conn				= @$connect_function( $user, $pw, $hostspec, $encoding );
         }
-		
+
 		elseif ( $user || $pw )
 		{
 			$conn				= @$connect_function( $user, $pw, null, $encoding );
         }
-		
+
 		else
 		{
 			$conn				= false;
         }
 
         @ini_restore( 'track_errors' );
-        
+
         if ( $conn == false )
 		{
             $error				= oci_error();
@@ -133,8 +133,8 @@ class OCI8Connection extends ConnectionCommon implements Connection
         $ret = @oci_close( $this->dblink );
         $this->dblink = null;
         return $ret;
-    }        
-    
+    }
+
     /**
      * @see Connection::executeQuery()
      */
@@ -162,21 +162,21 @@ class OCI8Connection extends ConnectionCommon implements Connection
 				, $sql
 			);
         }
-        
+
         return new OCI8ResultSet( $this, $result, $fetchmode );
     }
 
-    
+
     /**
      * @see Connection::simpleUpdate()
      */
-    
+
     function executeUpdate( $sql )
-    {    
+    {
         $this->lastQuery		= $sql;
 
         $statement				= oci_parse( $this->dblink, $sql );
-		
+
         if ( ! $statement )
 		{
             throw new SQLException( 'Unable to prepare update'
@@ -184,7 +184,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
 				, $sql
 			);
         }
-                
+
         $success				= oci_execute( $statement, $this->execMode );
 
         if ( ! $success )
@@ -209,7 +209,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
     {
         $this->execMode			= OCI_DEFAULT;
     }
-        
+
     /**
      * Commit the current transaction.
      * @throws SQLException
@@ -229,7 +229,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
         $this->execMode			= OCI_COMMIT_ON_SUCCESS;
     }
 
-    
+
     /**
      * Roll back ( undo ) the current transaction.
      * @throws SQLException
@@ -249,7 +249,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
         $this->execMode			= OCI_COMMIT_ON_SUCCESS;
     }
 
-    
+
     /**
      * Gets the number of rows affected by the data manipulation
      * query.
@@ -282,8 +282,8 @@ class OCI8Connection extends ConnectionCommon implements Connection
     * If the original SQL is in variable: query then the requlting
     * SQL looks like this:
     * <pre>
-    * SELECT B.* FROM ( 
-    *          SELECT A.*, rownum as TORQUE$ROWNUM FROM ( 
+    * SELECT B.* FROM (
+    *          SELECT A.*, rownum as TORQUE$ROWNUM FROM (
     *                  query
     *           ) A
     *      ) B WHERE B.TORQUE$ROWNUM > offset AND B.TORQUE$ROWNUM
@@ -306,7 +306,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
 
         if ( $offset > 0 )
 		{
-            $sql				.= ' B.CREOLE$ROWNUM > ' . $offset;            
+            $sql				.= ' B.CREOLE$ROWNUM > ' . $offset;
 
             if ( $limit > 0 )
 			{
@@ -319,13 +319,14 @@ class OCI8Connection extends ConnectionCommon implements Connection
 		{
 			$sql				.= ' B.CREOLE$ROWNUM <= ' . $limit;
 		}
-   } 
+   }
 
     /**
      * Get the native Oracle Error Message as a string.
      *
      * @param string $msg The Internal Error Message
      * @param mixed $errno The Oracle Error resource
+     * @return string
      */
     public function nativeError( $result = null )
 	{
@@ -333,16 +334,16 @@ class OCI8Connection extends ConnectionCommon implements Connection
 		{
 			$error				= oci_error( $result );
 		}
-	
+
 		else
 		{
 			$error				= oci_error( $this->dblink );
-		}         
+		}
 
 		return $error[ 'code' ] . ': ' . $error[ 'message' ];
 	}
-    
-    
+
+
     /**
      * @see Connection::getDatabaseInfo()
      */
@@ -352,7 +353,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
 
         return new OCI8DatabaseInfo( $this );
     }
-    
+
     /**
      * @see Connection::getIdGenerator()
      */
@@ -362,7 +363,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
 
         return new OCI8IdGenerator( $this );
     }
-    
+
     /**
      * Oracle supports native prepared statements, but the oci_parse call
      * is actually called by the OCI8PreparedStatement class because
@@ -371,13 +372,13 @@ class OCI8Connection extends ConnectionCommon implements Connection
      * @see OCI8PreparedStatement::executeUpdate()
      * @see Connection::prepareStatement()
      */
-    public function prepareStatement( $sql ) 
+    public function prepareStatement( $sql )
     {
         require_once 'creole/drivers/oracle/OCI8PreparedStatement.php';
 
         return new OCI8PreparedStatement( $this, $sql );
     }
-    
+
     /**
      * @see Connection::prepareCall()
      */
@@ -385,7 +386,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
 	{
         throw new SQLException( 'Oracle driver does not yet support stored procedures using CallableStatement.' );
     }
-    
+
     /**
      * @see Connection::createStatement()
      */

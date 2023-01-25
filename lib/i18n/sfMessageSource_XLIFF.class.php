@@ -17,18 +17,17 @@
  * @package    symfony
  * @subpackage i18n
  */
-
 /**
  * sfMessageSource_XLIFF class.
- * 
+ *
  * Using XML XLIFF format as the message source for translation.
  * Details and example of XLIFF can be found in the following URLs.
  *
  * # http://www.opentag.com/xliff.htm
  * # http://www-106.ibm.com/developerworks/xml/library/x-localis2/
- * 
+ *
  * See the MessageSource::factory() method to instantiate this class.
- * 
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 24 16:18:44 EST 2004
  * @package    symfony

@@ -19,7 +19,7 @@
  * <http://phing.info>.
 */
 
-include_once 'phing/types/TokenReader.php';
+include_once 'phing/types/TokenReaderType.php';
 include_once 'phing/system/io/IOException.php';
 include_once 'phing/filters/ReplaceTokens.php'; // For class Token
 
@@ -30,7 +30,7 @@ include_once 'phing/filters/ReplaceTokens.php'; // For class Token
  * @version   $Revision: 1.7 $
  * @package   phing.filters.util
  */
-class IniFileTokenReader extends TokenReader {
+class IniFileTokenReader extends TokenReaderType {
 
     /**
      * Holds the path to the INI file that is to be read.

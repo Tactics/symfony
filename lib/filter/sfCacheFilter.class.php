@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -206,11 +206,12 @@ class sfCacheFilter extends sfFilter
     }
   }
 
-  /**
-   * Gets a page template from the cache.
-   *
-   * @param string The internal URI
-   */
+    /**
+     * Gets a page template from the cache.
+     *
+     * @param string The internal URI
+     * @return bool
+     */
   protected function getPageCache($uri)
   {
     $context = $this->getContext();
@@ -265,11 +266,12 @@ class sfCacheFilter extends sfFilter
     }
   }
 
-  /**
-   * Gets an action template from the cache.
-   *
-   * @param string The internal URI
-   */
+    /**
+     * Gets an action template from the cache.
+     *
+     * @param string The internal URI
+     * @return bool
+     */
   protected function getActionCache($uri)
   {
     // retrieve content from cache

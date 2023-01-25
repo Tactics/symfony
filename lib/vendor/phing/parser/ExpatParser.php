@@ -35,7 +35,7 @@ include_once 'phing/system/io/FileReader.php';
  * handler classes.
  *
  * @author      Andreas Aderhold <andi@binarycloud.com>
- * @copyright © 2001,2002 THYRELL. All rights reserved
+ * @copyright ï¿½ 2001,2002 THYRELL. All rights reserved
  * @version   $Revision: 1.8 $ $Date: 2005/05/26 13:10:52 $
  * @access    public
  * @package   phing.parser

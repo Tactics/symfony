@@ -17,10 +17,9 @@
  * @package    symfony
  * @subpackage i18n
  */
- 
 /**
  * sfIMessageSource interface.
- * 
+ *
  * All messages source used by MessageFormat must be of sfIMessageSource.
  * It defines a set of operations to add and retrieve messages from the
  * message source. In addition, message source can load a particular 

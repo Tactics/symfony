@@ -1,30 +1,28 @@
 <?php
 
 /**
- * I18N Utility file.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the BSD License.
- *
- * Copyright(c) 2004 by Wei Zhuo. All rights reserved.
- *
- * To contact the author write to <weizhuo[at]gmail[dot]com>
- * The latest version of PRADO can be obtained from:
- * {@link http://prado.sourceforge.net/}
- *
- * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: util.php 9189 2008-05-22 17:39:35Z FabianLange $
- * @package    symfony
- * @subpackage i18n
- */
-
-
-  /**
-   * For a given DSN (database connection string), return some information
-   * about the DSN. This function comes from PEAR's DB package.
-   * @param string DSN format, similar to PEAR's DB
-   * @return array DSN information. 
-   */
+     * I18N Utility file.
+     *
+     * This program is free software; you can redistribute it and/or modify
+     * it under the terms of the BSD License.
+     *
+     * Copyright(c) 2004 by Wei Zhuo. All rights reserved.
+     *
+     * To contact the author write to <weizhuo[at]gmail[dot]com>
+     * The latest version of PRADO can be obtained from:
+     * {@link http://prado.sourceforge.net/}
+     *
+     * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
+     * @version    $Id: util.php 9189 2008-05-22 17:39:35Z FabianLange $
+     * @package    symfony
+     * @subpackage i18n
+     */
+    /**
+     * For a given DSN (database connection string), return some information
+     * about the DSN. This function comes from PEAR's DB package.
+     * @param string DSN format, similar to PEAR's DB
+     * @return array DSN information. 
+     */
     function parseDSN($dsn)
     {
         if (is_array($dsn)) {

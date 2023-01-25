@@ -9,7 +9,6 @@ use_helper('Form');
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 /**
  * ObjectHelper.
  *
@@ -18,7 +17,6 @@ use_helper('Form');
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: ObjectHelper.php 5149 2007-09-16 15:37:14Z fabien $
  */
-
 /**
  * Returns a html date control.
  *
@@ -28,7 +26,6 @@ use_helper('Form');
  * @param bool $default_value Date default value.
  *
  * @return string An html string which represents a date control.
- *
  */
 function object_input_date_tag($object, $method, $options = array(), $default_value = null)
 {

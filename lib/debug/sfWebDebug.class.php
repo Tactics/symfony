@@ -41,7 +41,7 @@ class sfWebDebug
   {
     if (!isset(self::$instance))
     {
-      $class = __CLASS__;
+      $class = self::class;
       self::$instance = new $class();
       self::$instance->initialize();
     }

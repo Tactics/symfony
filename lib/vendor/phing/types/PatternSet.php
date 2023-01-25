@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information please see
- * <http://phing.info>. 
+ * <http://phing.info>.
  */
 
 include_once 'phing/system/io/FileReader.php';
@@ -158,6 +158,7 @@ class PatternSet extends DataType {
      *
      * @param array List onto which the nameentry should be added
      * @returns PatternSetNameEntry  Reference to the created PsetNameEntry instance
+     * @return mixed
      */
     private function addPatternToList(&$list) {
         $num = array_push($list, new PatternSetNameEntry());
@@ -191,7 +192,7 @@ class PatternSet extends DataType {
         }
         if ($excludesFile instanceof File) {
             $excludesFile = $excludesFile->getPath();
-        }        
+        }
         $o = $this->createExcludesFile();
         $o->setName($excludesFile);
     }
@@ -205,9 +206,9 @@ class PatternSet extends DataType {
         $patternReader = null;
         try {
             // Get a FileReader
-            $patternReader = new BufferedReader(new FileReader($patternfile)); 
-        
-            // Create one NameEntry in the appropriate pattern list for each 
+            $patternReader = new BufferedReader(new FileReader($patternfile));
+
+            // Create one NameEntry in the appropriate pattern list for each
             // line in the file.
             $line = $patternReader->readLine();
             while ($line !== null) {
@@ -217,14 +218,14 @@ class PatternSet extends DataType {
                 }
                 $line = $patternReader->readLine();
             }
-            
+
         } catch (IOException $ioe)  {
-            $msg = "An error occured while reading from pattern file: " . $patternfile->__toString(); 
-            if($patternReader) $patternReader->close();            
+            $msg = "An error occured while reading from pattern file: " . $patternfile->__toString();
+            if($patternReader) $patternReader->close();
             throw new BuildException($msg, $ioe);
-        } 
-        
-        $patternReader->close();                
+        }
+
+        $patternReader->close();
     }
 
 
@@ -332,7 +333,7 @@ class PatternSet extends DataType {
         }
 
         if (!empty($this->excludesFileList)) {
-            foreach($this->excludesFileList as $ne) {               
+            foreach($this->excludesFileList as $ne) {
                 $fileName = (string) $ne->evalName($p);
                 if ($fileName !== null) {
                     $exclFile = $p->resolveFile($fileName);
@@ -349,13 +350,13 @@ class PatternSet extends DataType {
 
 
     function toString() {
-        
+
         // We can't compile includeList into array because, toString() does
         // not know about project:
         //
         // $includes = $this->makeArray($this->includeList, $this->project);
         // $excludes = $this->makeArray($this->excludeList, $this->project);
-            
+
         if (empty($this->includeList)) {
             $includes = "empty";
         } else {
@@ -365,7 +366,7 @@ class PatternSet extends DataType {
             }
             $includes = rtrim($includes, ",");
         }
-        
+
         if (empty($this->excludeList)) {
             $excludes = "empty";
         } else {
@@ -375,7 +376,7 @@ class PatternSet extends DataType {
             }
             $excludes = rtrim($excludes, ",");
         }
-               
+
         return "patternSet{ includes: $includes  excludes: $excludes }";
     }
 }

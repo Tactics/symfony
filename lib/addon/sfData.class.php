@@ -83,15 +83,16 @@ abstract class sfData
     }
   }
 
-  /**
-   * Gets a list of one or more *.yml files and returns the list in an array
-   *
-   * @param string A directory or file name; if null, then defaults to 'sf_data_dir'/fixtures
-   *
-   * @returns array A list of *.yml files.
-   *
-   * @throws sfInitializationException If the directory or file does not exist.
-   */
+    /**
+     * Gets a list of one or more *.yml files and returns the list in an array
+     *
+     * @param string A directory or file name; if null, then defaults to 'sf_data_dir'/fixtures
+     *
+     * @returns array A list of *.yml files.
+     *
+     * @return array
+     * @throws sfInitializationException If the directory or file does not exist.
+     */
   protected function getFiles($directory_or_file = null)
   {
     // directory or file?

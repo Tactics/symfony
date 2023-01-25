@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information please see
  * <http://phing.info>.
  */
- 
+
 require_once 'phing/BuildListener.php';
 include_once 'phing/BuildEvent.php';
 
@@ -29,7 +29,7 @@ include_once 'phing/BuildEvent.php';
  *  any messages that get logged.
  *
  *  @author    Andreas Aderhold <andi@binarycloud.com>
- *  @copyright © 2001,2002 THYRELL. All rights reserved
+ *  @copyright ï¿½ 2001,2002 THYRELL. All rights reserved
  *  @version   $Revision: 1.11 $ $Date: 2005/08/25 19:33:43 $
  *  @see       BuildEvent
  *  @package   phing.listener
@@ -203,8 +203,9 @@ class DefaultLogger implements BuildListener {
     /**
      *  Formats a time micro integer to human readable format.
      *
-     *  @param  integer The time stamp
-     *  @access private
+     * @param integer The time stamp
+     * @access private
+     * @return string
      */
     function _formatTime($micros) {
         $seconds = $micros;
@@ -217,17 +218,17 @@ class DefaultLogger implements BuildListener {
             return sprintf("%0.4f second%s", $seconds, ($seconds%60 === 1 ? "" : "s"));
         }
     }
-    
+
     /**
      * Prints a message to console.
-     * 
-     * @param string $message  The message to print. 
+     *
+     * @param string $message  The message to print.
      *                 Should not be <code>null</code>.
-     * @param int $priority The priority of the message. 
+     * @param int $priority The priority of the message.
      *                 (Ignored in this implementation.)
      * @return void
      */
     protected function printMessage($message, $priority) {
         print($message . $this->lSep);
-    }    
+    }
 }
