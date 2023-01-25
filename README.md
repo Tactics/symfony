@@ -19,7 +19,7 @@ since this is a private package hosted on our own Composer repository generator 
 Then run the following command
 
 ``` bash
-$ composer require tactics/symfony1
+$ composer require tactics/symfony
 ```
 
 ## Dependencies
