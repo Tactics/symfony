@@ -38,7 +38,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
   /** LastStmt used to count last update SQL **/
   private $lastStmt = null;
 
-  private $pointer_type = SQLSRV_CURSOR_CLIENT_BUFFERED;
+  private $pointer_type = SQLSRV_CURSOR_STATIC;
   /**
    * @see Connection::connect()
    */
@@ -76,7 +76,11 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
       $connectionInfo['CharacterSet'] = $dsninfo['encoding'];
     }
 
-    $conn = sqlsrv_connect( $serverName, $connectionInfo);
+    // Set default
+    $connectionInfo['Encrypt'] = false;
+    $connectionInfo['TrustServerCertificate'] = true;
+
+      $conn = sqlsrv_connect( $serverName, $connectionInfo);
     if( $conn === false )
     {
       throw new SQLException('connect failed', $this->sqlError());
@@ -151,7 +155,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   function getPointerType()
   {
-    return  $this->pointer_type ?: SQLSRV_CURSOR_CLIENT_BUFFERED;
+    return  $this->pointer_type ?: SQLSRV_CURSOR_STATIC;
   }
 
   /**
