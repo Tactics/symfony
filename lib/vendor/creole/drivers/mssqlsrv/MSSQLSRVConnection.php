@@ -76,6 +76,10 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
       $connectionInfo['CharacterSet'] = $dsninfo['encoding'];
     }
 
+    // Set default
+    $connectionInfo['Encrypt'] = false;
+    $connectionInfo['TrustServerCertificate'] = true;
+
     $conn = sqlsrv_connect( $serverName, $connectionInfo);
     if( $conn === false )
     {
