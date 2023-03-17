@@ -795,7 +795,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
             }
 
             if ($isNullAllowed && $isString) {
-                $script .= "if (\$v !== null || \$v !== '') {";
+                $script .= "if (\$v !== null && \$v !== '') {";
             }
 
             $script .= "    \$v = mb_substr(\$v, 0, " . (int) $col->getSize() . ");";
