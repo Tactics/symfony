@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -18,7 +18,6 @@
  */
 class sfSQLiteCache extends sfCache
 {
-  const DEFAULT_NAMESPACE = '';
 
   protected $conn = null;
 
@@ -183,7 +182,7 @@ class sfSQLiteCache extends sfCache
   *
   * @see sfCache
   */
-  public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function get($id, $namespace = '', $doNotTestCacheValidity = false)
   {
     $statement = sprintf("SELECT data FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
     if (!$doNotTestCacheValidity)
@@ -207,7 +206,7 @@ class sfSQLiteCache extends sfCache
    *
    * @see sfCache
    */
-  public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function has($id, $namespace = '', $doNotTestCacheValidity = false)
   {
     $statement = sprintf("SELECT id FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
     if (!$doNotTestCacheValidity)
@@ -217,7 +216,7 @@ class sfSQLiteCache extends sfCache
 
     return sqlite_num_rows(sqlite_query($statement, $this->conn)) ? true : false;
   }
-  
+
  /**
   * Saves some data in the cache.
   *
@@ -229,7 +228,7 @@ class sfSQLiteCache extends sfCache
   *
   * @see sfCache
   */
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
+  public function set($id, $namespace = '', $data = '')
   {
     if ($this->automaticCleaningFactor > 0)
     {
@@ -267,7 +266,7 @@ class sfSQLiteCache extends sfCache
   *
   * @see sfCache
   */
-  public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function remove($id, $namespace = '')
   {
     $statement = sprintf("DELETE FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
     if (sqlite_query($statement, $this->conn))
@@ -307,7 +306,7 @@ class sfSQLiteCache extends sfCache
     return sqlite_num_rows(sqlite_query($statement, $this->conn)) ? true : false;
   }
 
-  public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function lastModified($id, $namespace = '')
   {
     $statement = sprintf("SELECT created_at FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
     $rs = sqlite_query($statement, $this->conn);

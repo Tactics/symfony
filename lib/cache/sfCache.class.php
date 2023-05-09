@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -19,7 +19,8 @@
  */
 abstract class sfCache
 {
- /**
+    const DEFAULT_NAMESPACE = '';
+    /**
   * Cache lifetime (in seconds)
   *
   * @var int $lifeTime
@@ -42,7 +43,7 @@ abstract class sfCache
   *
   * @return string  The data of the cache (or null if no cache available)
   */
-  abstract public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false);
+  abstract public function get($id, $namespace = '', $doNotTestCacheValidity = false);
 
   /**
    * Returns true if there is a cache for the given id and namespace.
@@ -53,7 +54,7 @@ abstract class sfCache
    *
    * @return boolean true if the cache exists, false otherwise
    */
-  abstract public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false);
+  abstract public function has($id, $namespace = '', $doNotTestCacheValidity = false);
 
  /**
   * Saves some data in the cache.
@@ -64,7 +65,7 @@ abstract class sfCache
   *
   * @return boolean true if no problem
   */
-  abstract public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data);
+  abstract public function set($id, $namespace = '', $data = '');
 
  /**
   * Removes a content from the cache.
@@ -74,7 +75,7 @@ abstract class sfCache
   *
   * @return boolean true if no problem
   */
-  abstract public function remove($id, $namespace = self::DEFAULT_NAMESPACE);
+  abstract public function remove($id, $namespace = '');
 
  /**
   * Cleans the cache.
@@ -114,5 +115,5 @@ abstract class sfCache
   *
   * @return int The last modification time
   */
-  abstract public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE);
+  abstract public function lastModified($id, $namespace = '');
 }

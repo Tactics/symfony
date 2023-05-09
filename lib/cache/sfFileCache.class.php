@@ -23,7 +23,6 @@
  */
 class sfFileCache extends sfCache
 {
-  const DEFAULT_NAMESPACE = '';
 
  /**
   * Directory where to put the cache files
@@ -221,7 +220,7 @@ class sfFileCache extends sfCache
   *
   * @see sfCache
   */
-  public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function get($id, $namespace = '', $doNotTestCacheValidity = false)
   {
     $data = null;
 
@@ -256,7 +255,7 @@ class sfFileCache extends sfCache
    *
    * @see sfCache
    */
-  public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function has($id, $namespace = '', $doNotTestCacheValidity = false)
   {
     list($path, $file) = $this->getFileName($id, $namespace);
 
@@ -289,7 +288,7 @@ class sfFileCache extends sfCache
   *
   * @see sfCache
   */
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
+  public function set($id, $namespace = '', $data = '')
   {
     list($path, $file) = $this->getFileName($id, $namespace);
 
@@ -320,7 +319,7 @@ class sfFileCache extends sfCache
   *
   * @return boolean true if no problem
   */
-  public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function remove($id, $namespace = '')
   {
     list($path, $file) = $this->getFileName($id, $namespace);
 
@@ -355,7 +354,7 @@ class sfFileCache extends sfCache
    *
    * @return int The last modification time
    */
-  public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function lastModified($id, $namespace = '')
   {
     list($path, $file) = $this->getFileName($id, $namespace);
 
