@@ -179,7 +179,7 @@ class BasePeer
 				$affectedRows = $stmt->executeUpdate();
 			} catch (Exception $e) {
 				Propel::log($e->getMessage(), Propel::LOG_ERR);
-				throw new PropelException("Unable to execute DELETE statement.",$e);
+                throw new PropelException(sprintf("Unable to execute DELETE statement : %s.", $sql), $e);
 			}
 
 		} // for each table
@@ -215,8 +215,8 @@ class BasePeer
 			return $stmt->executeUpdate();
 		} catch (Exception $e) {
 			Propel::log($e->getMessage(), Propel::LOG_ERR);
-			throw new PropelException("Unable to perform DELETE ALL operation.", $e);
-		}
+            throw new PropelException(sprintf("Unable to perform DELETE ALL operation : %s.", $sql), $e);
+        }
 	}
 
 	/**
@@ -305,8 +305,8 @@ class BasePeer
 
 		} catch (Exception $e) {
 			Propel::log($e->getMessage(), Propel::LOG_ERR);
-			throw new PropelException("Unable to execute INSERT statement.", $e);
-		}
+            throw new PropelException(sprintf("Unable to execute INSERT statement : %s.", $sql), $e);
+        }
 
 		// If the primary key column is auto-incremented, get the id
 		// now.
@@ -407,7 +407,8 @@ class BasePeer
 				if ($rs) $rs->close();
 				if ($stmt) $stmt->close();
 				Propel::log($e->getMessage(), Propel::LOG_ERR);
-				throw new PropelException("Unable to execute UPDATE statement.", $e);
+
+				throw new PropelException(sprintf("Unable to execute UPDATE statement : %s.", $sql), $e);
 			}
 
 		} // foreach table in the criteria
