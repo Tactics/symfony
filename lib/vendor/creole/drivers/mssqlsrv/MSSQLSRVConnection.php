@@ -155,7 +155,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   function getPointerType()
   {
-    return  $this->pointer_type ?: SQLSRV_CURSOR_STATIC;
+    return  $this->pointer_type ?: SQLSRV_CURSOR_CLIENT_BUFFERED;
   }
 
   /**
