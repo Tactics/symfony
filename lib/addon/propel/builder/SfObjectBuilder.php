@@ -262,8 +262,8 @@ $script .= '
     }
 
 ";
-      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
-      $tmp = preg_replace('/}\s*$/', $post_mixer_script.'  }', $tmp);
+      $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
+      $tmp = $tmp ? preg_replace('/}\s*$/', $post_mixer_script.'  }', $tmp) : $tmp;
     }
 
     // update current script
@@ -304,7 +304,7 @@ $script .= '
 ";
       }
     }
-    $tmp = preg_replace('/{/', '{'.$date_script, $tmp, 1);
+    $tmp = $tmp ? preg_replace('/{/', '{'.$date_script, $tmp, 1) : $tmp;
 
     if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
     {
@@ -329,8 +329,8 @@ $script .= '
     }
 
 EOF;
-      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
-      $tmp = preg_replace('/(\$connection\->commit\(\);)/', '$1'.$post_mixer_script, $tmp);
+      $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
+      $tmp = $tmp ? preg_replace('/(\$connection\->commit\(\);)/', '$1'.$post_mixer_script, $tmp) : $tmp;
     }
 
     // update current script

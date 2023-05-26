@@ -224,7 +224,8 @@ class sfDateFormat
       $pattern = $tokens[$i];
       if ($pattern[0] == "'" && $pattern[strlen($pattern) - 1] == "'")
       {
-        $tokens[$i] = str_replace('``````', '\'', preg_replace('/(^\')|(\'$)/', '', $pattern));
+        $preg = $pattern ? preg_replace('/(^\')|(\'$)/', '', $pattern) : $pattern;
+        $tokens[$i] = str_replace('``````', '\'', $preg);
       }
       else if ($pattern == '``````')
       {

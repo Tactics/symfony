@@ -483,8 +483,9 @@ class pakeSpyc {
      */
     private function _toType($value) {
         if (preg_match('/^("(.*)"|\'(.*)\')/',$value,$matches)) {
-            $value = (string)preg_replace('/(\'\'|\\\\\')/',"'",end($matches));
-            $value = preg_replace('/\\\\"/','"',$value);
+            $end = end($matches);
+            $value = (string) ($end ? preg_replace('/(\'\'|\\\\\')/',"'",$end) : $end);
+            $value = $value ? preg_replace('/\\\\"/','"',$value) : $value;
         } elseif (preg_match('/^\\[(.+)\\]$/',$value,$matches)) {
             // Inline Sequence
 
@@ -530,7 +531,8 @@ class pakeSpyc {
             $value = (float)$value;
         } else {
             // Just a normal string, right?
-            $value = trim(preg_replace('/#(.+)$/','',$value));
+            $preg = $value ? preg_replace('/#(.+)$/','',$value) : $value;
+            $value = trim($preg);
         }
 
         return $value;
@@ -551,19 +553,19 @@ class pakeSpyc {
         $regex = '/(?:(")|(?:\'))((?(1)[^"]+|[^\']+))(?(1)"|\')/';
         if (preg_match_all($regex,$inline,$strings)) {
             $strings = $strings[2];
-            $inline  = preg_replace($regex,'YAMLString',$inline);
+            $inline  = $inline ? preg_replace($regex,'YAMLString',$inline) : $inline;
         }
         unset($regex);
 
         // Check for sequences
         if (preg_match_all('/\[(.+)\]/U',$inline,$seqs)) {
-            $inline = preg_replace('/\[(.+)\]/U','YAMLSeq',$inline);
+            $inline = $inline ? preg_replace('/\[(.+)\]/U','YAMLSeq',$inline) : $inline;
             $seqs   = $seqs[0];
         }
 
         // Check for mappings
         if (preg_match_all('/{(.+)}/U',$inline,$maps)) {
-            $inline = preg_replace('/{(.+)}/U','YAMLMap',$inline);
+            $inline = $inline ? preg_replace('/{(.+)}/U','YAMLMap',$inline) : $inline;
             $maps   = $maps[0];
         }
 

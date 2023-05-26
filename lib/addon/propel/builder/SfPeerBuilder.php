@@ -192,7 +192,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+      $tmp = $tmp ? preg_replace('/{/', '{'.$mixer_script, $tmp, 1) : $tmp;
     }
 
     $script .= $tmp;
@@ -229,8 +229,8 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     return \$ret;
 ";
 
-      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
-      $tmp = preg_replace("/\t\treturn ([^}]+)/", "\t\t\$ret = $1".$post_mixer_script.'  ', $tmp, 1);
+      $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
+      $tmp = $tmp ? preg_replace("/\t\treturn ([^}]+)/", "\t\t\$ret = $1".$post_mixer_script.'  ', $tmp, 1) : $tmp;
     }
 
     $script .= $tmp;
@@ -265,8 +265,8 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     return";
 
-      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
-      $tmp = preg_replace("/\t\treturn/", "\t\t".$post_mixer_script, $tmp, 1);
+      $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
+      $tmp = $tmp ? preg_replace("/\t\treturn/", "\t\t".$post_mixer_script, $tmp, 1) : $tmp;
     }
 
     $script .= $tmp;

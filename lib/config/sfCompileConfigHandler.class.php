@@ -77,7 +77,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
       $contents = str_replace("\r",  "\n", $contents);
 
       // replace multiple new lines with a single newline
-      $contents = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $contents);
+      $contents = $contents ? preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $contents) : $contents;
 
       // append file data
       $data .= "\n".$contents;

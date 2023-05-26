@@ -305,7 +305,7 @@ class sfDebugConnection implements Connection
     if (self::$logger)
     {
       // message on one line
-      $msg = preg_replace("/\r?\n/", ' ', $msg);
+      $msg = $msg ? preg_replace("/\r?\n/", ' ', $msg) : $msg;
       self::$logger->log($msg);
     }
   }

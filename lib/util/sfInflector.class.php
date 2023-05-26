@@ -30,7 +30,7 @@ class sfInflector
     $tmp = $lower_case_and_underscored_word;
 //    $tmp = sfToolkit::pregtr($tmp, array('#/(.?)#'    => "'::'.strtoupper('\\1')",
 //                                         '/(^|_)(.)/' => "strtoupper('\\2')"));
-										 
+
     $tmp = sfToolkit::pregtrcb(
 	  $tmp,
 	  array(
@@ -38,7 +38,7 @@ class sfInflector
 	    '/(^|_|-)+(.)/' => function ($matches) { return strtoupper($matches[2]); }
 	  )
     );
-	
+
     return $tmp;
   }
 
@@ -68,7 +68,7 @@ class sfInflector
    */
   public static function demodulize($class_name_in_module)
   {
-    return preg_replace('/^.*::/', '', $class_name_in_module);
+    return $class_name_in_module ? preg_replace('/^.*::/', '', $class_name_in_module) : $class_name_in_module;
   }
 
   /**

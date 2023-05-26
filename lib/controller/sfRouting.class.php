@@ -457,7 +457,6 @@ class sfRouting
 
     $params = sfToolkit::arrayDeepMerge($defaults, $params);
 
-    //$real_url = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
 	$real_url = preg_replace_callback(
 	  '/\:([^\/]+)/',
 	  function($matches) use ($params){
@@ -491,7 +490,7 @@ class sfRouting
       {
         $tmp = $querydiv.$tmp;
       }
-      $real_url = preg_replace('/\/\*(\/|$)/', "$tmp$1", $real_url);
+      $real_url = $real_url ? preg_replace('/\/\*(\/|$)/', "$tmp$1", $real_url) : $real_url;
     }
 
     // strip off last divider character
@@ -532,7 +531,7 @@ class sfRouting
     }
 
     // we remove multiple /
-    $url = preg_replace('#/+#', '/', $url);
+    $url = $url ? preg_replace('#/+#', '/', $url) : $url;
     foreach ($this->routes as $route_name => $route)
     {
       $out = array();

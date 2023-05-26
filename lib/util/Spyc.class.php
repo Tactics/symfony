@@ -588,13 +588,14 @@ class Spyc
     $value = trim($value);
     if ($value && !('"' == $value[0] || "'" == $value[0]))
     {
-      $value = preg_replace('/\s*#(.+)$/', '', $value);
+      $value = $value ? preg_replace('/\s*#(.+)$/', '', $value) : $value;
     }
 
     if (preg_match('/^("(.*)"|\'(.*)\')/', $value, $matches))
     {
-      $value = (string) preg_replace('/(\'\'|\\\\\')/', "'", end($matches));
-      $value = preg_replace('/\\\\"/', '"', $value);
+      $end = end($matches);
+      $value = (string) ($end ? preg_replace('/(\'\'|\\\\\')/', "'", $end) : $end);
+      $value = $value ? preg_replace('/\\\\"/', '"', $value) : $value;
     }
     else if (preg_match('/^\\[\s*\\]$/', $value, $matches))
     {
@@ -687,21 +688,21 @@ class Spyc
       {
         $saved_strings[] = $string;
       }
-      $inline  = preg_replace($regex, 'YAMLString', $inline);
+      $inline  = $inline ? preg_replace($regex, 'YAMLString', $inline) : $inline;
     }
     unset($regex);
 
     // Check for sequences
     if (preg_match_all('/\[(.+)\]/U', $inline, $seqs))
     {
-      $inline = preg_replace('/\[(.+)\]/U', 'YAMLSeq', $inline);
+      $inline = $inline ? preg_replace('/\[(.+)\]/U', 'YAMLSeq', $inline) : $inline;
       $seqs   = $seqs[0];
     }
 
     // Check for mappings
     if (preg_match_all('/{(.+)}/U', $inline, $maps))
     {
-      $inline = preg_replace('/{(.+)}/U', 'YAMLMap', $inline);
+      $inline = $inline ? preg_replace('/{(.+)}/U', 'YAMLMap', $inline) : $inline;
       $maps   = $maps[0];
     }
 

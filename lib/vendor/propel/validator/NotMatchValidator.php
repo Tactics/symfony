@@ -64,7 +64,7 @@ class NotMatchValidator implements BasicValidator
 		}
 
 		// if they did not escape / chars; we do that for them
-		$exp = preg_replace('/([^\\\])\/([^$])/', '$1\/$2', $exp);
+		$exp = $exp ? preg_replace('/([^\\\])\/([^$])/', '$1\/$2', $exp) : $exp;
 
 		return $exp;
 	}

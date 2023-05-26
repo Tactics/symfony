@@ -133,13 +133,14 @@ class sfViewCacheManager
     // prefix with hostname
     $request = $this->context->getRequest();
     $hostName = $request->getHost();
-    $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
-    $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
+    $hostName = $hostName ? preg_replace('/[^a-z0-9]/i', '_', $hostName) : $hostName;
+    $hostName = $hostName ? preg_replace('/_+/', '_', $hostName) : $hostName;
+    $hostName = strtolower($hostName);
 
     $uri = '/'.$hostName.'/'.$vary.'/'.$uri;
 
     // replace multiple /
-    $uri = preg_replace('#/+#', '/', $uri);
+    $uri = $uri ? preg_replace('#/+#', '/', $uri) : $uri;
 
     return array(dirname($uri), basename($uri));
   }

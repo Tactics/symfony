@@ -94,8 +94,8 @@ class PregEngine implements RegexpEngine {
     function replace($pattern, $replace, $source) {
         // convert \1 -> $1, because we want to use the more generic \1 in the XML
         // but PREG prefers $1 syntax.
-        $replace = preg_replace('/[^\\\]\\\(\d+)/', '$1', $replace);
-        return preg_replace($this->preparePattern($pattern), $replace, $source);
+        $replace = $replace ? preg_replace('/[^\\\]\\\(\d+)/', '$1', $replace) : $replace;
+        return $source ? preg_replace($this->preparePattern($pattern), $replace, $source) : $source;
     }
 
 }

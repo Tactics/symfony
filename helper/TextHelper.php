@@ -33,9 +33,9 @@ function truncate_text($text, $length = 30, $truncate_string = '...', $truncate_
   if (strlen($text) > $length)
   {
     $truncate_text = substr($text, 0, $length - strlen($truncate_string));
-    if ($truncate_lastspace)
+    if ($truncate_lastspace && $truncate_text)
     {
-      $truncate_text = preg_replace('/\s+?(\S+)?$/', '', $truncate_text);
+      $truncate_text = $truncate_text ? preg_replace('/\s+?(\S+)?$/', '', $truncate_text) : $truncate_text;
     }
 
     return $truncate_text.$truncate_string;
@@ -62,6 +62,14 @@ function highlight_text($text, $phrase, $highlighter = '<strong class="highlight
   if ($phrase == '')
   {
     return $text;
+  }
+
+  if (!$highlighter) {
+      return $text;
+  }
+
+  if (!$text) {
+      return $text;
   }
 
   return preg_replace('/('.preg_quote($phrase, '/').')/i', $highlighter, $text);
@@ -97,11 +105,11 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $e
       // only cut off at ends where $exceprt_string is added
       if($prefix)
       {
-        $excerpt = preg_replace('/^(\S+)?\s+?/', ' ', $excerpt);
+        $excerpt = $excerpt ? preg_replace('/^(\S+)?\s+?/', ' ', $excerpt) : $excerpt;
       }
       if($postfix)
       {
-        $excerpt = preg_replace('/\s+?(\S+)?$/', ' ', $excerpt);
+        $excerpt = $excerpt ? preg_replace('/\s+?(\S+)?$/', ' ', $excerpt) : $excerpt;
       }
 
     }
@@ -115,7 +123,10 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $e
  */
 function wrap_text($text, $line_width = 80)
 {
-  return preg_replace('/(.{1,'.$line_width.'})(\s+|$)/s', "\\1\n", preg_replace("/\n/", "\n\n", $text));
+
+  $preg = $text ? preg_replace("/\n/", "\n\n", $text) : $text;
+  $preg2 = $preg ? preg_replace('/(.{1,'.$line_width.'})(\s+|$)/s', "\\1\n", $preg) : $preg;
+  return $preg2;
 }
 
 /*
@@ -166,7 +177,7 @@ function auto_link_text($text, $link = 'all', $href_options = array())
  */
 function strip_links_text($text)
 {
-  return preg_replace('/<a.*>(.*)<\/a>/m', '\\1', $text);
+  return  $text ? preg_replace('/<a.*>(.*)<\/a>/m', '\\1', $text) : $text;
 }
 
 if (!defined('SF_AUTO_LINK_RE'))
@@ -216,5 +227,5 @@ function _auto_link_urls($text, $href_options = array())
  */
 function _auto_link_email_addresses($text)
 {
-  return preg_replace('/([\w\.!#\$%\-+.]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+)/', '<a href="mailto:\\1">\\1</a>', $text);
+  return $text ? preg_replace('/([\w\.!#\$%\-+.]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+)/', '<a href="mailto:\\1">\\1</a>', $text) : $text;
 }

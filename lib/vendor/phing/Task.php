@@ -83,7 +83,8 @@ abstract class Task extends ProjectComponent {
             // therefore know the XML tag name for this task, so we'll just
             // use the class name stripped of "task" suffix.  This is only
             // for log messages, so we don't have to worry much about accuracy.
-            return preg_replace('/task$/i', '', get_class($this));
+            $class = get_class($this);
+            return $class ? preg_replace('/task$/i', '', $class) : $class;
         }
         return $this->taskName;
     }

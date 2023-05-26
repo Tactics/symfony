@@ -273,7 +273,7 @@ function _convert_method_to_name($method, &$options)
     else
     {
       $name = sfInflector::underscore($method);
-      $name = preg_replace('/^get_?/', '', $name);
+      $name = $name ? preg_replace('/^get_?/', '', $name) : $name;
     }
   }
 

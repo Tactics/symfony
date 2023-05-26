@@ -361,7 +361,7 @@ class pakeApp
 
     if ($relative && $target_dir)
     {
-      $files = preg_replace('/^'.preg_quote(realpath($target_dir), '/').'/', '', $files);
+      $files = $files ? preg_replace('/^'.preg_quote(realpath($target_dir), '/').'/', '', $files) : $files;
 
       // remove leading /
       $files = array_map(function ($f) {

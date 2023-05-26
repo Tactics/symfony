@@ -91,7 +91,7 @@ class RegexpMapper implements FileNameMapper {
         $groups = (array) $this->reg->getGroups();
 
         // replace \1 with value of $groups[1] and return the modified "to" string
-        return preg_replace('/\\\([\d]+)/e', "\$groups[$1]", $this->to);
+        return $this->to ? preg_replace('/\\\([\d]+)/e', "\$groups[$1]", $this->to) : $this->to;
     }
 
 }

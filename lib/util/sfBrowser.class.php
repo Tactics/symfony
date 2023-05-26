@@ -98,7 +98,7 @@ class sfBrowser
     $query_string = html_entity_decode($query_string);
 
     // remove anchor
-    $path = preg_replace('/#.*/', '', $path);
+    $path = $path ? preg_replace('/#.*/', '', $path) : $path;
 
     // removes all fields from previous request
     $this->fields = array();

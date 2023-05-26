@@ -57,8 +57,8 @@ function cdata_section($content)
  */
 function escape_javascript($javascript = '')
 {
-  $javascript = preg_replace('/\r\n|\n|\r/', "\\n", $javascript);
-  $javascript = preg_replace('/(["\'])/', '\\\\\1', $javascript);
+  $javascript = $javascript ? preg_replace('/\r\n|\n|\r/', "\\n", $javascript) : $javascript;
+  $javascript = $javascript ? preg_replace('/(["\'])/', '\\\\\1', $javascript) : $javascript;
 
   return $javascript;
 }
@@ -82,7 +82,8 @@ function escape_once($html)
  */
 function fix_double_escape($escaped)
 {
-  return preg_replace('/&amp;([a-z]+|(#\d+)|(#x[\da-f]+));/i', '&$1;', $escaped);
+    $escaped = $escaped ? preg_replace('/&amp;([a-z]+|(#\d+)|(#x[\da-f]+));/i', '&$1;', $escaped) : $escaped;
+    return $escaped;
 }
 
 function _tag_options($options = array())

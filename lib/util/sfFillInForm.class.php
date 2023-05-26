@@ -78,7 +78,7 @@ class sfFillInForm
   {
     $xhtml = $this->fillInXml($xml, $formName, $formId, $values);
     $prolog_regexp = '/^' . preg_quote('<?xml version="1.0"?>') . '\s*/';
-    return preg_replace($prolog_regexp, '', $xhtml);
+    return $xhtml ? preg_replace($prolog_regexp, '', $xhtml) : $xhtml;
   }
 
   /**

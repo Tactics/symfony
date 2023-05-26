@@ -162,7 +162,7 @@ abstract class sfAdminGenerator extends sfCrudGenerator
       $phpOptions = var_export($options, true);
 
       // little hack
-      $phpOptions = preg_replace("/'confirm' => '(.+?)(?<!\\\)'/", '\'confirm\' => __(\'$1\')', $phpOptions);
+      $phpOptions = $phpOptions ? preg_replace("/'confirm' => '(.+?)(?<!\\\)'/", '\'confirm\' => __(\'$1\')', $phpOptions) : $phpOptions;
 
       $html .= '[?php echo button_to(__(\''.$name.'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.$phpOptions.') ?]';
     }
@@ -219,7 +219,7 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     $phpOptions = var_export($options, true);
 
     // little hack
-    $phpOptions = preg_replace("/'confirm' => '(.+?)(?<!\\\)'/", '\'confirm\' => __(\'$1\')', $phpOptions);
+    $phpOptions = $phpOptions ? preg_replace("/'confirm' => '(.+?)(?<!\\\)'/", '\'confirm\' => __(\'$1\')', $phpOptions) : $phpOptions;
 
     return '<li>[?php echo link_to(image_tag(\''.$icon.'\', array(\'alt\' => __(\''.$name.'\'), \'title\' => __(\''.$name.'\'))), \''.$this->getModuleName().'/'.$action.$url_params.($options ? ', '.$phpOptions : '').') ?]</li>'."\n";
   }
@@ -521,7 +521,7 @@ EOF;
     }
 
     // strip all = signs
-    $value = preg_replace('/%%=([^%]+)%%/', '%%$1%%', $value);
+    $value = $value ? preg_replace('/%%=([^%]+)%%/', '%%$1%%', $value) : $value;
 
     $i18n = '__(\''.$value.'\', '."\n".'array('.implode(",\n", $vars).'))';
 
@@ -649,7 +649,7 @@ EOF;
       $params = $this->getObjectTagParams($params);
 
       // little hack
-      $option_params = preg_replace("/'".preg_quote($defaultIncludeCustom)."'/", $defaultIncludeCustom, $option_params);
+      $option_params = $option_params ? preg_replace("/'".preg_quote($defaultIncludeCustom)."'/", $defaultIncludeCustom, $option_params) : $option_params;
 
       $options = "options_for_select(array(1 => __('yes'), 0 => __('no')), $default_value, $option_params)";
 
@@ -688,6 +688,6 @@ EOF;
      */
   protected function escapeString($string)
   {
-    return preg_replace('/\'/', '\\\'', $string);
+    return $string ? preg_replace('/\'/', '\\\'', $string) : $string;
   }
 }
