@@ -210,8 +210,6 @@ class sfI18N
   {
     if (!$time) return 0;
 
-    $culture = is_null($culture) ? $this->culture : $culture;
-
     $timeFormatInfo = @sfDateTimeFormatInfo::getInstance($culture);
     $timeFormat = $timeFormatInfo->getShortTimePattern();
 
