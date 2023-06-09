@@ -38,7 +38,8 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
   /** LastStmt used to count last update SQL **/
   private $lastStmt = null;
 
-  private $pointer_type = SQLSRV_CURSOR_STATIC;
+  private $pointer_type = SQLSRV_CURSOR_CLIENT_BUFFERED;
+
   /**
    * @see Connection::connect()
    */
