@@ -32,296 +32,319 @@ include_once 'creole/drivers/mssqlsrv/MSSQLSRVResultSet.php';
  */
 class MSSQLSRVConnection extends ConnectionCommon implements Connection {
 
-  /** Current database (used in mssql_select_db()). */
-  private $database;
+    /** Current database (used in mssql_select_db()). */
+    private $database;
 
-  /** LastStmt used to count last update SQL **/
-  private $lastStmt = null;
+    /** LastStmt used to count last update SQL **/
+    private $lastStmt = null;
 
-  private $pointer_type = SQLSRV_CURSOR_CLIENT_BUFFERED;
+    private $pointer_type = SQLSRV_CURSOR_CLIENT_BUFFERED;
 
-  /**
-   * @see Connection::connect()
-   */
-  function connect($dsninfo, $flags = 0)
-  {
-    if (!extension_loaded('sqlsrv')) {
-      throw new SQLException('sqlsrv extension not loaded');
-    }
-
-    $this->dsn = $dsninfo;
-    $this->flags = $flags;
-
-    $serverName = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : '(local)';
-
-    if(!empty($dsninfo['port'])) {
-      $portDelimiter = ",";
-      $serverName .= $portDelimiter.$dsninfo['port'];
-    }
-
-    $connectionInfo = array();
-    if(array_key_exists('username', $dsninfo) && $dsninfo['username'] != '')
+    /**
+     * @see Connection::connect()
+     */
+    function connect($dsninfo, $flags = 0)
     {
-      $connectionInfo['UID'] = $dsninfo['username'];
+        if (!extension_loaded('sqlsrv')) {
+            throw new SQLException('sqlsrv extension not loaded');
+        }
+
+        $this->dsn = $dsninfo;
+        $this->flags = $flags;
+
+        $serverName = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : '(local)';
+
+        if(!empty($dsninfo['port'])) {
+            $portDelimiter = ",";
+            $serverName .= $portDelimiter.$dsninfo['port'];
+        }
+
+        dump($dsninfo);
+        die();
+
+        $connectionInfo = array();
+        if(array_key_exists('username', $dsninfo) && $dsninfo['username'] != '')
+        {
+            $connectionInfo['UID'] = $dsninfo['username'];
+        }
+        if(array_key_exists('password', $dsninfo) && $dsninfo['password'] != '')
+        {
+            $connectionInfo['PWD'] = $dsninfo['password'];
+        }
+        if(array_key_exists('database', $dsninfo))
+        {
+            $connectionInfo['Database'] = $dsninfo['database'];
+        }
+        if(array_key_exists('encoding', $dsninfo) && is_bool($dsninfo['encoding'], array('SQLSRV_ENC_CHAR', 'SQLSRV_ENC_BINARY', 'UTF-8')))
+        {
+            $connectionInfo['CharacterSet'] = $dsninfo['encoding'];
+        }
+
+        if(array_key_exists('encrypt', $dsninfo) && is_bool($dsninfo['encrypt']))
+        {
+            $connectionInfo['Encrypt'] = $dsninfo['encoding'];
+        } else {
+            $connectionInfo['Encrypt'] = FALSE;
+        }
+
+        if(array_key_exists('trust_server_certificate', $dsninfo) && is_bool($dsninfo['trust_server_certificate']))
+        {
+            $connectionInfo['TrustServerCertificate'] = $dsninfo['trust_server_certificate'];
+        } else {
+            $connectionInfo['TrustServerCertificate'] = FALSE;
+        }
+
+        if(array_key_exists('trust_store', $dsninfo))
+        {
+            $connectionInfo['trustStore'] = $dsninfo['trust_store'];
+        }
+
+        if(array_key_exists('trust_store_password', $dsninfo))
+        {
+            $connectionInfo['trustStorePassword'] = $dsninfo['trust_store_password'];
+        }
+
+        $conn = sqlsrv_connect( $serverName, $connectionInfo);
+        if( $conn === false )
+        {
+            throw new SQLException('connect failed', $this->sqlError());
+        }
+
+        $this->dblink = $conn;
     }
-    if(array_key_exists('password', $dsninfo) && $dsninfo['password'] != '')
+
+    /**
+     * @see Connection::getDatabaseInfo()
+     */
+    public function getDatabaseInfo()
     {
-      $connectionInfo['PWD'] = $dsninfo['password'];
+        require_once 'creole/drivers/mssqlsrv/metadata/MSSQLSRVDatabaseInfo.php';
+        return new MSSQLSRVDatabaseInfo($this);
     }
-    if(array_key_exists('database', $dsninfo))
+
+    /**
+     * @see Connection::getIdGenerator()
+     */
+    public function getIdGenerator()
     {
-      $connectionInfo['Database'] = $dsninfo['database'];
+        require_once 'creole/drivers/mssqlsrv/MSSQLSRVIdGenerator.php';
+        return new MSSQLSRVIdGenerator($this);
     }
-    if(array_key_exists('encoding', $dsninfo) && in_array($dsninfo['encoding'], array('SQLSRV_ENC_CHAR', 'SQLSRV_ENC_BINARY', 'UTF-8')))
+
+    /**
+     * @see Connection::prepareStatement()
+     */
+    public function prepareStatement($sql)
     {
-      $connectionInfo['CharacterSet'] = $dsninfo['encoding'];
+        require_once 'creole/drivers/mssqlsrv/MSSQLSRVPreparedStatement.php';
+        return new MSSQLSRVPreparedStatement($this, $sql);
     }
 
-    // Set default
-    $connectionInfo['Encrypt'] = false;
-    $connectionInfo['TrustServerCertificate'] = true;
-
-      $conn = sqlsrv_connect( $serverName, $connectionInfo);
-    if( $conn === false )
+    /**
+     * @see Connection::createStatement()
+     */
+    public function createStatement()
     {
-      throw new SQLException('connect failed', $this->sqlError());
+        require_once 'creole/drivers/mssqlsrv/MSSQLSRVStatement.php';
+        return new MSSQLSRVStatement($this);
     }
 
-    $this->dblink = $conn;
-  }
-
-  /**
-   * @see Connection::getDatabaseInfo()
-   */
-  public function getDatabaseInfo()
-  {
-    require_once 'creole/drivers/mssqlsrv/metadata/MSSQLSRVDatabaseInfo.php';
-    return new MSSQLSRVDatabaseInfo($this);
-  }
-
-  /**
-   * @see Connection::getIdGenerator()
-   */
-  public function getIdGenerator()
-  {
-    require_once 'creole/drivers/mssqlsrv/MSSQLSRVIdGenerator.php';
-    return new MSSQLSRVIdGenerator($this);
-  }
-
-  /**
-   * @see Connection::prepareStatement()
-   */
-  public function prepareStatement($sql)
-  {
-    require_once 'creole/drivers/mssqlsrv/MSSQLSRVPreparedStatement.php';
-    return new MSSQLSRVPreparedStatement($this, $sql);
-  }
-
-  /**
-   * @see Connection::createStatement()
-   */
-  public function createStatement()
-  {
-    require_once 'creole/drivers/mssqlsrv/MSSQLSRVStatement.php';
-    return new MSSQLSRVStatement($this);
-  }
-
-  /**
-   * @see Connection::applyLimit()
-   */
-  public function applyLimit(&$sql, $offset, $limit)
-  {
-    if($limit > 0)
+    /**
+     * @see Connection::applyLimit()
+     */
+    public function applyLimit(&$sql, $offset, $limit)
     {
-      $sql .= ' offset ' . ($offset?: 0) . ' rows ';
-      $sql .= ' fetch next ' . $limit . ' rows only ';
+        if($limit > 0)
+        {
+            $sql .= ' offset ' . ($offset?: 0) . ' rows ';
+            $sql .= ' fetch next ' . $limit . ' rows only ';
+        }
+        else if($offset > 0) {
+            $sql .= ' offset ' . ($offset?: 0) . ' rows ';
+        }
     }
-    else if($offset > 0) {
-      $sql .= ' offset ' . ($offset?: 0) . ' rows ';
-    }
-  }
 
-  /**
-   * @see Connection::close()
-   */
-  function close()
-  {
-    $ret = sqlsrv_close( $this->dblink);
-    $this->dblink = null;
-    return $ret;
-  }
-
-  /**
-   * @return string
-   */
-  function getPointerType()
-  {
-    return  $this->pointer_type ?: SQLSRV_CURSOR_CLIENT_BUFFERED;
-  }
-
-  /**
-   * @param $type
-   */
-  function setPointerType($type)
-  {
-    $this->pointer_type = $type;
-  }
-
-  /**
-   * @see Connection::executeQuery()
-   */
-  function executeQuery($sql, $fetchmode = null)
-  {
-    $this->lastQuery = $sql;
-
-    //var_dump( $this->getPointerType());
-    $result = sqlsrv_query($this->dblink, $sql, null, array("Scrollable" => $this->getPointerType()));
-    if($result === false)
+    /**
+     * @see Connection::close()
+     */
+    function close()
     {
-      throw new SQLException('Could not execute query: ' . $sql,  $this->sqlError());
+        $ret = sqlsrv_close( $this->dblink);
+        $this->dblink = null;
+        return $ret;
     }
 
-    // get first results with has fields
-    $numfields = sqlsrv_num_fields( $result );
-    while(($numfields == false)&&(sqlsrv_num_fields( $result )))
+    /**
+     * @return string
+     */
+    function getPointerType()
     {
-      $numfields = sqlsrv_fetch_array( $result );
+        return  $this->pointer_type ?: SQLSRV_CURSOR_CLIENT_BUFFERED;
     }
 
-    return new MSSQLSRVResultSet($this, $result, $fetchmode);
-  }
-
-  /**
-   * @see Connection::executeUpdate()
-   */
-  function executeUpdate($sql)
-  {
-    $this->lastQuery = $sql;
-
-    $stmt = sqlsrv_query( $this->dblink, $sql);
-
-    if (!$stmt) {
-      throw new SQLException('Could not execute update', $this->sqlError(), $sql);
-    }
-
-    $rows_affected = sqlsrv_rows_affected( $stmt);
-    if( $rows_affected === false)
+    /**
+     * @param $type
+     */
+    function setPointerType($type)
     {
-      throw new SQLException('Error in calling sqlsrv_rows_affected',  $this->sqlError());
+        $this->pointer_type = $type;
     }
 
-    $this->lastStmt = $stmt;  // set to getUpdateCount() method
-
-    return $this->getUpdateCount();
-  }
-
-  /**
-   * Start a database transaction.
-   * @throws SQLException
-   * @return void
-   */
-  protected function beginTrans()
-  {
-    sqlsrv_query( $this->dblink, "SET ANSI_WARNINGS OFF;");
-    return;
-    $result = sqlsrv_begin_transaction( $this->dblink );
-    if ( $result === false )
+    /**
+     * @see Connection::executeQuery()
+     */
+    function executeQuery($sql, $fetchmode = null)
     {
-      throw new SQLException('Could not begin transaction', $this->sqlError());
-    }
-  }
+        $this->lastQuery = $sql;
 
-  /**
-   * Commit the current transaction.
-   * @throws SQLException
-   * @return void
-   */
-  protected function commitTrans()
-  {
-    return;
-    $result = sqlsrv_commit( $this->dblink );
-    if (!$result) {
-      throw new SQLException('Could not commit transaction', $this->sqlError());
-    }
-  }
+        //var_dump( $this->getPointerType());
+        $result = sqlsrv_query($this->dblink, $sql, null, array("Scrollable" => $this->getPointerType()));
+        if($result === false)
+        {
+            throw new SQLException('Could not execute query: ' . $sql,  $this->sqlError());
+        }
 
-  /**
-   * Roll back (undo) the current transaction.
-   * @throws SQLException
-   * @return void
-   */
-  protected function rollbackTrans()
-  {
-    return;
-    $result = sqlsrv_rollback( $this->dblink );
-    if (!$result) {
-      throw new SQLException('Could not rollback transaction', $this->sqlError());
-    }
-  }
+        // get first results with has fields
+        $numfields = sqlsrv_num_fields( $result );
+        while(($numfields == false)&&(sqlsrv_num_fields( $result )))
+        {
+            $numfields = sqlsrv_fetch_array( $result );
+        }
 
-  /**
-   * Gets the number of rows affected by the last query.
-   * if the last query was a select, returns 0.
-   *
-   * @return int Number of rows affected by the last query
-   * @throws SQLException
-   */
-  function getUpdateCount()
-  {
-    $rowsCount = sqlsrv_rows_affected($this->lastStmt);
-    $rowsCount = 1;
-    if($rowsCount === false)
+        return new MSSQLSRVResultSet($this, $result, $fetchmode);
+    }
+
+    /**
+     * @see Connection::executeUpdate()
+     */
+    function executeUpdate($sql)
     {
-      throw new SQLException('Unable to get affected row count', $this->sqlError());
+        $this->lastQuery = $sql;
+
+        $stmt = sqlsrv_query( $this->dblink, $sql);
+
+        if (!$stmt) {
+            throw new SQLException('Could not execute update', $this->sqlError(), $sql);
+        }
+
+        $rows_affected = sqlsrv_rows_affected( $stmt);
+        if( $rows_affected === false)
+        {
+            throw new SQLException('Error in calling sqlsrv_rows_affected',  $this->sqlError());
+        }
+
+        $this->lastStmt = $stmt;  // set to getUpdateCount() method
+
+        return $this->getUpdateCount();
     }
 
-    if($rowsCount == -1)
+    /**
+     * Start a database transaction.
+     * @throws SQLException
+     * @return void
+     */
+    protected function beginTrans()
     {
-      return 0;
+        sqlsrv_query( $this->dblink, "SET ANSI_WARNINGS OFF;");
+        return;
+        $result = sqlsrv_begin_transaction( $this->dblink );
+        if ( $result === false )
+        {
+            throw new SQLException('Could not begin transaction', $this->sqlError());
+        }
     }
 
-    return $rowsCount;
-  }
-
-
-  /**
-   * Creates a CallableStatement object for calling database stored procedures.
-   *
-   * @param string $sql
-   * @return CallableStatement
-   * @throws SQLException
-   */
-  function prepareCall($sql)
-  {
-    require_once 'creole/drivers/mssqlsrv/MSSQLSRVCallableStatement.php';
-    $stmt = sqlsrv_prepare($sql);
-    if ($stmt === false) {
-      throw new SQLException('Unable to prepare statement', $this->sqlError(), $sql);
-    }
-    return new MSSQLSRVCallableStatement($this, $stmt);
-  }
-
-  private function sqlError()
-  {
-    return print_r( sqlsrv_errors(), true);
-  }
-
-  /**
-   * returns the last inserted id
-   *
-   * @return int
-   * @throws SQLException
-   */
-  function getLastInsertedId()
-  {
-    if (
-      (sqlsrv_next_result($this->lastStmt) !== true) ||
-      (sqlsrv_fetch($this->lastStmt) !== true) ||
-      (($lastInsertedId = sqlsrv_get_field($this->lastStmt, 0)) === false)
-    ) {
-      throw new SQLException('Unable to retrieve last inserted id', $this->sqlError());
+    /**
+     * Commit the current transaction.
+     * @throws SQLException
+     * @return void
+     */
+    protected function commitTrans()
+    {
+        return;
+        $result = sqlsrv_commit( $this->dblink );
+        if (!$result) {
+            throw new SQLException('Could not commit transaction', $this->sqlError());
+        }
     }
 
-    return $lastInsertedId;
-  }
+    /**
+     * Roll back (undo) the current transaction.
+     * @throws SQLException
+     * @return void
+     */
+    protected function rollbackTrans()
+    {
+        return;
+        $result = sqlsrv_rollback( $this->dblink );
+        if (!$result) {
+            throw new SQLException('Could not rollback transaction', $this->sqlError());
+        }
+    }
+
+    /**
+     * Gets the number of rows affected by the last query.
+     * if the last query was a select, returns 0.
+     *
+     * @return int Number of rows affected by the last query
+     * @throws SQLException
+     */
+    function getUpdateCount()
+    {
+        $rowsCount = sqlsrv_rows_affected($this->lastStmt);
+        $rowsCount = 1;
+        if($rowsCount === false)
+        {
+            throw new SQLException('Unable to get affected row count', $this->sqlError());
+        }
+
+        if($rowsCount == -1)
+        {
+            return 0;
+        }
+
+        return $rowsCount;
+    }
+
+
+    /**
+     * Creates a CallableStatement object for calling database stored procedures.
+     *
+     * @param string $sql
+     * @return CallableStatement
+     * @throws SQLException
+     */
+    function prepareCall($sql)
+    {
+        require_once 'creole/drivers/mssqlsrv/MSSQLSRVCallableStatement.php';
+        $stmt = sqlsrv_prepare($sql);
+        if ($stmt === false) {
+            throw new SQLException('Unable to prepare statement', $this->sqlError(), $sql);
+        }
+        return new MSSQLSRVCallableStatement($this, $stmt);
+    }
+
+    private function sqlError()
+    {
+        return print_r( sqlsrv_errors(), true);
+    }
+
+    /**
+     * returns the last inserted id
+     *
+     * @return int
+     * @throws SQLException
+     */
+    function getLastInsertedId()
+    {
+        if (
+            (sqlsrv_next_result($this->lastStmt) !== true) ||
+            (sqlsrv_fetch($this->lastStmt) !== true) ||
+            (($lastInsertedId = sqlsrv_get_field($this->lastStmt, 0)) === false)
+        ) {
+            throw new SQLException('Unable to retrieve last inserted id', $this->sqlError());
+        }
+
+        return $lastInsertedId;
+    }
 }

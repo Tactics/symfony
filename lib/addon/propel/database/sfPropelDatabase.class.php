@@ -28,99 +28,121 @@
  */
 class sfPropelDatabase extends sfCreoleDatabase
 {
-  static protected
-    $config = array();
+    static protected
+        $config = array();
 
-  public function initialize($parameters = null, $name = 'propel')
-  {
-    parent::initialize($parameters);
-
-    if (!$this->hasParameter('datasource'))
+    public function initialize($parameters = null, $name = 'propel')
     {
-      $this->setParameter('datasource', $name);
-    }
+        parent::initialize($parameters);
 
-    $this->addConfig();
-
-    $is_default = $this->getParameter('is_default', false);
-
-    // first defined if none listed as default
-    if ($is_default || count(self::$config['propel']['datasources']) == 1)
-    {
-      $this->setDefaultConfig();
-    }
-
-    // Add debug database connections
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-          // register debug driver
-          Creole::registerDriver('*', 'symfony.addon.creole.drivers.sfDebugConnection');
-
-          // register our logger
-          sfDebugConnection::setLogger(sfLogger::getInstance());
-    }
-  }
-
-  public function setDefaultConfig()
-  {
-    self::$config['propel']['datasources']['default'] = $this->getParameter('datasource');
-  }
-
-  public function addConfig()
-  {
-    if ($this->hasParameter('host'))
-    {
-      $this->setParameter('hostspec', $this->getParameter('host'));
-    }
-
-    if ($dsn = $this->getParameter('dsn'))
-    {
-      $params = Creole::parseDSN($dsn);
-
-      $options = array('phptype', 'hostspec', 'database', 'username', 'password', 'port', 'protocol', 'encoding', 'persistent', 'socket','compat_assoc_lower','compat_rtrim_string');
-      foreach ($options as $option)
-      {
-        if (!$this->getParameter($option) && isset($params[$option]))
+        if (!$this->hasParameter('datasource'))
         {
-          $this->setParameter($option, $params[$option]);
+            $this->setParameter('datasource', $name);
         }
-      }
+
+        $this->addConfig();
+
+        $is_default = $this->getParameter('is_default', false);
+
+        // first defined if none listed as default
+        if ($is_default || count(self::$config['propel']['datasources']) == 1)
+        {
+            $this->setDefaultConfig();
+        }
+
+        // Add debug database connections
+        if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+        {
+            // register debug driver
+            Creole::registerDriver('*', 'symfony.addon.creole.drivers.sfDebugConnection');
+
+            // register our logger
+            sfDebugConnection::setLogger(sfLogger::getInstance());
+        }
     }
 
-    self::$config['propel']['datasources'][$this->getParameter('datasource')] =
-      array(
-        'adapter'      => $this->getParameter('phptype'),
-        'connection'   =>
-        array(
-          'phptype'    => $this->getParameter('phptype'),
-          'hostspec'   => $this->getParameter('hostspec'),
-          'database'   => $this->getParameter('database'),
-          'username'   => $this->getParameter('username'),
-          'password'   => $this->getParameter('password'),
-          'port'       => $this->getParameter('port'),
-          'encoding'   => $this->getParameter('encoding'),
-          'persistent' => $this->getParameter('persistent'),
-          'protocol'   => $this->getParameter('protocol'),
-          'socket'     => $this->getParameter('socket'),
-          'compat_assoc_lower' => $this->getParameter('compat_assoc_lower'),
-          'compat_rtrim_string' => $this->getParameter('compat_rtrim_string'),
-        ),
-      );
-  }
-
-  public static function getConfiguration()
-  {
-    return self::$config;
-  }
-
-  public function setConnectionParameter($key, $value)
-  {
-    if ($key == 'host')
+    public function setDefaultConfig()
     {
-      $key = 'hostspec';
+        self::$config['propel']['datasources']['default'] = $this->getParameter('datasource');
     }
 
-    self::$config['propel']['datasources'][$this->getParameter('datasource')]['connection'][$key] = $value;
-    $this->setParameter($key, $value);
-  }
+    public function addConfig()
+    {
+        if ($this->hasParameter('host'))
+        {
+            $this->setParameter('hostspec', $this->getParameter('host'));
+        }
+
+        if ($dsn = $this->getParameter('dsn'))
+        {
+            $params = Creole::parseDSN($dsn);
+
+            $options = array(
+                'phptype',
+                'hostspec',
+                'database',
+                'username',
+                'password',
+                'port',
+                'protocol',
+                'encoding',
+                'persistent',
+                'socket',
+                'compat_assoc_lower',
+                'compat_rtrim_string',
+                'encrypt',
+                'trust_server_certificate',
+                'trust_store',
+                'trust_store_password'
+            );
+
+            foreach ($options as $option)
+            {
+                if (!$this->getParameter($option) && isset($params[$option]))
+                {
+                    $this->setParameter($option, $params[$option]);
+                }
+            }
+        }
+
+        self::$config['propel']['datasources'][$this->getParameter('datasource')] =
+            array(
+                'adapter'      => $this->getParameter('phptype'),
+                'connection'   =>
+                    array(
+                        'phptype'    => $this->getParameter('phptype'),
+                        'hostspec'   => $this->getParameter('hostspec'),
+                        'database'   => $this->getParameter('database'),
+                        'username'   => $this->getParameter('username'),
+                        'password'   => $this->getParameter('password'),
+                        'port'       => $this->getParameter('port'),
+                        'encoding'   => $this->getParameter('encoding'),
+                        'persistent' => $this->getParameter('persistent'),
+                        'protocol'   => $this->getParameter('protocol'),
+                        'socket'     => $this->getParameter('socket'),
+                        'compat_assoc_lower' => $this->getParameter('compat_assoc_lower'),
+                        'compat_rtrim_string' => $this->getParameter('compat_rtrim_string'),
+                        'encrypt' => $this->getParameter('encrypt'),
+                        'trust_server_certificate' => $this->getParameter('trust_server_certificate'),
+                        'trust_store' => $this->getParameter('encrypt'),
+                        'trust_store_password' => $this->getParameter('trust_server_certificate')
+                    ),
+            );
+    }
+
+    public static function getConfiguration()
+    {
+        return self::$config;
+    }
+
+    public function setConnectionParameter($key, $value)
+    {
+        if ($key == 'host')
+        {
+            $key = 'hostspec';
+        }
+
+        self::$config['propel']['datasources'][$this->getParameter('datasource')]['connection'][$key] = $value;
+        $this->setParameter($key, $value);
+    }
 }
