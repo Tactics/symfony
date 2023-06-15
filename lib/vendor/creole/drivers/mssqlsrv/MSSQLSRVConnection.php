@@ -82,7 +82,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
 
         if(array_key_exists('encrypt', $dsninfo) && is_bool($dsninfo['encrypt']))
         {
-            $connectionInfo['Encrypt'] = $dsninfo['encoding'];
+            $connectionInfo['Encrypt'] = $dsninfo['encrypt'];
         } else {
             $connectionInfo['Encrypt'] = FALSE;
         }
