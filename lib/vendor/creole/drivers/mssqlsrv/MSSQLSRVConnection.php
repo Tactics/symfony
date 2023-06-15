@@ -75,7 +75,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
         {
             $connectionInfo['Database'] = $dsninfo['database'];
         }
-        if(array_key_exists('encoding', $dsninfo) && is_bool($dsninfo['encoding'], array('SQLSRV_ENC_CHAR', 'SQLSRV_ENC_BINARY', 'UTF-8')))
+        if(array_key_exists('encoding', $dsninfo) && in_array($dsninfo['encoding'], array('SQLSRV_ENC_CHAR', 'SQLSRV_ENC_BINARY', 'UTF-8')))
         {
             $connectionInfo['CharacterSet'] = $dsninfo['encoding'];
         }
