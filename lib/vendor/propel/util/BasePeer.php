@@ -181,7 +181,7 @@ class BasePeer
                 Propel::log($e->getMessage(), Propel::LOG_ERR);
 
                 if ($e instanceof SQLException) {
-                    throw new PropelException(sprintf("Unable to execute DELETE statement : %s.", $e->getUserInfo()), $e);
+                    throw new PropelException(sprintf("Unable to execute DELETE statement : %s | Due to %s.", $e->getUserInfo(), $e->getNativeError()), $e);
                 } else {
                     throw new PropelException(sprintf("Unable to execute DELETE statement : %s.", $sql), $e);
                 }
@@ -222,7 +222,7 @@ class BasePeer
             Propel::log($e->getMessage(), Propel::LOG_ERR);
 
             if ($e instanceof SQLException) {
-                throw new PropelException(sprintf("Unable to execute DELETE ALL operation : %s.", $e->getUserInfo()), $e);
+                throw new PropelException(sprintf("Unable to execute DELETE ALL operation : %s. | Due to %s.", $e->getUserInfo(), $e->getNativeError()), $e);
             } else {
                 throw new PropelException(sprintf("Unable to execute DELETE ALL operation : %s.", $sql), $e);
             }
@@ -316,7 +316,7 @@ class BasePeer
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             if ($e instanceof SQLException) {
-                throw new PropelException(sprintf("Unable to execute INSERT statement : %s.", $e->getUserInfo()), $e);
+                throw new PropelException(sprintf("Unable to execute INSERT statement : %s | Due to %s.", $e->getUserInfo(), $e->getNativeError()), $e);
             } else {
                 throw new PropelException(sprintf("Unable to execute INSERT statement : %s.", $sql), $e);
             }
@@ -421,9 +421,9 @@ class BasePeer
                 if ($rs) $rs->close();
                 if ($stmt) $stmt->close();
                 Propel::log($e->getMessage(), Propel::LOG_ERR);
-          
+
                 if ($e instanceof SQLException) {
-                    throw new PropelException(sprintf("Unable to execute UPDATE statement : %s.", $e->getUserInfo()), $e);
+                    throw new PropelException(sprintf("Unable to execute UPDATE statement : %s | Due to %s.", $e->getUserInfo(), $e->getNativeError()), $e);
                 } else {
                     throw new PropelException(sprintf("Unable to execute UPDATE statement : %s.", $sql), $e);
                 }
@@ -501,7 +501,7 @@ class BasePeer
                     Propel::log($e->getMessage(), Propel::LOG_ERR);
 
                     if ($e instanceof SQLException) {
-                        throw new PropelException(sprintf("Unable to execute SELECT statement : %s.", $e->getUserInfo()), $e);
+                        throw new PropelException(sprintf("Unable to execute SELECT statement : %s. | Due to %s.", $e->getUserInfo(), $e->getNativeError()), $e);
                     } else {
                         throw new PropelException(sprintf("Unable to execute SELECT statement : %s.", $e), $e);
                     }
@@ -512,7 +512,7 @@ class BasePeer
                 Propel::log($e->getMessage(), Propel::LOG_ERR);
 
                 if ($e instanceof SQLException) {
-                    throw new PropelException(sprintf("Unable to execute SELECT statement : %s.", $e->getUserInfo()), $e);
+                    throw new PropelException(sprintf("Unable to execute SELECT statement : %s. | Due to %s.", $e->getUserInfo(), $e->getNativeError()), $e);
                 } else {
                     throw new PropelException(sprintf("Unable to execute SELECT statement : %s.", $e), $e);
                 }

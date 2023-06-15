@@ -91,12 +91,12 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
             $connectionInfo['TrustServerCertificate'] = FALSE;
         }
 
-        if(array_key_exists('trust_store', $dsninfo))
+        if(array_key_exists('trust_store', $dsninfo) && !empty($dsninfo['trust_store']))
         {
             $connectionInfo['trustStore'] = $dsninfo['trust_store'];
         }
 
-        if(array_key_exists('trust_store_password', $dsninfo))
+        if(array_key_exists('trust_store_password', $dsninfo) && !empty($dsninfo['trust_store_password']))
         {
             $connectionInfo['trustStorePassword'] = $dsninfo['trust_store_password'];
         }

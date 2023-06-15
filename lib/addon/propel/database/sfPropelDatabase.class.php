@@ -124,8 +124,8 @@ class sfPropelDatabase extends sfCreoleDatabase
                         'compat_rtrim_string' => $this->getParameter('compat_rtrim_string'),
                         'encrypt' => $this->getParameter('encrypt'),
                         'trust_server_certificate' => $this->getParameter('trust_server_certificate'),
-                        'trust_store' => $this->getParameter('encrypt'),
-                        'trust_store_password' => $this->getParameter('trust_server_certificate')
+                        'trust_store' => $this->getParameter('trust_store'),
+                        'trust_store_password' => $this->getParameter('trust_store_password')
                     ),
             );
     }
