@@ -59,9 +59,6 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
             $serverName .= $portDelimiter.$dsninfo['port'];
         }
 
-        dump($dsninfo);
-        die();
-
         $connectionInfo = array();
         if(array_key_exists('username', $dsninfo) && $dsninfo['username'] != '')
         {

@@ -421,11 +421,7 @@ class BasePeer
                 if ($rs) $rs->close();
                 if ($stmt) $stmt->close();
                 Propel::log($e->getMessage(), Propel::LOG_ERR);
-                dump($e);
-                dump($stmt);
-                dump($sql);
-                die();
-
+          
                 if ($e instanceof SQLException) {
                     throw new PropelException(sprintf("Unable to execute UPDATE statement : %s.", $e->getUserInfo()), $e);
                 } else {
