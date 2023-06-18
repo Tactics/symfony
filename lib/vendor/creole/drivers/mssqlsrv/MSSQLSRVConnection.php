@@ -194,21 +194,14 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
     {
         $this->lastQuery = $sql;
 
-        //var_dump( $this->getPointerType());
-        $result = sqlsrv_query($this->dblink, $sql, null, array("Scrollable" => $this->getPointerType()));
-        if($result === false)
-        {
+        $result = sqlsrv_query($this->dblink, $sql, null, ['Scrollable' => $this->getPointerType()]);
+
+        if ($result === false) {
             throw new SQLException('Could not execute query: ' . $sql,  $this->sqlError());
         }
 
-        // get first results with has fields
-        $numfields = sqlsrv_num_fields( $result );
-        while(($numfields == false)&&(sqlsrv_num_fields( $result )))
-        {
-            $numfields = sqlsrv_fetch_array( $result );
-        }
-
-        return new MSSQLSRVResultSet($this, $result, $fetchmode);
+        $resultSet = new MSSQLSRVResultSet($this, $result, $fetchmode);
+        return $resultSet;
     }
 
     /**
