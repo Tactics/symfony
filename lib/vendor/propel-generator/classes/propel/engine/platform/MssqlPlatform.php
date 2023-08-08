@@ -85,7 +85,7 @@ class MssqlPlatform extends DefaultPlatform {
 	 */
 	public function hasSize($sqlType)
 	{
-		return !("INT" == $sqlType || "TEXT" == $sqlType);
+		return !("INT" === $sqlType || "TEXT" === $sqlType || "VARCHAR" === $sqlType);
 	}
 
 	/**
