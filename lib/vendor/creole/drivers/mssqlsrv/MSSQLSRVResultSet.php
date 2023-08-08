@@ -114,17 +114,17 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
     $sqlsrvFetchmode = $this->fetchmode === ResultSet::FETCHMODE_ASSOC ? SQLSRV_FETCH_ASSOC :  SQLSRV_FETCH_NUMERIC;
     $this->fields = sqlsrv_fetch_array($this->result, $sqlsrvFetchmode,  SQLSRV_SCROLL_ABSOLUTE, $this->offset + $this->cursorPos);
 
-      if ($this->fields === null) {
-        $this->afterLast();
-        return false;
-      }
+    if($this->fields == null) // if there are no more results
+    {
+      $this->afterLast();
+      return false;
+    }
+    elseif($this->fields == false)  // if an error occured
+    {
+      throw new SQLException("Error fetching result", $this->sqlError() );
+    }
 
-      if($this->fields === false) // if there are no more results
-      {
-        throw new SQLException("Error fetching result", $this->sqlError() );
-      }
-
-      if ($this->fetchmode === ResultSet::FETCHMODE_ASSOC && $this->lowerAssocCase) {
+    if ($this->fetchmode === ResultSet::FETCHMODE_ASSOC && $this->lowerAssocCase) {
       $this->fields = array_change_key_case($this->fields, CASE_LOWER);
     }
 
@@ -149,20 +149,17 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
 
   public function afterLast()
   {
-    $this->close();
     return false;
   }
 
   /**
    * @see ResultSet::close()
    */
-  public function close()
+  function close()
   {
-      if( $this->result) {
-          sqlsrv_free_stmt($this->result);
-          $this->result = false;
-          $this->fields = array();
-      }
+    sqlsrv_free_stmt($this->result);
+    $this->result = false;
+    $this->fields = array();
   }
 
   public function getFieldName($id)
