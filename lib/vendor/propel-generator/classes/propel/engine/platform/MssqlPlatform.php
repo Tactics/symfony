@@ -41,7 +41,7 @@ class MssqlPlatform extends DefaultPlatform {
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::INTEGER, "INT"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::BOOLEAN, "INT"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::DOUBLE, "FLOAT"));
-		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "TEXT"));
+        $this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "VARCHAR", 'max'));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::CLOB, "TEXT"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::DATE, "DATETIME"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::BU_DATE, "DATETIME"));
