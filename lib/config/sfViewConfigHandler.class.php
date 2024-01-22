@@ -226,7 +226,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     foreach ($this->mergeConfigValue('metas', $viewName) as $name => $content)
     {
-        $html = htmlspecialchars($content, ENT_QUOTES, sfConfig::get('sf_charset'));
+        $html = htmlspecialchars(is_string($content) ? $content : '' , ENT_QUOTES, sfConfig::get('sf_charset'));
         $preg = $html ? preg_replace('/&amp;(?=\w+;)/', '&', $html) : $html;
         $data[] = sprintf("  \$response->addMeta('%s', '%s', false, false);", $name, str_replace('\'', '\\\'', $preg));
     }

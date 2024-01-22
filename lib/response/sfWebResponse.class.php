@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -329,10 +329,10 @@ class sfWebResponse extends sfResponse
   {
     //return preg_replace('/\-(.)/e', "'-'.strtoupper('\\1')", strtr(ucfirst(strtolower($name)), '_', '-'));
 	return preg_replace_callback(
-	  '/\-(.)/', 
+	  '/\-(.)/',
 	  function ($matches) {
 		return '-'.strtoupper($matches[1]);
-	  }, 
+	  },
 	  strtr(ucfirst(strtolower($name)), '_', '-')
 	);
   }
@@ -486,7 +486,7 @@ class sfWebResponse extends sfResponse
 
     if ($escape)
     {
-      $value = htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset'));
+      $value = htmlspecialchars(is_string($value) ? $value : '', ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
     if ($replace || !$this->getParameter($key, null, 'helper/asset/auto/meta'))
