@@ -113,6 +113,9 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
      */
     public function applyLimit(&$sql, $offset, $limit)
     {
+        $limit = (int) $limit;
+        $offset = (int) $offset;
+
         if ( $limit > 0 ) {
             $sql .= " LIMIT ".$limit;
         }

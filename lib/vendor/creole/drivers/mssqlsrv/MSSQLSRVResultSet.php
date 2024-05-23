@@ -55,7 +55,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
    */
   public function _setOffset($offset)
   {
-      $this->offset = $offset;
+      $this->offset = (int)$offset;
       if ($offset > 0) {
           $this->seek(0);  // 0 becomes $offset by seek() method
       }
@@ -70,7 +70,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
    */
   public function _setLimit($limit)
   {
-      $this->limit = $limit;
+      $this->limit = (int)$limit;
   }
 
   /**
