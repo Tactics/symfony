@@ -4,7 +4,7 @@
  * Dutch Version
  */
 
-$PHPMAILER_LANG = array();
+$PHPMAILER_LANG = [];
 
 $PHPMAILER_LANG["provide_address"] = 'Er moet tenmiste &eacute;&eacute;n ' .
                                      'ontvanger emailadres opgegeven worden.';

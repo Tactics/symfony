@@ -37,7 +37,7 @@ include_once 'phing/types/Parameter.php';
 class BaseParamFilterReader extends BaseFilterReader implements Parameterizable {
     
     /** The passed in parameter array. */
-    protected $_parameters = array();
+    protected $_parameters = [];
     
     /*
      * Sets the parameters used by this filter, and sets

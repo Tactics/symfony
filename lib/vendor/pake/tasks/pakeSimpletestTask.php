@@ -16,7 +16,7 @@ class pakeSimpletestTask
     pake_task('pakeSimpletestTask::test');
   }
 
-  public static function call_simpletest($task, $type = 'text', $dirs = array())
+  public static function call_simpletest($task, $type = 'text', $dirs = [])
   {
     // remove E_STRICT because simpletest is not E_STRICT compatible
     $old_error_reporting = ini_get('error_reporting');
@@ -33,7 +33,7 @@ class pakeSimpletestTask
     }
 
     $base_test_dir = 'test';
-    $test_dirs = array();
+    $test_dirs = [];
 
     // run tests only in these subdirectories
     if ($dirs)
@@ -88,7 +88,7 @@ class pakeSimpletestTask
 
   public static function run_test($task, $args)
   {
-    $types = array('text', 'html', 'xml');
+    $types = ['text', 'html', 'xml'];
     $type = 'text';
     if (array_key_exists(0, $args) && in_array($args[0], $types))
     {
@@ -96,7 +96,7 @@ class pakeSimpletestTask
       array_shift($args);
     }
 
-    $dirs = array();
+    $dirs = [];
     if (is_array($args) && array_key_exists(0, $args))
     {
       $dirs[] = $args[0];

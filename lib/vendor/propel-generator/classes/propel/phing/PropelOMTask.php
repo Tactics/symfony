@@ -84,7 +84,7 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 
 		$_f = new PhingFile($this->getOutputDirectory(), $path);
 		if ($overwrite || !$_f->exists()) {
-			$this->log("\t\t-> " . $builder->getClassname() . " [builder: " . get_class($builder) . "]");
+			$this->log("\t\t-> " . $builder->getClassname() . " [builder: " . $builder::class . "]");
 			$script = $builder->build();
 			file_put_contents($_f->getAbsolutePath(), $script);
 			foreach($builder->getWarnings() as $warning) {
@@ -138,7 +138,7 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 						// -----------------------------------------------------------------------------------------
 
 						// these files are always created / overwrite any existing files
-						foreach(array('peer', 'object', 'mapbuilder') as $target) {
+						foreach(['peer', 'object', 'mapbuilder'] as $target) {
 							$builder = DataModelBuilder::builderFactory($table, $target);
 							$this->build($builder);
 						}
@@ -148,7 +148,7 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 						// -----------------------------------------------------------------------------------------
 
 						// these classes are only generated if they don't already exist
-						foreach(array('peerstub', 'objectstub') as $target) {
+						foreach(['peerstub', 'objectstub'] as $target) {
 							$builder = DataModelBuilder::builderFactory($table, $target);
 							$this->build($builder, $overwrite=false);
 						}
@@ -186,12 +186,12 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 
 						if ($table->isTree()) {
 
-							foreach(array('nodepeer', 'node') as $target) {
+							foreach(['nodepeer', 'node'] as $target) {
 								$builder = DataModelBuilder::builderFactory($table, $target);
 								$this->build($builder);
 							}
 
-							foreach(array('nodepeerstub', 'nodestub') as $target) {
+							foreach(['nodepeerstub', 'nodestub'] as $target) {
 								$builder = DataModelBuilder::builderFactory($table, $target);
 								$this->build($builder, $overwrite=false);
 							}

@@ -32,9 +32,6 @@ include_once 'phing/parser/ExpatParseException.php';
  */
 abstract class AbstractHandler {
 
-    public $parentHandler = null;
-    public $parser = null;
-
     /**
      * Constructs a SAX handler parser.
      *
@@ -43,9 +40,7 @@ abstract class AbstractHandler {
      * @param   object  the parser object
      * @param   object  the parent handler of this handler
      */
-    protected function __construct($parser, $parentHandler) {
-        $this->parentHandler = $parentHandler;
-        $this->parser = $parser;
+    protected function __construct(public $parser, public $parentHandler) {
         $this->parser->setHandler($this);
     }
         
@@ -90,7 +85,7 @@ abstract class AbstractHandler {
      * @access    public
      */
     public function characters($data) {
-        $s = trim($data);
+        $s = trim((string) $data);
         if (strlen($s) > 0) {
             throw new ExpatParseException("Unexpected text '$s'", $this->parser->getLocation());
         }

@@ -38,7 +38,7 @@ class BuildPropelGenPEARPackageTask extends MatchingTask {
 	private $state = 'stable';
 	private $notes;
 
-	private $filesets = array();
+	private $filesets = [];
 
 	/** Package file */
 	private $packageFile;
@@ -77,23 +77,11 @@ class BuildPropelGenPEARPackageTask extends MatchingTask {
 		}
 
 		// add install exceptions
-		$options['installexceptions'] = array(	'pear/pear-propel-gen' => '/',
-												'pear/pear-propel-gen.bat' => '/',
-												'pear/pear-build.xml' => '/',
-												'pear/build.properties' => '/',
-												);
+		$options['installexceptions'] = ['pear/pear-propel-gen' => '/', 'pear/pear-propel-gen.bat' => '/', 'pear/pear-build.xml' => '/', 'pear/build.properties' => '/'];
 
-		$options['dir_roles'] = array(	'projects' => 'data',
-										'test' => 'test',
-										'templates' => 'data',
-										'resources' => 'data');
+		$options['dir_roles'] = ['projects' => 'data', 'test' => 'test', 'templates' => 'data', 'resources' => 'data'];
 
-		$options['exceptions'] = array(	'pear/pear-propel-gen.bat' => 'script',
-										'pear/pear-propel-gen' => 'script',
-										'pear/pear-build.xml' => 'data',
-										'build.xml' => 'data',
-										'build-propel.xml' => 'data',
-									);
+		$options['exceptions'] = ['pear/pear-propel-gen.bat' => 'script', 'pear/pear-propel-gen' => 'script', 'pear/pear-build.xml' => 'data', 'build.xml' => 'data', 'build-propel.xml' => 'data'];
 
 		$pkg->setOptions($options);
 

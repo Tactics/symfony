@@ -43,9 +43,9 @@ class EventObject {
     /** Returns a String representation of this EventObject.*/
     function toString() {
         if (method_exists($this->source, "toString")) {
-            return get_class($this)."[source=".$this->source->toString()."]";
+            return static::class."[source=".$this->source->toString()."]";
         } else {
-            return get_class($this)."[source=".get_class($this->source)."]";
+            return static::class."[source=".$this->source::class."]";
         }
     }
 }

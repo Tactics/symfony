@@ -41,7 +41,7 @@ class MssqlDataSQLBuilder extends DataSQLBuilder {
 		if (is_object($blob)) {
 			$blob = $blob->__toString();
 		}
-		$data = unpack("H*hex", $blob);
+		$data = unpack("H*hex", (string) $blob);
 		return '0x'.$data['hex']; // no surrounding quotes!
 	}
 

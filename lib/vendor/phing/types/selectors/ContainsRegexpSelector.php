@@ -91,16 +91,11 @@ class ContainsRegexpSelector extends BaseExtendSelector {
         if ($parameters !== null) {
             for ($i=0,$size=count($parameters); $i < $size; $i++) {
                 $paramname = $parameters[$i]->getName();
-                switch(strtolower($paramname)) {
-                    case self::EXPRESSION_KEY:
-                        $this->setExpression($parameters[$i]->getValue());
-                        break;
-                    case self::CASE_KEY:
-                        $this->setCasesensitive($parameters[$i]->getValue());
-                        break;
-                    default:
-                        $this->setError("Invalid parameter " . $paramname);
-                }                
+                match (strtolower((string) $paramname)) {
+                    self::EXPRESSION_KEY => $this->setExpression($parameters[$i]->getValue()),
+                    self::CASE_KEY => $this->setCasesensitive($parameters[$i]->getValue()),
+                    default => $this->setError("Invalid parameter " . $paramname),
+                };                
             } // for each param
         } // if params
     }
@@ -153,7 +148,7 @@ class ContainsRegexpSelector extends BaseExtendSelector {
                 $teststr = $in->readLine();
             }
             return false;
-        } catch (IOException $ioe) {
+        } catch (IOException) {
             if ($in) $in->close();
             throw new BuildException("Could not read file " . $filename);
         }

@@ -112,7 +112,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	 */
 	public function close()
 	{
-		$this->fields = array();
+		$this->fields = [];
 		@pg_free_result($this->result);
 	}
 
@@ -124,24 +124,24 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	private function strToArray($str)
 	{
 		$str = substr($str, 1, -1); // remove { }
-		$res = array();
+		$res = [];
 
-		$subarr = array();
+		$subarr = [];
 		$in_subarr = 0;
 
 		$toks = explode(',', $str);
 		foreach($toks as $tok) {
 			if ($in_subarr > 0) { // already in sub-array?
 				$subarr[$in_subarr][] = $tok;
-				if ('}' === substr($tok, -1, 1)) { // check to see if we just added last component
+				if (str_ends_with($tok, '}')) { // check to see if we just added last component
 					$res[] = $this->strToArray(implode(',', $subarr[$in_subarr]));
 					$in_subarr--;
 				}
 			} elseif ($tok[0] === '{') { // we're inside a new sub-array
-				if ('}' !== substr($tok, -1, 1)) {
+				if (!str_ends_with($tok, '}')) {
 					$in_subarr++;
 					// if sub-array has more than one element
-					$subarr[$in_subarr] = array();
+					$subarr[$in_subarr] = [];
 					$subarr[$in_subarr][] = $tok;
 				} else {
 					$res[] = $this->strToArray($tok);
@@ -184,7 +184,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 		if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
 		if ($this->fields[$column] === null) { return new Blob(); }
 		$b = new Blob();
-		$b->setContents(pg_unescape_bytea($this->fields[$column]));
+		$b->setContents(pg_unescape_bytea((string) $this->fields[$column]));
 		return $b;
 	}
 

@@ -129,7 +129,7 @@ abstract class BaseObject implements Persistent {
 		}
 		else
 		{
-			$this->modifiedColumns = array();
+			$this->modifiedColumns = [];
 		}
 	}
 
@@ -182,7 +182,7 @@ abstract class BaseObject implements Persistent {
 	 */
 	protected function log(string $msg, int $priority = Propel::LOG_INFO): bool
     {
-		return Propel::log(get_class($this) . ': ' . $msg, $priority);
+		return Propel::log(static::class . ': ' . $msg, $priority);
 	}
 
 }

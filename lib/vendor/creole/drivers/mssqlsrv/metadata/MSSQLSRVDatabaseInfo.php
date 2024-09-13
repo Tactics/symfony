@@ -47,7 +47,7 @@ class MSSQLSRVDatabaseInfo extends DatabaseInfo {
         }
 
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_NUMERIC)) {
-            $this->tables[strtoupper($row[0])] = new MSSQLTableInfo($this, $row[0]);
+            $this->tables[strtoupper((string) $row[0])] = new MSSQLTableInfo($this, $row[0]);
         }
     }
 

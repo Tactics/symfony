@@ -11,12 +11,9 @@ class SQLExecTransaction {
 
     private $tSrcFile = null;
     private $tSqlCommand = "";
-    private $parent;
 
-    function __construct($parent)
+    function __construct(private $parent)
     {
-        // Parent is required so that we can log things ...
-        $this->parent = $parent;
     }
 
     public function setSrc(PhingFile $src)

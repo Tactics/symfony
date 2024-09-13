@@ -122,7 +122,7 @@ class MSSQLSRVPreparedStatement extends PreparedStatementCommon implements Prepa
       if (is_object($blob)) {
         $blob = $blob->__toString();
       }
-      $data = unpack("H*hex", $blob);
+      $data = unpack("H*hex", (string) $blob);
       $this->boundInVars[$paramIndex] = '0x'.$data['hex']; // no surrounding quotes!
     }
   }

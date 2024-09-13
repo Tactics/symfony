@@ -42,12 +42,12 @@
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-class Commandline {
+class Commandline implements \Stringable {
 
     /**
      * @var array CommandlineArguments[]
      */
-    public $arguments = array(); // public so "inner" class can access
+    public $arguments = []; // public so "inner" class can access
 
     /**
      * Full path (if not on %PATH% env var) to executable program.
@@ -59,7 +59,7 @@ class Commandline {
 
     public function __construct($to_process = null) {
         if ($to_process !== null) {
-            $tmp = $this->translateCommandline($to_process);
+            $tmp = static::translateCommandline($to_process);
             if ($tmp) {
                 $this->setExecutable(array_shift($tmp)); // removes first el
                 foreach($tmp as $arg) { // iterate through remaining elements
@@ -121,7 +121,7 @@ class Commandline {
         if ($this->executable === null) {
             return $args;
         }
-        return array_merge(array($this->executable), $args);
+        return array_merge([$this->executable], $args);
     }
 
 
@@ -130,7 +130,7 @@ class Commandline {
      * <code>addValue</code> or the argument object.
      */
     public function getArguments() {
-        $result = array();
+        $result = [];
         foreach($this->arguments as $arg) {
             $parts = $arg->getParts();
             if ($parts !== null) {
@@ -142,8 +142,8 @@ class Commandline {
         return $result;
     }
 
-    public function __toString() {
-        return self::toString($this->getCommandline());
+    public function __toString(): string {
+        return (string) self::toString($this->getCommandline());
     }
 
     /**
@@ -157,14 +157,14 @@ class Commandline {
      *                           and double quotes.
      */
     public static function quoteArgument($argument) {
-        if (strpos($argument, "\"") !== false) {
-            if (strpos($argument, "'") !== false) {
+        if (str_contains((string) $argument, "\"")) {
+            if (str_contains((string) $argument, "'")) {
                 throw new BuildException("Can't handle single and double quotes in same argument");
             } else {
-                return escapeshellarg($argument);
+                return escapeshellarg((string) $argument);
             }
-        } elseif (strpos($argument, "'") !== false || strpos($argument, " ") !== false) {
-            return escapeshellarg($argument);
+        } elseif (str_contains((string) $argument, "'") || str_contains((string) $argument, " ")) {
+            return escapeshellarg((string) $argument);
             //return '\"' . $argument . '\"';
         } else {
             return $argument;
@@ -200,7 +200,7 @@ class Commandline {
     public static function translateCommandline($to_process) {
 
         if (!$to_process) {
-            return array();
+            return [];
         }
 
         // parse with a simple finite state machine
@@ -210,7 +210,7 @@ class Commandline {
         $inDoubleQuote = 2;
 
         $state = $normal;
-        $args = array();
+        $args = [];
         $current = "";
         $lastTokenHasBeenQuoted = false;
 
@@ -289,7 +289,7 @@ class Commandline {
      * another operation.
      */
     public function clearArgs() {
-        $this->arguments = array();
+        $this->arguments = [];
     }
 
     /**

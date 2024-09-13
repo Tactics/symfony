@@ -17,10 +17,9 @@
  * # <b>auto_start</b>   - [Yes]     - Should session_start() automatically be called?
  * # <b>session_name</b> - [symfony] - The name of the session.
  *
- * @package    symfony
- * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
+ *
  * @version    SVN: $Id: sfSessionStorage.class.php 7791 2008-03-09 21:57:09Z fabien $
  */
 class sfSessionStorage extends sfStorage
@@ -31,7 +30,7 @@ class sfSessionStorage extends sfStorage
      * @param sfContext A sfContext instance
      * @param array   An associative array of initialization parameters
      *
-     * @return boolean true, if initialization completes successfully, otherwise false
+     * @return bool true, if initialization completes successfully, otherwise false
      *
      * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
      */
@@ -45,7 +44,7 @@ class sfSessionStorage extends sfStorage
 
         session_name($sessionName);
 
-        $use_cookies = (boolean)ini_get('session.use_cookies');
+        $use_cookies = (bool) ini_get('session.use_cookies');
         if (!$use_cookies) {
             $sessionId = $context->getRequest()->getParameter($sessionName, '');
 
@@ -59,8 +58,8 @@ class sfSessionStorage extends sfStorage
         $path = $this->getParameter('session_cookie_path', $cookieDefaults['path']);
         $domain = $this->getParameter('session_cookie_domain', $cookieDefaults['domain']);
         $secure = $this->getParameter('session_cookie_secure', $cookieDefaults['secure']);
-        $httpOnly = $this->getParameter('session_cookie_httponly', isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false);
-        $sameSite = $this->getParameter('session_cookie_samesite', isset($cookieDefaults['samesite']) ? $cookieDefaults['samesite'] : 'lax');
+        $httpOnly = $this->getParameter('session_cookie_httponly', $cookieDefaults['httponly'] ?? false);
+        $sameSite = $this->getParameter('session_cookie_samesite', $cookieDefaults['samesite'] ?? 'lax');
         if (version_compare(phpversion(), '7.3', '>=')) {
             session_set_cookie_params([
                 'lifetime' => $lifetime,
@@ -68,7 +67,7 @@ class sfSessionStorage extends sfStorage
                 'domain' => $domain,
                 'secure' => $secure,
                 'httponly' => $httpOnly,
-                'samesite' => $sameSite
+                'samesite' => $sameSite,
             ]);
         } elseif (version_compare(phpversion(), '5.2', '>=')) {
             session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
@@ -91,12 +90,12 @@ class sfSessionStorage extends sfStorage
      *
      * @return mixed Data associated with the key
      */
-    public function & read($key)
+    public function &read($key)
     {
         $retval = null;
 
         if (isset($_SESSION[$key])) {
-            $retval =& $_SESSION[$key];
+            $retval = &$_SESSION[$key];
         }
 
         return $retval;
@@ -111,12 +110,12 @@ class sfSessionStorage extends sfStorage
      *
      * @return mixed Data associated with the key
      */
-    public function & remove($key)
+    public function &remove($key)
     {
         $retval = null;
 
         if (isset($_SESSION[$key])) {
-            $retval =& $_SESSION[$key];
+            $retval = &$_SESSION[$key];
             unset($_SESSION[$key]);
         }
 
@@ -130,16 +129,14 @@ class sfSessionStorage extends sfStorage
      *
      * @param string A unique key identifying your data
      * @param mixed  Data associated with your key
-     *
      */
     public function write($key, &$data)
     {
-        $_SESSION[$key] =& $data;
+        $_SESSION[$key] = &$data;
     }
 
     /**
      * Executes the shutdown procedure.
-     *
      */
     public function shutdown()
     {

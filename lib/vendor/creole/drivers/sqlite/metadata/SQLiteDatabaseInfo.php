@@ -46,7 +46,7 @@ class SQLiteDatabaseInfo extends DatabaseInfo {
         }
         
         while ($row = sqlite_fetch_array($result)) {
-            $this->tables[strtoupper($row[0])] = new SQLiteTableInfo($this, $row[0]);
+            $this->tables[strtoupper((string) $row[0])] = new SQLiteTableInfo($this, $row[0]);
         }
     }
     

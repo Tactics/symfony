@@ -36,10 +36,7 @@ require_once 'phing/parser/AbstractHandler.php';
  */
 class XmlToData extends AbstractHandler {
 
-	private $database;
 	private $data;
-
-	private $encoding;
 
 	public $parser;
 
@@ -53,11 +50,9 @@ class XmlToData extends AbstractHandler {
 	 *
 	 * @param      Database $database
 	 */
-	public function __construct(Database $database, $encoding = 'iso-8859-1')
-	{
-		$this->database = $database;
-		$this->encoding = $encoding;
-	}
+	public function __construct(private readonly Database $database, private $encoding = 'iso-8859-1')
+ {
+ }
 
 	/**
 	 *
@@ -66,7 +61,7 @@ class XmlToData extends AbstractHandler {
 	{
 		try {
 
-			$this->data = array();
+			$this->data = [];
 
 			try {
 				$fr = new FileReader($xmlFile);
@@ -107,10 +102,10 @@ class XmlToData extends AbstractHandler {
 			} else {
 				$table = $this->database->getTableByPhpName($name);
 
-				$this->columnValues = array();
+				$this->columnValues = [];
 				foreach($attributes as $name => $value) {
 					$col = $table->getColumnByPhpName($name);
-					$this->columnValues[] = new ColumnValue($col, iconv('utf-8',$this->encoding, $value));
+					$this->columnValues[] = new ColumnValue($col, iconv('utf-8',(string) $this->encoding, (string) $value));
 				}
 				$this->data[] = new DataRow($table, $this->columnValues);
 			}

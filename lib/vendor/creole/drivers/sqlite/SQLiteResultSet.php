@@ -113,7 +113,7 @@ class SQLiteResultSet extends ResultSetCommon implements ResultSet {
      */
     public function close()
     {
-        $this->fields = array();
+        $this->fields = [];
         $this->result = null;
     }
 }

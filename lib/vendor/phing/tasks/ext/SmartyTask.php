@@ -48,7 +48,7 @@ class SmartyTask extends Task {
      * Variables that are assigned to the context on parse/compile.
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * This is the control template that governs the output.
@@ -380,7 +380,7 @@ class SmartyTask extends Task {
                 $this->log("Using contextProperties file: " . $fullPath->__toString());
                 $source->load($fullPath);
 
-            } catch (Exception $e) {
+            } catch (Exception) {
 
               throw new BuildException("Context properties file " . $sources[$i] .
                             " could not be found in the file system!");
@@ -534,7 +534,7 @@ class SmartyTask extends Task {
                 if (StringHelper::endsWith("file.contents", $property)) {
                     // pull in contents of file specified
 
-                    $property = substr($property, 0, strpos($property, "file.contents") - 1);
+                    $property = substr((string) $property, 0, strpos((string) $property, "file.contents") - 1);
 
                     // reset value, and then
                     // read in teh contents of the file into that var
@@ -565,7 +565,7 @@ class SmartyTask extends Task {
             //$c->display($this->controlTemplate);
             $writer->write($c->fetch($this->controlTemplate));
             $writer->close();
-        } catch (IOException $ioe) {
+        } catch (IOException) {
             $writer->close();
             throw new BuildException("Cannot write parsed template.");
         }

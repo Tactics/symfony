@@ -4,7 +4,7 @@
  * Russian Version
  */
 
-$PHPMAILER_LANG = array();
+$PHPMAILER_LANG = [];
 
 $PHPMAILER_LANG["provide_address"] = 'Ïîæàëóéñòà ââåäèòå ìèíèìóì îäèí Email' .
                                      'ïîëó÷àòåëÿ.';

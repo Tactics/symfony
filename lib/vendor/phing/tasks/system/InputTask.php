@@ -100,7 +100,7 @@ class InputTask extends Task {
         }
 
         if ($this->validargs !== null) {
-            $accept = preg_split('/[\s,]+/', $this->validargs);
+            $accept = preg_split('/[\s,]+/', (string) $this->validargs);
 
             // is it a boolean (yes/no) inputrequest?
             $yesno = false;

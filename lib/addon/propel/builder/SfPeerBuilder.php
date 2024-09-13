@@ -9,81 +9,73 @@
  */
 
 /**
- * @package    symfony
- * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: SfPeerBuilder.php 17357 2009-04-16 11:46:01Z FabianLange $
  */
 class SfPeerBuilder extends PHP5ComplexPeerBuilder
 {
-  public function build()
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    public function build()
     {
-      return sfToolkit::stripComments(parent::build());
-    }
-
-    return parent::build();
-  }
-
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
-    {
-      return;
-    }
-
-    parent::addIncludes($script);
-  }
-
-  protected function addSelectMethods(&$script)
-  {
-    parent::addSelectMethods($script);
-
-    if ($this->getTable()->getAttribute('isI18N'))
-    {
-      $this->addDoSelectWithI18n($script);
-    }
-  }
-
-  protected function addDoSelectWithI18n(&$script)
-  {
-    $table = $this->getTable();
-    $thisTableObjectBuilder = OMBuilder::getNewObjectBuilder($table);
-    $className = $table->getPhpName();
-    $pks = $table->getPrimaryKey();
-    $pk = PeerBuilder::getColumnName($pks[0], $className);
-
-    // get i18n table name and culture column name
-    foreach ($table->getReferrers() as $fk)
-    {
-      $tblFK = $fk->getTable();
-      if ($tblFK->getName() == $table->getAttribute('i18nTable'))
-      {
-        $i18nClassName = $tblFK->getPhpName();
-        // FIXME
-        $i18nPeerClassName = $i18nClassName.'Peer';
-
-        $i18nTable = $table->getDatabase()->getTable($tblFK->getName());
-        $i18nTableObjectBuilder = OMBuilder::getNewObjectBuilder($i18nTable);
-        $i18nTablePeerBuilder = OMBuilder::getNewPeerBuilder($i18nTable);
-        $i18nPks = $i18nTable->getPrimaryKey();
-        $i18nPk = PeerBuilder::getColumnName($i18nPks[0], $i18nClassName);
-
-        $culturePhpName = '';
-        $cultureColumnName = '';
-        foreach ($tblFK->getColumns() as $col)
-        {
-          if (("true" === strtolower($col->getAttribute('isCulture'))))
-          {
-            $culturePhpName = $col->getPhpName();
-            $cultureColumnName = PeerBuilder::getColumnName($col, $i18nClassName);
-          }
+        if (!DataModelBuilder::getBuildProperty('builderAddComments')) {
+            return sfToolkit::stripComments(parent::build());
         }
-      }
+
+        return parent::build();
     }
 
-    $script .= "
+    protected function addIncludes(&$script)
+    {
+        if (!DataModelBuilder::getBuildProperty('builderAddIncludes')) {
+            return;
+        }
+
+        parent::addIncludes($script);
+    }
+
+    protected function addSelectMethods(&$script)
+    {
+        parent::addSelectMethods($script);
+
+        if ($this->getTable()->getAttribute('isI18N')) {
+            $this->addDoSelectWithI18n($script);
+        }
+    }
+
+    protected function addDoSelectWithI18n(&$script)
+    {
+        $table = $this->getTable();
+        $thisTableObjectBuilder = OMBuilder::getNewObjectBuilder($table);
+        $className = $table->getPhpName();
+        $pks = $table->getPrimaryKey();
+        $pk = PeerBuilder::getColumnName($pks[0], $className);
+
+        // get i18n table name and culture column name
+        foreach ($table->getReferrers() as $fk) {
+            $tblFK = $fk->getTable();
+            if ($tblFK->getName() == $table->getAttribute('i18nTable')) {
+                $i18nClassName = $tblFK->getPhpName();
+                // FIXME
+                $i18nPeerClassName = $i18nClassName.'Peer';
+
+                $i18nTable = $table->getDatabase()->getTable($tblFK->getName());
+                $i18nTableObjectBuilder = OMBuilder::getNewObjectBuilder($i18nTable);
+                $i18nTablePeerBuilder = OMBuilder::getNewPeerBuilder($i18nTable);
+                $i18nPks = $i18nTable->getPrimaryKey();
+                $i18nPk = PeerBuilder::getColumnName($i18nPks[0], $i18nClassName);
+
+                $culturePhpName = '';
+                $cultureColumnName = '';
+                foreach ($tblFK->getColumns() as $col) {
+                    if ('true' === strtolower((string) $col->getAttribute('isCulture'))) {
+                        $culturePhpName = $col->getPhpName();
+                        $cultureColumnName = PeerBuilder::getColumnName($col, $i18nClassName);
+                    }
+                }
+            }
+        }
+
+        $script .= "
 
   /**
    * Selects a collection of $className objects pre-filled with their i18n objects.
@@ -107,84 +99,83 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       \$c->setDbName(self::DATABASE_NAME);
     }
 
-    ".$this->getPeerClassname()."::addSelectColumns(\$c);
-    \$startcol = (".$this->getPeerClassname()."::NUM_COLUMNS - ".$this->getPeerClassname()."::NUM_LAZY_LOAD_COLUMNS) + 1;
+    ".$this->getPeerClassname().'::addSelectColumns($c);
+    $startcol = ('.$this->getPeerClassname().'::NUM_COLUMNS - '.$this->getPeerClassname().'::NUM_LAZY_LOAD_COLUMNS) + 1;
 
-    ".$i18nPeerClassName."::addSelectColumns(\$c);
+    '.$i18nPeerClassName.'::addSelectColumns($c);
 
-    \$c->addJoin(".$pk.", ".$i18nPk.");
-    \$c->add(".$cultureColumnName.", \$culture);
+    $c->addJoin('.$pk.', '.$i18nPk.');
+    $c->add('.$cultureColumnName.', $culture);
 
-    \$rs = ".$this->basePeerClassname."::doSelect(\$c, \$connection);
-    \$results = array();
+    $rs = '.$this->basePeerClassname.'::doSelect($c, $connection);
+    $results = array();
 
-    while(\$rs->next()) {
-";
-            if ($table->getChildrenColumn()) {
-              $script .= "
-      \$omClass = ".$this->getPeerClassname()."::getOMClass(\$rs, 1);
-";
-            } else {
-              $script .= "
-      \$omClass = ".$this->getPeerClassname()."::getOMClass();
-";
-            }
-            $script .= "
-      \$cls = Propel::import(\$omClass);
-      \$obj1 = new \$cls();
-      \$obj1->hydrate(\$rs);
-      \$obj1->setCulture(\$culture);
-";
-//            if ($i18nTable->getChildrenColumn()) {
-              $script .= "
-      \$omClass = ".$i18nTablePeerBuilder->getPeerClassname()."::getOMClass(\$rs, \$startcol);
-";
-//            } else {
-//              $script .= "
-//      \$omClass = ".$i18nTablePeerBuilder->getPeerClassname()."::getOMClass();
-//";
-//            }
+    while($rs->next()) {
+';
+        if ($table->getChildrenColumn()) {
+            $script .= '
+      $omClass = '.$this->getPeerClassname().'::getOMClass($rs, 1);
+';
+        } else {
+            $script .= '
+      $omClass = '.$this->getPeerClassname().'::getOMClass();
+';
+        }
+        $script .= '
+      $cls = Propel::import($omClass);
+      $obj1 = new $cls();
+      $obj1->hydrate($rs);
+      $obj1->setCulture($culture);
+';
+        //            if ($i18nTable->getChildrenColumn()) {
+        $script .= '
+      $omClass = '.$i18nTablePeerBuilder->getPeerClassname().'::getOMClass($rs, $startcol);
+';
+        //            } else {
+        //              $script .= "
+        //      \$omClass = ".$i18nTablePeerBuilder->getPeerClassname()."::getOMClass();
+        // ";
+        //            }
 
-            $script .= "
-      \$cls = Propel::import(\$omClass);
-      \$obj2 = new \$cls();
-      \$obj2->hydrate(\$rs, \$startcol);
+        $script .= '
+      $cls = Propel::import($omClass);
+      $obj2 = new $cls();
+      $obj2->hydrate($rs, $startcol);
 
-      \$obj1->set".$i18nClassName."ForCulture(\$obj2, \$culture);
-      \$obj2->set".$className."(\$obj1);
+      $obj1->set'.$i18nClassName.'ForCulture($obj2, $culture);
+      $obj2->set'.$className.'($obj1);
 
-      \$results[] = \$obj1;
+      $results[] = $obj1;
     }
-    return \$results;
+    return $results;
   }
-";
-  }
+';
+    }
 
-  protected function addDoValidate(&$script)
-  {
-      $tmp = '';
-      parent::addDoValidate($tmp);
-
-      $script .= str_replace("return {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n",
-        "\$res =  {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n".
-        "    if (\$res !== true) {\n".
-        "        \$request = sfContext::getInstance()->getRequest();\n".
-        "        foreach (\$res as \$failed) {\n".
-        "            \$col = ".$this->getPeerClassname()."::translateFieldname(\$failed->getColumn(), BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);\n".
-        "            \$request->setError(\$col, \$failed->getMessage());\n".
-        "        }\n".
-        "    }\n\n".
-        "    return \$res;\n", $tmp);
-  }
-
-  protected function addDoSelectRS(&$script)
-  {
-    $tmp = '';
-    parent::addDoSelectRS($tmp);
-
-    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    protected function addDoValidate(&$script)
     {
-      $mixer_script = "
+        $tmp = '';
+        parent::addDoValidate($tmp);
+
+        $script .= str_replace("return {$this->basePeerClassname}::doValidate(".$this->getPeerClassname().'::DATABASE_NAME, '.$this->getPeerClassname()."::TABLE_NAME, \$columns);\n",
+            "\$res =  {$this->basePeerClassname}::doValidate(".$this->getPeerClassname().'::DATABASE_NAME, '.$this->getPeerClassname()."::TABLE_NAME, \$columns);\n".
+            "    if (\$res !== true) {\n".
+            "        \$request = sfContext::getInstance()->getRequest();\n".
+            "        foreach (\$res as \$failed) {\n".
+            '            $col = '.$this->getPeerClassname()."::translateFieldname(\$failed->getColumn(), BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);\n".
+            "            \$request->setError(\$col, \$failed->getMessage());\n".
+            "        }\n".
+            "    }\n\n".
+            "    return \$res;\n", $tmp);
+    }
+
+    protected function addDoSelectRS(&$script)
+    {
+        $tmp = '';
+        parent::addDoSelectRS($tmp);
+
+        if (DataModelBuilder::getBuildProperty('builderAddBehaviors')) {
+            $mixer_script = "
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:addDoSelectRS:addDoSelectRS') as \$callable)
     {
@@ -192,21 +183,20 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = $tmp ? preg_replace('/{/', '{'.$mixer_script, $tmp, 1) : $tmp;
+            $tmp = $tmp ? preg_replace('/{/', '{'.$mixer_script, $tmp, 1) : $tmp;
+        }
+
+        $script .= $tmp;
     }
 
-    $script .= $tmp;
-  }
-
-  protected function addDoUpdate(&$script)
-  {
-    $tmp = '';
-    parent::addDoUpdate($tmp);
-
-    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    protected function addDoUpdate(&$script)
     {
-      // add sfMixer call
-      $pre_mixer_script = "
+        $tmp = '';
+        parent::addDoUpdate($tmp);
+
+        if (DataModelBuilder::getBuildProperty('builderAddBehaviors')) {
+            // add sfMixer call
+            $pre_mixer_script = "
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doUpdate:pre') as \$callable)
     {
@@ -219,7 +209,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
 ";
 
-      $post_mixer_script = "
+            $post_mixer_script = "
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doUpdate:post') as \$callable)
     {
@@ -229,22 +219,21 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     return \$ret;
 ";
 
-      $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
-      $tmp = $tmp ? preg_replace("/\t\treturn ([^}]+)/", "\t\t\$ret = $1".$post_mixer_script.'  ', $tmp, 1) : $tmp;
+            $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
+            $tmp = $tmp ? preg_replace("/\t\treturn ([^}]+)/", "\t\t\$ret = $1".$post_mixer_script.'  ', $tmp, 1) : $tmp;
+        }
+
+        $script .= $tmp;
     }
 
-    $script .= $tmp;
-  }
-
-  protected function addDoInsert(&$script)
-  {
-    $tmp = '';
-    parent::addDoInsert($tmp);
-
-    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    protected function addDoInsert(&$script)
     {
-      // add sfMixer call
-      $pre_mixer_script = "
+        $tmp = '';
+        parent::addDoInsert($tmp);
+
+        if (DataModelBuilder::getBuildProperty('builderAddBehaviors')) {
+            // add sfMixer call
+            $pre_mixer_script = "
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doInsert:pre') as \$callable)
     {
@@ -257,7 +246,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
 ";
 
-      $post_mixer_script = "
+            $post_mixer_script = "
     foreach (sfMixer::getCallables('{$this->getClassname()}:doInsert:post') as \$callable)
     {
       call_user_func(\$callable, '{$this->getClassname()}', \$values, \$connection, \$pk);
@@ -265,10 +254,10 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     return";
 
-      $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
-      $tmp = $tmp ? preg_replace("/\t\treturn/", "\t\t".$post_mixer_script, $tmp, 1) : $tmp;
-    }
+            $tmp = $tmp ? preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1) : $tmp;
+            $tmp = $tmp ? preg_replace("/\t\treturn/", "\t\t".$post_mixer_script, $tmp, 1) : $tmp;
+        }
 
-    $script .= $tmp;
-  }
+        $script .= $tmp;
+    }
 }

@@ -79,7 +79,7 @@ class FileReader extends Reader {
         // Compute length to read
         // possible that filesize($this->file) will be larger than 
         // available bytes to read, but that's fine -- better to err on high end
-        $length = ($len === null) ? filesize($this->file->getAbsolutePath()) : $len;
+        $length = $len ?? filesize($this->file->getAbsolutePath());
 
         // Read data
         $out = fread($this->fd, $length + 1); // adding 1 seems to ensure that next call to read() will return EOF (-1)

@@ -67,11 +67,11 @@ class EqualsCondition implements Condition {
         }
 
         if ($this->trim) {
-            $this->arg1 = trim($this->arg1);
-            $this->arg2 = trim($this->arg2);
+            $this->arg1 = trim((string) $this->arg1);
+            $this->arg2 = trim((string) $this->arg2);
         }
 
         //print("[comparison] Comparing '".$this->arg1."' and '".$this->arg2."'\n");
-        return $this->caseSensitive ? $this->arg1 === $this->arg2 : strtolower($this->arg1) === strtolower($this->arg2);
+        return $this->caseSensitive ? $this->arg1 === $this->arg2 : strtolower((string) $this->arg1) === strtolower((string) $this->arg2);
     }
 }

@@ -36,12 +36,12 @@ if (class_exists('pakeFinder'))
 class pakeFinder
 {
   private $type        = 'file';
-  private $names       = array();
-  private $prunes      = array();
-  private $discards    = array();
-  private $execs       = array();
+  private $names       = [];
+  private $prunes      = [];
+  private $discards    = [];
+  private $execs       = [];
   private $mindepth    = 0;
-  private $sizes       = array();
+  private $sizes       = [];
   private $maxdepth    = 1000000;
   private $relative    = false;
   private $follow_link = false;
@@ -92,11 +92,11 @@ class pakeFinder
   {
     $finder = new pakeFinder();
 
-    if (strtolower(substr($name, 0, 3)) == 'dir')
+    if (strtolower(substr((string) $name, 0, 3)) == 'dir')
     {
       $finder->type = 'directory';
     }
-    else if (strtolower($name) == 'any')
+    else if (strtolower((string) $name) == 'any')
     {
       $finder->type = 'any';
     }
@@ -113,7 +113,7 @@ class pakeFinder
    */
   private function to_regex($str)
   {
-    if ($str[0] == '/' && $str[strlen($str) - 1] == '/')
+    if ($str[0] == '/' && $str[strlen((string) $str) - 1] == '/')
     {
       return $str;
     }
@@ -125,7 +125,7 @@ class pakeFinder
 
   private function args_to_array($arg_list, $not = false)
   {
-    $list = array();
+    $list = [];
 
     for ($i = 0; $i < count($arg_list); $i++)
     {
@@ -133,12 +133,12 @@ class pakeFinder
       {
         foreach ($arg_list[$i] as $arg)
         {
-          $list[] = array($not, $this->to_regex($arg));
+          $list[] = [$not, $this->to_regex($arg)];
         }
       }
       else
       {
-        $list[] = array($not, $this->to_regex($arg_list[$i]));
+        $list[] = [$not, $this->to_regex($arg_list[$i])];
       }
     }
 
@@ -238,7 +238,7 @@ class pakeFinder
    */
   public function ignore_version_control()
   {
-    $ignores = array('.svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr');
+    $ignores = ['.svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr'];
 
     return $this->discard($ignores)->prune($ignores);
   }
@@ -305,7 +305,7 @@ class pakeFinder
    */
   public function in()
   {
-    $files    = array();
+    $files    = [];
     $here_dir = getcwd();
     $numargs  = func_num_args();
     $arg_list = func_get_args();
@@ -317,7 +317,7 @@ class pakeFinder
       $numargs  = count($arg_list);
     }
 
-    $dirs = array();
+    $dirs = [];
     for ($i = 0; $i < $numargs; $i++)
     {
       if ($argDirs = glob($arg_list[$i]))
@@ -364,15 +364,15 @@ class pakeFinder
   {
     if ($depth > $this->maxdepth)
     {
-      return array();
+      return [];
     }
 
     if (is_link($dir) && !$this->follow_link)
     {
-      return array();
+      return [];
     }
 
-    $files = array();
+    $files = [];
 
     if (is_dir($dir))
     {
@@ -421,11 +421,11 @@ class pakeFinder
     $one_not_name_rule = false;
     foreach ($this->names as $args)
     {
-      list($not, $regex) = $args;
+      [$not, $regex] = $args;
       if ($not)
       {
         $one_not_name_rule = true;
-        if (preg_match($regex, $entry))
+        if (preg_match($regex, (string) $entry))
         {
           return false;
         }
@@ -436,11 +436,11 @@ class pakeFinder
     // we must match one "name" rules to be ok
     foreach ($this->names as $args)
     {
-      list($not, $regex) = $args;
+      [$not, $regex] = $args;
       if (!$not)
       {
         $one_name_rule = true;
-        if (preg_match($regex, $entry))
+        if (preg_match($regex, (string) $entry))
         {
           return true;
         }
@@ -487,7 +487,7 @@ class pakeFinder
     foreach ($this->prunes as $args)
     {
       $regex = $args[1];
-      if (preg_match($regex, $entry)) return true;
+      if (preg_match($regex, (string) $entry)) return true;
     }
 
     return false;
@@ -500,7 +500,7 @@ class pakeFinder
     foreach ($this->discards as $args)
     {
       $regex = $args[1];
-      if (preg_match($regex, $entry)) return true;
+      if (preg_match($regex, (string) $entry)) return true;
     }
 
     return false;
@@ -512,7 +512,7 @@ class pakeFinder
 
     foreach ($this->execs as $exec)
     {
-      if (!call_user_func_array($exec, array($dir, $entry))) return false;
+      if (!call_user_func_array($exec, [$dir, $entry])) return false;
     }
 
     return true;
@@ -521,7 +521,7 @@ class pakeFinder
   public static function isPathAbsolute($path)
   {
     if ($path[0] == '/' || $path[0] == '\\' ||
-        (strlen($path) > 3 && ctype_alpha($path[0]) &&
+        (strlen((string) $path) > 3 && ctype_alpha((string) $path[0]) &&
          $path[1] == ':' &&
          ($path[2] == '\\' || $path[2] == '/')
         )

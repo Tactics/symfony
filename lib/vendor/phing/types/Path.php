@@ -63,9 +63,9 @@ include_once 'phing/types/FileSet.php';
  * @author Stefan Bodewig <stefan.bodewig@epost.de> (Ant)
  * @package phing.types
  */
-class Path extends DataType {
+class Path extends DataType implements \Stringable {
 
-    private $elements = array();
+    private $elements = [];
 
     /**
      * Constructor for internally instantiated objects sets project.
@@ -219,12 +219,12 @@ class Path extends DataType {
     public function listPaths() {
         if (!$this->checked) {
             // make sure we don't have a circular reference here
-            $stk = array();
+            $stk = [];
             array_push($stk, $this);
             $this->dieOnCircularReference($stk, $this->project);
         }
 
-        $result = array();
+        $result = [];
         for ($i = 0, $elSize=count($this->elements); $i < $elSize; $i++) {
             $o = $this->elements[$i];
             if ($o instanceof Reference) {
@@ -288,7 +288,7 @@ class Path extends DataType {
      * CLASSPATH or PATH environment variable definition.
      * @return string A textual representation of the path.
      */
-    public function __toString() {
+    public function __toString(): string {
 
         $list = $this->listPaths();
 
@@ -307,7 +307,7 @@ class Path extends DataType {
      * @return array|string
      */
     public static function translatePath(Project $project, $source) {
-        $result = array();
+        $result = [];
         if ($source == null) {
           return "";
         }
@@ -318,10 +318,10 @@ class Path extends DataType {
             $pathElement = $tok->nextToken();
             try {
                 $element .= self::resolveFile($project, $pathElement);
-            } catch (BuildException $e) {
+            } catch (BuildException) {
             }
 
-            for ($i = 0, $_i=strlen($element); $i < $_i; $i++) {
+            for ($i = 0, $_i=strlen((string) $element); $i < $_i; $i++) {
                 self::translateFileSep($element, $i);
             }
             $result[] = $element;
@@ -340,7 +340,7 @@ class Path extends DataType {
         }
 
         $result = $source;
-        for ($i = 0, $_i=strlen($source); $i < $_i; $i++) {
+        for ($i = 0, $_i=strlen((string) $source); $i < $_i; $i++) {
             self::translateFileSep($result, $i);
         }
 

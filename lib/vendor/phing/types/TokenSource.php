@@ -58,7 +58,7 @@ class TokenSource extends DataType {
      * Array holding parameters for the wrapped TokenReader.
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * Reference to the TokenReader used by this TokenSource
@@ -69,7 +69,7 @@ class TokenSource extends DataType {
     /**
      * Array with key/value pairs of tokens
      */
-    protected $tokens = array();
+    protected $tokens = [];
 
     /**
      * This method is called to load the sources from the reader
@@ -92,9 +92,7 @@ class TokenSource extends DataType {
             while ($token = $this->reader->readToken()) {
                 $this->tokens[] = $token;
             }
-        } catch (BuildException $e) {
-            $this->log("Error reading TokenSource: " . $e->getMessage(), Project::PROJECT_MSG_WARN);
-        } catch (IOException $e) {
+        } catch (BuildException|IOException $e) {
             $this->log("Error reading TokenSource: " . $e->getMessage(), Project::PROJECT_MSG_WARN);
         }
     }

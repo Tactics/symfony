@@ -49,26 +49,26 @@ class IntrospectionHelper {
      *
      * @var array string[]
      */
-    private $attributeSetters = array();
+    private $attributeSetters = [];
 
     /**
      * Holds methods to create nested elements.
      *
      * @var array string[]
      */
-    private $nestedCreators = array();
+    private $nestedCreators = [];
 
     /**
      * Holds methods to store configured nested elements.
      *
      * @var array string[]
      */
-    private $nestedStorers = array();
+    private $nestedStorers = [];
 
     /**
      * Map from attribute names to nested types.
      */
-    private $nestedTypes = array();
+    private $nestedTypes = [];
 
     /**
      * New idea in phing: any class can register certain
@@ -80,7 +80,7 @@ class IntrospectionHelper {
      *         function setListeningReplace($slot) {}
      * @var array string[]
       */
-    private $slotListeners = array();
+    private $slotListeners = [];
 
     /**
      * The method to add PCDATA stuff.
@@ -101,7 +101,7 @@ class IntrospectionHelper {
      * The cache of IntrospectionHelper classes instantiated by getHelper().
      * @var array IntrospectionHelpers[]
      */
-    private static $helpers = array();
+    private static $helpers = [];
 
     /**
      * Factory method for helper objects.
@@ -151,7 +151,7 @@ class IntrospectionHelper {
 
                     $this->methodAddText = $method;
 
-                } elseif (strpos($name, "setlistening") === 0) {
+                } elseif (str_starts_with($name, "setlistening")) {
 
                     // Phing supports something unique called "RegisterSlots"
                     // These are dynamic values that use a basic slot system so that
@@ -167,7 +167,7 @@ class IntrospectionHelper {
 
                     $this->slotListeners[$name] = $method;
 
-                } elseif (strpos($name, "set") === 0) {
+                } elseif (str_starts_with($name, "set")) {
 
                     // A standard attribute setter.
 
@@ -177,7 +177,7 @@ class IntrospectionHelper {
 
                     $this->attributeSetters[$name] = $method;
 
-                } elseif (strpos($name, "create") === 0) {
+                } elseif (str_starts_with($name, "create")) {
 
                     if (count($method->getParameters()) > 0) {
                         throw new BuildException($method->getDeclaringClass()->getName()."::".$method->getName()."() may not take any parameters.");
@@ -205,7 +205,7 @@ class IntrospectionHelper {
 
                     $this->nestedCreators[$name] = $method;
 
-                } elseif (strpos($name, "addconfigured") === 0) {
+                } elseif (str_starts_with($name, "addconfigured")) {
 
                     // *must* use class hints if using addConfigured ...
 
@@ -238,7 +238,7 @@ class IntrospectionHelper {
 
                     $this->nestedStorers[$name] = $method;
 
-                } elseif (strpos($name, "add") === 0) {
+                } elseif (str_starts_with($name, "add")) {
 
                     // *must* use class hints if using add ...
 
@@ -290,7 +290,7 @@ class IntrospectionHelper {
 
         if (StringHelper::isSlotVar($value)) {
 
-            $as = "setlistening" . strtolower($attributeName);
+            $as = "setlistening" . strtolower((string) $attributeName);
 
             if (!isset($this->slotListeners[$as])) {
                 $msg = $this->getElementName($project, $element) . " doesn't support a slot-listening '$attributeName' attribute.";
@@ -306,7 +306,7 @@ class IntrospectionHelper {
 
             // Traditional value options
 
-            $as = "set".strtolower($attributeName);
+            $as = "set".strtolower((string) $attributeName);
 
             if (!isset($this->attributeSetters[$as])) {
                 $msg = $this->getElementName($project, $element) . " doesn't support the '$attributeName' attribute.";
@@ -320,7 +320,7 @@ class IntrospectionHelper {
             } else {
 
                 // decode any html entities in string
-                $value = html_entity_decode($value);
+                $value = html_entity_decode((string) $value);
 
                 // value is a string representation of a boolean type,
                 // convert it to primitive
@@ -396,8 +396,8 @@ class IntrospectionHelper {
      */
     function createElement(Project $project, $element, $elementName) {
 
-        $addMethod = "add".strtolower($elementName);
-        $createMethod = "create".strtolower($elementName);
+        $addMethod = "add".strtolower((string) $elementName);
+        $createMethod = "create".strtolower((string) $elementName);
         $nestedElement = null;
 
         if (isset($this->nestedCreators[$createMethod])) {
@@ -464,7 +464,7 @@ class IntrospectionHelper {
             return;
         }
 
-        $storer = "addconfigured".strtolower($elementName);
+        $storer = "addconfigured".strtolower((string) $elementName);
 
         if (isset($this->nestedStorers[$storer])) {
 
@@ -487,7 +487,7 @@ class IntrospectionHelper {
 
     /** Return all attribues supported by the introspected class. */
     function getAttributes() {
-        $attribs = array();
+        $attribs = [];
         foreach (array_keys($this->attributeSetters) as $setter) {
             $attribs[] =$this->getPropertyName($setter, "set");
         }
@@ -516,7 +516,7 @@ class IntrospectionHelper {
 
         // check if class of element is registered with project (tasks & types)
         // most element types don't have a getTag() method
-        $elClass = get_class($element);
+        $elClass = $element::class;
 
         if (!in_array('getTag', get_class_methods($elClass))) {
                 // loop through taskdefs and typesdefs and see if the class name
@@ -543,8 +543,8 @@ class IntrospectionHelper {
 
     /** extract the name of a property from a method name - subtracting  a given prefix. */
     function getPropertyName($methodName, $prefix) {
-        $start = strlen($prefix);
-        return strtolower(substr($methodName, $start));
+        $start = strlen((string) $prefix);
+        return strtolower(substr((string) $methodName, $start));
     }
 
     /**

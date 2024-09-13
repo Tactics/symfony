@@ -41,9 +41,6 @@ class ExpatParser extends AbstractSAXParser {
     /** @var resource */
     private $parser;
 
-    /** @var Reader */
-    private $reader;
-
     private $file;
 
     private $buffer = 4096;
@@ -66,9 +63,8 @@ class ExpatParser extends AbstractSAXParser {
      * @param string $filename Filename to read.
      * @throws Exception if the given argument is not a PhingFile object
      */
-    function __construct(Reader $reader, $filename=null) {
+    function __construct(private readonly Reader $reader, $filename=null) {
 
-        $this->reader = $reader;
         if ($filename !== null) {
             $this->file = new PhingFile($filename);
         }
@@ -76,8 +72,8 @@ class ExpatParser extends AbstractSAXParser {
         $this->buffer = 4096;
         $this->location = new Location();
         xml_set_object($this->parser, $this);
-        xml_set_element_handler($this->parser, array($this,"startElement"),array($this,"endElement"));
-        xml_set_character_data_handler($this->parser, array($this, "characters"));
+        xml_set_element_handler($this->parser, $this->startElement(...),$this->endElement(...));
+        xml_set_character_data_handler($this->parser, $this->characters(...));
     }
 
     /**
@@ -121,7 +117,7 @@ class ExpatParser extends AbstractSAXParser {
     function parse() {
 
         while ( ($data = $this->reader->read()) !== -1 ) {
-            if (!xml_parse($this->parser, $data, $this->reader->eof())) {
+            if (!xml_parse($this->parser, (string) $data, $this->reader->eof())) {
                 $error = xml_error_string(xml_get_error_code($this->parser));
                 $e = new ExpatParseException($error, $this->getLocation());
                 xml_parser_free($this->parser);

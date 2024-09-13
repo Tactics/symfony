@@ -46,7 +46,7 @@ class MySQLDatabaseInfo extends DatabaseInfo {
         }
 
         while ($row = mysql_fetch_row($result)) {
-            $this->tables[strtoupper($row[0])] = new MySQLTableInfo($this, $row[0]);
+            $this->tables[strtoupper((string) $row[0])] = new MySQLTableInfo($this, $row[0]);
         }
 		
 		$this->tablesLoaded = true;

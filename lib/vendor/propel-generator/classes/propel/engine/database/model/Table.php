@@ -55,13 +55,12 @@ class Table extends XMLElement implements IDMethod {
 	private $indices;
 	private $unices;
 	private $idMethodParameters;
-	private $name;
 	private $description;
 	private $phpName;
 	private $idMethod;
 	private $phpNamingMethod;
 	private $tableParent;
-	private $referrers = array();
+	private $referrers = [];
 	private $foreignTableNames;
 	private $containsForeignPK;
 	private $inheritanceColumn;
@@ -85,17 +84,16 @@ class Table extends XMLElement implements IDMethod {
 	 *
 	 * @param      string $name table name
 	 */
-	public function __construct($name = null)
+	public function __construct(private $name = null)
 	{
-		$this->name = $name;
-		$this->columnList = array();
-		$this->validatorList = array();
-		$this->foreignKeys = array();
-		$this->indices = array();
-		$this->unices = array();
-		$this->columnsByName = array();
-		$this->columnsByPhpName = array();
-		$this->vendorSpecificInfo = array();
+		$this->columnList = [];
+		$this->validatorList = [];
+		$this->foreignKeys = [];
+		$this->indices = [];
+		$this->unices = [];
+		$this->columnsByName = [];
+		$this->columnsByPhpName = [];
+		$this->vendorSpecificInfo = [];
 	}
 
    /**
@@ -258,7 +256,7 @@ class Table extends XMLElement implements IDMethod {
 	 */
 	private function acquireConstraintName($nameType, $nbr)
 	{
-		$inputs = array();
+		$inputs = [];
 		$inputs[] = $this->getDatabase();
 		$inputs[] = $this->getName();
 		$inputs[] = $nameType;
@@ -355,7 +353,7 @@ class Table extends XMLElement implements IDMethod {
 	* @return     Validator The added Validator.
 	* @throws     EngineException
 	*/
-   public function addValidator($data)
+   public function addValidator(mixed $data)
    {
 	 if ($data instanceof Validator)
 	 {
@@ -391,7 +389,7 @@ class Table extends XMLElement implements IDMethod {
 			$this->foreignKeys[] = $fk;
 
 			if ($this->foreignTableNames === null) {
-				$this->foreignTableNames = array();
+				$this->foreignTableNames = [];
 			}
 			if (!in_array($fk->getForeignTableName(), $this->foreignTableNames)) {
 				$this->foreignTableNames[] = $fk->getForeignTableName();
@@ -425,9 +423,9 @@ class Table extends XMLElement implements IDMethod {
 			return null;
 		}
 		$children = $this->inheritanceColumn->getChildren();
-		$names = array();
+		$names = [];
 		for ($i = 0, $size=count($children); $i < $size; $i++) {
-			$names[] = get_class($children[$i]);
+			$names[] = $children[$i]::class;
 		}
 		return $names;
 	}
@@ -438,7 +436,7 @@ class Table extends XMLElement implements IDMethod {
 	public function addReferrer(ForeignKey $fk)
 	{
 		if ($this->referrers === null) {
-			$this->referrers = array();
+			$this->referrers = [];
 		}
 		$this->referrers[] = $fk;
 	}
@@ -473,7 +471,7 @@ class Table extends XMLElement implements IDMethod {
 	public function getForeignTableNames()
 	{
 		if ($this->foreignTableNames === null) {
-			$this->foreignTableNames = array();
+			$this->foreignTableNames = [];
 		}
 		return $this->foreignTableNames;
 	}
@@ -496,7 +494,7 @@ class Table extends XMLElement implements IDMethod {
 			$imp = $impdata;
 			$imp->setTable($this);
 			if ($this->idMethodParameters === null) {
-				$this->idMethodParameters = array();
+				$this->idMethodParameters = [];
 			}
 			$this->idMethodParameters[] = $imp;
 			return $imp;
@@ -586,7 +584,7 @@ class Table extends XMLElement implements IDMethod {
 	public function getPhpName()
 	{
 		if ($this->phpName === null) {
-			$inputs = array();
+			$inputs = [];
 			$inputs[] = $this->name;
 			$inputs[] = $this->phpNamingMethod;
 			try {
@@ -814,7 +812,7 @@ class Table extends XMLElement implements IDMethod {
 	 */
 	public function getSequenceName()
 	{
-		static $longNamesMap = array();
+		static $longNamesMap = [];
 		$result = null;
 		if ($this->getIdMethod() == self::NATIVE) {
 			$idMethodParams = $this->getIdMethodParameters();
@@ -826,7 +824,7 @@ class Table extends XMLElement implements IDMethod {
 				  {
 					$longNamesMap[$this->getName()] = strval(count($longNamesMap) + 1);
 				  }
-				  $result = substr($this->getName(), 0, $maxIdentifierLength - strlen("_SEQ_" . $longNamesMap[$this->getName()])) . "_SEQ_" . $longNamesMap[$this->getName()];
+				  $result = substr((string) $this->getName(), 0, $maxIdentifierLength - strlen("_SEQ_" . $longNamesMap[$this->getName()])) . "_SEQ_" . $longNamesMap[$this->getName()];
 				}
 				else
 				{
@@ -902,7 +900,7 @@ class Table extends XMLElement implements IDMethod {
      * @param mixed $col Column or column name.
      * @return bool
      */
-	public function containsColumn($col)
+	public function containsColumn(mixed $col)
 	{
 		if ($col instanceof Column) {
 			return in_array($col, $this->columnList);
@@ -1083,7 +1081,7 @@ class Table extends XMLElement implements IDMethod {
 	 */
 	public function getPrimaryKey()
 	{
-		$pk = array();
+		$pk = [];
 		for($i=0,$_i=count($this->columnList); $i < $_i; $i++) {
 			$col = $this->columnList[$i];
 			if ($col->isPrimaryKey()) {

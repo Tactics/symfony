@@ -92,48 +92,41 @@
 class Archive_Zip
 {
     /**
-    * The filename of the zip archive.
-    *
-    * @var string Name of the Zip file
-    */
-    var $_zipname='';
-
-    /**
     * File descriptor of the opened Zip file.
     *
     * @var int Internal zip file descriptor
     */
-    var $_zip_fd=0;
+    public $_zip_fd=0;
 
     /**
     * @var int last error code
     */
-    var $_error_code=1;
+    public $_error_code=1;
 
     /**
     * @var string Last error description
     */
-    var $_error_string='';
+    public $_error_string='';
 
     // {{{ constructor
     /**
-    * Archive_Zip Class constructor. This flavour of the constructor only
-    * declare a new Archive_Zip object, identifying it by the name of the
-    * zip file.
-    *
-    * @param    string  $p_zipname  The name of the zip archive to create
-    * @access public
-    */
-    function __construct($p_zipname)
+     * Archive_Zip Class constructor. This flavour of the constructor only
+     * declare a new Archive_Zip object, identifying it by the name of the
+     * zip file.
+     *
+     * @param string $_zipname The name of the zip archive to create
+     * @access public
+     */
+    function __construct(/**
+     * The filename of the zip archive.
+     */
+    public $_zipname)
     {
       if (!extension_loaded('zlib')) {
           throw new Exception("The extension 'zlib' couldn't be found.\n".
               "Please make sure your version of PHP was built ".
               "with 'zlib' support.");
       }
-
-      // ----- Set the attributes
-      $this->_zipname = $p_zipname;
       $this->_zip_fd = 0;
     }
     // }}}
@@ -161,24 +154,21 @@ class Archive_Zip
     * @return mixed An array of file description on success,
 	*               an error code on error
     */
-    function create($p_filelist, $p_params=0)
+    function create(mixed $p_filelist, mixed $p_params=0)
     {
         $this->_errorReset();
 
         // ----- Set default values
         if ($p_params === 0) {
-    	    $p_params = array();
+    	    $p_params = [];
         }
         if ($this->_check_parameters($p_params,
-	                                 array('no_compression' => false,
-	                                       'add_path' => "",
-	                                       'remove_path' => "",
-	                                       'remove_all_path' => false)) != 1) {
+	                                 ['no_compression' => false, 'add_path' => "", 'remove_path' => "", 'remove_all_path' => false]) != 1) {
 		    return 0;
 	    }
 
         // ----- Look if the $p_filelist is really an array
-        $p_result_list = array();
+        $p_result_list = [];
         if (is_array($p_filelist)) {
             $v_result = $this->_create($p_filelist, $p_result_list, $p_params);
         }
@@ -232,26 +222,21 @@ class Archive_Zip
     * @return mixed An array of file description on success,
 	*               0 on an unrecoverable failure, an error code is logged.
     */
-    function add($p_filelist, $p_params=0)
+    function add(mixed $p_filelist, mixed $p_params=0)
     {
         $this->_errorReset();
 
         // ----- Set default values
         if ($p_params === 0) {
-        	$p_params = array();
+        	$p_params = [];
         }
         if ($this->_check_parameters($p_params,
-	                                 array ('no_compression' => false,
-	                                        'add_path' => '',
-	                                        'remove_path' => '',
-	                                        'remove_all_path' => false,
-						    	     		'callback_pre_add' => '',
-							    		    'callback_post_add' => '')) != 1) {
+	                                 ['no_compression' => false, 'add_path' => '', 'remove_path' => '', 'remove_all_path' => false, 'callback_pre_add' => '', 'callback_post_add' => '']) != 1) {
 		    return 0;
 	    }
 
         // ----- Look if the $p_filelist is really an array
-        $p_result_list = array();
+        $p_result_list = [];
         if (is_array($p_filelist)) {
             // ----- Call the create fct
             $v_result = $this->_add($p_filelist, $p_result_list, $p_params);
@@ -335,7 +320,7 @@ class Archive_Zip
             return(0);
         }
 
-        $v_list = array();
+        $v_list = [];
         if ($this->_list($v_list) != 1) {
             unset($v_list);
             return(0);
@@ -383,7 +368,7 @@ class Archive_Zip
     * @return mixed An array of file description on success,
 	*               0 on an unrecoverable failure, an error code is logged.
     */
-    function extract($p_params=0)
+    function extract(mixed $p_params=0)
     {
 
         $this->_errorReset();
@@ -395,25 +380,15 @@ class Archive_Zip
 
         // ----- Set default values
         if ($p_params === 0) {
-        	$p_params = array();
+        	$p_params = [];
         }
         if ($this->_check_parameters($p_params,
-	                                 array ('extract_as_string' => false,
-	                                        'add_path' => '',
-	                                        'remove_path' => '',
-	                                        'remove_all_path' => false,
-					    		     		'callback_pre_extract' => '',
-						    			    'callback_post_extract' => '',
-							    		    'set_chmod' => 0,
-								    	    'by_name' => '',
-									        'by_index' => '',
-									        'by_ereg' => '',
-									        'by_preg' => '') ) != 1) {
+	                                 ['extract_as_string' => false, 'add_path' => '', 'remove_path' => '', 'remove_all_path' => false, 'callback_pre_extract' => '', 'callback_post_extract' => '', 'set_chmod' => 0, 'by_name' => '', 'by_index' => '', 'by_ereg' => '', 'by_preg' => ''] ) != 1) {
 	    	return 0;
 	    }
 
         // ----- Call the extracting fct
-        $v_list = array();
+        $v_list = [];
         if ($this->_extractByRule($v_list, $p_params) != 1) {
             unset($v_list);
             return(0);
@@ -446,7 +421,7 @@ class Archive_Zip
     * @return mixed An array of file description on success,
 	*               0 on an unrecoverable failure, an error code is logged.
     */
-    function delete($p_params)
+    function delete(mixed $p_params)
     {
         $this->_errorReset();
 
@@ -457,10 +432,7 @@ class Archive_Zip
 
         // ----- Set default values
         if ($this->_check_parameters($p_params,
-	                                 array ('by_name' => '',
-									        'by_index' => '',
-									        'by_ereg' => '',
-									        'by_preg' => '') ) != 1) {
+	                                 ['by_name' => '', 'by_index' => '', 'by_ereg' => '', 'by_preg' => ''] ) != 1) {
 	    	return 0;
     	}
 
@@ -476,7 +448,7 @@ class Archive_Zip
         }
 
         // ----- Call the delete fct
-        $v_list = array();
+        $v_list = [];
         if ($this->_deleteByRule($v_list, $p_params) != 1) {
             unset($v_list);
             return(0);
@@ -508,7 +480,7 @@ class Archive_Zip
         }
 
         // ----- Default properties
-        $v_prop = array();
+        $v_prop = [];
         $v_prop['comment'] = '';
         $v_prop['nb'] = 0;
         $v_prop['status'] = 'not_exist';
@@ -524,7 +496,7 @@ class Archive_Zip
             }
 
             // ----- Read the central directory informations
-            $v_central_dir = array();
+            $v_central_dir = [];
             if (($v_result = $this->_readEndCentralDir($v_central_dir)) != 1) {
                 return 0;
             }
@@ -553,13 +525,13 @@ class Archive_Zip
 	*                            the filename of a valid zip archive.
     * @return integer 1 on success, 0 on failure.
     */
-    function duplicate($p_archive)
+    function duplicate(mixed $p_archive)
     {
         $this->_errorReset();
 
         // ----- Look if the $p_archive is a Archive_Zip object
         if (   (is_object($p_archive))
-		    && (strtolower(get_class($p_archive)) == 'archive_zip')) {
+		    && (strtolower($p_archive::class) == 'archive_zip')) {
             $v_result = $this->_duplicate($p_archive->_zipname);
         }
 
@@ -600,7 +572,7 @@ class Archive_Zip
 	*                                 the filename of a valid zip archive.
     * @return integer 1 on success, 0 on failure.
     */
-    function merge($p_archive_to_add)
+    function merge(mixed $p_archive_to_add)
     {
         $v_result = 1;
         $this->_errorReset();
@@ -612,7 +584,7 @@ class Archive_Zip
 
         // ----- Look if the $p_archive_to_add is a Archive_Zip object
         if (   (is_object($p_archive_to_add))
-		    && (strtolower(get_class($p_archive_to_add)) == 'archive_zip')) {
+		    && (strtolower($p_archive_to_add::class) == 'archive_zip')) {
             $v_result = $this->_merge($p_archive_to_add);
         }
 
@@ -663,7 +635,7 @@ class Archive_Zip
 
       	// ----- Extract error constants from all const.
         foreach ($v_const_list as $v_key => $v_value) {
-            if (substr($v_key, 0, strlen('ARCHIVE_ZIP_ERR_')) =='ARCHIVE_ZIP_ERR_') {
+            if (str_starts_with($v_key, 'ARCHIVE_ZIP_ERR_')) {
                 $v_error_list[$v_key] = $v_value;
             }
         }
@@ -789,7 +761,7 @@ class Archive_Zip
   function _create($p_list, &$p_result_list, &$p_params)
   {
     $v_result=1;
-    $v_list_detail = array();
+    $v_list_detail = [];
 
 	$p_add_dir = $p_params['add_path'];
 	$p_remove_dir = $p_params['remove_path'];
@@ -828,7 +800,7 @@ class Archive_Zip
   function _add($p_list, &$p_result_list, &$p_params)
   {
     $v_result=1;
-    $v_list_detail = array();
+    $v_list_detail = [];
 
 	$p_add_dir = $p_params['add_path'];
 	$p_remove_dir = $p_params['remove_path'];
@@ -846,7 +818,7 @@ class Archive_Zip
     }
 
     // ----- Read the central directory informations
-    $v_central_dir = array();
+    $v_central_dir = [];
     if (($v_result = $this->_readEndCentralDir($v_central_dir)) != 1)
     {
       $this->_closeFd();
@@ -891,7 +863,7 @@ class Archive_Zip
     $v_zip_temp_fd = $v_swap;
 
     // ----- Add the files
-    $v_header_list = array();
+    $v_header_list = [];
     if (($v_result = $this->_addFileList($p_list, $v_header_list,
 	                                     $p_add_dir, $p_remove_dir,
 										 $p_remove_all_dir, $p_params)) != 1)
@@ -1067,7 +1039,7 @@ class Archive_Zip
     $v_result=1;
 
     // ----- Add the files
-    $v_header_list = array();
+    $v_header_list = [];
     if (($v_result = $this->_addFileList($p_list, $v_header_list,
 	                                     $p_add_dir, $p_remove_dir,
 										 $p_remove_all_dir, $p_params)) != 1) {
@@ -1138,7 +1110,7 @@ class Archive_Zip
 						&$p_params)
   {
     $v_result=1;
-    $v_header = array();
+    $v_header = [];
 
     // ----- Recuperate the current number of elt in list
     $v_nb = sizeof($p_result_list);
@@ -1262,20 +1234,20 @@ class Archive_Zip
 
     // ----- Look for all path to remove
     if ($p_remove_all_dir) {
-      $v_stored_filename = basename($p_filename);
+      $v_stored_filename = basename((string) $p_filename);
     }
     // ----- Look for partial path remove
     else if ($p_remove_dir != "")
     {
-      if (substr($p_remove_dir, -1) != '/')
+      if (!str_ends_with((string) $p_remove_dir, '/'))
         $p_remove_dir .= "/";
 
-      if ((substr($p_filename, 0, 2) == "./") || (substr($p_remove_dir, 0, 2) == "./"))
+      if ((str_starts_with((string) $p_filename, "./")) || (str_starts_with((string) $p_remove_dir, "./")))
       {
-        if ((substr($p_filename, 0, 2) == "./") && (substr($p_remove_dir, 0, 2) != "./"))
+        if ((str_starts_with((string) $p_filename, "./")) && (!str_starts_with((string) $p_remove_dir, "./")))
           $p_remove_dir = "./".$p_remove_dir;
-        if ((substr($p_filename, 0, 2) != "./") && (substr($p_remove_dir, 0, 2) == "./"))
-          $p_remove_dir = substr($p_remove_dir, 2);
+        if ((!str_starts_with((string) $p_filename, "./")) && (str_starts_with((string) $p_remove_dir, "./")))
+          $p_remove_dir = substr((string) $p_remove_dir, 2);
       }
 
       $v_compare = $this->_tool_PathInclusion($p_remove_dir, $p_filename);
@@ -1287,14 +1259,14 @@ class Archive_Zip
           $v_stored_filename = "";
         }
         else {
-          $v_stored_filename = substr($p_filename, strlen($p_remove_dir));
+          $v_stored_filename = substr((string) $p_filename, strlen((string) $p_remove_dir));
         }
       }
     }
     // ----- Look for path to add
     if ($p_add_dir != "")
     {
-      if (substr($p_add_dir, -1) == "/")
+      if (str_ends_with((string) $p_add_dir, "/"))
         $v_stored_filename = $p_add_dir.$v_stored_filename;
       else
         $v_stored_filename = $p_add_dir."/".$v_stored_filename;
@@ -1326,7 +1298,7 @@ class Archive_Zip
     $p_header['crc'] = 0;
     $p_header['compressed_size'] = 0;
     $p_header['size'] = filesize($p_filename);
-    $p_header['filename_len'] = strlen($p_filename);
+    $p_header['filename_len'] = strlen((string) $p_filename);
     $p_header['extra_len'] = 0;
     $p_header['comment_len'] = 0;
     $p_header['disk'] = 0;
@@ -1345,7 +1317,7 @@ class Archive_Zip
 	    && ($p_params[ARCHIVE_ZIP_PARAM_PRE_ADD] != '')) {
 
       // ----- Generate a local information
-      $v_local_header = array();
+      $v_local_header = [];
       $this->_convertHeader2FileInfo($p_header, $v_local_header);
 
       // ----- Call the callback
@@ -1371,7 +1343,7 @@ class Archive_Zip
     }
 
     // ----- Check the path length
-    if (strlen($p_header['stored_filename']) > 0xFF) {
+    if (strlen((string) $p_header['stored_filename']) > 0xFF) {
       $p_header['status'] = 'filename_too_long';
     }
 
@@ -1445,7 +1417,7 @@ class Archive_Zip
 	    && ($p_params[ARCHIVE_ZIP_PARAM_POST_ADD] != '')) {
 
       // ----- Generate a local information
-      $v_local_header = array();
+      $v_local_header = [];
       $this->_convertHeader2FileInfo($p_header, $v_local_header);
 
       // ----- Call the callback
@@ -1498,19 +1470,19 @@ class Archive_Zip
     $v_binary_data = pack("VvvvvvVVVvv", 0x04034b50, $p_header['version'], $p_header['flag'],
                           $p_header['compression'], $v_mtime, $v_mdate,
                           $p_header['crc'], $p_header['compressed_size'], $p_header['size'],
-                          strlen($p_header['stored_filename']), $p_header['extra_len']);
+                          strlen((string) $p_header['stored_filename']), $p_header['extra_len']);
 
     // ----- Write the first 148 bytes of the header in the archive
     fputs($this->_zip_fd, $v_binary_data, 30);
 
     // ----- Write the variable fields
-    if (strlen($p_header['stored_filename']) != 0)
+    if (strlen((string) $p_header['stored_filename']) != 0)
     {
-      fputs($this->_zip_fd, $p_header['stored_filename'], strlen($p_header['stored_filename']));
+      fputs($this->_zip_fd, (string) $p_header['stored_filename'], strlen((string) $p_header['stored_filename']));
     }
     if ($p_header['extra_len'] != 0)
     {
-      fputs($this->_zip_fd, $p_header['extra'], $p_header['extra_len']);
+      fputs($this->_zip_fd, (string) $p_header['extra'], $p_header['extra_len']);
     }
 
     // ----- Return
@@ -1547,24 +1519,24 @@ class Archive_Zip
     $v_binary_data = pack("VvvvvvvVVVvvvvvVV", 0x02014b50, $p_header['version'], $p_header['version_extracted'],
                           $p_header['flag'], $p_header['compression'], $v_mtime, $v_mdate, $p_header['crc'],
                           $p_header['compressed_size'], $p_header['size'],
-                          strlen($p_header['stored_filename']), $p_header['extra_len'], $p_header['comment_len'],
+                          strlen((string) $p_header['stored_filename']), $p_header['extra_len'], $p_header['comment_len'],
                           $p_header['disk'], $p_header['internal'], $p_header['external'], $p_header['offset']);
 
     // ----- Write the 42 bytes of the header in the zip file
     fputs($this->_zip_fd, $v_binary_data, 46);
 
     // ----- Write the variable fields
-    if (strlen($p_header['stored_filename']) != 0)
+    if (strlen((string) $p_header['stored_filename']) != 0)
     {
-      fputs($this->_zip_fd, $p_header['stored_filename'], strlen($p_header['stored_filename']));
+      fputs($this->_zip_fd, (string) $p_header['stored_filename'], strlen((string) $p_header['stored_filename']));
     }
     if ($p_header['extra_len'] != 0)
     {
-      fputs($this->_zip_fd, $p_header['extra'], $p_header['extra_len']);
+      fputs($this->_zip_fd, (string) $p_header['extra'], $p_header['extra_len']);
     }
     if ($p_header['comment_len'] != 0)
     {
-      fputs($this->_zip_fd, $p_header['comment'], $p_header['comment_len']);
+      fputs($this->_zip_fd, (string) $p_header['comment'], $p_header['comment_len']);
     }
 
     // ----- Return
@@ -1589,15 +1561,15 @@ class Archive_Zip
     $v_result=1;
 
     // ----- Packed data
-    $v_binary_data = pack("VvvvvVVv", 0x06054b50, 0, 0, $p_nb_entries, $p_nb_entries, $p_size, $p_offset, strlen($p_comment));
+    $v_binary_data = pack("VvvvvVVv", 0x06054b50, 0, 0, $p_nb_entries, $p_nb_entries, $p_size, $p_offset, strlen((string) $p_comment));
 
     // ----- Write the 22 bytes of the header in the zip file
     fputs($this->_zip_fd, $v_binary_data, 22);
 
     // ----- Write the variable fields
-    if (strlen($p_comment) != 0)
+    if (strlen((string) $p_comment) != 0)
     {
-      fputs($this->_zip_fd, $p_comment, strlen($p_comment));
+      fputs($this->_zip_fd, (string) $p_comment, strlen((string) $p_comment));
     }
 
     // ----- Return
@@ -1632,7 +1604,7 @@ class Archive_Zip
     }
 
     // ----- Read the central directory informations
-    $v_central_dir = array();
+    $v_central_dir = [];
     if (($v_result = $this->_readEndCentralDir($v_central_dir)) != 1)
     {
       return $v_result;
@@ -1748,23 +1720,23 @@ class Archive_Zip
 
     // ----- Check the path
     if (($p_path == "")
-	    || ((substr($p_path, 0, 1) != "/")
-	    && (substr($p_path, 0, 3) != "../") && (substr($p_path,1,2)!=":/")))
+	    || ((!str_starts_with((string) $p_path, "/"))
+	    && (!str_starts_with((string) $p_path, "../")) && (substr((string) $p_path,1,2)!=":/")))
       $p_path = "./".$p_path;
 
     // ----- Reduce the path last (and duplicated) '/'
     if (($p_path != "./") && ($p_path != "/")) {
       // ----- Look for the path end '/'
-      while (substr($p_path, -1) == "/") {
-        $p_path = substr($p_path, 0, strlen($p_path)-1);
+      while (str_ends_with((string) $p_path, "/")) {
+        $p_path = substr((string) $p_path, 0, strlen((string) $p_path)-1);
       }
     }
 
     // ----- Look for path to remove format (should end by /)
-    if (($p_remove_path != "") && (substr($p_remove_path, -1) != '/')) {
+    if (($p_remove_path != "") && (!str_ends_with((string) $p_remove_path, '/'))) {
       $p_remove_path .= '/';
     }
-    $p_remove_path_size = strlen($p_remove_path);
+    $p_remove_path_size = strlen((string) $p_remove_path);
 
     // ----- Open the zip file
     if (($v_result = $this->_openFd('rb')) != 1)
@@ -1773,7 +1745,7 @@ class Archive_Zip
     }
 
     // ----- Read the central directory informations
-    $v_central_dir = array();
+    $v_central_dir = [];
     if (($v_result = $this->_readEndCentralDir($v_central_dir)) != 1)
     {
       // ----- Close the zip file
@@ -1800,7 +1772,7 @@ class Archive_Zip
       }
 
       // ----- Read the file header
-      $v_header = array();
+      $v_header = [];
       if (($v_result = $this->_readCentralFileHeader($v_header)) != 1) {
         $this->_closeFd();
 
@@ -1827,11 +1799,11 @@ class Archive_Zip
 			   $j++) {
 
               // ----- Look for a directory
-              if (substr($p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j], -1) == "/") {
+              if (str_ends_with((string) $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j], "/")) {
 
                   // ----- Look if the directory is in the filename path
-                  if (   (strlen($v_header['stored_filename']) > strlen($p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j]))
-                      && (substr($v_header['stored_filename'], 0, strlen($p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j])) == $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j])) {
+                  if (   (strlen((string) $v_header['stored_filename']) > strlen((string) $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j]))
+                      && (str_starts_with((string) $v_header['stored_filename'], (string) $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j]))) {
                       $v_extract = true;
                   }
               }
@@ -1846,7 +1818,7 @@ class Archive_Zip
       else if (   (isset($p_params[ARCHIVE_ZIP_PARAM_BY_EREG]))
                && ($p_params[ARCHIVE_ZIP_PARAM_BY_EREG] != "")) {
 
-          if (ereg($p_params[ARCHIVE_ZIP_PARAM_BY_EREG], $v_header['stored_filename'])) {
+          if (preg_match($p_params[ARCHIVE_ZIP_PARAM_BY_EREG], (string) $v_header['stored_filename'])) {
               $v_extract = true;
           }
       }
@@ -1855,7 +1827,7 @@ class Archive_Zip
       else if (   (isset($p_params[ARCHIVE_ZIP_PARAM_BY_PREG]))
                && ($p_params[ARCHIVE_ZIP_PARAM_BY_PREG] != "")) {
 
-          if (preg_match($p_params[ARCHIVE_ZIP_PARAM_BY_PREG], $v_header['stored_filename'])) {
+          if (preg_match($p_params[ARCHIVE_ZIP_PARAM_BY_PREG], (string) $v_header['stored_filename'])) {
               $v_extract = true;
           }
       }
@@ -1991,7 +1963,7 @@ class Archive_Zip
     // ----- Look for all path to remove
     if ($p_remove_all_path == true) {
         // ----- Get the basename of the path
-        $p_entry['filename'] = basename($p_entry['filename']);
+        $p_entry['filename'] = basename((string) $p_entry['filename']);
     }
 
     // ----- Look for path to remove
@@ -2008,12 +1980,12 @@ class Archive_Zip
         return $v_result;
       }
 
-      $p_remove_path_size = strlen($p_remove_path);
-      if (substr($p_entry['filename'], 0, $p_remove_path_size) == $p_remove_path)
+      $p_remove_path_size = strlen((string) $p_remove_path);
+      if (substr((string) $p_entry['filename'], 0, $p_remove_path_size) == $p_remove_path)
       {
 
         // ----- Remove the path
-        $p_entry['filename'] = substr($p_entry['filename'], $p_remove_path_size);
+        $p_entry['filename'] = substr((string) $p_entry['filename'], $p_remove_path_size);
 
       }
     }
@@ -2029,7 +2001,7 @@ class Archive_Zip
 	    && ($p_params[ARCHIVE_ZIP_PARAM_PRE_EXTRACT] != '')) {
 
       // ----- Generate a local information
-      $v_local_header = array();
+      $v_local_header = [];
       $this->_convertHeader2FileInfo($p_entry, $v_local_header);
 
       // ----- Call the callback
@@ -2091,12 +2063,12 @@ class Archive_Zip
 
     // ----- Check the directory availability and create it if necessary
     else {
-      if ((($p_entry['external']&0x00000010)==0x00000010) || (substr($p_entry['filename'], -1) == '/'))
+      if ((($p_entry['external']&0x00000010)==0x00000010) || (str_ends_with((string) $p_entry['filename'], '/')))
         $v_dir_to_check = $p_entry['filename'];
-      else if (!strstr($p_entry['filename'], "/"))
+      else if (!strstr((string) $p_entry['filename'], "/"))
         $v_dir_to_check = "";
       else
-        $v_dir_to_check = dirname($p_entry['filename']);
+        $v_dir_to_check = dirname((string) $p_entry['filename']);
 
       if (($v_result = $this->_dirCheck($v_dir_to_check, (($p_entry['external']&0x00000010)==0x00000010))) != 1) {
 
@@ -2198,7 +2170,7 @@ class Archive_Zip
 	    && ($p_params[ARCHIVE_ZIP_PARAM_POST_EXTRACT] != '')) {
 
       // ----- Generate a local information
-      $v_local_header = array();
+      $v_local_header = [];
       $this->_convertHeader2FileInfo($p_entry, $v_local_header);
 
       // ----- Call the callback
@@ -2229,7 +2201,7 @@ class Archive_Zip
     $v_result=1;
 
     // ----- Read the file header
-    $v_header = array();
+    $v_header = [];
     if (($v_result = $this->_readFileHeader($v_header)) != 1)
     {
       // ----- Return
@@ -2483,7 +2455,7 @@ class Archive_Zip
     $p_header['status'] = 'ok';
 
     // ----- Look if it is a directory
-    if (substr($p_header['filename'], -1) == '/')
+    if (str_ends_with($p_header['filename'], '/'))
     {
       $p_header['external'] = 0x41FF0010;
     }
@@ -2639,7 +2611,7 @@ class Archive_Zip
   function _deleteByRule(&$p_result_list, &$p_params)
   {
     $v_result=1;
-    $v_list_detail = array();
+    $v_list_detail = [];
 
     // ----- Open the zip file
     if (($v_result=$this->_openFd('rb')) != 1)
@@ -2649,7 +2621,7 @@ class Archive_Zip
     }
 
     // ----- Read the central directory informations
-    $v_central_dir = array();
+    $v_central_dir = [];
     if (($v_result = $this->_readEndCentralDir($v_central_dir)) != 1)
     {
       $this->_closeFd();
@@ -2673,12 +2645,12 @@ class Archive_Zip
     }
 
     // ----- Read each entry
-    $v_header_list = array();
+    $v_header_list = [];
     $j_start = 0;
     for ($i=0, $v_nb_extracted=0; $i<$v_central_dir['entries']; $i++) {
 
       // ----- Read the file header
-      $v_header_list[$v_nb_extracted] = array();
+      $v_header_list[$v_nb_extracted] = [];
       $v_result
 	    = $this->_readCentralFileHeader($v_header_list[$v_nb_extracted]);
       if ($v_result != 1) {
@@ -2705,11 +2677,11 @@ class Archive_Zip
 			   $j++) {
 
               // ----- Look for a directory
-              if (substr($p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j], -1) == "/") {
+              if (str_ends_with((string) $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j], "/")) {
 
                   // ----- Look if the directory is in the filename path
-                  if (   (strlen($v_header_list[$v_nb_extracted]['stored_filename']) > strlen($p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j]))
-                      && (substr($v_header_list[$v_nb_extracted]['stored_filename'], 0, strlen($p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j])) == $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j])) {
+                  if (   (strlen($v_header_list[$v_nb_extracted]['stored_filename']) > strlen((string) $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j]))
+                      && (str_starts_with($v_header_list[$v_nb_extracted]['stored_filename'], (string) $p_params[ARCHIVE_ZIP_PARAM_BY_NAME][$j]))) {
                       $v_found = true;
                   }
                   elseif (   (($v_header_list[$v_nb_extracted]['external']&0x00000010)==0x00000010) /* Indicates a folder */
@@ -2729,7 +2701,7 @@ class Archive_Zip
       else if (   (isset($p_params[ARCHIVE_ZIP_PARAM_BY_EREG]))
                && ($p_params[ARCHIVE_ZIP_PARAM_BY_EREG] != "")) {
 
-          if (ereg($p_params[ARCHIVE_ZIP_PARAM_BY_EREG],
+          if (preg_match($p_params[ARCHIVE_ZIP_PARAM_BY_EREG],
 		           $v_header_list[$v_nb_extracted]['stored_filename'])) {
               $v_found = true;
           }
@@ -2935,8 +2907,8 @@ class Archive_Zip
     $v_result = 1;
 
     // ----- Remove the final '/'
-    if (($p_is_dir) && (substr($p_dir, -1)=='/')) {
-      $p_dir = substr($p_dir, 0, strlen($p_dir)-1);
+    if (($p_is_dir) && (str_ends_with((string) $p_dir, '/'))) {
+      $p_dir = substr((string) $p_dir, 0, strlen((string) $p_dir)-1);
     }
 
     // ----- Check the directory availability
@@ -2945,7 +2917,7 @@ class Archive_Zip
     }
 
     // ----- Extract parent directory
-    $p_parent_dir = dirname($p_dir);
+    $p_parent_dir = dirname((string) $p_dir);
 
     // ----- Just a check
     if ($p_parent_dir != $p_dir) {
@@ -3006,7 +2978,7 @@ class Archive_Zip
     }
 
     // ----- Read the central directory informations
-    $v_central_dir = array();
+    $v_central_dir = [];
     if (($v_result = $this->_readEndCentralDir($v_central_dir)) != 1) {
       $this->_closeFd();
       return $v_result;
@@ -3022,7 +2994,7 @@ class Archive_Zip
     }
 
     // ----- Read the central directory informations
-    $v_central_dir_to_add = array();
+    $v_central_dir_to_add = [];
     $v_result = $p_archive_to_add->_readEndCentralDir($v_central_dir_to_add);
     if ($v_result != 1) {
       $this->_closeFd();
@@ -3248,8 +3220,7 @@ class Archive_Zip
     }
 
     // ----- Check specific parameters
-    $v_callback_list = array ('callback_pre_add','callback_post_add',
-	                          'callback_pre_extract','callback_post_extract');
+    $v_callback_list = ['callback_pre_add', 'callback_post_add', 'callback_pre_extract', 'callback_post_extract'];
     for ($i=0; $i<sizeof($v_callback_list); $i++) {
     	$v_key=$v_callback_list[$i];
         if (   (isset($p_params[$v_key])) && ($p_params[$v_key] != '')) {
@@ -3325,7 +3296,7 @@ class Archive_Zip
     if ($p_dir != "")
     {
       // ----- Explode path by directory names
-      $v_list = explode("/", $p_dir);
+      $v_list = explode("/", (string) $p_dir);
 
       // ----- Study directories from last to first
       for ($i=sizeof($v_list)-1; $i>=0; $i--)
@@ -3384,9 +3355,9 @@ class Archive_Zip
     $v_result = 1;
 
     // ----- Explode dir and path by directory separator
-    $v_list_dir = explode("/", $p_dir);
+    $v_list_dir = explode("/", (string) $p_dir);
     $v_list_dir_size = sizeof($v_list_dir);
-    $v_list_path = explode("/", $p_path);
+    $v_list_path = explode("/", (string) $p_path);
     $v_list_path_size = sizeof($v_list_path);
 
     // ----- Study directories paths
@@ -3573,11 +3544,11 @@ class Archive_Zip
     if (stristr(php_uname(), 'windows')) {
       // ----- Look for potential disk letter
       if (   ($p_remove_disk_letter)
-	      && (($v_position = strpos($p_path, ':')) != false)) {
-          $p_path = substr($p_path, $v_position+1);
+	      && (($v_position = strpos((string) $p_path, ':')) != false)) {
+          $p_path = substr((string) $p_path, $v_position+1);
       }
       // ----- Change potential windows directory separator
-      if ((strpos($p_path, '\\') > 0) || (substr($p_path, 0,1) == '\\')) {
+      if ((strpos((string) $p_path, '\\') > 0) || (str_starts_with((string) $p_path, '\\'))) {
           $p_path = strtr($p_path, '\\', '/');
       }
     }

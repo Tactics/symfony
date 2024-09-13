@@ -42,7 +42,7 @@ class Parameter extends DataType {
     protected $value;
     
     /** Nested parameters */
-    protected $parameters = array();
+    protected $parameters = [];
 
     function setName($name) {
         $this->name = (string) $name;

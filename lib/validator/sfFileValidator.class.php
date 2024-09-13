@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -22,90 +22,75 @@
  *                                                file mime type does not match a value
  *                                                listed in the mime types array.
  *
- * @package    symfony
- * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfFileValidator.class.php 3233 2007-01-11 21:01:08Z fabien $
  */
 class sfFileValidator extends sfValidator
 {
-  /**
-   * Executes this validator.
-   *
-   * @param mixed A file or parameter value/array
-   * @param error An error message reference
-   *
-   * @return bool true, if this validator executes successfully, otherwise false
-   */
-  public function execute(&$value, &$error)
-  {
-    $request = $this->getContext()->getRequest();
-
-    // file too large?
-    $max_size = $this->getParameter('max_size');
-    if ($max_size !== null && $max_size < $value['size'])
+    /**
+     * Executes this validator.
+     *
+     * @param mixed A file or parameter value/array
+     * @param error An error message reference
+     *
+     * @return bool true, if this validator executes successfully, otherwise false
+     */
+    public function execute(&$value, &$error)
     {
-      $error = $this->getParameter('max_size_error');
+        $request = $this->getContext()->getRequest();
 
-      return false;
+        // file too large?
+        $max_size = $this->getParameter('max_size');
+        if ($max_size !== null && $max_size < $value['size']) {
+            $error = $this->getParameter('max_size_error');
+
+            return false;
+        }
+
+        // supported mime types formats
+        $mime_types = $this->getParameter('mime_types');
+        if ($mime_types !== null && !in_array($value['type'], $mime_types)) {
+            $error = $this->getParameter('mime_types_error');
+
+            return false;
+        }
+
+        return true;
     }
 
-    // supported mime types formats
-    $mime_types = $this->getParameter('mime_types');
-    if ($mime_types !== null && !in_array($value['type'], $mime_types))
+    /**
+     * Initializes this validator.
+     *
+     * @param sfContext The current application context
+     * @param array   An associative array of initialization parameters
+     *
+     * @return bool true, if initialization completes successfully, otherwise false
+     */
+    public function initialize($context, $parameters = null)
     {
-      $error = $this->getParameter('mime_types_error');
+        // initialize parent
+        parent::initialize($context);
 
-      return false;
+        // set defaults
+        $this->getParameterHolder()->set('max_size', null);
+        $this->getParameterHolder()->set('max_size_error', 'File is too large');
+        $this->getParameterHolder()->set('mime_types', null);
+        $this->getParameterHolder()->set('mime_types_error', 'Invalid mime type');
+
+        $this->getParameterHolder()->add($parameters);
+
+        // pre-defined categories
+        $categories = ['@web_images' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif']];
+
+        if (!is_array($this->getParameter('mime_types'))) {
+            if (isset($categories[$this->getParameter('mime_types')])) {
+                $this->setParameter('mime_types', $categories[$this->getParameter('mime_types')]);
+            }
+        } elseif ($this->getParameter('mime_types', null)) {
+            $this->setParameter('mime_types', $this->getParameter('mime_types'));
+        }
+
+        return true;
     }
-
-    return true;
-  }
-
-  /**
-   * Initializes this validator.
-   *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
-   *
-   * @return bool true, if initialization completes successfully, otherwise false
-   */
-  public function initialize($context, $parameters = null)
-  {
-    // initialize parent
-    parent::initialize($context);
-
-    // set defaults
-    $this->getParameterHolder()->set('max_size',         null);
-    $this->getParameterHolder()->set('max_size_error',   'File is too large');
-    $this->getParameterHolder()->set('mime_types',        null);
-    $this->getParameterHolder()->set('mime_types_error', 'Invalid mime type');
-
-    $this->getParameterHolder()->add($parameters);
-
-    // pre-defined categories
-    $categories = array(
-      '@web_images' => array(
-        'image/jpeg',
-        'image/pjpeg',
-        'image/png',
-        'image/x-png',
-        'image/gif',
-      ),
-    );
-
-    if (!is_array($this->getParameter('mime_types')))
-    {
-      if (isset($categories[$this->getParameter('mime_types')]))
-      {
-        $this->setParameter('mime_types', $categories[$this->getParameter('mime_types')]);
-      }
-    }
-    elseif ($this->getParameter('mime_types', null))
-    {
-      $this->setParameter('mime_types', $this->getParameter('mime_types'));
-    }
-
-    return true;
-  }
 }

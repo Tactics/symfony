@@ -68,7 +68,7 @@ class pakeGlobToRegex
     $escaping = false;
     $in_curlies = 0;
     $regex = '';
-    for ($i = 0; $i < strlen($glob); $i++)
+    for ($i = 0; $i < strlen((string) $glob); $i++)
     {
       $car = $glob[$i];
       if ($first_byte)

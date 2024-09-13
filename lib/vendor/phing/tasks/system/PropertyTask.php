@@ -336,8 +336,8 @@ class PropertyTask extends Task {
 
             while(!$resolved) {
 
-                $fragments = array();
-                $propertyRefs = array();
+                $fragments = [];
+                $propertyRefs = [];
 
                 // [HL] this was ::parsePropertyString($this->value ...) ... this seems wrong
                 self::parsePropertyString($value, $fragments, $propertyRefs);

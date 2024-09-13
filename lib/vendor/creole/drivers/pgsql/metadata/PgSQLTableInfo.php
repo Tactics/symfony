@@ -40,26 +40,20 @@ require_once 'creole/metadata/TableInfo.php';
 class PgSQLTableInfo extends TableInfo {
 	
     /**
-     * Database Version.
-     * @var String
-     */
-    private $version;
-	
-    /**
-     * Table OID
-     * @var Integer
-     */
-    private $oid;
-
-    /**
      * @param string $table The table name.
      * @param string $database The database name.
      * @param resource $dblink The db connection resource.
+     * @param string $version
+     * @param int $intOID
      */
-    function __construct(DatabaseInfo $database, $name, $version, $intOID) {
+    function __construct(DatabaseInfo $database, $name, /**
+     * Database Version.
+     */
+    private $version, /**
+     * Table OID
+     */
+    private $oid) {
         parent::__construct ($database, $name);
-        $this->version = $version;
-        $this->oid = $intOID;
     } // function __construct(DatabaseInfo $database, $name) {
 
     /** Load the columns for this table */
@@ -109,16 +103,16 @@ class PgSQLTableInfo extends TableInfo {
         	} // if (((int) $row['isarray']) === 1)
             $name = $row['attname'];
             // If they type is a domain, Process it
-            if (strtolower ($row['typtype']) == 'd')
+            if (strtolower ((string) $row['typtype']) == 'd')
             {
             	$arrDomain = $this->processDomain ($row['typname']);
             	$type = $arrDomain['type'];
             	$size = $arrDomain['length'];
             	$precision = $size;
             	$scale = $arrDomain['scale'];
-            	$boolHasDefault = (strlen (trim ($row['atthasdef'])) > 0) ? $row['atthasdef'] : $arrDomain['hasdefault'];
-            	$default = (strlen (trim ($row['adsrc'])) > 0) ? $row['adsrc'] : $arrDomain['default'];
-            	$is_nullable = (strlen (trim ($row['attnotnull'])) > 0) ? $row['attnotnull'] : $arrDomain['notnull'];
+            	$boolHasDefault = (strlen (trim ((string) $row['atthasdef'])) > 0) ? $row['atthasdef'] : $arrDomain['hasdefault'];
+            	$default = (strlen (trim ((string) $row['adsrc'])) > 0) ? $row['adsrc'] : $arrDomain['default'];
+            	$is_nullable = (strlen (trim ((string) $row['attnotnull'])) > 0) ? $row['attnotnull'] : $arrDomain['notnull'];
             	$is_nullable = (($is_nullable == 't') ? false : true);
             } // if (strtolower ($row['typtype']) == 'd')
             else
@@ -136,9 +130,9 @@ class PgSQLTableInfo extends TableInfo {
             $autoincrement = null;
                        
             // if column has a default
-            if (($boolHasDefault == 't') && (strlen (trim ($default)) > 0))
+            if (($boolHasDefault == 't') && (strlen (trim ((string) $default)) > 0))
             {
-	            if (!preg_match('/^nextval\(/', $default))
+	            if (!preg_match('/^nextval\(/', (string) $default))
 	            {
 	            	$strDefault= preg_replace ('/::[\W\D]*/', '', $default);
 	            	$default = str_replace ("'", '', $strDefault);
@@ -163,7 +157,7 @@ class PgSQLTableInfo extends TableInfo {
     private function processLengthScale ($intTypmod, $strName)
     {
     	// Define the return array
-    	$arrRetVal = array ('length'=>null, 'scale'=>null);
+    	$arrRetVal = ['length'=>null, 'scale'=>null];
 
     	// Some datatypes don't have a Typmod
     	if ($intTypmod == -1)
@@ -199,7 +193,7 @@ class PgSQLTableInfo extends TableInfo {
 
     private function processDomain ($strDomain)
     {
-    	if (strlen (trim ($strDomain)) < 1)
+    	if (strlen (trim ((string) $strDomain)) < 1)
     	{
     		throw new SQLException ("Invalid domain name [" . $strDomain . "]");
     	} // if (strlen (trim ($strDomain)) < 1)
@@ -226,14 +220,14 @@ class PgSQLTableInfo extends TableInfo {
         {
         	throw new SQLException ("Domain [" . $strDomain . "] not found.");
         } // if (!$row)
-        $arrDomain = array ();
+        $arrDomain = [];
         $arrDomain['type'] = $row['basetype'];
 	    $arrLengthPrecision = $this->processLengthScale ($row['typtypmod'], $row['basetype']);
 	    $arrDomain['length'] = $arrLengthPrecision['length'];
 	    $arrDomain['scale'] = $arrLengthPrecision['scale'];
 	    $arrDomain['notnull'] = $row['typnotnull'];
 	    $arrDomain['default'] = $row['typdefault'];
-	    $arrDomain['hasdefault'] = (strlen (trim ($row['typdefault'])) > 0) ? 't' : 'f';
+	    $arrDomain['hasdefault'] = (strlen (trim ((string) $row['typdefault'])) > 0) ? 't' : 'f';
 
 	    pg_free_result ($result);
 	    return $arrDomain;
@@ -350,7 +344,7 @@ class PgSQLTableInfo extends TableInfo {
             if (!isset($this->indexes[$name])) {
                 $this->indexes[$name] = new IndexInfo($name, $unique);
             }
-            $arrColumns = explode (' ', $row['indkey']);
+            $arrColumns = explode (' ', (string) $row['indkey']);
             foreach ($arrColumns as $intColNum)
             {
 	            $result2 = pg_query ($this->conn->getResource(), sprintf ("SELECT a.attname
@@ -397,7 +391,7 @@ class PgSQLTableInfo extends TableInfo {
         // adding each column for that key.
 
         while($row = pg_fetch_assoc($result)) {
-            $arrColumns = explode (' ', $row['indkey']);
+            $arrColumns = explode (' ', (string) $row['indkey']);
             foreach ($arrColumns as $intColNum)
             {
 	            $result2 = pg_query ($this->conn->getResource(), sprintf ("SELECT a.attname

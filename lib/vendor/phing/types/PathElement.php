@@ -6,15 +6,14 @@
  */
 class PathElement {
 
-    private $parts = array();
-    private $outer;
+    private $parts = [];
 
-    public function __construct(Path $outer) {
-        $this->outer = $outer;
+    public function __construct(private readonly Path $outer)
+    {
     }
 
     public function setDir(PhingFile $loc) {
-        $this->parts = array(Path::translateFile($loc->getAbsolutePath()));
+        $this->parts = [Path::translateFile($loc->getAbsolutePath())];
     }
 
     public function setPath($path) {

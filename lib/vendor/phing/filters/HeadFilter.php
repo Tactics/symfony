@@ -69,39 +69,39 @@ class HeadFilter extends BaseParamFilterReader implements ChainableReader {
      * during reading     
      */
     function read($len = null) {
-    
+
         if ( !$this->getInitialized() ) {
             $this->_initialize();
             $this->setInitialized(true);
         }
-        
+
         // note, if buffer contains fewer lines than
         // $this->_lines this code will not work.
-        
+
         if($this->_linesRead < $this->_lines) {
-        
+
             $buffer = $this->in->read($len);
-            
+
             if($buffer === -1) {
                 return -1;
             }
-            
+
             // now grab first X lines from buffer
-            
-            $lines = explode("\n", $buffer);
-            
+
+            $lines = explode("\n", (string) $buffer);
+
             $linesCount = count($lines);
-            
+
             // must account for possibility that the num lines requested could 
             // involve more than one buffer read.            
             $len = ($linesCount > $this->_lines ? $this->_lines - $this->_linesRead : $linesCount);
             $filtered_buffer = implode("\n", array_slice($lines, 0, $len) );
             $this->_linesRead += $len;
-            
+
             return $filtered_buffer;
-        
+
         }
-        
+
         return -1; // EOF, since the file is "finished" as far as subsequent filters are concerned.
     }    
 

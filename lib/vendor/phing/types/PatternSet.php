@@ -32,10 +32,10 @@ include_once 'phing/types/DataType.php';
  */
 class PatternSet extends DataType {
 
-    private $includeList = array();
-    private $excludeList = array();
-    private $includesFileList = array();
-    private $excludesFileList = array();
+    private $includeList = [];
+    private $excludeList = [];
+    private $includesFileList = [];
+    private $excludesFileList = [];
 
     /**
      * Makes this instance in effect a reference to another PatternSet
@@ -119,7 +119,7 @@ class PatternSet extends DataType {
         if ($this->isReference()) {
             throw $this->tooManyAttributes();
         }
-        if ($includes !== null && strlen($includes) > 0) {
+        if ($includes !== null && strlen((string) $includes) > 0) {
             $tok = strtok($includes, ", ");
             while ($tok !== false) {
                 $o = $this->createInclude();
@@ -143,7 +143,7 @@ class PatternSet extends DataType {
         if ($this->isReference()) {
             throw $this->tooManyAttributes();
         }
-        if ($excludes !== null && strlen($excludes) > 0) {
+        if ($excludes !== null && strlen((string) $excludes) > 0) {
             $tok = strtok($excludes, ", ");
             while ($tok !== false) {
                 $o = $this->createExclude();
@@ -286,7 +286,7 @@ class PatternSet extends DataType {
      */
     function getRef(Project $p) {
         if (!$this->checked) {
-            $stk = array();
+            $stk = [];
             array_push($stk, $this);
             $this->dieOnCircularReference($stk, $p);
         }
@@ -306,7 +306,7 @@ class PatternSet extends DataType {
             return null;
         }
 
-        $tmpNames = array();
+        $tmpNames = [];
         foreach($list as $ne) {
             $pattern = (string) $ne->evalName($p);
             if ($pattern !== null && strlen($pattern) > 0) {
@@ -329,7 +329,7 @@ class PatternSet extends DataType {
                     $this->readPatterns($inclFile, $this->includeList, $p);
                 }
             }
-            $this->includesFileList = array();
+            $this->includesFileList = [];
         }
 
         if (!empty($this->excludesFileList)) {
@@ -344,7 +344,7 @@ class PatternSet extends DataType {
                     $this->readPatterns($exclFile, $this->excludeList, $p);
                 }
             }
-            $this->excludesFileList = array();
+            $this->excludesFileList = [];
         }
     }
 

@@ -31,7 +31,7 @@ class DeleteTask extends Task {
 
     protected $file;
     protected $dir;
-    protected $filesets = array();
+    protected $filesets = [];
     protected $includeEmpty = false;
 
     protected $quiet = false;
@@ -39,7 +39,7 @@ class DeleteTask extends Task {
     protected $verbosity = Project::PROJECT_MSG_VERBOSE;
 
 	/** Any filelists of files that should be deleted. */
-    private $filelists = array();
+    private $filelists = [];
 
     /**
      * Set the name of a single file to be removed.
@@ -152,7 +152,7 @@ class DeleteTask extends Task {
 		foreach($this->filelists as $fl) {
 			try {
 				$files = $fl->getFiles($this->project);
-				$this->removeFiles($fl->getDir($this->project), $files, $empty=array());
+				$this->removeFiles($fl->getDir($this->project), $files, $empty=[]);
 			} catch (BuildException $be) {
 				// directory doesn't exist or is not readable
 					if ($this->failonerror) {
@@ -188,7 +188,7 @@ class DeleteTask extends Task {
     private function removeDir($d) {
         $list = $d->listDir();
         if ($list === null) {
-            $list = array();
+            $list = [];
         }
 
         foreach($list as $s) {
@@ -259,7 +259,7 @@ class DeleteTask extends Task {
                     try {
                         $dir->delete();
                         $dirCount++;
-                    } catch (Exception $e) {
+                    } catch (Exception) {
                         $message="Unable to delete directory " . $dir->__toString();
                         if($this->failonerror) {
                             throw new BuildException($message);

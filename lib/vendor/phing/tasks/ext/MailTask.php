@@ -40,7 +40,7 @@ class MailTask extends Task {
 
     function main() {
         $this->log('Sending mail to ' . $this->recipient );    
-        mail($this->recipient, $this->subject, $this->msg);
+        mail((string) $this->recipient, (string) $this->subject, (string) $this->msg);
     }
 
     /** setter for message */

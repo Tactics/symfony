@@ -135,7 +135,7 @@ class PHPDocumentorTask extends Task
 
 		foreach($output as $line)
 		{
-			if(strpos($line, 'ERROR') !== false)
+			if(str_contains($line, 'ERROR'))
 			{
 				$this->log($line, Project::PROJECT_MSG_ERR);
 				continue;

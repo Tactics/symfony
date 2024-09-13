@@ -11,29 +11,26 @@
 /**
  * sfGenerator is the abstract base class for all generators.
  *
- * @package    symfony
- * @subpackage database
  * @author     Olivier Verdier <Olivier.Verdier@gmail.com>
+ *
  * @version    SVN: $Id $
  */
 class sfPropelDataRetriever
 {
-  static public function retrieveObjects($class, $peerMethod = null)
-  {
-    if (!$peerMethod)
+    public static function retrieveObjects($class, $peerMethod = null)
     {
-      $peerMethod = 'doSelect';
+        if (!$peerMethod) {
+            $peerMethod = 'doSelect';
+        }
+
+        $classPeer = $class.'Peer';
+
+        if (!is_callable([$classPeer, $peerMethod])) {
+            throw new sfException(sprintf('Peer method "%s" not found for class "%s"', $peerMethod, $classPeer));
+        }
+
+        $objects = call_user_func([$classPeer, $peerMethod], new Criteria());
+
+        return $objects;
     }
-
-    $classPeer = $class.'Peer';
-
-    if (!is_callable(array($classPeer, $peerMethod)))
-    {
-      throw new sfException(sprintf('Peer method "%s" not found for class "%s"', $peerMethod, $classPeer));
-    }
-
-    $objects = call_user_func(array($classPeer, $peerMethod), new Criteria());
-
-    return $objects;
-  }
 }

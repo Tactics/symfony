@@ -30,7 +30,7 @@ class Win32FileSystem extends FileSystem {
     protected $altSlash;
     protected $semicolon;
 
-    private static $driveDirCache = array();
+    private static $driveDirCache = [];
 
     function __construct() {
         $this->slash = self::getSeparator();
@@ -48,7 +48,7 @@ class Win32FileSystem extends FileSystem {
     }
 
     function slashify($p) {
-        if ((strlen($p) > 0) && ($p[0] != $this->slash)) {
+        if ((strlen((string) $p) > 0) && ($p[0] != $this->slash)) {
             return $this->slash.$p;
         }
         else {
@@ -132,7 +132,7 @@ class Win32FileSystem extends FileSystem {
         } else {
             // Partial normalization
             $src = $offset;
-            $sb .= substr($strPath, 0, $offset);
+            $sb .= substr((string) $strPath, 0, $offset);
         }
 
         // Remove redundant slashes from the remainder of the path, forcing all
@@ -322,7 +322,7 @@ class Win32FileSystem extends FileSystem {
             return null;
         }
 
-        $s = (isset(self::$driveDirCache[$i]) ? self::$driveDirCache[$i] : null);
+        $s = (self::$driveDirCache[$i] ?? null);
 
         if ($s !== null) {
             return $s;
@@ -349,7 +349,7 @@ class Win32FileSystem extends FileSystem {
         $pl   = (int) $f->getPrefixLength();
 
         if (($pl === 2) && ($path[0] === $this->slash)) {
-            return path;            // UNC
+            return \PATH;            // UNC
         }
 
         if ($pl === 3) {
@@ -402,7 +402,7 @@ class Win32FileSystem extends FileSystem {
 
     /* -- Attribute accessors -- */
 
-    function setReadOnly($f) {
+    function setReadOnly($f): never {
         // dunno how to do this on win
         throw new Exception("WIN32FileSystem doesn't support read-only yet.");
     }
@@ -432,7 +432,7 @@ class Win32FileSystem extends FileSystem {
                 }
             }
         }
-        $fs = array();
+        $fs = [];
         $j = (int) 0;
         $slash = (string) $this->slash;
         for ($i = 0; $i < 26; $i++) {
@@ -461,7 +461,7 @@ class Win32FileSystem extends FileSystem {
         if (!$dir) {
             throw new Exception("Can't open directory " . $f->__toString());
         }
-        $vv = array();
+        $vv = [];
         while (($file = @readdir($dir)) !== false) {
             if ($file == "." || $file == "..") {
                 continue;

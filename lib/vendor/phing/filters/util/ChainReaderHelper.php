@@ -74,7 +74,7 @@ class ChainReaderHelper {
     private $bufferSize = 8192;
     
     /** Chain of filters */
-    private $filterChains = array();
+    private $filterChains = [];
     
     /** The Phing project */
     private $project;
@@ -122,7 +122,7 @@ class ChainReaderHelper {
     
         $instream = $this->primaryReader;
         $filterReadersCount = count($this->filterChains);
-        $finalFilters = array();
+        $finalFilters = [];
 
         // Collect all filter readers of all filter chains used ...
         for($i = 0 ; $i<$filterReadersCount ; $i++) {
@@ -141,12 +141,12 @@ class ChainReaderHelper {
                 $filter = $finalFilters[$i];
                 
                 if ( $filter instanceof PhingFilterReader ) {
-                
+
                     // This filter reader is an external class.
                     $className = $filter->getClassName();
                     $classpath = $filter->getClasspath();
                     $project   = $filter->getProject();
-                    
+
                     if ( $className !== null ) {
                         $cls = Phing::import($className, $classpath);
                         $impl = new $cls();                        
@@ -155,14 +155,14 @@ class ChainReaderHelper {
                     if ( !($impl instanceof FilterReader) ) {
                         throw new Exception($className." does not extend phing.system.io.FilterReader");
                     }
-                    
+
                     $impl->setReader($instream); // chain
                     $impl->setProject($this->getProject()); // what about $project above ?
 
                     if ( $impl instanceof Parameterizable ) {
                         $impl->setParameters($filter->getParams());
                     }
-                    
+
                     $instream = $impl; // now that it's been chained
                                                             
                 } elseif (($filter instanceof ChainableReader) && ($filter instanceof Reader)) {                   
@@ -171,7 +171,7 @@ class ChainReaderHelper {
                     }                    
                     $instream = $filter->chain($instream);
                 } else {
-                    throw new Exception("Cannot chain invalid filter: " . get_class($filter));
+                    throw new Exception("Cannot chain invalid filter: " . $filter::class);
                 }
             }
         }

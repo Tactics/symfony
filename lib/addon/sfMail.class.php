@@ -3,404 +3,383 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 /**
- *
  * sfMail class.
  *
- * @package    symfony
- * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfMail.class.php 3172 2007-01-05 16:03:15Z fabien $
  */
 class sfMail
 {
-  protected $mailer;
+    protected $mailer;
 
-  public function __construct()
-  {
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/phpmailer/class.phpmailer.php');
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/phpmailer/class.smtp.php');
-
-    $this->mailer = new PHPMailer();
-  }
-
-  public function initialize()
-  {
-  }
-
-  public function setCharset($charset)
-  {
-    $this->mailer->CharSet = $charset;
-  }
-
-  public function getCharset()
-  {
-    return $this->mailer->CharSet;
-  }
-
-  public function setContentType($content_type)
-  {
-    $this->mailer->ContentType = $content_type;
-  }
-
-  public function getContentType()
-  {
-    return $this->mailer->ContentType;
-  }
-
-  public function setPriority($priority)
-  {
-    $this->mailer->Priority = $priority;
-  }
-
-  public function getPriority()
-  {
-    return $this->mailer->Priority;
-  }
-
-  public function setEncoding($encoding)
-  {
-    $this->mailer->Encoding = $encoding;
-  }
-
-  public function getEncoding()
-  {
-    return $this->mailer->Encoding;
-  }
-
-  public function setSubject($subject)
-  {
-    $this->mailer->Subject = $subject;
-  }
-
-  public function getSubject()
-  {
-    return $this->mailer->Subject;
-  }
-
-  public function setBody($body)
-  {
-    $this->mailer->Body = $body;
-  }
-
-  public function getBody()
-  {
-    return $this->mailer->Body;
-  }
-
-  public function setMailer($type = 'mail', $options = array())
-  {
-    switch ($type)
+    public function __construct()
     {
-      case 'smtp':
-        $this->mailer->IsSMTP();
-        if (isset($options['keep_alive'])) $this->mailer->SMTPKeepAlive = true;
-        break;
-      case 'sendmail':
-        $this->mailer->IsSendmail();
-        break;
-      default:
-        $this->mailer->IsMail();
-        break;
-    }
-  }
-  
-  public function getMailer()
-  {
-    return $this->mailer->Mailer;
-  }
+        require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/phpmailer/class.phpmailer.php';
+        require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/phpmailer/class.smtp.php';
 
-  public function setSender($address, $name = null)
-  {
-    if (!$address)
-    {
-      return;
+        $this->mailer = new PHPMailer();
     }
 
-    if ($name == null)
+    public function initialize()
     {
-      list($address, $name) = $this->splitAddress($address);
-    }
-    $this->mailer->Sender = $address;
-  }
-
-  public function getSender()
-  {
-    return $this->mailer->Sender;
-  }
-
-  public function setFrom($address, $name = null)
-  {
-    if (!$address)
-    {
-      return;
     }
 
-    if ($name == null)
+    public function setCharset($charset)
     {
-      list($address, $name) = $this->splitAddress($address);
-    }
-    $this->mailer->From     = $address;
-    $this->mailer->FromName = $name;
-  }
-
-  public function getFrom()
-  {
-    return $this->mailer->From;
-  }
-
-  /*
-   * $recipents:
-   * test@example.com
-   * Example email <test@example.com>
-   * array('test@example.com', 'test1@example.com')
-   * array('Example email <test@example.com>', 'test1@example.com')
-   */
-  public function addAddresses($addresses)
-  {
-    if (!$addresses)
-    {
-      return;
+        $this->mailer->CharSet = $charset;
     }
 
-    if (is_array($addresses))
+    public function getCharset()
     {
-      foreach ($addresses as $address)
-      {
-        list($address, $name) = $this->splitAddress($address);
+        return $this->mailer->CharSet;
+    }
+
+    public function setContentType($content_type)
+    {
+        $this->mailer->ContentType = $content_type;
+    }
+
+    public function getContentType()
+    {
+        return $this->mailer->ContentType;
+    }
+
+    public function setPriority($priority)
+    {
+        $this->mailer->Priority = $priority;
+    }
+
+    public function getPriority()
+    {
+        return $this->mailer->Priority;
+    }
+
+    public function setEncoding($encoding)
+    {
+        $this->mailer->Encoding = $encoding;
+    }
+
+    public function getEncoding()
+    {
+        return $this->mailer->Encoding;
+    }
+
+    public function setSubject($subject)
+    {
+        $this->mailer->Subject = $subject;
+    }
+
+    public function getSubject()
+    {
+        return $this->mailer->Subject;
+    }
+
+    public function setBody($body)
+    {
+        $this->mailer->Body = $body;
+    }
+
+    public function getBody()
+    {
+        return $this->mailer->Body;
+    }
+
+    public function setMailer($type = 'mail', $options = [])
+    {
+        switch ($type) {
+            case 'smtp':
+                $this->mailer->IsSMTP();
+                if (isset($options['keep_alive'])) {
+                    $this->mailer->SMTPKeepAlive = true;
+                }
+                break;
+            case 'sendmail':
+                $this->mailer->IsSendmail();
+                break;
+            default:
+                $this->mailer->IsMail();
+                break;
+        }
+    }
+
+    public function getMailer()
+    {
+        return $this->mailer->Mailer;
+    }
+
+    public function setSender($address, $name = null)
+    {
+        if (!$address) {
+            return;
+        }
+
+        if ($name == null) {
+            [$address, $name] = $this->splitAddress($address);
+        }
+        $this->mailer->Sender = $address;
+    }
+
+    public function getSender()
+    {
+        return $this->mailer->Sender;
+    }
+
+    public function setFrom($address, $name = null)
+    {
+        if (!$address) {
+            return;
+        }
+
+        if ($name == null) {
+            [$address, $name] = $this->splitAddress($address);
+        }
+        $this->mailer->From = $address;
+        $this->mailer->FromName = $name;
+    }
+
+    public function getFrom()
+    {
+        return $this->mailer->From;
+    }
+
+    /*
+     * $recipents:
+     * test@example.com
+     * Example email <test@example.com>
+     * array('test@example.com', 'test1@example.com')
+     * array('Example email <test@example.com>', 'test1@example.com')
+     */
+    public function addAddresses($addresses)
+    {
+        if (!$addresses) {
+            return;
+        }
+
+        if (is_array($addresses)) {
+            foreach ($addresses as $address) {
+                [$address, $name] = $this->splitAddress($address);
+                $this->mailer->AddAddress($address, $name);
+            }
+        } else {
+            [$address, $name] = $this->splitAddress($addresses);
+            $this->mailer->AddAddress($address, $name);
+        }
+    }
+
+    private function splitAddress($address)
+    {
+        if (preg_match('/^(.+)\s<(.+?)>$/', (string) $address, $matches)) {
+            return [$matches[2], $matches[1]];
+        } else {
+            return [$address, ''];
+        }
+    }
+
+    public function addAddress($address, $name = null)
+    {
+        if ($name == null) {
+            [$address, $name] = $this->splitAddress($address);
+        }
         $this->mailer->AddAddress($address, $name);
-      }
     }
-    else
+
+    public function addCc($address, $name = null)
     {
-      list($address, $name) = $this->splitAddress($addresses);
-      $this->mailer->AddAddress($address, $name);
+        if ($name == null) {
+            [$address, $name] = $this->splitAddress($address);
+        }
+        $this->mailer->AddCc($address, $name);
     }
-  }
 
-  private function splitAddress($address)
-  {
-    if (preg_match('/^(.+)\s<(.+?)>$/', $address, $matches))
+    public function addBcc($address, $name = null)
     {
-      return array($matches[2], $matches[1]);
+        if ($name == null) {
+            [$address, $name] = $this->splitAddress($address);
+        }
+        $this->mailer->AddBcc($address, $name);
     }
-    else
+
+    public function addReplyTo($address, $name = null)
     {
-      return array($address, '');
-    }
-  }
+        if (!$address) {
+            return;
+        }
 
-  public function addAddress($address, $name = null)
-  {
-    if ($name == null)
+        if ($name == null) {
+            [$address, $name] = $this->splitAddress($address);
+        }
+        $this->mailer->AddReplyTo($address, $name);
+    }
+
+    public function clearAddresses()
     {
-      list($address, $name) = $this->splitAddress($address);
+        $this->mailer->ClearAddresses();
     }
-    $this->mailer->AddAddress($address, $name);
-  }
 
-  public function addCc($address, $name = null)
-  {
-    if ($name == null)
+    public function clearCcs()
     {
-      list($address, $name) = $this->splitAddress($address);
+        $this->mailer->ClearCcs();
     }
-    $this->mailer->AddCc($address, $name);
-  }
 
-  public function addBcc($address, $name = null)
-  {
-    if ($name == null)
+    public function clearBccs()
     {
-      list($address, $name) = $this->splitAddress($address);
+        $this->mailer->ClearBccs();
     }
-    $this->mailer->AddBcc($address, $name);
-  }
 
-  public function addReplyTo($address, $name = null)
-  {
-    if (!$address)
+    public function clearReplyTos()
     {
-      return;
+        $this->mailer->ClearReplyTos();
     }
 
-    if ($name == null)
+    public function clearAllRecipients()
     {
-      list($address, $name) = $this->splitAddress($address);
+        $this->mailer->ClearAllRecipients();
     }
-    $this->mailer->AddReplyTo($address, $name);
-  }
 
-  public function clearAddresses()
-  {
-    $this->mailer->ClearAddresses();
-  }
-
-  public function clearCcs()
-  {
-    $this->mailer->ClearCcs();
-  }
-
-  public function clearBccs()
-  {
-    $this->mailer->ClearBccs();
-  }
-
-  public function clearReplyTos()
-  {
-    $this->mailer->ClearReplyTos();
-  }
-
-  public function clearAllRecipients()
-  {
-    $this->mailer->ClearAllRecipients();
-  }
-
-  public function addAttachment($path, $name = '', $encoding = 'base64', $type = 'application/octet-stream')
-  {
-    $this->mailer->AddAttachment($path, $name, $encoding, $type);
-  }
-
-  public function addStringAttachment($string, $filename, $encoding = 'base64', $type = 'application/octet-stream')
-  {
-    $this->mailer->AddStringAttachment($string, $filename, $encoding, $type);
-  }
-
-  public function addEmbeddedImage($path, $cid, $name = '', $encoding = 'base64', $type = 'application/octet-stream')
-  {
-    $this->mailer->AddEmbeddedImage($path, $cid, $name, $encoding, $type);
-  }
-
-  public function setAttachments($attachments)
-  {
-    if ($attachments instanceof sfMailAttachments)
+    public function addAttachment($path, $name = '', $encoding = 'base64', $type = 'application/octet-stream')
     {
-      $this->mailer->setAttachments($attachments->getAttachments());
+        $this->mailer->AddAttachment($path, $name, $encoding, $type);
     }
-  }
 
-  public function clearAttachments()
-  {
-    $this->mailer->ClearAttachments();
-  }
-
-  function addCustomHeader($name, $value)
-  {
-    $this->mailer->AddCustomHeader("$name: $value");
-  }
-
-  function clearCustomHeaders()
-  {
-    $this->mailer->ClearCustomHeaders();
-  }
-
-  public function prepare()
-  {
-    // Set whether the message is multipart/alternative
-    if (!empty($this->mailer->AltBody))
+    public function addStringAttachment($string, $filename, $encoding = 'base64', $type = 'application/octet-stream')
     {
-      $this->mailer->ContentType = "multipart/alternative";
+        $this->mailer->AddStringAttachment($string, $filename, $encoding, $type);
     }
 
-    $this->mailer->SetMessageType();
-  }
-
-  public function send()
-  {
-    if (!$this->mailer->Send())
+    public function addEmbeddedImage($path, $cid, $name = '', $encoding = 'base64', $type = 'application/octet-stream')
     {
-      throw new sfException($this->mailer->ErrorInfo);
+        $this->mailer->AddEmbeddedImage($path, $cid, $name, $encoding, $type);
     }
-  }
 
-  public function smtpClose()
-  {
-    $this->mailer->SmtpClose();
-  }
-  
-  public function getRawHeader()
-  {
-    return $this->mailer->CreateHeader();
-  }
+    public function setAttachments($attachments)
+    {
+        if ($attachments instanceof sfMailAttachments) {
+            $this->mailer->setAttachments($attachments->getAttachments());
+        }
+    }
 
-  public function getRawBody()
-  {
-    return $this->mailer->CreateBody();
-  }
+    public function clearAttachments()
+    {
+        $this->mailer->ClearAttachments();
+    }
 
-  public function setDomain($hostname)
-  {
-    $this->mailer->Hostname = $hostname;
-  }
+    public function addCustomHeader($name, $value)
+    {
+        $this->mailer->AddCustomHeader("$name: $value");
+    }
 
-  public function getDomain()
-  {
-    return $this->mailer->Hostname;
-  }
+    public function clearCustomHeaders()
+    {
+        $this->mailer->ClearCustomHeaders();
+    }
 
-  public function setHostname($hostname)
-  {
-    $this->mailer->Host = $hostname;
-  }
+    public function prepare()
+    {
+        // Set whether the message is multipart/alternative
+        if (!empty($this->mailer->AltBody)) {
+            $this->mailer->ContentType = 'multipart/alternative';
+        }
 
-  public function getHostname()
-  {
-    return $this->mailer->Host;
-  }
+        $this->mailer->SetMessageType();
+    }
 
-  public function setPort($port)
-  {
-    $this->mailer->Port = $port;
-  }
+    public function send()
+    {
+        if (!$this->mailer->Send()) {
+            throw new sfException($this->mailer->ErrorInfo);
+        }
+    }
 
-  public function getPort()
-  {
-    return $this->mailer->Port;
-  }
+    public function smtpClose()
+    {
+        $this->mailer->SmtpClose();
+    }
 
-  public function setUsername($username)
-  {
-    $this->mailer->Username = $username;
-    $this->mailer->SMTPAuth = $username ? true : false;
-  }
+    public function getRawHeader()
+    {
+        return $this->mailer->CreateHeader();
+    }
 
-  public function getUsername()
-  {
-    return $this->mailer->Username;
-  }
+    public function getRawBody()
+    {
+        return $this->mailer->CreateBody();
+    }
 
-  public function setPassword($password)
-  {
-    $this->mailer->Password = $password;
-  }
+    public function setDomain($hostname)
+    {
+        $this->mailer->Hostname = $hostname;
+    }
 
-  public function getPassword()
-  {
-    return $this->mailer->Password;
-  }
+    public function getDomain()
+    {
+        return $this->mailer->Hostname;
+    }
 
-  public function setWordWrap($wordWrap)
-  {
-    $this->mailer->WordWrap = $wordWrap;
-  }
+    public function setHostname($hostname)
+    {
+        $this->mailer->Host = $hostname;
+    }
 
-  public function getWordWrap()
-  {
-    return $this->mailer->WordWrap;
-  }
+    public function getHostname()
+    {
+        return $this->mailer->Host;
+    }
 
-  public function setAltBody($text)
-  {
-    $this->mailer->AltBody = $text;
-  }
+    public function setPort($port)
+    {
+        $this->mailer->Port = $port;
+    }
 
-  public function getAltBody()
-  {
-    return $this->mailer->AltBody;
-  }
+    public function getPort()
+    {
+        return $this->mailer->Port;
+    }
+
+    public function setUsername($username)
+    {
+        $this->mailer->Username = $username;
+        $this->mailer->SMTPAuth = $username ? true : false;
+    }
+
+    public function getUsername()
+    {
+        return $this->mailer->Username;
+    }
+
+    public function setPassword($password)
+    {
+        $this->mailer->Password = $password;
+    }
+
+    public function getPassword()
+    {
+        return $this->mailer->Password;
+    }
+
+    public function setWordWrap($wordWrap)
+    {
+        $this->mailer->WordWrap = $wordWrap;
+    }
+
+    public function getWordWrap()
+    {
+        return $this->mailer->WordWrap;
+    }
+
+    public function setAltBody($text)
+    {
+        $this->mailer->AltBody = $text;
+    }
+
+    public function getAltBody()
+    {
+        return $this->mailer->AltBody;
+    }
 }

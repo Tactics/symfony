@@ -29,17 +29,14 @@
  */
 class PreOrderNodeIterator implements Iterator
 {
-	private $topNode = null;
-
 	private $curNode = null;
 
 	private $querydb = false;
 
 	private $connection = null;
 
-	public function __construct($node, $opts) {
-		$this->topNode = $node;
-		$this->curNode = $node;
+	public function __construct(private $topNode, $opts) {
+		$this->curNode = $this->topNode;
 
 		if (isset($opts['con']))
 			$this->con = $opts['con'];

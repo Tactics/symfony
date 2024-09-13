@@ -108,7 +108,7 @@ class Rule extends XMLElement {
 	public function getClass()
 	{
 		if ($this->classname === null && $this->name !== null) {
-			return "propel.validator." . ucfirst($this->name) . "Validator";
+			return "propel.validator." . ucfirst((string) $this->name) . "Validator";
 		}
 		return $this->classname;
 	}

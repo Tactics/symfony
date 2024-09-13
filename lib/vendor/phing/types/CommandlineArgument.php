@@ -6,11 +6,10 @@
  */
 class CommandlineArgument {
 
-    private $parts = array();
-    private $outer;
+    private $parts = [];
 
-    public function __construct(Commandline $outer) {
-        $this->outer = $outer;
+    public function __construct(private readonly Commandline $outer)
+    {
     }
 
     /**
@@ -19,7 +18,7 @@ class CommandlineArgument {
      * @param string $value a single commandline argument.
      */
     public function setValue($value) {
-        $this->parts = array($value);
+        $this->parts = [$value];
     }
 
     /**
@@ -42,7 +41,7 @@ class CommandlineArgument {
      * @param value a single commandline argument.
      */
     public function setPath($value) {
-        $this->parts = array( (string) $value );
+        $this->parts = [(string) $value];
     }
 
     /**
@@ -52,7 +51,7 @@ class CommandlineArgument {
      * @param value a single commandline argument.
      */
     public function setFile(PhingFile $value) {
-        $this->parts = array($value->getAbsolutePath());
+        $this->parts = [$value->getAbsolutePath()];
     }
 
     /**

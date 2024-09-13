@@ -28,7 +28,7 @@ include_once 'phing/system/lang/NullPointerException.php';
  * @version   $Revision: 1.1 $
  * @package   phing.system.io
  */
-class PhingFile {
+class PhingFile implements \Stringable {
 
     /** separator string, static, obtained from FileSystem */
     public static $separator;
@@ -143,11 +143,11 @@ class PhingFile {
      */
     function getName() {
         // that's a lastIndexOf
-        $index = ((($res = strrpos($this->path, self::$separator)) === false) ? -1 : $res);
+        $index = ((($res = strrpos((string) $this->path, (string) self::$separator)) === false) ? -1 : $res);
         if ($index < $this->prefixLength) {
-            return substr($this->path, $this->prefixLength);
+            return substr((string) $this->path, $this->prefixLength);
         }
-        return substr($this->path, $index + 1);
+        return substr((string) $this->path, $index + 1);
     }
 
     /**
@@ -164,14 +164,14 @@ class PhingFile {
      */
     function getParent() {
         // that's a lastIndexOf
-        $index = ((($res = strrpos($this->path, self::$separator)) === false) ? -1 : $res);
+        $index = ((($res = strrpos((string) $this->path, (string) self::$separator)) === false) ? -1 : $res);
         if ($index < $this->prefixLength) {
             if (($this->prefixLength > 0) && (strlen($this->path > $this->prefixLength))) {
-                return substr($this->path, 0, $this->prefixLength);
+                return substr((string) $this->path, 0, $this->prefixLength);
             }
             return null;
         }
-        return substr($this->path, 0, $index);
+        return substr((string) $this->path, 0, $index);
     }
 
     /**
@@ -581,7 +581,7 @@ class PhingFile {
             return null;
         }
         $n = count($ss);
-        $fs = array();
+        $fs = [];
         for ($i = 0; $i < $n; $i++) {
             $fs[$i] = new PhingFile((string)$this->path, (string)$ss[$i]);
         }
@@ -607,7 +607,7 @@ class PhingFile {
 			if ($this->mkdir()) {
 	            return true;
 	        }
-		} catch (IOException $ioe) {
+		} catch (IOException) {
 			// IOException from mkdir() means that directory propbably didn't exist.
 		}        
         $parentFile = $this->getParentFile();
@@ -859,8 +859,8 @@ class PhingFile {
     }
     
     /** PHP5's native method. */
-    function __toString() {
-        return $this->getPath();
+    function __toString(): string {
+        return (string) $this->getPath();
     }
 }
 ?>

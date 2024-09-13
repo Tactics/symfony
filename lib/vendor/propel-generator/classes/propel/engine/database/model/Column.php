@@ -40,8 +40,6 @@ include_once 'propel/engine/database/model/Domain.php';
 class Column extends XMLElement {
 
 	const DEFAULT_TYPE = "VARCHAR";
-
-	private $name;
 	private $description;
 	private $phpName = null;
 	private $phpNamingMethod;
@@ -102,10 +100,9 @@ class Column extends XMLElement {
 	 *
 	 * @param      name column name
 	 */
-	public function __construct($name = null)
-	{
-		$this->name = $name;
-	}
+	public function __construct(private $name = null)
+ {
+ }
 
     /**
      * Return a comma delimited string listing the specified columns.
@@ -117,7 +114,7 @@ class Column extends XMLElement {
      */
 	public static function makeList($columns, Platform $platform)
 	{
-		$list = array();
+		$list = [];
 		foreach($columns as $col) {
 			if ($col instanceof Column) {
 				$col = $col->getName();
@@ -141,7 +138,7 @@ class Column extends XMLElement {
 			} else {
 				$this->domain = new Domain();
 				$this->domain->copy($this->getPlatform()->getDomainForType(self::DEFAULT_TYPE));
-				$this->setType(strtoupper($this->getAttribute("type")));
+				$this->setType(strtoupper((string) $this->getAttribute("type")));
 			}
 
 			//Name
@@ -164,7 +161,7 @@ class Column extends XMLElement {
 			$this->isNodeKey = $this->booleanValue($this->getAttribute("nodeKey"));
 			$this->nodeKeySep = $this->getAttribute("nodeKeySep", ".");
 
-			$this->isNotNull = $this->booleanValue($this->getAttribute("required"), false);
+			$this->isNotNull = $this->booleanValue($this->getAttribute("required"));
 
 			// Regardless of above, if this column is a primary key then it can't be null.
 			if ($this->isPrimaryKey) {
@@ -206,7 +203,7 @@ class Column extends XMLElement {
 	 */
 	public function getFullyQualifiedName()
 	{
-		return ($this->parentTable->getName() . '.' . name);
+		return ($this->parentTable->getName() . '.' . \NAME);
 	}
 
 	/**
@@ -250,7 +247,7 @@ class Column extends XMLElement {
 	public function getPhpName()
 	{
 		if ($this->phpName === null) {
-			$inputs = array();
+			$inputs = [];
 			$inputs[] = $this->name;
 			$inputs[] = $this->phpNamingMethod;
 			try {
@@ -356,13 +353,13 @@ class Column extends XMLElement {
 	 * parent column of the inheritance to the current column
 	 * @param      mixed $inhdata Inheritance or XML data.
 	 */
-	public function addInheritance($inhdata)
+	public function addInheritance(mixed $inhdata)
 	{
 		if ($inhdata instanceof Inheritance) {
 			$inh = $inhdata;
 			$inh->setColumn($this);
 			if ($this->inheritanceList === null) {
-				$this->inheritanceList = array();
+				$this->inheritanceList = [];
 				$this->isEnumeratedClasses = true;
 			}
 			$this->inheritanceList[] = $inh;
@@ -572,7 +569,7 @@ class Column extends XMLElement {
 	public function addReferrer(ForeignKey $fk)
 	{
 		if ($this->referrers === null) {
-			$this->referrers = array();
+			$this->referrers = [];
 		}
 		$this->referrers[] = $fk;
 	}
@@ -583,7 +580,7 @@ class Column extends XMLElement {
 	public function getReferrers()
 	{
 		if ($this->referrers === null) {
-			$this->referrers = array();
+			$this->referrers = [];
 		}
 		return $this->referrers;
 	}
@@ -835,24 +832,24 @@ class Column extends XMLElement {
 	 */
 	public function setTypeFromString($typeName, $size)
 	{
-		$tn = strtoupper($typeName);
+		$tn = strtoupper((string) $typeName);
 		$this->setType($tn);
 
 		if ($size !== null) {
 			$this->size = $size;
 		}
 
-		if (strpos($tn, "CHAR") !== false) {
+		if (str_contains($tn, "CHAR")) {
 			$this->domain->setType(PropelTypes::VARCHAR);
-		} elseif (strpos($tn, "INT") !== false) {
+		} elseif (str_contains($tn, "INT")) {
 			$this->domain->setType(PropelTypes::INTEGER);
-		} elseif (strpos($tn, "FLOAT") !== false) {
+		} elseif (str_contains($tn, "FLOAT")) {
 			$this->domain->setType(PropelTypes::FLOAT);
-		} elseif (strpos($tn, "DATE") !== false) {
+		} elseif (str_contains($tn, "DATE")) {
 			$this->domain->setType(PropelTypes::DATE);
-		} elseif (strpos($tn, "TIME") !== false) {
+		} elseif (str_contains($tn, "TIME")) {
 			$this->domain->setType(PropelTypes::TIMESTAMP);
-		} else if (strpos($tn, "BINARY") !== false) {
+		} else if (str_contains($tn, "BINARY")) {
 			$this->domain->setType(PropelTypes::LONGVARBINARY);
 		} else {
 			$this->domain->setType(PropelTypes::VARCHAR);
@@ -877,7 +874,7 @@ class Column extends XMLElement {
 	public function isPrimitive()
 	{
 		$t = $this->getPhpNative();
-		return in_array($t, array("boolean", "int", "double", "string"));
+		return in_array($t, ["boolean", "int", "double", "string"]);
 	}
 
   /**
@@ -887,7 +884,7 @@ class Column extends XMLElement {
   public function isPrimitiveNumeric()
   {
 	$t = $this->getPhpNative();
-	return in_array($t, array("boolean", "int", "double"));
+	return in_array($t, ["boolean", "int", "double"]);
   }
 
 	/**

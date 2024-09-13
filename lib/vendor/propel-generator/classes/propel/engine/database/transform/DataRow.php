@@ -6,13 +6,8 @@
  */
 class DataRow
 {
-    private $table;
-    private $columnValues;
-
-    public function __construct(Table $table, $columnValues)
+    public function __construct(private readonly Table $table, private $columnValues)
     {
-        $this->table = $table;
-        $this->columnValues = $columnValues;
     }
 
     public function getTable()

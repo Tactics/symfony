@@ -93,7 +93,7 @@ abstract class ConnectionCommon {
      */
     public function __sleep()
     {
-        return array('dsn', 'flags');
+        return ['dsn', 'flags'];
     }
     
     /**

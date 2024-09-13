@@ -44,7 +44,7 @@ class DateSelector extends BaseExtendSelector {
     const CHECKDIRS_KEY = "checkdirs";
     const GRANULARITY_KEY = "granularity";
     const WHEN_KEY = "when";
-    private static $timeComparisons = array("before", "after", "equal");
+    private static $timeComparisons = ["before", "after", "equal"];
     
     public function __construct() {
         //if (Os.isFamily("dos")) {
@@ -148,25 +148,14 @@ class DateSelector extends BaseExtendSelector {
         if ($parameters !== null) {
             for ($i=0,$size=count($parameters); $i < $size; $i++) {
                 $paramname = $parameters[$i]->getName();
-                switch(strtolower($paramname)) {
-                    case self::MILLIS_KEY:
-                        $this->setMillis($parameters[$i]->getValue());
-                        break;
-                    case self::DATETIME_KEY:
-                        $this->setDatetime($parameters[$i]->getValue());
-                        break;
-                    case self::CHECKDIRS_KEY:
-                        $this->setCheckdirs($parameters[$i]->getValue());
-                        break;                    
-                    case self::GRANULARITY_KEY:
-                        $this->setGranularity($parameters[$i]->getValue());
-                        break;
-                    case self::WHEN_KEY:
-                        $this->setWhen($parameters[$i]->getValue());
-                        break;
-                    default:
-                        $this->setError("Invalid parameter " . $paramname);
-                } // switch
+                match (strtolower((string) $paramname)) {
+                    self::MILLIS_KEY => $this->setMillis($parameters[$i]->getValue()),
+                    self::DATETIME_KEY => $this->setDatetime($parameters[$i]->getValue()),
+                    self::CHECKDIRS_KEY => $this->setCheckdirs($parameters[$i]->getValue()),
+                    self::GRANULARITY_KEY => $this->setGranularity($parameters[$i]->getValue()),
+                    self::WHEN_KEY => $this->setWhen($parameters[$i]->getValue()),
+                    default => $this->setError("Invalid parameter " . $paramname),
+                }; // switch
             }
         }
     }

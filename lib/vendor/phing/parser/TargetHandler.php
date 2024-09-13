@@ -42,21 +42,17 @@ class TargetHandler extends AbstractHandler {
     private $target;
 
     /**
-     * The phing project configurator object
-     * @var ProjectConfigurator
-     */
-    private $configurator;
-
-    /**
      * Constructs a new TargetHandler
      *
      * @param  object  the ExpatParser object
      * @param  object  the parent handler that invoked this handler
      * @param  object  the ProjectConfigurator object
      */
-    function __construct(AbstractSAXParser $parser, AbstractHandler $parentHandler, ProjectConfigurator $configurator) {
-        parent::__construct($parser, $parentHandler);
-        $this->configurator = $configurator;      
+    function __construct(AbstractSAXParser $parser, AbstractHandler $parentHandler, /**
+     * The phing project configurator object
+     */
+    private readonly ProjectConfigurator $configurator) {
+        parent::__construct($parser, $parentHandler);      
     }
 
     /**

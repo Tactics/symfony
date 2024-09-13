@@ -80,10 +80,10 @@ class AbstractFileSet extends DataType implements SelectorContainer {
      */
     public $defaultPatterns;
 
-    public $additionalPatterns = array();
+    public $additionalPatterns = [];
     public $dir;
     public $isCaseSensitive = true;
-    public $selectors = array();
+    public $selectors = [];
 
     function __construct($fileset = null) {
         if ($fileset !== null && ($fileset instanceof FileSet)) {
@@ -311,7 +311,7 @@ class AbstractFileSet extends DataType implements SelectorContainer {
      */
     function getRef(Project $p) {
         if (!$this->checked) {
-            $stk = array();
+            $stk = [];
             array_push($stk, $this);
             $this->dieOnCircularReference($stk, $p);
         }
@@ -350,7 +350,7 @@ class AbstractFileSet extends DataType implements SelectorContainer {
             return $this->getRef($this->getProject())->hasPatterns();
         }
 
-        if ($this->defaultPatterns->hasPatterns($this->getProject())) {
+        if ($this->defaultPatterns->hasPatterns()) {
             return true;
         }
 
@@ -390,7 +390,7 @@ class AbstractFileSet extends DataType implements SelectorContainer {
             return $this->getRef($p)->getSelectors($p);
         } else {
             // *copy* selectors
-            $result = array();
+            $result = [];
             for($i=0,$size=count($this->selectors); $i < $size; $i++) {
                 $result[] = clone $this->selectors[$i];
             }

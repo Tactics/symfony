@@ -67,12 +67,7 @@ class PearLogger implements BuildListener {
      * Maps Phing PROJECT_MSG_* constants to PEAR_LOG_* constants.
      * @var array
      */
-    protected static $levelMap = array( Project::PROJECT_MSG_DEBUG => PEAR_LOG_DEBUG,
-                                        Project::PROJECT_MSG_INFO => PEAR_LOG_INFO,
-                                        Project::PROJECT_MSG_VERBOSE => PEAR_LOG_NOTICE,
-                                        Project::PROJECT_MSG_WARN => PEAR_LOG_WARNING,
-                                        Project::PROJECT_MSG_ERR => PEAR_LOG_ERR
-                                       );
+    protected static $levelMap = [Project::PROJECT_MSG_DEBUG => PEAR_LOG_DEBUG, Project::PROJECT_MSG_INFO => PEAR_LOG_INFO, Project::PROJECT_MSG_VERBOSE => PEAR_LOG_NOTICE, Project::PROJECT_MSG_WARN => PEAR_LOG_WARNING, Project::PROJECT_MSG_ERR => PEAR_LOG_ERR];
     /**
      * Whether logging has been configured.
      * @var boolean
@@ -92,7 +87,7 @@ class PearLogger implements BuildListener {
         if ($type === null) $type = 'file';
         if ($name === null) $name = 'phing.log';
         if ($ident === null) $ident = 'phing';
-        if ($conf === null) $conf = array();
+        if ($conf === null) $conf = [];
 
         $this->logger = Log::singleton($type, $name, $ident, $conf, self::$levelMap[$this->msgOutputLevel]);
     }

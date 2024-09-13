@@ -36,7 +36,7 @@ class PresentSelector extends BaseSelector {
     private $mapperElement = null;
     private $map = null;
     private $destmustexist = true;
-    private static $filePresence = array("srconly", "both");
+    private static $filePresence = ["srconly", "both"];
     
     public function toString() {
         $buf = "{presentselector targetdir: ";

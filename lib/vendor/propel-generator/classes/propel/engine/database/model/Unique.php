@@ -39,7 +39,7 @@ class Unique extends Index {
 	/**
 	 * Default constructor.
 	 */
-	public function __construct(Table $table, $indexColumns = array())
+	public function __construct(Table $table, $indexColumns = [])
 	{
 	}
 

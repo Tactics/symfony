@@ -31,10 +31,6 @@
 
 class Location {
 
-    private $fileName;
-    private $lineNumber;
-    private $columnNumber;
-
     /**
      * Constructs the location consisting of a file name and line number
      *
@@ -43,10 +39,8 @@ class Location {
      * @param  integer the column number
      * @access public
      */
-    function __construct($fileName = null, $lineNumber = null, $columnNumber = null) {
-        $this->fileName = $fileName;
-        $this->lineNumber = $lineNumber;
-        $this->columnNumber = $columnNumber;
+    function __construct(private $fileName = null, private $lineNumber = null, private $columnNumber = null)
+    {
     }
 
     /**

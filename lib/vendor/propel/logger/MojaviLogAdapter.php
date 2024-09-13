@@ -32,20 +32,14 @@ require_once('propel/logger/BasicLogger.php');
 class MojaviLogAdapter implements BasicLogger {
 
 	/**
-	 * Instance of mojavi logger
-	 */
-	private $logger = null;
-
-	/**
 	 * constructor for setting up Mojavi log adapter
 	 *
 	 * @param      ErrorLog   $logger   instance of Mojavi error log obtained by
 	 *                               calling LogManager::getLogger();
 	 */
-	public function __construct($logger = null)
-	{
-		$this->logger = $logger;
-	}
+	public function __construct(private $logger = null)
+ {
+ }
 
 	/**
 	 * A convenience function for logging an alert event.
@@ -137,26 +131,13 @@ class MojaviLogAdapter implements BasicLogger {
 		if(is_null($this->logger))
 			$this->logger = LogManager::getLogger('propel');
 
-		switch($severity)
-		{
-			case 'crit':
-				$method = 'fatal';
-				break;
-			case 'err':
-				$method = 'error';
-				break;
-			case 'alert':
-			case 'warning':
-				$method = 'warning';
-				break;
-			case 'notice':
-			case 'info':
-				$method = 'info';
-				break;
-			case 'debug':
-			default:
-				$method = 'debug';
-		}
+		$method = match ($severity) {
+      'crit' => 'fatal',
+      'err' => 'error',
+      'alert', 'warning' => 'warning',
+      'notice', 'info' => 'info',
+      default => 'debug',
+  };
 
 		// get a backtrace to pass class, function, file, & line to Mojavi logger
 		$trace = debug_backtrace();

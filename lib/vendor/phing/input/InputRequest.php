@@ -75,9 +75,8 @@ class InputRequest {
     
     /**
      * Set the default value to use.
-     * @param mixed $v
      */
-    public function setDefaultValue($v) {
+    public function setDefaultValue(mixed $v) {
         $this->defaultValue = $v;
     }
     

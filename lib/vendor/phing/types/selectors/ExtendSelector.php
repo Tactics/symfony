@@ -36,7 +36,7 @@ class ExtendSelector extends BaseSelector {
 
     private $classname;
     private $dynselector;
-    private $parameters = array();
+    private $parameters = [];
 
     /**
      * Sets the classname of the custom selector.

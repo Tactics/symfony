@@ -49,10 +49,10 @@ class BasePeer
 {
 
     /** Array (hash) that contains the cached mapBuilders. */
-    private static $mapBuilders = array();
+    private static $mapBuilders = [];
 
     /** Array (hash) that contains cached validators */
-    private static $validatorMap = array();
+    private static $validatorMap = [];
 
     /**
      * phpname type
@@ -83,8 +83,8 @@ class BasePeer
         // TODO we should take care of including the peer class here
 
         $peerclass = 'Base' . $classname . 'Peer'; // TODO is this always true?
-        $callable = array($peerclass, 'getFieldnames');
-        $args = array($type);
+        $callable = [$peerclass, 'getFieldnames'];
+        $args = [$type];
 
         return call_user_func_array($callable, $args);
     }
@@ -94,8 +94,8 @@ class BasePeer
         // TODO we should take care of including the peer class here
 
         $peerclass = 'Base' . $classname . 'Peer'; // TODO is this always true?
-        $callable = array($peerclass, 'translateFieldname');
-        $args = array($fieldname, $fromType, $toType);
+        $callable = [$peerclass, 'translateFieldname'];
+        $args = [$fieldname, $fromType, $toType];
 
         return call_user_func_array($callable, $args);
     }
@@ -121,7 +121,7 @@ class BasePeer
         // Set up a list of required tables (one DELETE statement will
         // be executed per table)
 
-        $tables_keys = array();
+        $tables_keys = [];
         foreach($criteria as $c) {
             foreach($c->getAllTables() as $tableName) {
                 $tableName2 = $criteria->getTableForAlias($tableName);
@@ -139,8 +139,8 @@ class BasePeer
 
         foreach($tables as $tableName) {
 
-            $whereClause = array();
-            $selectParams = array();
+            $whereClause = [];
+            $selectParams = [];
             foreach($dbMap->getTable($tableName)->getColumns() as $colMap) {
                 $key = $tableName . '.' . $colMap->getColumnName();
                 if ($criteria->containsKey($key)) {
@@ -298,9 +298,9 @@ class BasePeer
         try {
 
             $qualifiedCols = $criteria->keys(); // we need table.column cols when populating values
-            $columns = array(); // but just 'column' cols for the SQL
+            $columns = []; // but just 'column' cols for the SQL
             foreach($qualifiedCols as $qualifiedCol) {
-                $columns[] = substr($qualifiedCol, strpos($qualifiedCol, '.') + 1);
+                $columns[] = substr((string) $qualifiedCol, strpos((string) $qualifiedCol, '.') + 1);
             }
 
             $sql = "INSERT INTO " . $tableName
@@ -371,9 +371,9 @@ class BasePeer
 
         foreach($tablesColumns as $tableName => $columns) {
 
-            $whereClause = array();
+            $whereClause = [];
 
-            $selectParams = array();
+            $selectParams = [];
             foreach($columns as $colName) {
                 $sb = "";
                 $selectCriteria->getCriterion($colName)->appendPsTo($sb, $selectParams);
@@ -402,7 +402,7 @@ class BasePeer
 
                 $sql = "UPDATE " . $tableName . " SET ";
                 foreach($updateTablesColumns[$tableName] as $col) {
-                    $sql .= substr($col, strpos($col, '.') + 1) . " = ?,";
+                    $sql .= substr((string) $col, strpos((string) $col, '.') + 1) . " = ?,";
                 }
 
                 $sql = substr($sql, 0, -1) . " WHERE " . $sqlSnippet;
@@ -460,7 +460,7 @@ class BasePeer
             // transactions.
             if ($criteria->isUseTransaction()) $connection->begin();
 
-            $params = array();
+            $params = [];
             $sql = self::createSelectSql($criteria, $params);
 
             $stmt = $connection->prepareStatement($sql);
@@ -484,7 +484,7 @@ class BasePeer
                     // transactions.
                     if ($criteria->isUseTransaction()) $connection->begin();
 
-                    $params = array();
+                    $params = [];
                     $sql = self::createSelectSql($criteria, $params);
 
                     $stmt = $connection->prepareStatement($sql);
@@ -534,7 +534,7 @@ class BasePeer
     {
         $dbMap = Propel::getDatabaseMap($dbName);
         $tableMap = $dbMap->getTable($tableName);
-        $failureMap = array(); // map of ValidationFailed objects
+        $failureMap = []; // map of ValidationFailed objects
         foreach($columns as $colName => $colValue) {
             if ($tableMap->containsColumn($colName)) {
                 $col = $tableMap->getColumn($colName);
@@ -611,12 +611,12 @@ class BasePeer
         $dbMap = Propel::getDatabaseMap($criteria->getDbName());
 
         // redundant definition $selectModifiers = array();
-        $selectClause = array();
-        $fromClause = array();
-        $joinClause = array();
-        $joinTables = array();
-        $whereClause = array();
-        $orderByClause = array();
+        $selectClause = [];
+        $fromClause = [];
+        $joinClause = [];
+        $joinTables = [];
+        $whereClause = [];
+        $orderByClause = [];
         // redundant definition $groupByClause = array();
 
         $orderBy = $criteria->getOrderByColumns();
@@ -638,8 +638,8 @@ class BasePeer
 
             $selectClause[] = $columnName; // the full column name: e.g. MAX(books.price)
 
-            $parenPos = strrpos($columnName, '(');
-            $dotPos = strpos($columnName, '.');
+            $parenPos = strrpos((string) $columnName, '(');
+            $dotPos = strpos((string) $columnName, '.');
 
             // [HL] I think we really only want to worry about adding stuff to
             // the fromClause if this function has a TABLE.COLUMN in it at all.
@@ -648,9 +648,9 @@ class BasePeer
             if ($dotPos !== false) {
 
                 if ($parenPos === false) { // table.column
-                    $tableName = substr($columnName, 0, $dotPos);
+                    $tableName = substr((string) $columnName, 0, $dotPos);
                 } else { // FUNC(table.column)
-                    $tableName = substr($columnName, $parenPos + 1, $dotPos - ($parenPos + 1));
+                    $tableName = substr((string) $columnName, $parenPos + 1, $dotPos - ($parenPos + 1));
                     // functions may contain qualifiers so only take the last
                     // word as the table name.
                     // COUNT(DISTINCT books.price)
@@ -840,33 +840,33 @@ class BasePeer
 
                 // Add function expression as-is.
 
-                if (strpos($orderByColumn, '(') !== false) {
+                if (str_contains((string) $orderByColumn, '(')) {
                     $orderByClause[] = $orderByColumn;
                     continue;
                 }
 
                 // Split orderByColumn (i.e. "table.column DESC")
 
-                $dotPos = strpos($orderByColumn, '.');
+                $dotPos = strpos((string) $orderByColumn, '.');
 
                 if ($dotPos !== false) {
-                    $tableName = substr($orderByColumn, 0, $dotPos);
-                    $columnName = substr($orderByColumn, $dotPos+1);
+                    $tableName = substr((string) $orderByColumn, 0, $dotPos);
+                    $columnName = substr((string) $orderByColumn, $dotPos+1);
                 }
                 else {
                     $tableName = '';
                     $columnName = $orderByColumn;
                 }
 
-                $spacePos = strpos($columnName, ' ');
+                $spacePos = strpos((string) $columnName, ' ');
 
                 if ($spacePos !== false) {
-                    $direction = substr($columnName, $spacePos);
+                    $direction = substr((string) $columnName, $spacePos);
                     //Prevent SQL Injection
-                    if (!in_array(trim($direction), array('ASC', 'DESC'))) {
+                    if (!in_array(trim($direction), ['ASC', 'DESC'])) {
                         $direction = '';
                     }
-                    $columnName = substr($columnName, 0, $spacePos);
+                    $columnName = substr((string) $columnName, 0, $spacePos);
                 }
                 else {
                     $direction = '';
@@ -898,7 +898,7 @@ class BasePeer
         $sql =  "SELECT "
             .($selectModifiers ? implode(" ", $selectModifiers) . " " : "")
             .implode(", ", $selectClause)
-            ." FROM ". ( (!empty($joinClause) && count($fromClause) > 1 && (substr(get_class($db), 0, 7) == 'DBMySQL')) ? "(" . implode(", ", $fromClause) . ")" : implode(", ", $fromClause) )
+            ." FROM ". ( (!empty($joinClause) && count($fromClause) > 1 && (str_starts_with($db::class, 'DBMySQL'))) ? "(" . implode(", ", $fromClause) . ")" : implode(", ", $fromClause) )
             .($joinClause ? ' ' . implode(' ', $joinClause) : '')
             .($whereClause ? " WHERE ".implode(" AND ", $whereClause) : "")
             .($groupByClause ? " GROUP BY ".implode(",", $groupByClause) : "")
@@ -919,11 +919,11 @@ class BasePeer
      * @return     array params array('column' => ..., 'table' => ..., 'value' => ...)
      */
     private static function buildParams($columns, Criteria $values) {
-        $params = array();
+        $params = [];
         foreach($columns as $key) {
             if ($values->containsKey($key)) {
                 $crit = $values->getCriterion($key);
-                $params[] = array('column' => $crit->getColumn(), 'table' => $crit->getTable(), 'value' => $crit->getValue());
+                $params[] = ['column' => $crit->getColumn(), 'table' => $crit->getTable(), 'value' => $crit->getValue()];
             }
         }
         return $params;
@@ -965,7 +965,7 @@ class BasePeer
     public static function getValidator($classname)
     {
         try {
-            $v = isset(self::$validatorMap[$classname]) ? self::$validatorMap[$classname] : null;
+            $v = self::$validatorMap[$classname] ?? null;
             if ($v === null) {
                 $cls = Propel::import($classname);
                 $v = new $cls();
@@ -990,7 +990,7 @@ class BasePeer
     public static function getMapBuilder($classname)
     {
         try {
-            $mb = isset(self::$mapBuilders[$classname]) ? self::$mapBuilders[$classname] : null;
+            $mb = self::$mapBuilders[$classname] ?? null;
             if ($mb === null) {
                 $cls = Propel::import($classname);
                 $mb = new $cls();

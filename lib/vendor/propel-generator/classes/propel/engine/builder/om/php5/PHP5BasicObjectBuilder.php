@@ -273,7 +273,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
             $cptype = $col->getPhpNative();
             $type = $cptype;
-            $clo=strtolower($col->getName());
+            $clo=strtolower((string) $col->getName());
             $defVal = "";
 
             // When NULL not allowed we set a standard default value for our properties.
@@ -366,7 +366,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
     protected function addTemporalAccessor(string &$script, Column $col): void
     {
         $cfc=$col->getPhpName();
-        $clo=strtolower($col->getName());
+        $clo=strtolower((string) $col->getName());
 
         // these default values are based on the Creole defaults
         // the date and time default formats are locale-sensitive
@@ -435,7 +435,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
     protected function addGenericAccessor(string &$script, Column $col): void
     {
         $cfc=$col->getPhpName();
-        $clo=strtolower($col->getName());
+        $clo=strtolower((string) $col->getName());
 
         $isInt = ($col->getPhpNative() === 'int');
         $isFloat = ($col->getPhpNative() === 'float');
@@ -508,7 +508,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
     protected function addLazyLoader(string &$script, Column $col): void
     {
         $cfc=$col->getPhpName();
-        $clo=strtolower($col->getName());
+        $clo=strtolower((string) $col->getName());
 
         $script .= "
 	/**
@@ -531,20 +531,15 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			\$rs->next();
 ";
         $affix = CreoleTypes::getAffix(CreoleTypes::getCreoleCode($col->getType()));
-        $clo = strtolower($col->getName());
-        switch($col->getType()) {
-            case PropelTypes::DATE:
-            case PropelTypes::TIME:
-            case PropelTypes::TIMESTAMP:
-                $script .= "
+        $clo = strtolower((string) $col->getName());
+        match ($col->getType()) {
+            PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP => $script .= "
 			\$this->$clo = \$rs->get$affix(1, null);
-";
-                break;
-            default:
-                $script .= "
+",
+            default => $script .= "
 			\$this->$clo = \$rs->get$affix(1);
-";
-        } // switch
+",
+        }; // switch
         $script .= "
 			\$this->".$clo."_isLoaded = true;
 		} catch (Exception \$e) {
@@ -571,8 +566,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
     protected function addMutatorOpen(string &$script, Column $col): void
     {
         $cfc=$col->getPhpName();
-        $clo=strtolower($col->getName());
-        $throwsPropelException = in_array($col->getType(), array(PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP), true);
+        $clo=strtolower((string) $col->getName());
+        $throwsPropelException = in_array($col->getType(), [PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP], true);
 
         $isInt = ($col->getPhpNative() === 'int');
         $isFloat = ($col->getPhpNative() === 'float');
@@ -666,7 +661,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
     protected function addLobMutator(string &$script, Column $col): void
     {
         $this->addMutatorOpen($script, $col);
-        $clo = strtolower($col->getName());
+        $clo = strtolower((string) $col->getName());
         // Setting of LOB columns gets some special handling
 
         if ($col->getPropelType() === PropelTypes::BLOB || $col->getPropelType() === PropelTypes::LONGVARBINARY ) {
@@ -708,7 +703,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
      */
     protected function addTemporalMutator(string &$script, Column $col): void
     {
-        $clo = strtolower($col->getName());
+        $clo = strtolower((string) $col->getName());
 
         $defaultValue = null;
         if (($val = $col->getPhpDefaultValue()) !== null) {
@@ -748,7 +743,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
      */
     protected function addDefaultMutator(string &$script, Column $col): void
     {
-        $clo = strtolower($col->getName());
+        $clo = strtolower((string) $col->getName());
 
         // FIXME: refactor this
         $defaultValue = null;
@@ -853,7 +848,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
         foreach($table->getColumns() as $col) {
             if(!$col->isLazyLoad()) {
                 $affix = CreoleTypes::getAffix(CreoleTypes::getCreoleCode($col->getType()));
-                $clo = strtolower($col->getName());
+                $clo = strtolower((string) $col->getName());
 
                 $isInt = ($col->getPhpNative() === 'int');
                 $isFloat = ($col->getPhpNative() === 'float');
@@ -881,20 +876,14 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
                     $affix .= 'OrNull';
                 }
 
-                switch ($col->getType()) {
-
-                    case PropelTypes::DATE:
-                    case PropelTypes::TIME:
-                    case PropelTypes::TIMESTAMP:
-                        $script .= "
+                match ($col->getType()) {
+                    PropelTypes::DATE, PropelTypes::TIME, PropelTypes::TIMESTAMP => $script .= "
                 \$this->$clo = \$rs->get$affix(\$startcol + $n, null);
-    ";
-                        break;
-                    default:
-                        $script .= "
+    ",
+                    default => $script .= "
                 \$this->$clo = \$rs->get$affix(\$startcol + $n);
-    ";
-                }
+    ",
+                };
             }
             $n++;
         } // if col->isLazyLoad()
@@ -941,7 +930,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		\$criteria = new Criteria(".$this->getPeerClassname()."::DATABASE_NAME);
 ";
         foreach ($this->getTable()->getColumns() as $col) {
-            $clo = strtolower($col->getName());
+            $clo = strtolower((string) $col->getName());
             if ($col->isPrimaryKey()) {
                 $script .= "
 		\$criteria->add(".$this->getColumnConstant($col).", \$this->$clo);";
@@ -973,7 +962,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		\$criteria = new Criteria(".$this->getPeerClassname()."::DATABASE_NAME);
 ";
         foreach ($this->getTable()->getColumns() as $col) {
-            $clo = strtolower($col->getName());
+            $clo = strtolower((string) $col->getName());
             $script .= "
 		if (\$this->isColumnModified(".$this->getColumnConstant($col).")) \$criteria->add(".$this->getColumnConstant($col).", \$this->$clo);";
         }
@@ -1450,7 +1439,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
         $pkeys = $this->getTable()->getPrimaryKey();
         $col = $pkeys[0];
-        $clo=strtolower($col->getName());
+        $clo=strtolower((string) $col->getName());
         $ctype = $col->getPhpNative();
 
         $script .= "
@@ -1573,14 +1562,14 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	{
 ";
 
-        $pkcols = array();
+        $pkcols = [];
         foreach ($table->getColumns() as $pkcol) {
             if ($pkcol->isPrimaryKey()) {
                 $pkcols[] = $pkcol->getName();
             }
         }
 
-        $ucols = array();
+        $ucols = [];
         /** @var Unique $unice **/
         foreach ($table->getUnices() as $unice) {
             $uniceCols = $unice->getColumns();

@@ -196,8 +196,8 @@ if (Propel::isInit()) {
 		foreach ($this->getTable()->getColumns() as $col) {
 
 			$script .= "
-	/** the column name for the ".strtoupper($col->getName()) ." field */
-	const ".$this->getColumnName($col) ." = '".$this->getTable()->getName().".".strtoupper($col->getName())."';
+	/** the column name for the ".strtoupper((string) $col->getName()) ." field */
+	const ".$this->getColumnName($col) ." = '".$this->getTable()->getName().".".strtoupper((string) $col->getName())."';
 ";
 		} // foreach
 	}
@@ -403,19 +403,19 @@ if (Propel::isInit()) {
 
 					$script .= "
 	/** A key representing a particular subclass */
-	const CLASSKEY_".strtoupper($child->getKey())." = '" . $child->getKey() . "';
+	const CLASSKEY_".strtoupper((string) $child->getKey())." = '" . $child->getKey() . "';
 ";
 
-	if (strtoupper($child->getClassname()) != strtoupper($child->getKey())) {
+	if (strtoupper((string) $child->getClassname()) != strtoupper((string) $child->getKey())) {
 		$script .= "
 	/** A key representing a particular subclass */
-	const CLASSKEY_".strtoupper($child->getClassname())." = '" . $child->getKey() . "';
+	const CLASSKEY_".strtoupper((string) $child->getClassname())." = '" . $child->getKey() . "';
 ";
 	}
 
 	$script .= "
 	/** A class that can be returned by this peer. */
-	const CLASSNAME_".strtoupper($child->getKey())." = '". $childBuilder->getClasspath() . "';
+	const CLASSNAME_".strtoupper((string) $child->getKey())." = '". $childBuilder->getClasspath() . "';
 ";
 					} /* foreach children */
 			} /* if col->isenumerated...() */
@@ -506,7 +506,7 @@ if (Propel::isInit()) {
 		*/
 		if ($table->hasPrimaryKey()) {
 			$pk = $table->getPrimaryKey();
-			$count_col = $table->getName().".".strtoupper($pk[0]->getName());
+			$count_col = $table->getName().".".strtoupper((string) $pk[0]->getName());
 		}
 
 		$script .= "
@@ -739,8 +739,8 @@ if (Propel::isInit()) {
 ";
 			foreach ($col->getChildren() as $child) {
 				$script .= "
-				case self::CLASSKEY_".strtoupper($child->getKey()).":
-					\$omClass = self::CLASSNAME_".strtoupper($child->getKey()).";
+				case self::CLASSKEY_".strtoupper((string) $child->getKey()).":
+					\$omClass = self::CLASSNAME_".strtoupper((string) $child->getKey()).";
 					break;
 ";
 			} /* foreach */
@@ -1408,7 +1408,7 @@ if (Propel::isInit()) {
 			$i = 0;
 			foreach($table->getPrimaryKey() as $col) {
 				$script .= "
-				\$c{$i} = \$criteria->getNewCriterion(".$this->getPeerClassname($col).", \$pk[$i], Criteria::EQUAL);";
+				\$c{$i} = \$criteria->getNewCriterion(".$this->getPeerClassname().", \$pk[$i], Criteria::EQUAL);";
 				$j = $i - 1;
 				if ($i > 0) {
 					$script .= "
@@ -1442,7 +1442,7 @@ if (Propel::isInit()) {
 	 * Retrieve object using using composite pkey values.
 	 * ";
 		foreach ($table->getPrimaryKey() as $col) {
-			$clo = strtolower($col->getName());
+			$clo = strtolower((string) $col->getName());
 			$cptype = $col->getPhpNative();
 			$script .= "@param $cptype $".$clo."
 	   ";
@@ -1454,7 +1454,7 @@ if (Propel::isInit()) {
 	public static function ".$this->getRetrieveMethodName()."(";
 		$co = 0;
 		foreach ($table->getPrimaryKey() as $col) {
-			$clo = strtolower($col->getName());
+			$clo = strtolower((string) $col->getName());
 			$script .= ($co++ ? "," : "") . " $".$clo;
 		} /* foreach */
 		$script .= ", Connection \$connection = null) {
@@ -1463,7 +1463,7 @@ if (Propel::isInit()) {
 		}
 		\$criteria = new Criteria();";
 		foreach ($table->getPrimaryKey() as $col) {
-			$clo = strtolower($col->getName());
+			$clo = strtolower((string) $col->getName());
 			$script .= "
 		\$criteria->add(".$this->getColumnConstant($col).", $".$clo.");";
 		}

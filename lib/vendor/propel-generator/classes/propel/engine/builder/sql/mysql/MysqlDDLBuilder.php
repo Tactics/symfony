@@ -107,7 +107,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 (
 	";
 
-		$lines = array();
+		$lines = [];
 
 		foreach ($table->getColumns() as $col) {
 			$entry = $this->getColumnDDL($col);
@@ -161,7 +161,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 		$platform = $this->getPlatform();
 
 		$cols = $index->getColumns();
-		$list = array();
+		$list = [];
 		foreach($cols as $col) {
 			$list[] = $this->quoteIdentifier($col) . ($index->hasColumnSize($col) ? '(' . $index->getColumnSize($col) . ')' : '');
 		}
@@ -197,8 +197,8 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 		$platform = $this->getPlatform();
 
 
-		$_indices = array();
-		$_previousColumns = array();
+		$_indices = [];
+		$_previousColumns = [];
 
 		// we're building an array of indices here which is smart about multi-column indices.
 		// for example, if we have to indices foo(ColA) and bar(ColB, ColC), we have actually three indices already defined:
@@ -214,7 +214,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 		$_tableIndices = array_merge($table->getIndices(), $table->getUnices());
 		foreach($_tableIndices as $_index) {
 			// same procedure, this time for unices and indices
-			$_previousColumns = array();
+			$_previousColumns = [];
 			$_indexColumns = $_index->getColumns();
 			foreach($_indexColumns as $_indexColumn) {
 				$_previousColumns[] = $this->quoteIdentifier($_indexColumn);
@@ -239,7 +239,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 
 		foreach ($table->getForeignKeys() as $fk) {
 
-			$indexName = $this->quoteIdentifier(substr_replace($fk->getName(), 'FI_',  strrpos($fk->getName(), 'FK_'), 3));
+			$indexName = $this->quoteIdentifier(substr_replace($fk->getName(), 'FI_',  strrpos((string) $fk->getName(), 'FK_'), 3));
 
 			if(!in_array($this->getColumnList($fk->getLocalColumns()), $_indices)) {
 				// no matching index defined in the schema, so we have to create one. MySQL needs indices on any columns that serve as foreign keys. these are not auto-created prior to 4.1.2

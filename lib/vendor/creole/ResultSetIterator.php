@@ -51,15 +51,12 @@
  */
 class ResultSetIterator implements Iterator {
 
-    private ResultSet $rs;
-
     /**
      * Construct the iterator.
      * @param ResultSet $rs
      */
-    public function __construct(ResultSet $rs)
+    public function __construct(private readonly ResultSet $rs)
     {
-        $this->rs = $rs;
     }
 
     /**

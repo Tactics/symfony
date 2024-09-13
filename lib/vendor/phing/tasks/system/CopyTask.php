@@ -47,11 +47,11 @@ class CopyTask extends Task {
     protected $flatten       = false;  // apply the FlattenMapper right way (from XML)
     protected $mapperElement = null;
 
-    protected $fileCopyMap   = array(); // asoc array containing mapped file names
-    protected $dirCopyMap    = array(); // asoc array containing mapped file names
+    protected $fileCopyMap   = []; // asoc array containing mapped file names
+    protected $dirCopyMap    = []; // asoc array containing mapped file names
     protected $fileUtils     = null;    // a instance of fileutils
-    protected $filesets      = array(); // all fileset objects assigned to this task
-    protected $filterChains  = array(); // all filterchains objects assigned to this task
+    protected $filesets      = []; // all fileset objects assigned to this task
+    protected $filterChains  = []; // all filterchains objects assigned to this task
 
     protected $verbosity     = Project::PROJECT_MSG_VERBOSE;
 
@@ -307,7 +307,7 @@ class CopyTask extends Task {
     private function buildMap(&$fromDir, &$toDir, &$names, &$mapper, &$map) {
         $toCopy = null;
         if ($this->overwrite) {
-            $v = array();
+            $v = [];
             foreach($names as $name) {
                 $result = $mapper->main($name);
                 if ($result !== null) {

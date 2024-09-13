@@ -7,13 +7,8 @@
  */
 class ObjectWithVendorSpecificData
 {
-    protected $object;
-    protected $vendorType;
-
-    public function __construct($object, $vendorType)
+    public function __construct(protected $object, protected $vendorType)
     {
-        $this->object = $object;
-        $this->vendorType = $vendorType;
     }
 
     public function isCompatible($type)

@@ -82,7 +82,7 @@ class DependSelector extends BaseSelector {
      * a file out of date.
      */
     public function setGranularity($granularity) {
-        $this->granularity = (int) granularity;
+        $this->granularity = (int) \GRANULARITY;
     }
 
     /**

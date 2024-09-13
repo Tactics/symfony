@@ -28,11 +28,11 @@ class pakeGetopt
   const NO_ARGUMENT = 0;
   const REQUIRED_ARGUMENT = 1;
   const OPTIONAL_ARGUMENT = 2;
-  private $short_options = array();
-  private $long_options = array();
+  private $short_options = [];
+  private $long_options = [];
   private $args = '';
-  private $options = array();
-  private $arguments = array();
+  private $options = [];
+  private $arguments = [];
 
   public function __construct($options)
   {
@@ -52,19 +52,19 @@ class pakeGetopt
   {
     if ($long_opt[0] == '-' && $long_opt[1] == '-')
     {
-      $long_opt = substr($long_opt, 2);
+      $long_opt = substr((string) $long_opt, 2);
     }
 
     if ($short_opt)
     {
       if ($short_opt[0] == '-')
       {
-        $short_opt = substr($short_opt, 1);
+        $short_opt = substr((string) $short_opt, 1);
       }
-      $this->short_options[$short_opt] = array('mode' => $mode, 'comment' => $comment, 'name' => $long_opt);
+      $this->short_options[$short_opt] = ['mode' => $mode, 'comment' => $comment, 'name' => $long_opt];
     }
 
-    $this->long_options[$long_opt] = array('mode' => $mode, 'comment' => $comment, 'name' => $long_opt);
+    $this->long_options[$long_opt] = ['mode' => $mode, 'comment' => $comment, 'name' => $long_opt];
   }
 
   public function parse($args = null)
@@ -72,10 +72,8 @@ class pakeGetopt
     if (is_string($args))
     {
       // hack to split arguments with spaces : --test="with some spaces"
-      $args = preg_replace_callback('/(\'|")(.+?)\\1/', function($matches) {
-        return str_replace(' ', '=PLACEHOLDER=', $matches[2]);
-      }, $args);
-      $args = preg_split('/\s+/', $args);
+      $args = preg_replace_callback('/(\'|")(.+?)\\1/', fn($matches) => str_replace(' ', '=PLACEHOLDER=', $matches[2]), $args);
+      $args = preg_split('/\s+/', (string) $args);
       $args = str_replace('=PLACEHOLDER=', ' ', $args);
     }
     else if (!$args)
@@ -91,8 +89,8 @@ class pakeGetopt
 
     $this->args = $args;
 
-    $this->options = array();
-    $this->arguments = array();
+    $this->options = [];
+    $this->arguments = [];
 
     while ($arg = array_shift($this->args))
     {
@@ -103,18 +101,18 @@ class pakeGetopt
         break;
       }
 
-      if ($arg[0] != '-' || (strlen($arg) > 1 && $arg[1] == '-' && !$this->long_options))
+      if ($arg[0] != '-' || (strlen((string) $arg) > 1 && $arg[1] == '-' && !$this->long_options))
       {
-        $this->arguments = array_merge($this->arguments, array($arg), $this->args);
+        $this->arguments = array_merge($this->arguments, [$arg], $this->args);
         break;
       }
-      elseif (strlen($arg) > 1 && $arg[1] == '-')
+      elseif (strlen((string) $arg) > 1 && $arg[1] == '-')
       {
-        $this->parse_long_option(substr($arg, 2));
+        $this->parse_long_option(substr((string) $arg, 2));
       }
       else
       {
-        $this->parse_short_option(substr($arg, 1));
+        $this->parse_short_option(substr((string) $arg, 1));
       }
     }
   }
@@ -149,7 +147,7 @@ class pakeGetopt
 
   private function parse_short_option($arg)
   {
-    for ($i = 0; $i < strlen($arg); $i++)
+    for ($i = 0; $i < strlen((string) $arg); $i++)
     {
       $opt = $arg[$i];
       $opt_arg = true;
@@ -163,9 +161,9 @@ class pakeGetopt
       /* required or optional argument? */
       if ($this->short_options[$opt]['mode'] == self::REQUIRED_ARGUMENT)
       {
-        if ($i + 1 < strlen($arg))
+        if ($i + 1 < strlen((string) $arg))
         {
-          $this->options[$this->short_options[$opt]['name']] = substr($arg, $i + 1);
+          $this->options[$this->short_options[$opt]['name']] = substr((string) $arg, $i + 1);
           break;
         }
         else
@@ -184,9 +182,9 @@ class pakeGetopt
       }
       else if ($this->short_options[$opt]['mode'] == self::OPTIONAL_ARGUMENT)
       {
-        if (substr($arg, $i + 1) != '')
+        if (substr((string) $arg, $i + 1) != '')
         {
-          $this->options[$this->short_options[$opt]['name']] = substr($arg, $i + 1);
+          $this->options[$this->short_options[$opt]['name']] = substr((string) $arg, $i + 1);
         }
         else
         {
@@ -210,7 +208,7 @@ class pakeGetopt
 
   private function parse_long_option($arg)
   {
-    @list($opt, $opt_arg) = explode('=', $arg);
+    @[$opt, $opt_arg] = explode('=', (string) $arg);
 
     if (!$opt_arg)
     {

@@ -43,22 +43,22 @@ class TaskAdapter extends Task {
             try {  // try to set project
                 $this->proxy->setProject($this->project);
             } catch (Exception $ex) {
-                $this->log("Error setting project in " . get_class($this->proxy) . Project::PROJECT_MSG_ERR);
+                $this->log("Error setting project in " . $this->proxy::class . Project::PROJECT_MSG_ERR);
                 throw new BuildException($ex);
             }
         } else {
-            throw new Exception("Error setting project in class " . get_class($this->proxy));
+            throw new Exception("Error setting project in class " . $this->proxy::class);
         }
 
         if (method_exists($this->proxy, "main")) {
             try { //try to call main
                 $this->proxy->main($this->project);
             } catch (Exception $ex) {
-                $this->log("Error in " . get_class($this->proxy), Project::PROJECT_MSG_ERR);
+                $this->log("Error in " . $this->proxy::class, Project::PROJECT_MSG_ERR);
                 throw new BuildException($ex->getMessage());
             }
         } else {
-            throw new BuildException("Your task-like class '" . get_class($this->proxy) ."' does not have a main() method");
+            throw new BuildException("Your task-like class '" . $this->proxy::class ."' does not have a main() method");
         }
     }
 

@@ -143,7 +143,7 @@ interface PreparedStatement {
      * @return ResultSet
      * @throws SQLException if a database access error occurs.
      */
-    public function executeQuery($p1 = null, $fetchmode = null);
+    public function executeQuery(mixed $p1 = null, $fetchmode = null);
     
     /**
      * Executes the SQL INSERT, UPDATE, or DELETE statement in this PreparedStatement object.
@@ -156,17 +156,16 @@ interface PreparedStatement {
 
     /**
      * A generic set method.
-     * 
+     *
      * You can use this if you don't want to concern yourself with the details.  It involves
      * slightly more overhead than the specific settesr, since it grabs the PHP type to determine
      * which method makes most sense.
-     * 
+     *
      * @param int $paramIndex
-     * @param mixed $value
      * @return void
      * @throws SQLException
      */
-    public function set($paramIndex, $value);
+    public function set($paramIndex, mixed $value);
     
     /**
      * Sets an array.
@@ -193,14 +192,14 @@ interface PreparedStatement {
      * @param mixed $blob Blob object or string containing data.
      * @return void
      */
-    public function setBlob($paramIndex, $blob);
+    public function setBlob($paramIndex, mixed $blob);
 
     /**
      * @param int $paramIndex
      * @param mixed $clob Clob object  or string containing data.
      * @return void
      */
-    public function setClob($paramIndex, $clob);
+    public function setClob($paramIndex, mixed $clob);
 
     /**
      * @param int $paramIndex

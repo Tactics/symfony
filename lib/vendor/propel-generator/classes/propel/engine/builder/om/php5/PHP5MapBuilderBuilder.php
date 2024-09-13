@@ -246,7 +246,7 @@ class ".$this->getClassname()." {
 		foreach ($table->getColumns() as $col) {
 			$tfc=$table->getPhpName();
 			$cfc=$col->getPhpName();
-			$cup=strtoupper($col->getName());
+			$cup=strtoupper((string) $col->getName());
 			if (!$col->getSize()) {
 				$size = "null";
 			} else {
@@ -255,7 +255,7 @@ class ".$this->getClassname()." {
 			if($col->isPrimaryKey()) {
 				if($col->isForeignKey()) {
 					$script .= "
-		\$tMap->addForeignPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."' , CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
+		\$tMap->addForeignPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."' , CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper((string) $col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
 ";
 				} else {
 					$script .= "
@@ -265,7 +265,7 @@ class ".$this->getClassname()." {
 			} else {
 				if($col->isForeignKey()) {
 					$script .= "
-		\$tMap->addForeignKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
+		\$tMap->addForeignKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper((string) $col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
 ";
 			} else {
 					$script .= "
@@ -277,7 +277,7 @@ class ".$this->getClassname()." {
 
 		foreach($table->getValidators() as $val) {
 			$col = $val->getColumn();
-			$cup = strtoupper($col->getName());
+			$cup = strtoupper((string) $col->getName());
 			foreach($val->getRules() as $rule) {
 				if ($val->getTranslate() !== Validator::TRANSLATE_NONE) {
 					$script .= "

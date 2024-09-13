@@ -37,8 +37,8 @@ class ForeignKey extends XMLElement {
 	private $onUpdate;
 	private $onDelete;
 	private $parentTable;
-	private $localColumns = array();
-	private $foreignColumns = array();
+	private $localColumns = [];
+	private $foreignColumns = [];
 
 	// the uppercase equivalent of the onDelete/onUpdate values in the dtd
 	const NONE     = "";            // No "ON [ DELETE | UPDATE]" behaviour specified.
@@ -65,10 +65,10 @@ class ForeignKey extends XMLElement {
 	 */
 	private function normalizeFKey($attrib)
 	{
-		if ($attrib === null  || strtoupper($attrib) == "NONE") {
+		if ($attrib === null  || strtoupper((string) $attrib) == "NONE") {
 			$attrib = self::NONE;
 		}
-		$attrib = strtoupper($attrib);
+		$attrib = strtoupper((string) $attrib);
 		if ($attrib == "SETNULL") {
 			$attrib =  self::SETNULL;
 		}
@@ -225,7 +225,7 @@ class ForeignKey extends XMLElement {
 	 */
 	public function getLocalForeignMapping()
 	{
-		$h = array();
+		$h = [];
 		for ($i=0, $size=count($this->localColumns); $i < $size; $i++) {
 			$h[$this->localColumns[$i]] = $this->foreignColumns[$i];
 		}
@@ -247,7 +247,7 @@ class ForeignKey extends XMLElement {
 	 */
 	public function getForeignLocalMapping()
 	{
-		$h = array();
+		$h = [];
 		for ($i=0, $size=count($this->localColumns); $i < $size; $i++) {
 			$h[ $this->foreignColumns[$i] ] = $this->localColumns[$i];
 		}

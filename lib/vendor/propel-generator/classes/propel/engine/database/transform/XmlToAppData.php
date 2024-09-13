@@ -57,14 +57,11 @@ class XmlToAppData extends AbstractHandler {
 	private $isForReferenceOnly;
 	private $currentPackage;
 	private $currentXmlFile;
-	private $defaultPackage;
-
-	private $encoding;
 
 	/** two-dimensional array,
 		first dimension is for schemas(key is the path to the schema file),
 		second is for tags within the schema */
-	private $schemasTagsStack = array();
+	private $schemasTagsStack = [];
 
 	public $parser;
 
@@ -75,13 +72,11 @@ class XmlToAppData extends AbstractHandler {
 	 * @param      string $defaultPackage the default PHP package used for the om
 	 * @param      string $encoding The database encoding.
 	 */
-	public function __construct(Platform $platform, $defaultPackage, $encoding = 'iso-8859-1')
+	public function __construct(Platform $platform, private $defaultPackage, private $encoding = 'iso-8859-1')
 	{
 		$this->app = new AppData($platform);
 		$this->platform = $platform;
-		$this->defaultPackage = $defaultPackage;
 		$this->firstPass = true;
-		$this->encoding = $encoding;
 	}
 
 	/**
@@ -102,7 +97,7 @@ class XmlToAppData extends AbstractHandler {
 		$domDocument->load($xmlFile);
 
 		// store current schema file path
-		$this->schemasTagsStack[$xmlFile] = array();
+		$this->schemasTagsStack[$xmlFile] = [];
 
 		$this->currentXmlFile = $xmlFile;
 
@@ -177,7 +172,7 @@ class XmlToAppData extends AbstractHandler {
 						//and it's ingnored in the nested external-schemas
 						if(!$this->isExternalSchema()) {
 							$isForRefOnly = @$attributes["referenceOnly"];
-							$this->isForReferenceOnly = ($isForRefOnly !== null ? (strtolower($isForRefOnly) === "true") : true); // defaults to TRUE
+							$this->isForReferenceOnly = ($isForRefOnly !== null ? (strtolower((string) $isForRefOnly) === "true") : true); // defaults to TRUE
 						}
 
 						if ($xmlFile[0] != '/') {
@@ -304,19 +299,16 @@ class XmlToAppData extends AbstractHandler {
 						$this->_throwInvalidTagException($name);
 				}
 	  } elseif ($parentTag == "validator") {
-		switch($name) {
-		  case "rule":
-					  $this->currValidator->addRule($attributes);
-		  break;
-		  default:
-			$this->_throwInvalidTagException($name);
-		}
+		match ($name) {
+      "rule" => $this->currValidator->addRule($attributes),
+      default => $this->_throwInvalidTagException($name),
+  };
 			} elseif ($parentTag == "vendor") {
 
 				switch($name) {
 					case "parameter":
 						if($this->currVendorObject->isCompatible($this->platform->getDatabaseType())) {
-							$this->currVendorObject->setVendorParameter($attributes['name'], iconv('utf-8',$this->encoding, $attributes['value']));
+							$this->currVendorObject->setVendorParameter($attributes['name'], iconv('utf-8',$this->encoding, (string) $attributes['value']));
 						}
 					break;
 
@@ -340,7 +332,7 @@ class XmlToAppData extends AbstractHandler {
 		}
 	}
 
-	function _throwInvalidTagException($tag_name)
+	function _throwInvalidTagException($tag_name): never
 	{
 		throw new BuildException("Unexpected tag <" . $tag_name . ">", $this->parser->getLocation());
 	}

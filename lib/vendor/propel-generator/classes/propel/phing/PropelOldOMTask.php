@@ -99,7 +99,7 @@ class PropelOldOMTask extends AbstractPropelDataModelTask {
 						//$generator->put("pkpeer", $pkpeer); -- we're not using this yet
 						$generator->put("pkmap", $pkmap);
 
-						foreach(array($pkpeer, $pkmap, $pkbase) as $pk) {
+						foreach([$pkpeer, $pkmap, $pkbase] as $pk) {
 							$path = strtr($pk, '.', '/');
 							$f = new PhingFile($this->getOutputDirectory(), $path);
 							if (!$f->exists()) {
@@ -208,7 +208,7 @@ class PropelOldOMTask extends AbstractPropelDataModelTask {
 							$col = $table->getChildrenColumn();
 							if ($col->isEnumeratedClasses()) {
 								foreach ($col->getChildren() as $child) {
-									$childpkg = ($child->getPackage() ? $child->getPackage() : $package);
+									$childpkg = ($child->getPackage() ?: $package);
 								    $generator->put("child", $child);
 									$generator->put("package", $childpkg);
 								    $path = ClassTools::getFilePath($childpkg, $child->getClassName());

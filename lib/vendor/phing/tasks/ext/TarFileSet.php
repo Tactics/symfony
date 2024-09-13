@@ -35,9 +35,9 @@ class TarFileSet extends FileSet {
             if ($includeEmpty) {
 
                 // first any empty directories that will not be implicitly added by any of the files
-                $implicitDirs = array();
+                $implicitDirs = [];
                 foreach($this->files as $file) {
-                    $implicitDirs[] = dirname($file);
+                    $implicitDirs[] = dirname((string) $file);
                 }
 
                 $incDirs = $ds->getIncludedDirectories();
@@ -47,7 +47,7 @@ class TarFileSet extends FileSet {
                 // we get duplicate directories in the resulting tar
                 foreach($incDirs as $dir) {
                     foreach($incDirs as $dircheck) {
-                        if (!empty($dir) && $dir == dirname($dircheck)) {
+                        if (!empty($dir) && $dir == dirname((string) $dircheck)) {
                             $implicitDirs[] = $dir;
                         }
                     }

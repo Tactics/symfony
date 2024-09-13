@@ -104,7 +104,7 @@ class ExecTask extends Task {
          // test if os match
         $myos = Phing::getProperty("os.name");
         $this->log("Myos = " . $myos, Project::PROJECT_MSG_VERBOSE);
-        if (($this->os !== null) && (strpos($os, $myos) === false)) {
+        if (($this->os !== null) && (!str_contains($os, $myos))) {
             // this command will be executed only on the specified OS
             $this->log("Not found in " . $os, Project::PROJECT_MSG_VERBOSE);
             return 0;
@@ -153,7 +153,7 @@ class ExecTask extends Task {
 
 		$this->log("Executing command: " . $this->command);
 
-        $output = array();
+        $output = [];
         $return = null;
         exec($this->command, $output, $return);
 
@@ -177,7 +177,7 @@ class ExecTask extends Task {
      * The command to use.
      * @param mixed $command String or string-compatible (e.g. w/ __toString()).
      */
-    function setCommand($command) {
+    function setCommand(mixed $command) {
         $this->command = "" . $command;
     }
 

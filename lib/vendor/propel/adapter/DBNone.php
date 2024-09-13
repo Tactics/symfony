@@ -93,7 +93,7 @@ class DBNone extends DBAdapter {
 	 */
 	public function subString($s, $pos, $len)
 	{
-		return substr($s, $pos, $len);
+		return substr((string) $s, $pos, $len);
 	}
 
 	/**
@@ -104,7 +104,7 @@ class DBNone extends DBAdapter {
 	 */
 	public function strLength($s)
 	{
-		return strlen($s);
+		return strlen((string) $s);
 	}
 
 	/**

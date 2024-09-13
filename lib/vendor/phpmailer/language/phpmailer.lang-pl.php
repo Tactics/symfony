@@ -5,7 +5,7 @@
  * translated from english lang file ver. 1.72
  */
 
-$PHPMAILER_LANG = array();
+$PHPMAILER_LANG = [];
 
 $PHPMAILER_LANG["provide_address"] = 'Nale¿y podaæ prawid³owy adres email Odbiorcy.';
 $PHPMAILER_LANG["mailer_not_supported"] = 'Wybrana metoda wysy³ki wiadomoœci nie jest obs³ugiwana.';

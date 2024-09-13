@@ -77,15 +77,15 @@ class UnixFileSystem extends FileSystem {
         // PHP AFAIK.
         if ($strPathname[0] === "~") {
             if ($strPathname[1] === "/") { // like ~/foo => /home/user/foo
-                $strPathname = "/home/" . get_current_user() . substr($strPathname, 1);
+                $strPathname = "/home/" . get_current_user() . substr((string) $strPathname, 1);
             } else { // like ~foo => /home/foo
-                $pos = strpos($strPathname, "/");
-                $name = substr($strPathname, 1, $pos - 2);
-                $strPathname = "/home/" . $name . substr($strPathname, $pos);
+                $pos = strpos((string) $strPathname, "/");
+                $name = substr((string) $strPathname, 1, $pos - 2);
+                $strPathname = "/home/" . $name . substr((string) $strPathname, $pos);
             }
         }
 
-        $n = strlen($strPathname);
+        $n = strlen((string) $strPathname);
         $prevChar = 0;
         for ($i=0; $i < $n; $i++) {
             $c = $strPathname[$i];
@@ -118,7 +118,7 @@ class UnixFileSystem extends FileSystem {
         $sb = "";
 
         if ($offset > 0) {
-            $sb .= substr($pathname, 0, $offset);
+            $sb .= substr((string) $pathname, 0, $offset);
         }
         $prevChar = 0;
         for ($i = $offset; $i < $n; $i++) {
@@ -194,7 +194,7 @@ class UnixFileSystem extends FileSystem {
     function getBooleanAttributes($f) {
         //$rv = getBooleanAttributes0($f);
         $name = $f->getName();
-        $hidden = (strlen($name) > 0) && ($name[0] == '.');
+        $hidden = (strlen((string) $name) > 0) && ($name[0] == '.');
         return ($hidden ? $this->BA_HIDDEN : 0);
     }
 
@@ -230,7 +230,7 @@ class UnixFileSystem extends FileSystem {
         if (!$this->checkAccess('/', false)) {
             die ("Can not access root");
         }
-        return array(new PhingFile("/"));
+        return [new PhingFile("/")];
     }
 
     /**
@@ -241,7 +241,7 @@ class UnixFileSystem extends FileSystem {
         if (!$dir) {
             throw new Exception("Can't open directory " . $f->__toString());
         }
-        $vv = array();
+        $vv = [];
         while (($file = @readdir($dir)) !== false) {
             if ($file == "." || $file == "..") {
                 continue;
@@ -253,10 +253,10 @@ class UnixFileSystem extends FileSystem {
     }
 
     function fromURIPath($p) {
-        if (StringHelper::endsWith("/", $p) && (strlen($p) > 1)) {
+        if (StringHelper::endsWith("/", $p) && (strlen((string) $p) > 1)) {
 
             // "/foo/" --> "/foo", but "/" --> "/"
-            $p = substr($p, 0, strlen($p) - 1);
+            $p = substr((string) $p, 0, strlen((string) $p) - 1);
 
         }
 

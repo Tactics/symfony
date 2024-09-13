@@ -28,16 +28,13 @@
  */
 class MultipleChoiceInputRequest extends InputRequest {
 
-    protected $choices = array();
-
     /**
      * @param string $prompt The prompt to show to the user.  Must not be null.
      * @param array $choices holds all input values that are allowed.
      *                Must not be null.
      */
-    public function __construct($prompt, $choices) {
+    public function __construct($prompt, protected $choices) {
         parent::__construct($prompt);
-        $this->choices = $choices;
     }
 
     /**

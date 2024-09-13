@@ -39,10 +39,10 @@ class Target implements TaskContainer {
     private $name;
 
     /** dependencies */
-    private $dependencies = array();
+    private $dependencies = [];
 
     /** holds objects of children of this target */
-    private $children = array();
+    private $children = [];
 
     /** the if cond. from xml */
     private $ifCondition = "";
@@ -161,7 +161,7 @@ class Target implements TaskContainer {
      *  @return  array  Task[]
      */
     public function getTasks() {
-        $tasks = array();
+        $tasks = [];
         for ($i=0,$size=count($this->children); $i < $size; $i++) {
             $tsk = $this->children[$i];
             if ($tsk instanceof Task) {
@@ -180,7 +180,7 @@ class Target implements TaskContainer {
      *  @access  public
      */
     public function setIf($property) {
-        $this->ifCondition = ($property === null) ? "" : $property;
+        $this->ifCondition = $property ?? "";
     }
 
     /**
@@ -192,7 +192,7 @@ class Target implements TaskContainer {
      *  @access  public
      */
     public function setUnless($property) {
-        $this->unlessCondition = ($property === null) ? "" : $property;
+        $this->unlessCondition = $property ?? "";
     }
 
     /**
@@ -201,7 +201,7 @@ class Target implements TaskContainer {
      *  @param string The description text
      */
     public function setDescription($description) {
-        if ($description !== null && strcmp($description, "") !== 0) {
+        if ($description !== null && strcmp((string) $description, "") !== 0) {
             $this->description = (string) $description;
         } else {
             $this->description = null;
@@ -281,7 +281,7 @@ class Target implements TaskContainer {
             return true;
         }
 
-        $properties = explode(",", $this->ifCondition);
+        $properties = explode(",", (string) $this->ifCondition);
 
         $result = true;
         foreach ($properties as $property) {
@@ -304,7 +304,7 @@ class Target implements TaskContainer {
             return true;
         }
 
-        $properties = explode(",", $this->unlessCondition);
+        $properties = explode(",", (string) $this->unlessCondition);
 
         $result = true;
         foreach ($properties as $property) {

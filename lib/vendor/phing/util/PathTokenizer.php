@@ -59,7 +59,7 @@ class PathTokenizer {
 
      */
 
-    private $tokens = array();
+    private $tokens = [];
 
     
 
@@ -107,7 +107,7 @@ class PathTokenizer {
 
         // enough information to tokenize correctly.    
 
-        $this->tokens = preg_split("/[;:]/", $path, -1, PREG_SPLIT_NO_EMPTY);
+        $this->tokens = preg_split("/[;:]/", (string) $path, -1, PREG_SPLIT_NO_EMPTY);
 
         $this->dosStyleFilesystem = ( PATH_SEPARATOR == ';');
 
@@ -171,7 +171,7 @@ class PathTokenizer {
 
         } else {
 
-            $token = trim(array_shift($this->tokens));
+            $token = trim((string) array_shift($this->tokens));
 
         }
 
@@ -189,7 +189,7 @@ class PathTokenizer {
 
             // spec. We look at the next token
 
-            $nextToken = trim(array_shift($this->tokens));
+            $nextToken = trim((string) array_shift($this->tokens));
 
             if (StringHelper::startsWith('\\', $nextToken) || StringHelper::startsWith('/', $nextToken)) {
 

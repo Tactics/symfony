@@ -29,18 +29,15 @@
  */
 abstract class DatabaseInfo {
 
-    protected $tables = array();
+    protected $tables = [];
 
-    protected $sequences = array();
+    protected $sequences = [];
 
     /** have tables been loaded */
     protected $tablesLoaded = false;
 
     /** have sequences been loaded */
     protected $seqsLoaded = false;
-
-    /** additional vendor specific information */
-    private $vendorSpecificInfo = array();
 
     /**
      * The database Connection.
@@ -60,13 +57,13 @@ abstract class DatabaseInfo {
     /**
      * @param Connection $dbh
      */
-    public function __construct(Connection $conn, $vendorInfo = array())
+    public function __construct(Connection $conn, /** additional vendor specific information */
+    private $vendorSpecificInfo = [])
     {
         $this->conn = $conn;
         $this->dblink = $conn->getResource();
         $dsn = $conn->getDSN();
         $this->dbname = $dsn['database'];
-        $this->vendorSpecificInfo = $vendorInfo;
     }
 
     /**
@@ -86,7 +83,7 @@ abstract class DatabaseInfo {
      */
     function __sleep()
     {
-        return array('tables','sequences','conn');
+        return ['tables', 'sequences', 'conn'];
     }
 
     /**
@@ -182,7 +179,7 @@ abstract class DatabaseInfo {
     public function isSequence($key)
     {
         if(!$this->seqsLoaded) $this->initSequences();
-        return isset($this->sequences[ strtoupper($key) ]);
+        return isset($this->sequences[ strtoupper((string) $key) ]);
     }
 
     /**

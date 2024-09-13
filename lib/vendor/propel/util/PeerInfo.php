@@ -32,13 +32,13 @@
 class PeerInfo
 {
 	/** Propel Object Peers */
-	private static $peers = array();
+	private static $peers = [];
 
 	/** Reflection Objects of the Propel Peers */
-	private static $reflections = array();
+	private static $reflections = [];
 
 	/** Table Maps of the Propel Peers */
-	private static $maps = array();
+	private static $maps = [];
 
 
 	/**
@@ -182,9 +182,9 @@ class PeerInfo
 		public static function callMethod($peer, $method, $params = null)
 		{
 				if ($params !== null) {
-						return call_user_func_array(array($peer, $method), $params);
+						return call_user_func_array([$peer, $method], $params);
 				}
-				return call_user_func(array($peer, $method));
+				return call_user_func([$peer, $method]);
 		}
 
 }

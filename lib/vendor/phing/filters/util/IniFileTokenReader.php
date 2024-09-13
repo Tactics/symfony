@@ -57,7 +57,7 @@ class IniFileTokenReader extends TokenReaderType {
 
         static $tokens = null;
         if ($tokens === null) {
-            $tokens = array();
+            $tokens = [];
             $arr = parse_ini_file($this->file->getAbsolutePath(), true);
             if ($this->section === null) {
                 foreach ($arr as $sec_name => $values) {

@@ -99,7 +99,7 @@ class MySQLiResultSet extends ResultSetCommon implements ResultSet {
     public function close()
     {
         @mysqli_free_result($this->result);
-        $this->fields = array();
+        $this->fields = [];
     }
 
     /**
@@ -143,12 +143,12 @@ class MySQLiResultSet extends ResultSetCommon implements ResultSet {
             return null;
         }
 
-        $ts = strtotime($this->fields[$column]);
+        $ts = strtotime((string) $this->fields[$column]);
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             // otherwise it's an ugly MySQL timestamp!
             // YYYYMMDDHHMMSS
-            if (preg_match('/([\d]{4})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})/', $this->fields[$column], $matches)) {
+            if (preg_match('/([\d]{4})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})/', (string) $this->fields[$column], $matches)) {
                 //              YYYY       MM       DD       HH       MM       SS
                 //                $1       $2       $3       $4       $5       $6
                 $ts = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);

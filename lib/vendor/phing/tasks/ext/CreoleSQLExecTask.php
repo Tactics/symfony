@@ -64,7 +64,7 @@ class CreoleSQLExecTask extends CreoleTask {
     /**
      * files to load
      */
-    private $filesets = array();
+    private $filesets = [];
 
     /**
      * SQL statement
@@ -84,7 +84,7 @@ class CreoleSQLExecTask extends CreoleTask {
     /**
      * SQL transactions to perform
      */
-    private $transactions = array();
+    private $transactions = [];
 
     /**
      * SQL Statement delimiter
@@ -247,14 +247,14 @@ class CreoleSQLExecTask extends CreoleTask {
      */
     public function main()  {
 
-        $savedTransaction = array();
+        $savedTransaction = [];
         for($i=0,$size=count($this->transactions); $i < $size; $i++) {
             $savedTransaction[] = clone $this->transactions[$i];
         }
 
         $savedSqlCommand = $this->sqlCommand;
 
-        $this->sqlCommand = trim($this->sqlCommand);
+        $this->sqlCommand = trim((string) $this->sqlCommand);
 
         try {
             if ($this->srcFile === null && $this->sqlCommand === ""
@@ -317,18 +317,11 @@ class CreoleSQLExecTask extends CreoleTask {
                     if ($out) $out->close();
                     throw $e;
                 }
-            } catch (IOException $e) {
+            } catch (IOException|SQLException $e){
                 if (!$this->isAutocommit() && $this->conn !== null && $this->onError == "abort") {
                     try {
                         $this->conn->rollback();
-                    } catch (SQLException $ex) {}
-                }
-                throw new BuildException($e->getMessage(), $this->location);
-            } catch (SQLException $e){
-                if (!$this->isAutocommit() && $this->conn !== null && $this->onError == "abort") {
-                    try {
-                        $this->conn->rollback();
-                    } catch (SQLException $ex) {}
+                    } catch (SQLException) {}
                 }
                 throw new BuildException($e->getMessage(), $this->location);
             }
@@ -357,7 +350,7 @@ class CreoleSQLExecTask extends CreoleTask {
         $in = new BufferedReader($reader);
         try {
             while (($line = $in->readLine()) !== null) {
-                $line = trim($line);
+                $line = trim((string) $line);
                 $line = ProjectConfigurator::replaceProperties($this->project, $line,
                         $this->project->getProperties());
 
@@ -378,7 +371,7 @@ class CreoleSQLExecTask extends CreoleTask {
                 // SQL defines "--" as a comment to EOL
                 // and in Oracle it may contain a hint
                 // so we cannot just remove it, instead we must end it
-                if (strpos($line, "--") !== false) {
+                if (str_contains($line, "--")) {
                     $sql .= "\n";
                 }
 
@@ -387,7 +380,7 @@ class CreoleSQLExecTask extends CreoleTask {
                         || $this->delimiterType == self::DELIM_ROW
                         && $line == $this->delimiter) {
                     $this->log("SQL: " . $sql, Project::PROJECT_MSG_VERBOSE);
-                    $this->execSQL(StringHelper::substring($sql, 0, strlen($sql) - strlen($this->delimiter) - 1), $out);
+                    $this->execSQL(StringHelper::substring($sql, 0, strlen($sql) - strlen((string) $this->delimiter) - 1), $out);
                     $sql = "";
                 }
             }
@@ -408,7 +401,7 @@ class CreoleSQLExecTask extends CreoleTask {
      */
     protected function execSQL($sql, $out = null) {
         // Check and ignore empty statements
-        if (trim($sql) == "") {
+        if (trim((string) $sql) == "") {
             return;
         }
 
@@ -474,7 +467,7 @@ class CreoleSQLExecTask extends CreoleTask {
                     foreach($fields as $columnValue) {
 
                         if ($columnValue != null) {
-                            $columnValue = trim($columnValue);
+                            $columnValue = trim((string) $columnValue);
                         }
 
                         if ($first) {

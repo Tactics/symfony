@@ -9,39 +9,33 @@
  */
 
 /**
- * @package    symfony
- * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfConsoleController.class.php 3204 2007-01-09 18:50:08Z fabien $
  */
 class sfConsoleController extends sfController
 {
-  /**
-   * Dispatches a request.
-   *
-   * @param string A module name
-   * @param string An action name
-   * @param array  An associative array of parameters to be set
-   */
-  public function dispatch($moduleName, $actionName, $parameters = array())
-  {
-    try
+    /**
+     * Dispatches a request.
+     *
+     * @param string A module name
+     * @param string An action name
+     * @param array  An associative array of parameters to be set
+     */
+    public function dispatch($moduleName, $actionName, $parameters = [])
     {
-      // set parameters
-      $this->getContext()->getRequest()->getParameterHolder()->add($parameters);
+        try {
+            // set parameters
+            $this->getContext()->getRequest()->getParameterHolder()->add($parameters);
 
-      // make the first request
-      $this->forward($moduleName, $actionName);
+            // make the first request
+            $this->forward($moduleName, $actionName);
+        } catch (sfException $e) {
+            $e->printStackTrace();
+        } catch (Exception $e) {
+            // wrap non symfony exceptions
+            $sfException = new sfException();
+            $sfException->printStackTrace($e);
+        }
     }
-    catch (sfException $e)
-    {
-      $e->printStackTrace();
-    }
-    catch (Exception $e)
-    {
-      // wrap non symfony exceptions
-      $sfException = new sfException();
-      $sfException->printStackTrace($e);
-    }
-  }
 }

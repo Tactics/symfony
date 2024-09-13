@@ -29,10 +29,9 @@
  */
 abstract class TableInfo {
 
-    protected $name;
-    protected $columns = array();
-    protected $foreignKeys = array();
-    protected $indexes = array();
+    protected $columns = [];
+    protected $foreignKeys = [];
+    protected $indexes = [];
     protected $primaryKey;
 
     protected $pkLoaded = false;
@@ -45,7 +44,7 @@ abstract class TableInfo {
      * Additional and optional vendor specific information.
      * @var vendorSpecificInfo
      */
-    protected $vendorSpecificInfo = array();
+    protected $vendorSpecificInfo = [];
 
     /**
      * Database Connection.
@@ -70,9 +69,8 @@ abstract class TableInfo {
      * @param string $database The database name.
      * @param resource $dblink The db connection resource.
      */
-    function __construct(DatabaseInfo $database, $name) {
+    function __construct(DatabaseInfo $database, protected $name) {
         $this->database = $database;
-        $this->name = $name;
         $this->conn = $database->getConnection(); // shortcut because all drivers need this for the queries
         $this->dblink = $this->conn->getResource();
         $this->dbname = $database->getName();
@@ -86,7 +84,7 @@ abstract class TableInfo {
      */
     function __sleep()
     {
-        return array('name', 'columns', 'foreignKeys', 'indexes', 'primaryKey');
+        return ['name', 'columns', 'foreignKeys', 'indexes', 'primaryKey'];
     }
 
     /**

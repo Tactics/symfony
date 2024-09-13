@@ -5,7 +5,7 @@
  * Author: Mikael Stokkebro <info@stokkebro.dk>
  */
 
-$PHPMAILER_LANG = array();
+$PHPMAILER_LANG = [];
 
 $PHPMAILER_LANG["provide_address"] = 'Du skal indtaste mindst en ' .
                                      'modtagers emailadresse.';

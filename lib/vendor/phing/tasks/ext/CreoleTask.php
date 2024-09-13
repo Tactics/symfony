@@ -40,7 +40,7 @@ abstract class CreoleTask extends Task {
      *
      * NOT IMPLEMENTED YET
      */
-    private static $loaderMap = array();
+    private static $loaderMap = [];
 
     private $caching = true;
 

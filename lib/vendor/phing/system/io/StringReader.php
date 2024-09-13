@@ -25,12 +25,11 @@
  */
 class StringReader extends Reader {
     
-    private    $_string;
     private $mark = 0;
     private $currPos = 0;
     
-    function __construct($string) {
-        $this->_string = $string;
+    function __construct(private $_string)
+    {
     }
 
     function skip($n) {}
@@ -39,10 +38,10 @@ class StringReader extends Reader {
         if ($len === null) {
             return $this->_string;
         } else {            
-            if ($this->currPos >= strlen($this->_string)) {
+            if ($this->currPos >= strlen((string) $this->_string)) {
                 return -1;
             }            
-            $out = substr($this->_string, $this->currPos, $len);
+            $out = substr((string) $this->_string, $this->currPos, $len);
             $this->currPos += $len;
             return $out;
         }

@@ -23,63 +23,60 @@
  * # <b>invalid_error</b> - [Invalid input] - An error message to use when the
  *                                          input fails the callback check
  *
- * @package    symfony
- * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfCallbackValidator.class.php 3329 2007-01-23 08:29:34Z fabien $
  */
 class sfCallbackValidator extends sfValidator
 {
-  /**
-   * Executes this validator.
-   *
-   * @param string A parameter value
-   * @param string An error message reference
-   *
-   * @return boolean true, if this validator executes successfully, otherwise false
-   */
-  public function execute(&$value, &$error)
-  {
-    $callback = $this->getParameterHolder()->get('callback');
-
-    if (!call_user_func($callback, $value))
+    /**
+     * Executes this validator.
+     *
+     * @param string A parameter value
+     * @param string An error message reference
+     *
+     * @return bool true, if this validator executes successfully, otherwise false
+     */
+    public function execute(&$value, &$error)
     {
-      $error = $this->getParameterHolder()->get('invalid_error');
+        $callback = $this->getParameterHolder()->get('callback');
 
-      return false;
+        if (!call_user_func($callback, $value)) {
+            $error = $this->getParameterHolder()->get('invalid_error');
+
+            return false;
+        }
+
+        return true;
     }
 
-    return true;
-  }
-
-  /**
-   * Initializes this validator.
-   *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   */
-  public function initialize($context, $parameters = null)
-  {
-    // initialize parent
-    parent::initialize($context);
-
-    // set defaults
-    $this->getParameterHolder()->set('callback', null);
-    $this->getParameterHolder()->set('invalid_error', 'Invalid input');
-
-    $this->getParameterHolder()->add($parameters);
-
-    // check parameters
-    if (!is_callable($this->getParameterHolder()->get('callback')))
+    /**
+     * Initializes this validator.
+     *
+     * @param sfContext The current application context
+     * @param array   An associative array of initialization parameters
+     *
+     * @return bool true, if initialization completes successfully, otherwise false
+     */
+    public function initialize($context, $parameters = null)
     {
-      // no pattern specified
-      $error = 'Callback function must be a valid callback using is_callable()';
+        // initialize parent
+        parent::initialize($context);
 
-      throw new sfValidatorException($error);
+        // set defaults
+        $this->getParameterHolder()->set('callback', null);
+        $this->getParameterHolder()->set('invalid_error', 'Invalid input');
+
+        $this->getParameterHolder()->add($parameters);
+
+        // check parameters
+        if (!is_callable($this->getParameterHolder()->get('callback'))) {
+            // no pattern specified
+            $error = 'Callback function must be a valid callback using is_callable()';
+
+            throw new sfValidatorException($error);
+        }
+
+        return true;
     }
-
-    return true;
-  }
 }

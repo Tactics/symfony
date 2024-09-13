@@ -244,7 +244,7 @@ class PropelOldSQLTask extends AbstractPropelDataModelTask {
 
 			$dataModels = $this->getDataModels();
 			$dataModel = array_shift($dataModels);
-			$packagedDataModels = array();
+			$packagedDataModels = [];
 
 			$platform = $this->getPlatformForTargetDatabase();
 
@@ -269,16 +269,15 @@ class PropelOldSQLTask extends AbstractPropelDataModelTask {
 
 	protected function cloneDatabase($db) {
 
-		$attributes = array (
-			'name' => $db->getName(),
-			'baseClass' => $db->getBaseClass(),
-			'basePeer' => $db->getBasePeer(),
-			//'defaultPhpType' => $db->getDefaultPhpType(),
-			'defaultIdMethod' => $db->getDefaultIdMethod(),
-			'defaultPhpNamingMethod' => $db->getDefaultPhpNamingMethod(),
-			'defaultTranslateMethod' => $db->getDefaultTranslateMethod(),
-			//'heavyIndexing' => $db->getHeavyIndexing(),
-		);
+		$attributes = [
+      'name' => $db->getName(),
+      'baseClass' => $db->getBaseClass(),
+      'basePeer' => $db->getBasePeer(),
+      //'defaultPhpType' => $db->getDefaultPhpType(),
+      'defaultIdMethod' => $db->getDefaultIdMethod(),
+      'defaultPhpNamingMethod' => $db->getDefaultPhpNamingMethod(),
+      'defaultTranslateMethod' => $db->getDefaultTranslateMethod(),
+  ];
 
 		$clone = new Database();
 		$clone->loadFromXML($attributes);

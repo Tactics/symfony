@@ -56,7 +56,7 @@ class PHP5MultiExtendObjectBuilder extends ObjectBuilder {
 	 */
 	public function getPackage()
 	{
-		return ($this->child->getPackage() ? $this->child->getPackage() : parent::getPackage());
+		return ($this->child->getPackage() ?: parent::getPackage());
 	}
 
 	/**
@@ -179,7 +179,7 @@ class ".$this->getClassname()." extends ".$this->getParentClassname()." {
 		$col = $child->getColumn();
 		$cfc = $col->getPhpName();
 
-		$const = "CLASSKEY_".strtoupper($child->getKey());
+		$const = "CLASSKEY_".strtoupper((string) $child->getKey());
 
 		$script .= "
 	/**
@@ -190,7 +190,7 @@ class ".$this->getClassname()." extends ".$this->getParentClassname()." {
 ";
 
 		$script .= "
-		\$this->set$cfc(".$this->getPeerClassname()."::CLASSKEY_".strtoupper($child->getKey()).");
+		\$this->set$cfc(".$this->getPeerClassname()."::CLASSKEY_".strtoupper((string) $child->getKey()).");
 	}
 ";
 	}

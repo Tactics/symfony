@@ -191,7 +191,7 @@ final class AnsiColorLogger extends DefaultLogger {
             if ($debug !== null) {
                 $debugColor = self::PREFIX . $debug . self::SUFFIX;
             }
-        } catch (IOException $ioe) {
+        } catch (IOException) {
             //Ignore exception - we will use the defaults.
         }
     }

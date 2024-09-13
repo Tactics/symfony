@@ -33,7 +33,7 @@ class OsCondition implements Condition {
     private $family;
 
     function setFamily($f) {
-        $this->family = strtolower($f);
+        $this->family = strtolower((string) $f);
     }
 
     function evaluate() {
@@ -43,7 +43,7 @@ class OsCondition implements Condition {
             if ($this->family === "windows") {
                 return StringHelper::startsWith("win", $osName);
             } elseif ($this->family === "mac") {
-                return (strpos($osName, "mac") !== false || strpos($osName, "darwin") !== false);
+                return (str_contains($osName, "mac") || str_contains($osName, "darwin"));
             } elseif ($this->family === ("unix")) {
 				return (
 					StringHelper::endsWith("ix", $osName) ||

@@ -51,7 +51,7 @@ interface IdGenerator {
      * @param mixed $keyInfo Any additional information (e.g. sequence name) needed to fetch the id.
      * @return int The last id / next id.
      */
-    public function getId($keyInfo = null);
+    public function getId(mixed $keyInfo = null);
     
 }
 

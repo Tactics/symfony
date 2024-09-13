@@ -9,7 +9,7 @@
 class PhpLintTask extends Task {
 
   protected $file;  // the source file (from xml attribute)
-  protected $filesets = array(); // all fileset objects assigned to this task
+  protected $filesets = []; // all fileset objects assigned to this task
 
   /**
    * File to be performed syntax check on
@@ -62,7 +62,7 @@ class PhpLintTask extends Task {
     $command = 'php -l ';
     if(file_exists($file)) {
       if(is_readable($file)) {
-	$message = array();
+	$message = [];
 	exec($command.$file, $message);
 	if(!preg_match('/^No syntax errors detected/', $message[0])) {
 	  $this->log($message[1], Project::PROJECT_MSG_ERR);

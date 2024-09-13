@@ -150,7 +150,7 @@ abstract class ".$this->getClassname()." {
 		$npath_sep = '';
 		foreach ($table->getColumns() as $col) {
 			if ($col->isNodeKey()) {
-				$npath_colname = $table->getName() . '.' . strtoupper($col->getName());
+				$npath_colname = $table->getName() . '.' . strtoupper((string) $col->getName());
 				$npath_phpname = $col->getPhpName();
 				$npath_len = $col->getSize();
 				$npath_sep = $col->getNodeKeySep();

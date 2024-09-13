@@ -65,12 +65,6 @@ abstract class ResultSetCommon {
     protected $conn;
 
     /**
-     * Resource identifier used for native result set handling.
-     * @var resource
-     */
-    protected $result;
-
-    /**
      * The current cursor position (row number). First row is 1. Before first row is 0.
      * @var int
      */
@@ -96,11 +90,14 @@ abstract class ResultSetCommon {
 
     /**
      * Constructor.
+     * @param resource $result
      */
-    public function __construct(Connection $conn, $result, $fetchmode = null)
+    public function __construct(Connection $conn, /**
+     * Resource identifier used for native result set handling.
+     */
+    protected $result, $fetchmode = null)
     {
         $this->conn = $conn;
-        $this->result = $result;
         if ($fetchmode !== null) {
             $this->fetchmode = $fetchmode;
         } else {
@@ -333,7 +330,7 @@ abstract class ResultSetCommon {
             return null;
         }
 
-        return ($this->rtrimString ? rtrim($value) : (string) $value);
+        return ($this->rtrimString ? rtrim((string) $value) : (string) $value);
     }
 
     /**
@@ -347,7 +344,7 @@ abstract class ResultSetCommon {
             return '';
         }
 
-        return ($this->rtrimString ? rtrim($value) : (string) $value);
+        return ($this->rtrimString ? rtrim((string) $value) : (string) $value);
     }
 
     /**
@@ -437,13 +434,13 @@ abstract class ResultSetCommon {
         {
             $ts = $value->getTimestamp();
         }
-        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $value))
+        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', (string) $value))
         {
             $ts = DateTime::createFromFormat('M d Y H:i:s:A', $value)->getTimestamp();
         }
         else
         {
-            $ts = strtotime($value);
+            $ts = strtotime((string) $value);
         }
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
@@ -545,13 +542,13 @@ abstract class ResultSetCommon {
         {
             $ts = $value->getTimestamp();
         }
-        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $value))
+        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', (string) $value))
         {
             $ts = DateTime::createFromFormat('M d Y H:i:s:A', $value)->getTimestamp();
         }
         else
         {
-            $ts = strtotime($value);
+            $ts = strtotime((string) $value);
         }
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
@@ -594,13 +591,13 @@ abstract class ResultSetCommon {
         {
             $ts = $value->getTimestamp();
         }
-        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', $value))
+        else if (1 === preg_match('/^[a-zA-Z]{3,4}\s+[\d]{1,2} [\d]{4} [\d]{1,2}:[\d]{2}:[\d]{2}:[AP]M$/', (string) $value))
         {
             $ts = DateTime::createFromFormat('M d Y H:i:s:A', $value)->getTimestamp();
         }
         else
         {
-            $ts = strtotime($value);
+            $ts = strtotime((string) $value);
         }
 
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE

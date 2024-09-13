@@ -49,12 +49,6 @@ class TableMap {
 	/** The columns in the table. */
 	private $columns;
 
-	/** The database this table belongs to. */
-	private $dbMap;
-
-	/** The name of the table. */
-	private $tableName;
-
 	/** The PHP name of the table. */
 	private $phpName;
 
@@ -71,16 +65,14 @@ class TableMap {
 	private $pkInfo;
 
 	/**
-	 * Construct a new TableMap.
-	 *
-	 * @param      string $tableName The name of the table.
-	 * @param      DatabaseMap $containingDB A DatabaseMap that this table belongs to.
-	 */
-	public function __construct($tableName, DatabaseMap $containingDB)
+  * Construct a new TableMap.
+  *
+  * @param      string $tableName The name of the table.
+  * @param DatabaseMap $dbMap A DatabaseMap that this table belongs to.
+  */
+ public function __construct(private $tableName, private readonly DatabaseMap $dbMap)
 	{
-		$this->tableName = $tableName;
-		$this->dbMap = $containingDB;
-		$this->columns = array();
+		$this->columns = [];
 	}
 
 	/**
@@ -300,8 +292,8 @@ class TableMap {
 		$col = new ColumnMap($name, $this);
 
 		if ($fkTable && $fkColumn) {
-			if (strpos($fkColumn, '.') > 0 && strpos($fkColumn, $fkTable) !== false) {
-				$fkColumn = substr($fkColumn, strlen($fkTable) + 1);
+			if (strpos((string) $fkColumn, '.') > 0 && str_contains((string) $fkColumn, $fkTable)) {
+				$fkColumn = substr((string) $fkColumn, strlen($fkTable) + 1);
 			}
 			$col->setForeignKey($fkTable, $fkColumn);
 		}
@@ -373,7 +365,7 @@ class TableMap {
 	 */
 	private function hasPrefix($data)
 	{
-		return (substr($data, $this->getPrefix()) !== false);
+		return (substr((string) $data, $this->getPrefix()) !== false);
 	}
 
 	/**

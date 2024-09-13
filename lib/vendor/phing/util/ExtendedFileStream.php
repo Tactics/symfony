@@ -54,11 +54,11 @@
 			/** Small fix for Windows */
 			if ($path[8] == DIRECTORY_SEPARATOR)
 			{
-				$filepath = substr($path, 7);
+				$filepath = substr((string) $path, 7);
 			}
 			else
 			{
-				$filepath = substr($path, 8);
+				$filepath = substr((string) $path, 8);
 			}
 			
 			$this->createDirectories(dirname($filepath));
@@ -81,7 +81,7 @@
 		
 		function stream_write($data)
 		{
-			return fwrite($this->fp, $data);
+			return fwrite($this->fp, (string) $data);
 		}
 		
 		function stream_eof()

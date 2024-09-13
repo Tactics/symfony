@@ -31,7 +31,7 @@ class Regexp {
      * Matching groups found. 
      * @var array
      */
-    private $groups = array();
+    private $groups = [];
      
     /**
      * Pattern to match.

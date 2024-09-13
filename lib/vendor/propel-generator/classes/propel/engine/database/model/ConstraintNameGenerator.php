@@ -59,7 +59,7 @@ class ConstraintNameGenerator implements NameGenerator {
 		$maxBodyLength = -1;
 		try {
 			$maxColumnNameLength = (int) $db->getPlatform()->getMaxColumnNameLength();
-			$maxBodyLength = ($maxColumnNameLength - strlen($namePostfix)
+			$maxBodyLength = ($maxColumnNameLength - strlen((string) $namePostfix)
 					- strlen($constraintNbr) - 2);
 
 			if (self::DEBUG) {
@@ -72,8 +72,8 @@ class ConstraintNameGenerator implements NameGenerator {
 		}
 
 		// Do any necessary trimming.
-		if ($maxBodyLength !== -1 && strlen($name) > $maxBodyLength) {
-			$name = substr($name, 0, $maxBodyLength);
+		if ($maxBodyLength !== -1 && strlen((string) $name) > $maxBodyLength) {
+			$name = substr((string) $name, 0, $maxBodyLength);
 		}
 
 		$name .= self::STD_SEPARATOR_CHAR . $namePostfix

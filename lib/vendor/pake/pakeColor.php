@@ -22,9 +22,9 @@
  */
 class pakeColor
 {
-  static public $styles = array();
+  static public $styles = [];
 
-  static function style($name, $options = array())
+  static function style($name, $options = [])
   {
     self::$styles[$name] = $options;
   }
@@ -38,16 +38,16 @@ class pakeColor
       return $text;
     }
 
-    static $options    = array('bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8);
-    static $foreground = array('black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37);
-    static $background = array('black' => 40, 'red' => 41, 'green' => 42, 'yellow' => 43, 'blue' => 44, 'magenta' => 45, 'cyan' => 46, 'white' => 47);
+    static $options    = ['bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8];
+    static $foreground = ['black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37];
+    static $background = ['black' => 40, 'red' => 41, 'green' => 42, 'yellow' => 43, 'blue' => 44, 'magenta' => 45, 'cyan' => 46, 'white' => 47];
 
     if (!is_array($parameters) && isset(self::$styles[$parameters]))
     {
       $parameters = self::$styles[$parameters];
     }
 
-    $codes = array();
+    $codes = [];
     if (isset($parameters['fg']))
     {
       $codes[] = $foreground[$parameters['fg']];
@@ -68,6 +68,6 @@ class pakeColor
   }
 }
 
-pakeColor::style('ERROR',    array('bg' => 'red', 'fg' => 'white', 'bold' => true));
-pakeColor::style('INFO',     array('fg' => 'green', 'bold' => true));
-pakeColor::style('COMMENT',  array('fg' => 'yellow'));
+pakeColor::style('ERROR',    ['bg' => 'red', 'fg' => 'white', 'bold' => true]);
+pakeColor::style('INFO',     ['fg' => 'green', 'bold' => true]);
+pakeColor::style('COMMENT',  ['fg' => 'yellow']);

@@ -31,7 +31,7 @@
 class CoverageMergerTask extends Task
 {
 	/** the list of filesets containing the .php filename rules */
-	private $filesets = array();
+	private $filesets = [];
 
 	/**
 	 * Add a new fileset containing the .php files to process
@@ -50,7 +50,7 @@ class CoverageMergerTask extends Task
 	 */
 	private function getFilenames()
 	{
-		$files = array();
+		$files = [];
 
 		foreach ($this->filesets as $fileset)
 		{
@@ -61,7 +61,7 @@ class CoverageMergerTask extends Task
 
 			foreach ($includedFiles as $file)
 			{
-				$fs = new PhingFile(basename($ds->getBaseDir()), $file);
+				$fs = new PhingFile(basename((string) $ds->getBaseDir()), $file);
 
 				$files[] = $fs->getAbsolutePath();
 			}
@@ -80,7 +80,7 @@ class CoverageMergerTask extends Task
 		{
 			$coverageInformation = unserialize(file_get_contents($file));
 
-			CoverageMerger::merge($this->project, array($coverageInformation));
+			CoverageMerger::merge($this->project, [$coverageInformation]);
 		}
 	}
 }

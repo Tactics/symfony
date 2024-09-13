@@ -123,7 +123,7 @@ class ProjectConfigurator {
 			}
 		}
 
-        $bean = get_class($target);
+        $bean = $target::class;
         $ih = IntrospectionHelper::getHelper($bean);
 
         foreach ($attrs as $key => $value) {
@@ -133,7 +133,7 @@ class ProjectConfigurator {
             }
             $value = self::replaceProperties($project, $value, $project->getProperties());
             try { // try to set the attribute
-                $ih->setAttribute($project, $target, strtolower($key), $value);
+                $ih->setAttribute($project, $target, strtolower((string) $key), $value);
             } catch (BuildException $be) {
                 // id attribute must be set externally
                 if ($key !== "id") {
@@ -152,10 +152,10 @@ class ProjectConfigurator {
      * @access public
      */
     public static function addText($project, $target, $text = null) {
-        if ($text === null || strlen(trim($text)) === 0) {
+        if ($text === null || strlen(trim((string) $text)) === 0) {
             return;
         }
-        $ih = IntrospectionHelper::getHelper(get_class($target));
+        $ih = IntrospectionHelper::getHelper($target::class);
         $text = self::replaceProperties($project, $text, $project->getProperties());
         $ih->addText($project, $target, $text);
     }
@@ -170,7 +170,7 @@ class ProjectConfigurator {
      * @access public
      */
     public static function storeChild($project, $parent, $child, $tag) {
-        $ih = IntrospectionHelper::getHelper(get_class($parent));
+        $ih = IntrospectionHelper::getHelper($parent::class);
         $ih->storeElement($project, $parent, $child, $tag);
     }
 
@@ -211,7 +211,7 @@ class ProjectConfigurator {
         // the old parsePropertyString() method, since it has more stringent
         // requirements.
 
-        $sb = preg_replace_callback('/\$\{([^}]+)\}/', array('ProjectConfigurator', 'replacePropertyCallback'), $value);
+        $sb = preg_replace_callback('/\$\{([^}]+)\}/', ['ProjectConfigurator', 'replacePropertyCallback'], $value);
         return $sb;
     }
 

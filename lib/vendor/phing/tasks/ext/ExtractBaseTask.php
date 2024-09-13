@@ -36,7 +36,7 @@ abstract class ExtractBaseTask extends MatchingTask {
      */
     protected $todir;
     protected $removepath;
-    protected $filesets = array(); // all fileset objects assigned to this task
+    protected $filesets = []; // all fileset objects assigned to this task
 
     /**
      * Add a new fileset.
@@ -77,7 +77,7 @@ abstract class ExtractBaseTask extends MatchingTask {
 
         $this->validateAttributes();
 
-        $filesToExtract = array();
+        $filesToExtract = [];
         if ($this->file !== null) {
             if(!$this->isDestinationUpToDate($this->file)) {
                 $filesToExtract[] = $this->file;
@@ -129,7 +129,7 @@ abstract class ExtractBaseTask extends MatchingTask {
             $fileSystem = FileSystem::getFileSystem();
             foreach ($compressedArchiveContent as $compressArchivePathInfo) {
                 $compressArchiveFilename = $compressArchivePathInfo['filename'];
-                if(!empty($this->removepath) && strlen($compressArchiveFilename) >= strlen($this->removepath))
+                if(!empty($this->removepath) && strlen((string) $compressArchiveFilename) >= strlen((string) $this->removepath))
                 {
                     $compressArchiveFilename = $compressArchiveFilename ? preg_replace('/^' . $this->removepath . '/','', $compressArchiveFilename) : $compressArchiveFilename;
                 }

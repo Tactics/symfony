@@ -31,7 +31,7 @@ class Character {
 
     public static function isLetter($char) {
 
-        if (strlen($char) !== 1)
+        if (strlen((string) $char) !== 1)
             $char = 0;
 
         $char = (int) ord($char);

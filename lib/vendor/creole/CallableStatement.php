@@ -42,7 +42,7 @@ interface CallableStatement extends PreparedStatement {
      * @return array
      * @throws SQLException if $paramIndex was not bound as output variable.
      */
-    public function getArray($paramIndex);
+    public function getArray(mixed $paramIndex);
 
     /**
      *
@@ -50,7 +50,7 @@ interface CallableStatement extends PreparedStatement {
      * @return boolean
      * @throws SQLException if $paramIndex was not bound as output variable.
      */
-    public function getBoolean($paramIndex);
+    public function getBoolean(mixed $paramIndex);
 
     /**
      *
@@ -58,13 +58,13 @@ interface CallableStatement extends PreparedStatement {
      * @return Blob blob object
      * @throws SQLException if $paramIndex was not bound as output variable.
      */
-    public function getBlob($paramIndex);
+    public function getBlob(mixed $paramIndex);
 
     /**
      * @param mixed $paramIndex Column name (string) or index (int).
      * @return Clob clob object.
      */
-    public function getClob($paramIndex);
+    public function getClob(mixed $paramIndex);
 
     /**
      * Return a formatted date.
@@ -79,25 +79,25 @@ interface CallableStatement extends PreparedStatement {
      * @return mixed  Formatted date, or integer unix timestamp (using 00:00:00 for time) if $format was null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getDate($column, $format = '%x');
+    public function getDate(mixed $column, $format = '%x');
 
     /**
      * @param mixed $paramIndex Column name (string) or index (int).
      * @return float
      */
-    public function getFloat($paramIndex);
+    public function getFloat(mixed $paramIndex);
 
     /**
      * @param mixed $paramIndex Column name (string) or index (int).
      * @return int
      */
-    public function getInt($paramIndex);
+    public function getInt(mixed $paramIndex);
 
     /**
      * @param mixed $paramIndex Column name (string) or index (int).
      * @return string
      */
-    public function getString($paramIndex);
+    public function getString(mixed $paramIndex);
 
     /**
      * Return a formatted time.
@@ -112,7 +112,7 @@ interface CallableStatement extends PreparedStatement {
      * @return mixed  Formatted time, or integer unix timestamp (using today's date) if $format was null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getTime($column, $format = '%X');
+    public function getTime(mixed $column, $format = '%X');
 
     /**
      * Return a formatted timestamp.
@@ -128,6 +128,6 @@ interface CallableStatement extends PreparedStatement {
      * @return mixed Formatted timestamp, or integer unix timestamp (if $format was null)
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getTimestamp($column, $format = 'Y-m-d H:i:s');
+    public function getTimestamp(mixed $column, $format = 'Y-m-d H:i:s');
 
 }

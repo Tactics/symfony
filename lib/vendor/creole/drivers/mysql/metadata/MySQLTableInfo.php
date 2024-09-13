@@ -48,19 +48,19 @@ class MySQLTableInfo extends TableInfo {
 
         $res = mysql_query("SHOW COLUMNS FROM `" . $this->name . "`", $this->conn->getResource());
 
-        $defaults = array();
-        $nativeTypes = array();
-        $precisions = array();
+        $defaults = [];
+        $nativeTypes = [];
+        $precisions = [];
 
         while($row = mysql_fetch_assoc($res)) {
             $name = $row['Field'];
             $is_nullable = ($row['Null'] == 'YES');
-            $is_auto_increment = (strpos($row['Extra'], 'auto_increment') !== false);
+            $is_auto_increment = (str_contains((string) $row['Extra'], 'auto_increment'));
             $size = null;
             $precision = null;
 			$scale = null;
 			
-            if (preg_match('/^(\w+)[\(]?([\d,]*)[\)]?( |$)/', $row['Type'], $matches)) {
+            if (preg_match('/^(\w+)[\(]?([\d,]*)[\)]?( |$)/', (string) $row['Type'], $matches)) {
                 //            colname[1]   size/precision[2]
                 $nativeType = $matches[1];
                 if ($matches[2]) {
@@ -72,13 +72,13 @@ class MySQLTableInfo extends TableInfo {
                         $size = (int) $matches[2];
                     }
                 }
-            } elseif (preg_match('/^(\w+)\(/', $row['Type'], $matches)) {
+            } elseif (preg_match('/^(\w+)\(/', (string) $row['Type'], $matches)) {
                 $nativeType = $matches[1];
             } else {
                 $nativeType = $row['Type'];
             }
             //BLOBs can't have any default values in MySQL
-            $default = preg_match('~blob|text~', $nativeType) ? null : $row['Default'];
+            $default = preg_match('~blob|text~', (string) $nativeType) ? null : $row['Default'];
             $this->columns[$name] = new ColumnInfo($this,
                                                    $name,
                                                    MySQLTypes::getType($nativeType),
@@ -194,7 +194,7 @@ class MySQLTableInfo extends TableInfo {
 
     // Get the information on all the foreign keys
     $regEx = '/FOREIGN KEY \(`([^`]*)`\) REFERENCES `([^`]*)` \(`([^`]*)`\)(.*)/';
-    if (preg_match_all($regEx,$row[1],$matches)) {
+    if (preg_match_all($regEx,(string) $row[1],$matches)) {
       $tmpArray = array_keys($matches[0]);
       foreach ($tmpArray as $curKey) {
         $name = $matches[1][$curKey];
@@ -217,10 +217,7 @@ class MySQLTableInfo extends TableInfo {
           }
 
           //typical for mysql is RESTRICT
-          $fkactions = array(
-            'ON DELETE'	=> ForeignKeyInfo::RESTRICT,
-            'ON UPDATE'	=> ForeignKeyInfo::RESTRICT,
-          );
+          $fkactions = ['ON DELETE'	=> ForeignKeyInfo::RESTRICT, 'ON UPDATE'	=> ForeignKeyInfo::RESTRICT];
                               
           if ($fkey) {
             //split foreign key information -> search for ON DELETE and afterwords for ON UPDATE action

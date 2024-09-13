@@ -47,7 +47,7 @@ class MergeMapper implements FileNameMapper {
         if ($this->mergedFile === null) {
             throw new BuildException("MergeMapper error, to attribute not set");
         }
-        return array($this->mergedFile);
+        return [$this->mergedFile];
     }
 
     /**

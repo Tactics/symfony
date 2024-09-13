@@ -66,29 +66,25 @@ class ColumnMap {
 	/** Name of the column that this column is related to. */
 	private $relatedColumnName = "";
 
-	/** The TableMap for this column. */
-	private $table;
-
-	/** The name of the column. */
-	private $columnName;
-
 	/** The php name of the column. */
 	private $phpName;
 
 	/** validators for this column */
-	private $validators = array();
+	private $validators = [];
 
 	/**
-	 * Constructor.
-	 *
-	 * @param      string $name The name of the column.
-	 * @param      TableMap containingTable TableMap of the table this column is in.
-	 */
-	public function __construct($name, TableMap $containingTable)
-	{
-		$this->columnName = $name;
-		$this->table = $containingTable;
-	}
+  * Constructor.
+  *
+  * @param string $columnName The name of the column.
+  * @param      TableMap containingTable TableMap of the table this column is in.
+  */
+ public function __construct(
+     private $columnName,
+     /** The TableMap for this column. */
+     private readonly TableMap $table
+ )
+ {
+ }
 
 	/**
 	 * Get the name of a column.

@@ -13,9 +13,6 @@ class Criterion  {
     const UND = " AND ";
     const ODER = " OR ";
 
-    /** Value of the CO. */
-    private $value;
-
     /** Comparison value.
      * @var        string
      */
@@ -42,26 +39,23 @@ class Criterion  {
     /**
      * other connected criteria and their conjunctions.
      */
-    private $clauses = array();
-    private $conjunctions = array();
+    private $clauses = [];
+    private $conjunctions = [];
 
     /** "Parent" Criteria class */
-//	Doesn't seem to be used? removed by joskosmos
-//	private $parent;
-
+    //	Doesn't seem to be used? removed by joskosmos
+    //	private $parent;
     /**
      * Create a new instance.
      *
      * @param      Criteria $outer The outer class (this is an "inner" class).
      * @param      string $column TABLE.COLUMN format.
-     * @param      mixed $value
      * @param      string $comparison
      */
-    public function __construct(Criteria $outer, $column, $value, $comparison = null)
+    public function __construct(Criteria $outer, $column, private readonly mixed $value, $comparison = null)
     {
-        list($this->table, $this->column) = explode('.', $column);
-        $this->value = $value;
-        $this->comparison = ($comparison === null ? Criteria::EQUAL : $comparison);
+        [$this->table, $this->column] = explode('.', $column);
+        $this->comparison = ($comparison ?? Criteria::EQUAL);
         $this->init($outer);
     }
 
@@ -75,7 +69,7 @@ class Criterion  {
         try {
             $db = Propel::getDB($criteria->getDbName());
             $this->setDB($db);
-        } catch (Exception $e) {
+        } catch (Exception) {
             // we are only doing this to allow easier debugging, so
             // no need to throw up the exception, just make note of it.
             Propel::log("Could not get a DBAdapter, generated sql may be wrong", Propel::LOG_ERR);
@@ -273,7 +267,7 @@ class Criterion  {
                 $valuesLength = 0;
                 foreach ( (array) $this->value as $value ) {
                     $valuesLength++;
-                    $params[] = array('table' => $realtable, 'column' => $this->column, 'value' => $value);
+                    $params[] = ['table' => $realtable, 'column' => $this->column, 'value' => $value];
                 }
                 if ( $valuesLength !== 0 ) {
                     $sb .= $field . $this->comparison . '(' . substr(str_repeat("?,", $valuesLength), 0, -1) . ')';
@@ -313,7 +307,7 @@ class Criterion  {
                     $sb .= '?';
                 }
 
-                $params[] = array('table' => $realtable, 'column' => $this->column, 'value' => $this->value);
+                $params[] = ['table' => $realtable, 'column' => $this->column, 'value' => $this->value];
 
                 // OPTION 3:  table.column = ? or table.column >= ? etc. (traditional expressions, the default)
             } else {
@@ -336,7 +330,7 @@ class Criterion  {
                         // need to track the field in params, because
                         // we'll need it to determine the correct setter
                         // method later on (e.g. field 'review.DATE' => setDate());
-                        $params[] = array('table' => $realtable, 'column' => $this->column, 'value' => $this->value);
+                        $params[] = ['table' => $realtable, 'column' => $this->column, 'value' => $this->value];
                     }
                 } else {
 
@@ -366,10 +360,9 @@ class Criterion  {
     /**
      * This method checks another Criteria to see if they contain
      * the same attributes and hashtable entries.
-     * @param      mixed $obj
      * @return     boolean
      */
-    public function equals($obj)
+    public function equals(mixed $obj)
     {
         if ($this === $obj) {
             return true;
@@ -413,11 +406,11 @@ class Criterion  {
         $h = crc32(serialize($this->value)) ^ crc32($this->comparison);
 
         if ($this->table !== null) {
-            $h ^= crc32($this->table);
+            $h ^= crc32((string) $this->table);
         }
 
         if ($this->column !== null) {
-            $h ^= crc32($this->column);
+            $h ^= crc32((string) $this->column);
         }
 
         foreach ( $this->clauses as $clause ) {
@@ -426,9 +419,9 @@ class Criterion  {
             // replace it if it doesnt bother us?
             // $clause->appendPsTo($sb='',$params=array());
             $sb = '';
-            $params = array();
+            $params = [];
             $clause->appendPsTo($sb,$params);
-            $h ^= crc32(serialize(array($sb,$params)));
+            $h ^= crc32(serialize([$sb, $params]));
             unset ( $sb, $params );
         }
 
@@ -441,7 +434,7 @@ class Criterion  {
      */
     public function getAllTables()
     {
-        $tables = array();
+        $tables = [];
         $this->addCriterionTable($this, $tables);
         return $tables;
     }
@@ -468,7 +461,7 @@ class Criterion  {
      */
     public function getAttachedCriterion()
     {
-        $crits = array();
+        $crits = [];
         $this->traverseCriterion($this, $crits);
         return $crits;
     }

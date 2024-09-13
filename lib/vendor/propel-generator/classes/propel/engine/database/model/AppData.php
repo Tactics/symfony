@@ -38,13 +38,7 @@ class AppData {
 	 * The list of databases for this application.
 	 * @var        array Database[]
 	 */
-	private $dbList = array();
-
-	/**
-	 * The platform class for our database(s).
-	 * @var        string
-	 */
-	private $platform;
+	private $dbList = [];
 
 	/**
 	 * Name of the database. Only one database definition
@@ -63,10 +57,14 @@ class AppData {
 	 *
 	 * @param      Platform $platform The platform class to use for any databases added to this application model.
 	 */
-	public function __construct(Platform $platform)
-	{
-		$this->platform = $platform;
-	}
+	public function __construct(
+     /**
+      * The platform class for our database(s).
+      */
+     private readonly Platform $platform
+ )
+ {
+ }
 
 	/**
 	 * Set the name of the database.

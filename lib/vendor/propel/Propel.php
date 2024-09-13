@@ -100,7 +100,7 @@ class Propel {
 	/**
 	 * The global cache of database maps
 	 */
-	private static $dbMaps = array();
+	private static $dbMaps = [];
 
 	/**
 	 * The cache of DB adapter keys
@@ -132,13 +132,13 @@ class Propel {
 	 * to Propel being initialized.  This can happen if the OM Peer classes are
 	 * included before the Propel::init() method has been called.
 	 */
-	private static $mapBuilders = array();
+	private static $mapBuilders = [];
 
 	/**
 	 * Cache of established connections (to eliminate overhead).
 	 * @var        array
 	 */
-	private static $connectionMap = array();
+	private static $connectionMap = [];
 
 	/**
 	 * initialize Propel
@@ -162,7 +162,7 @@ class Propel {
 		// properties that are contained in the configuration. First
 		// look for properties that are in the "propel" namespace.
 		$originalConf = self::$configuration;
-		self::$configuration = isset(self::$configuration['propel']) ? self::$configuration['propel'] : null;
+		self::$configuration = self::$configuration['propel'] ?? null;
 
 		if (empty(self::$configuration)) {
 				// Assume the original configuration already had any
@@ -171,7 +171,7 @@ class Propel {
 		}
 
 		// reset the connection map (this should enable runtime changes of connection params)
-		self::$connectionMap = array();
+		self::$connectionMap = [];
 
 		self::initAdapters(self::$configuration);
 
@@ -187,7 +187,7 @@ class Propel {
 		// now that the pre-loaded map builders have been propertly initialized
 		// empty the array.
 		// any further mapBuilders will be build by the generated MapBuilder classes.
-		self::$mapBuilders = array();
+		self::$mapBuilders = [];
 	}
 
 	/**
@@ -200,9 +200,9 @@ class Propel {
 	 */
 	private static function initAdapters($configuration) {
 
-		self::$adapterMap = array();
+		self::$adapterMap = [];
 
-		$c = isset($configuration['datasources']) ? $configuration['datasources'] : null;
+		$c = $configuration['datasources'] ?? null;
 
 		if (!empty($c)) {
 			try {
@@ -295,11 +295,11 @@ class Propel {
 				// array casting handles bug in PHP5b2 where the isset() checks
 				// below may return true if $c is not an array (e.g. is a string)
 
-				$type = isset($c['type']) ? $c['type'] : 'file';
-				$name = isset($c['name']) ? $c['name'] : './propel.log';
-				$ident = isset($c['ident']) ? $c['ident'] : 'propel';
-				$conf = isset($c['conf']) ? $c['conf'] : array();
-				$level = isset($c['level']) ? $c['level'] : PEAR_LOG_DEBUG;
+				$type = $c['type'] ?? 'file';
+				$name = $c['name'] ?? './propel.log';
+				$ident = $c['ident'] ?? 'propel';
+				$conf = $c['conf'] ?? [];
+				$level = $c['level'] ?? PEAR_LOG_DEBUG;
 
 				self::$logger = Log::singleton($type, $name, $ident, $conf, $level);
 			} // if isset()
@@ -358,25 +358,16 @@ class Propel {
 		if(self::hasLogger())
 		{
 			$logger = self::logger();
-			switch($level)
-			{
-				case self::LOG_EMERG:
-					return $logger->log($message, $level);
-				case self::LOG_ALERT:
-					return $logger->alert($message);
-				case self::LOG_CRIT:
-					return $logger->crit($message);
-				case self::LOG_ERR:
-					return $logger->err($message);
-				case self::LOG_WARNING:
-					return $logger->warning($message);
-				case self::LOG_NOTICE:
-					return $logger->notice($message);
-				case self::LOG_INFO:
-					return $logger->info($message);
-				default:
-					return $logger->debug($message);
-			}
+			return match ($level) {
+       self::LOG_EMERG => $logger->log($message, $level),
+       self::LOG_ALERT => $logger->alert($message),
+       self::LOG_CRIT => $logger->crit($message),
+       self::LOG_ERR => $logger->err($message),
+       self::LOG_WARNING => $logger->warning($message),
+       self::LOG_NOTICE => $logger->notice($message),
+       self::LOG_INFO => $logger->info($message),
+       default => $logger->debug($message),
+   };
 		}
 		return true;
 	}
@@ -452,7 +443,7 @@ class Propel {
 	 */
 	private static function getDatabaseProperty($db, $prop)
 	{
-		return isset(self::$configuration['datasources'][$db][$prop]) ? self::$configuration['datasources'][$db][$prop] : null;
+		return self::$configuration['datasources'][$db][$prop] ?? null;
 	}
 
 	/**
@@ -467,11 +458,11 @@ class Propel {
 			$name = self::getDefaultDB();
 		}
 
-		$connection = isset(self::$connectionMap[$name]) ? self::$connectionMap[$name] : null;
+		$connection = self::$connectionMap[$name] ?? null;
 
 		if ($connection === null) {
 
-			$dsn = isset(self::$configuration['datasources'][$name]['connection']) ? self::$configuration['datasources'][$name]['connection'] : null;
+			$dsn = self::$configuration['datasources'][$name]['connection'] ?? null;
 			if ($dsn === null) {
 				throw new PropelException("No connection params set for " . $name);
 			}
@@ -523,7 +514,7 @@ class Propel {
 			return self::DEFAULT_NAME;
 		} elseif (self::$defaultDBName === null) {
 			// Determine default database name.
-			self::$defaultDBName = isset(self::$configuration['datasources']['default']) ? self::$configuration['datasources']['default'] : self::DEFAULT_NAME;
+			self::$defaultDBName = self::$configuration['datasources']['default'] ?? self::DEFAULT_NAME;
 		}
 		return self::$defaultDBName;
 	}
@@ -544,10 +535,10 @@ class Propel {
 	public static function import($path) {
 
 		// extract classname
-		if (($pos = strrpos($path, '.')) === false) {
+		if (($pos = strrpos((string) $path, '.')) === false) {
 			$class = $path;
 		} else {
-			$class = substr($path, $pos + 1);
+			$class = substr((string) $path, $pos + 1);
 		}
 
 		// check if class exists

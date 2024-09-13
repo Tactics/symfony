@@ -222,14 +222,14 @@ class TranslateGettext extends BaseParamFilterReader implements ChainableReader 
         //
         // also match gettext() -- same as above
 
-        $buffer = preg_replace_callback('/([^\w]|^)_\("((\\\"|[^"])*)"\)/', array($this, 'xlateStringCallback'), $buffer);
-        $buffer = preg_replace_callback('/([^\w]|^)gettext\("((\\\"|[^"])*)"\)/', array($this, 'xlateStringCallback'), $buffer);
+        $buffer = preg_replace_callback('/([^\w]|^)_\("((\\\"|[^"])*)"\)/', [$this, 'xlateStringCallback'], $buffer);
+        $buffer = preg_replace_callback('/([^\w]|^)gettext\("((\\\"|[^"])*)"\)/', [$this, 'xlateStringCallback'], $buffer);
 
         // Check to see if there are any _('') calls and flag an error
 
         // Check to see if there are any unmatched gettext() calls -- and flag an error
 
-        $matches = array();
+        $matches = [];
         if (preg_match('/([^\w]|^)(gettext\([^\)]+\))/', $buffer, $matches)) {
             $this->log("Unable to perform translation on: " . $matches[2], Project::PROJECT_MSG_WARN);
         }

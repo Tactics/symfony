@@ -33,17 +33,14 @@
  */
 class RuntimeConfigurable {
 
-    private $elementTag = null;
-    private $children = array();
-    private $wrappedObject = null;
-    private $attributes = array();
+    private $children = [];
+    private $attributes = [];
     private $characters = "";
 
 
     /** @param proxy The element to wrap. */
-    function __construct($proxy, $elementTag) {
-        $this->wrappedObject = $proxy;
-        $this->elementTag = $elementTag;
+    function __construct(private $wrappedObject, private $elementTag)
+    {
     }
 
     function setProxy($proxy) {
@@ -110,7 +107,7 @@ class RuntimeConfigurable {
             // Configure all child of this object ...
             foreach($this->children as $child) {
                 $child->maybeConfigure($project);
-                ProjectConfigurator::storeChild($project, $this->wrappedObject, $child->wrappedObject, strtolower($child->getElementTag()));
+                ProjectConfigurator::storeChild($project, $this->wrappedObject, $child->wrappedObject, strtolower((string) $child->getElementTag()));
             }
         }
     }

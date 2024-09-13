@@ -33,11 +33,6 @@
 class RootHandler extends AbstractHandler {
 
     /**
-     * The phing project configurator object
-     */
-    private $configurator;
-
-    /**
      * Constructs a new RootHandler
      *
      * The root filter is required so the parser knows what to do. It's
@@ -49,8 +44,7 @@ class RootHandler extends AbstractHandler {
      * @param AbstractSAXParser $parser The ExpatParser object.
      * @param ProjectConfigurator $configurator The ProjectConfigurator object.
      */
-    function __construct(AbstractSAXParser $parser, ProjectConfigurator $configurator) {
-        $this->configurator = $configurator;
+    function __construct(AbstractSAXParser $parser, private readonly ProjectConfigurator $configurator) {
         parent::__construct($parser, $this);
     }
 

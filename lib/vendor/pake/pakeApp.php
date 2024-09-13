@@ -25,24 +25,10 @@ class pakeApp
   const VERSION = '1.1.DEV';
 
   private static $MAX_LINE_SIZE = 65;
-  private static $PROPERTIES = array();
-  private static $PAKEFILES = array('pakefile', 'Pakefile', 'pakefile.php', 'Pakefile.php');
-  private static $PLUGINDIRS = array();
-  private static $OPTIONS = array(
-    array('--dry-run',  '-n', pakeGetopt::NO_ARGUMENT,       "Do a dry run without executing actions."),
-    array('--help',     '-H', pakeGetopt::NO_ARGUMENT,       "Display this help message."),
-    array('--libdir',   '-I', pakeGetopt::REQUIRED_ARGUMENT, "Include LIBDIR in the search path for required modules."),
-    array('--nosearch', '-N', pakeGetopt::NO_ARGUMENT,       "Do not search parent directories for the pakefile."),
-    array('--prereqs',  '-P', pakeGetopt::NO_ARGUMENT,       "Display the tasks and dependencies, then exit."),
-    array('--quiet',    '-q', pakeGetopt::NO_ARGUMENT,       "Do not log messages to standard output."),
-    array('--pakefile', '-f', pakeGetopt::REQUIRED_ARGUMENT, "Use FILE as the pakefile."),
-    array('--require',  '-r', pakeGetopt::REQUIRED_ARGUMENT, "Require MODULE before executing pakefile."),
-    array('--tasks',    '-T', pakeGetopt::NO_ARGUMENT,       "Display the tasks and dependencies, then exit."),
-    array('--trace',    '-t', pakeGetopt::NO_ARGUMENT,       "Turn on invoke/execute tracing, enable full backtrace."),
-    array('--usage',    '-h', pakeGetopt::NO_ARGUMENT,       "Display usage."),
-    array('--verbose',  '-v', pakeGetopt::NO_ARGUMENT,       "Log message to standard output (default)."),
-    array('--version',  '-V', pakeGetopt::NO_ARGUMENT,       "Display the program version."),
-  );
+  private static $PROPERTIES = [];
+  private static $PAKEFILES = ['pakefile', 'Pakefile', 'pakefile.php', 'Pakefile.php'];
+  private static $PLUGINDIRS = [];
+  private static $OPTIONS = [['--dry-run', '-n', pakeGetopt::NO_ARGUMENT, "Do a dry run without executing actions."], ['--help', '-H', pakeGetopt::NO_ARGUMENT, "Display this help message."], ['--libdir', '-I', pakeGetopt::REQUIRED_ARGUMENT, "Include LIBDIR in the search path for required modules."], ['--nosearch', '-N', pakeGetopt::NO_ARGUMENT, "Do not search parent directories for the pakefile."], ['--prereqs', '-P', pakeGetopt::NO_ARGUMENT, "Display the tasks and dependencies, then exit."], ['--quiet', '-q', pakeGetopt::NO_ARGUMENT, "Do not log messages to standard output."], ['--pakefile', '-f', pakeGetopt::REQUIRED_ARGUMENT, "Use FILE as the pakefile."], ['--require', '-r', pakeGetopt::REQUIRED_ARGUMENT, "Require MODULE before executing pakefile."], ['--tasks', '-T', pakeGetopt::NO_ARGUMENT, "Display the tasks and dependencies, then exit."], ['--trace', '-t', pakeGetopt::NO_ARGUMENT, "Turn on invoke/execute tracing, enable full backtrace."], ['--usage', '-h', pakeGetopt::NO_ARGUMENT, "Display usage."], ['--verbose', '-v', pakeGetopt::NO_ARGUMENT, "Log message to standard output (default)."], ['--version', '-V', pakeGetopt::NO_ARGUMENT, "Display the program version."]];
 
   private $opt = null;
   private $nosearch = false;
@@ -57,7 +43,7 @@ class pakeApp
 
   private function __construct()
   {
-    self::$PLUGINDIRS[] = dirname(__FILE__).'/tasks';
+    self::$PLUGINDIRS[] = __DIR__.'/tasks';
   }
 
   public static function get_plugin_dirs()
@@ -101,7 +87,7 @@ class pakeApp
   {
     if ($pakefile)
     {
-      pakeApp::$PAKEFILES = array($pakefile);
+      pakeApp::$PAKEFILES = [$pakefile];
     }
 
     $this->handle_options($options);
@@ -119,26 +105,26 @@ class pakeApp
       $args = $this->opt->get_arguments();
       $task = array_shift($args);
 
-      $options = array();
+      $options = [];
       for ($i = 0, $max = count($args); $i < $max; $i++)
       {
-        if (0 === strpos($args[$i], '--'))
+        if (str_starts_with((string) $args[$i], '--'))
         {
-          if (false !== $pos = strpos($args[$i], '='))
+          if (false !== $pos = strpos((string) $args[$i], '='))
           {
-            $key = substr($args[$i], 2, $pos - 2);
-            $value = substr($args[$i], $pos + 1);
+            $key = substr((string) $args[$i], 2, $pos - 2);
+            $value = substr((string) $args[$i], $pos + 1);
           }
           else
           {
-            $key = substr($args[$i], 2);
+            $key = substr((string) $args[$i], 2);
             $value = true;
           }
-          if ('[]' == substr($key, -2))
+          if (str_ends_with($key, '[]'))
           {
             if (!isset($options[$key]))
             {
-              $options[$key] = array();
+              $options[$key] = [];
             }
             $options[$key][] = $value;
           }
@@ -226,7 +212,7 @@ class pakeApp
         $this->verbose = false;
         break;
       case 'pakefile':
-        pakeApp::$PAKEFILES = array($value);
+        pakeApp::$PAKEFILES = [$value];
         break;
       case 'require':
         require $value;
@@ -268,10 +254,10 @@ class pakeApp
 
     foreach (pakeApp::$OPTIONS as $option)
     {
-      list($long, $short, $mode, $comment) = $option;
+      [$long, $short, $mode, $comment] = $option;
       if ($mode == pakeGetopt::REQUIRED_ARGUMENT)
       {
-        if (preg_match('/\b([A-Z]{2,})\b/', $comment, $match))
+        if (preg_match('/\b([A-Z]{2,})\b/', (string) $comment, $match))
           $long .= '='.$match[1];
       }
       printf("  %-20s (%s)\n", pakeColor::colorize($long, 'INFO', pake_STDOUT()), pakeColor::colorize($short, 'INFO', pake_STDOUT()));
@@ -286,10 +272,10 @@ class pakeApp
     $tasks = pakeTask::get_tasks();
     foreach ($tasks as $name => $task)
     {
-      $w = strlen(pakeTask::get_mini_task_name($name));
+      $w = strlen((string) pakeTask::get_mini_task_name($name));
       if ($w > $width) $width = $w;
     }
-    $width += strlen(pakeColor::colorize(' ', 'INFO', pake_STDOUT()));
+    $width += strlen((string) pakeColor::colorize(' ', 'INFO', pake_STDOUT()));
 
     echo "available pake tasks:\n";
 
@@ -341,7 +327,7 @@ class pakeApp
 
   public static function get_files_from_argument($arg, $target_dir = '', $relative = false)
   {
-    $files = array();
+    $files = [];
     if (is_array($arg))
     {
       $files = $arg;
@@ -364,9 +350,7 @@ class pakeApp
       $files = $files ? preg_replace('/^'.preg_quote(realpath($target_dir), '/').'/', '', $files) : $files;
 
       // remove leading /
-      $files = array_map(function ($f) {
-          return 0 === strpos($f, DIRECTORY_SEPARATOR) ? substr($f, 1) : $f;
-      }, $files);
+      $files = array_map(fn($f) => str_starts_with((string) $f, DIRECTORY_SEPARATOR) ? substr((string) $f, 1) : $f, $files);
     }
 
     return $files;
@@ -379,29 +363,29 @@ class pakeApp
       $size = self::$MAX_LINE_SIZE;
     }
 
-    if (strlen($text) < $size)
+    if (strlen((string) $text) < $size)
     {
       return $text;
     }
 
     $subsize = floor(($size - 3) / 2);
 
-    return substr($text, 0, $subsize).pakeColor::colorize('...', 'INFO', pake_STDOUT()).substr($text, -$subsize);
+    return substr((string) $text, 0, $subsize).pakeColor::colorize('...', 'INFO', pake_STDOUT()).substr((string) $text, -$subsize);
   }
 
   /* see perl Text::Abbrev module */
   private function abbrev($options)
   {
-    $abbrevs = array();
-    $table = array();
+    $abbrevs = [];
+    $table = [];
 
     foreach ($options as $option)
     {
       $option = pakeTask::get_mini_task_name($option);
 
-      for ($len = (strlen($option)) - 1; $len > 0; --$len)
+      for ($len = (strlen((string) $option)) - 1; $len > 0; --$len)
       {
-        $abbrev = substr($option, 0, $len);
+        $abbrev = substr((string) $option, 0, $len);
         if (!array_key_exists($abbrev, $table))
           $table[$abbrev] = 1;
         else
@@ -411,7 +395,7 @@ class pakeApp
         if ($seen == 1)
         {
           // we're the first word so far to have this abbreviation.
-          $abbrevs[$abbrev] = array($option);
+          $abbrevs[$abbrev] = [$option];
         }
         else if ($seen == 2)
         {
@@ -430,7 +414,7 @@ class pakeApp
     // Non-abbreviations always get entered, even if they aren't unique
     foreach ($options as $option)
     {
-      $abbrevs[$option] = array($option);
+      $abbrevs[$option] = [$option];
     }
 
     return $abbrevs;

@@ -11,158 +11,131 @@
 /**
  * sfDebug provides some method to help debugging a symfony application.
  *
- * @package    symfony
- * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfDebug.class.php 3785 2007-04-13 17:26:08Z fabien $
  */
 class sfDebug
 {
-  /**
-   * Returns PHP information as an array.
-   *
-   * @return array An array of php information
-   */
-  public static function phpInfoAsArray()
-  {
-    $values = array(
-      'php'        => phpversion(),
-      'os'         => php_uname(),
-      'extensions' => get_loaded_extensions(),
-    );
-
-    return $values;
-  }
-
-  /**
-   * Returns PHP globals variables as a sorted array.
-   *
-   * @return array PHP globals
-   */
-  public static function globalsAsArray()
-  {
-    $values = array();
-    foreach (array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name)
+    /**
+     * Returns PHP information as an array.
+     *
+     * @return array An array of php information
+     */
+    public static function phpInfoAsArray()
     {
-      if (!isset($GLOBALS['_'.strtoupper($name)]))
-      {
-        continue;
-      }
+        $values = ['php' => phpversion(), 'os' => php_uname(), 'extensions' => get_loaded_extensions()];
 
-      $values[$name] = array();
-      foreach ($GLOBALS['_'.strtoupper($name)] as $key => $value)
-      {
-        $values[$name][$key] = $value;
-      }
-      ksort($values[$name]);
+        return $values;
     }
 
-    ksort($values);
-
-    return $values;
-  }
-
-  /**
-   * Returns sfConfig variables as a sorted array.
-   *
-   * @return array sfConfig variables
-   */
-  public static function settingsAsArray()
-  {
-    $config = sfConfig::getAll();
-
-    ksort($config);
-
-    return $config;
-  }
-
-  /**
-   * Returns request parameter holders as an array.
-   *
-   * @param sfRequest A sfRequest instance
-   *
-   * @return array The request parameter holders
-   */
-  public static function requestAsArray($request)
-  {
-    if ($request)
+    /**
+     * Returns PHP globals variables as a sorted array.
+     *
+     * @return array PHP globals
+     */
+    public static function globalsAsArray()
     {
-      $values = array(
-        'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
-        'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
-      );
-    }
-    else
-    {
-      $values = array('parameterHolder' => array(), 'attributeHolder' => array());
-    }
+        $values = [];
+        foreach (['cookie', 'server', 'get', 'post', 'files', 'env', 'session'] as $name) {
+            if (!isset($GLOBALS['_'.strtoupper($name)])) {
+                continue;
+            }
 
-    return $values;
-  }
-
-  /**
-   * Returns response parameters as an array.
-   *
-   * @param sfResponse A sfResponse instance
-   *
-   * @return array The response parameters
-   */
-  public static function responseAsArray($response)
-  {
-    if ($response)
-    {
-      $values = array(
-        'cookies'         => array(),
-        'httpHeaders'     => array(),
-        'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
-      );
-      if (method_exists($response, 'getHttpHeaders'))
-      {
-        foreach ($response->getHttpHeaders() as $key => $value)
-        {
-          $values['httpHeaders'][$key] = $value;
+            $values[$name] = [];
+            foreach ($GLOBALS['_'.strtoupper($name)] as $key => $value) {
+                $values[$name][$key] = $value;
+            }
+            ksort($values[$name]);
         }
-      }
 
-      if (method_exists($response, 'getCookies'))
-      {
-        $cookies = array();
-        foreach ($response->getCookies() as $key => $value)
-        {
-          $values['cookies'][$key] = $value;
+        ksort($values);
+
+        return $values;
+    }
+
+    /**
+     * Returns sfConfig variables as a sorted array.
+     *
+     * @return array sfConfig variables
+     */
+    public static function settingsAsArray()
+    {
+        $config = sfConfig::getAll();
+
+        ksort($config);
+
+        return $config;
+    }
+
+    /**
+     * Returns request parameter holders as an array.
+     *
+     * @param sfRequest A sfRequest instance
+     *
+     * @return array The request parameter holders
+     */
+    public static function requestAsArray($request)
+    {
+        if ($request) {
+            $values = ['parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()), 'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder())];
+        } else {
+            $values = ['parameterHolder' => [], 'attributeHolder' => []];
         }
-      }
+
+        return $values;
     }
-    else
+
+    /**
+     * Returns response parameters as an array.
+     *
+     * @param sfResponse A sfResponse instance
+     *
+     * @return array The response parameters
+     */
+    public static function responseAsArray($response)
     {
-      $values = array('cookies' => array(), 'httpHeaders' => array(), 'parameterHolder' => array());
+        if ($response) {
+            $values = ['cookies' => [], 'httpHeaders' => [], 'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder())];
+            if (method_exists($response, 'getHttpHeaders')) {
+                foreach ($response->getHttpHeaders() as $key => $value) {
+                    $values['httpHeaders'][$key] = $value;
+                }
+            }
+
+            if (method_exists($response, 'getCookies')) {
+                $cookies = [];
+                foreach ($response->getCookies() as $key => $value) {
+                    $values['cookies'][$key] = $value;
+                }
+            }
+        } else {
+            $values = ['cookies' => [], 'httpHeaders' => [], 'parameterHolder' => []];
+        }
+
+        return $values;
     }
 
-    return $values;
-  }
-
-  /**
-   * Returns a parameter holder as an array.
-   *
-   * @param sfParameterHolder A sfParameterHolder instance
-   *
-   * @return array The parameter holder as an array
-   */
-  public static function flattenParameterHolder($parameterHolder)
-  {
-    $values = array();
-    foreach ($parameterHolder->getNamespaces() as $ns)
+    /**
+     * Returns a parameter holder as an array.
+     *
+     * @param sfParameterHolder A sfParameterHolder instance
+     *
+     * @return array The parameter holder as an array
+     */
+    public static function flattenParameterHolder($parameterHolder)
     {
-      $values[$ns] = array();
-      foreach ($parameterHolder->getAll($ns) as $key => $value)
-      {
-        $values[$ns][$key] = $value;
-      }
-      ksort($values[$ns]);
+        $values = [];
+        foreach ($parameterHolder->getNamespaces() as $ns) {
+            $values[$ns] = [];
+            foreach ($parameterHolder->getAll($ns) as $key => $value) {
+                $values[$ns][$key] = $value;
+            }
+            ksort($values[$ns]);
+        }
+
+        ksort($values);
+
+        return $values;
     }
-
-    ksort($values);
-
-    return $values;
-  }
 }

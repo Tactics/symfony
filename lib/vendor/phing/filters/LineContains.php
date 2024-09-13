@@ -63,7 +63,7 @@ class LineContains extends BaseParamFilterReader implements ChainableReader {
      * Array of Contains objects.
      * @var array
      */
-    private $_contains = array();
+    private $_contains = [];
 
     /**
      * [Deprecated]
@@ -87,14 +87,14 @@ class LineContains extends BaseParamFilterReader implements ChainableReader {
             return -1;
         }
 
-        $lines = explode("\n", $buffer);
-        $matched = array();
+        $lines = explode("\n", (string) $buffer);
+        $matched = [];
         $containsSize = count($this->_contains);
 
         foreach($lines as $line) {
             for($i = 0 ; $i < $containsSize ; $i++) {
                 $containsStr = $this->_contains[$i]->getValue();
-                if ( strstr($line, $containsStr) === false ) {
+                if ( !str_contains($line, (string) $containsStr) ) {
                     $line = null;
                     break;
                 }
@@ -140,7 +140,7 @@ class LineContains extends BaseParamFilterReader implements ChainableReader {
                 $containsSize = count($this->_contains);
                 for($i = 0 ; $i < $containsSize ; $i++) {
                     $containsStr = $this->_contains[$i]->getValue();
-                    if ( strstr($this->_line, $containsStr) === false ) {
+                    if ( !str_contains($this->_line, (string) $containsStr) ) {
                         $this->_line = null;
                         break;
                     }

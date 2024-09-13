@@ -159,7 +159,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
   {
     sqlsrv_free_stmt($this->result);
     $this->result = false;
-    $this->fields = array();
+    $this->fields = [];
   }
 
   public function getFieldName($id)
