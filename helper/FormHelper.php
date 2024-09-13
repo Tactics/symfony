@@ -134,7 +134,16 @@ function form_tag($url_for_options = '', $options = array())
 
   $html_options['action'] = url_for($url_for_options);
 
-  return tag('form', $html_options, true);
+  $csrfTag = $nameTag = '';
+  if (isset($html_options['name'])) {
+      $formName = $html_options['name'];
+      $csrfManager = new sfCsrfTokenManager($formName, sfCsrfTokenManager::TOKEN_FIELD_NAME, 4 * 60 * 60);
+      $csrfToken = $csrfManager->generateToken(sfCsrfTokenManager::TOKEN_FIELD_NAME);
+      $csrfTag = input_hidden_tag(sfCsrfTokenManager::TOKEN_FIELD_NAME, $csrfToken);
+      $nameTag = input_hidden_tag(sfCsrfTokenManager::SESSION_KEY_FIELD_NAME, $formName);
+  }
+
+  return tag('form', $html_options, true) . $csrfTag . $nameTag;
 }
 
 /**
