@@ -80,22 +80,14 @@ class Creole {
      * @see registerDriver()
      * @var array Hash mapping phptype => driver class (in dot-path notation, e.g. 'mysql' => 'creole.drivers.mysql.MySQLConnection').
      */
-    private static $driverMap = array(  'mysql' => 'creole.drivers.mysql.MySQLConnection',
-                                        'mysqli' => 'creole.drivers.mysqli.MySQLiConnection',
-                                        'pgsql' => 'creole.drivers.pgsql.PgSQLConnection',
-                                        'sqlite' => 'creole.drivers.sqlite.SQLiteConnection',
-                                        'oracle' => 'creole.drivers.oracle.OCI8Connection',
-                                        'mssql' => 'creole.drivers.mssql.MSSQLConnection',
-                                        'odbc' => 'creole.drivers.odbc.ODBCConnection',
-                                        'mssqlsrv' => 'creole.drivers.mssqlsrv.MSSQLSRVConnection',
-                                       );
+    private static $driverMap = ['mysql' => 'creole.drivers.mysql.MySQLConnection', 'mysqli' => 'creole.drivers.mysqli.MySQLiConnection', 'pgsql' => 'creole.drivers.pgsql.PgSQLConnection', 'sqlite' => 'creole.drivers.sqlite.SQLiteConnection', 'oracle' => 'creole.drivers.oracle.OCI8Connection', 'mssql' => 'creole.drivers.mssql.MSSQLConnection', 'odbc' => 'creole.drivers.odbc.ODBCConnection', 'mssqlsrv' => 'creole.drivers.mssqlsrv.MSSQLSRVConnection'];
 
     /**
      * Map of already established connections
      * @see getConnection()
      * @var array Hash mapping connection DSN => Connection instance
      */
-    private static $connectionMap = array();
+    private static $connectionMap = [];
 
     /**
      * Register your own RDBMS driver class.
@@ -169,7 +161,7 @@ class Creole {
      * @throws SQLException
      * @see self::parseDSN()
      */
-    public static function getConnection($dsn, $flags = 0)
+    public static function getConnection(mixed $dsn, $flags = 0)
     {
         if (is_array($dsn)) {
             $dsninfo = $dsn;
@@ -194,7 +186,7 @@ class Creole {
         // sort $dsninfo by keys so the serialized result is always the same
         // for identical connection parameters, no matter what their order is
         ksort($dsninfo);
-        $connectionMapKey = crc32(serialize($dsninfo + array('compat_flags' => ($flags & Creole::COMPAT_ALL))));
+        $connectionMapKey = crc32(serialize($dsninfo + ['compat_flags' => ($flags & Creole::COMPAT_ALL)]));
 
         // see if we already have a connection with these parameters cached
         if(isset(self::$connectionMap[$connectionMapKey]))
@@ -291,16 +283,7 @@ class Creole {
             return $dsn;
         }
 
-        $parsed = array(
-            'phptype'  => null,
-            'username' => null,
-            'password' => null,
-            'protocol' => null,
-            'hostspec' => null,
-            'port'     => null,
-            'socket'   => null,
-            'database' => null
-        );
+        $parsed = ['phptype'  => null, 'username' => null, 'password' => null, 'protocol' => null, 'hostspec' => null, 'port'     => null, 'socket'   => null, 'database' => null];
 
         $info = parse_url($dsn);
 
@@ -334,7 +317,7 @@ class Creole {
         if (isset($info['query'])) {
                 $opts = explode('&', $info['query']);
                 foreach ($opts as $opt) {
-                    list($key, $value) = explode('=', $opt);
+                    [$key, $value] = explode('=', $opt);
                     if (!isset($parsed[$key])) { // don't allow params overwrite
                         $parsed[$key] = urldecode($value);
                     }

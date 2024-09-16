@@ -33,14 +33,11 @@ class SourceFileScanner {
     /** Instance of FileUtils */
     private $fileUtils;
 
-    /** Task this class is working for -- for logging purposes. */
-    private $task;
-
     /**
      * @param task The task we should log messages through
      */
-    function __construct($task) {
-        $this->task = $task;
+    function __construct(/** Task this class is working for -- for logging purposes. */
+    private $task) {
         $this->fileUtils = new FileUtils();
     }
 
@@ -75,7 +72,7 @@ class SourceFileScanner {
             $now += 2000;
         }
 
-        $v = array();
+        $v = [];
 
         for ($i=0, $size=count($files); $i < $size; $i++) {
 
@@ -138,7 +135,7 @@ class SourceFileScanner {
             }
 
         }
-        $result = array();
+        $result = [];
         $result = $v;
         return $result;
     }
@@ -150,7 +147,7 @@ class SourceFileScanner {
      */
     function restrictAsFiles(&$files, &$srcDir, &$destDir, &$mapper) {
         $res = $this->restrict($files, $srcDir, $destDir, $mapper);
-        $result = array();
+        $result = [];
         for ($i=0; $i<count($res); $i++) {
             $result[$i] = new PhingFile($srcDir, $res[$i]);
         }

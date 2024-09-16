@@ -13,13 +13,12 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
+ *
  * @version    $Id: sfMessageFormat.class.php 24622 2009-11-30 23:49:47Z FabianLange $
- * @package    symfony
- * @subpackage i18n
  */
 
 /**
- * Gets the encoding utilities
+ * Gets the encoding utilities.
  */
 
 /**
@@ -43,252 +42,246 @@
  * </code>
  *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
+ *
  * @version v1.0, last update on Fri Dec 24 20:46:16 EST 2004
- * @package    symfony
- * @subpackage i18n
  */
 class sfMessageFormat
 {
-  /**
-   * The message source.
-   * @var sfMessageSource
-   */
-  protected $source;
+    /**
+     * The message source.
+     *
+     * @var sfMessageSource
+     */
+    protected $source;
 
-  /**
-   * A list of loaded message catalogues.
-   * @var array
-   */
-  protected $catalogues = array();
+    /**
+     * A list of loaded message catalogues.
+     *
+     * @var array
+     */
+    protected $catalogues = [];
 
-  /**
-   * The translation messages.
-   * @var array
-   */
-  protected $messages = array();
+    /**
+     * The translation messages.
+     *
+     * @var array
+     */
+    protected $messages = [];
 
-  /**
-   * A list of untranslated messages.
-   * @var array
-   */
-  protected $untranslated = array();
+    /**
+     * A list of untranslated messages.
+     *
+     * @var array
+     */
+    protected $untranslated = [];
 
-  /**
-   * The prefix and suffix to append to untranslated messages.
-   * @var array
-   */
-  protected $postscript = array('', '');
+    /**
+     * The prefix and suffix to append to untranslated messages.
+     *
+     * @var array
+     */
+    protected $postscript = ['', ''];
 
-  /**
-   * Set the default catalogue.
-   * @var string
-   */
-  public $Catalogue;
+    /**
+     * Set the default catalogue.
+     *
+     * @var string
+     */
+    public $Catalogue;
 
-  /**
-   * Output encoding charset
-   * @var string
-   */
-  protected $charset = 'UTF-8';
+    /**
+     * Output encoding charset.
+     *
+     * @var string
+     */
+    protected $charset = 'UTF-8';
 
-  /**
-   * Constructor.
-   * Create a new instance of sfMessageFormat using the messages
-   * from the supplied message source.
-   *
-   * @param MessageSource the source of translation messages.
-   * @param string charset for the message output.
-   */
-  function __construct(sfIMessageSource $source, $charset = 'UTF-8')
-  {
-    $this->source = $source;
-    $this->setCharset($charset);
-  }
-
-  /**
-   * Sets the charset for message output.
-   *
-   * @param string charset, default is UTF-8
-   */
-  public function setCharset($charset)
-  {
-    $this->charset = $charset;
-  }
-
-  /**
-   * Gets the charset for message output. Default is UTF-8.
-   *
-   * @return string charset, default UTF-8
-   */
-  public function getCharset()
-  {
-    return $this->charset;
-  }
-
-  /**
-   * Loads the message from a particular catalogue. A listed
-   * loaded catalogues is kept to prevent reload of the same
-   * catalogue. The load catalogue messages are stored
-   * in the $this->message array.
-   *
-   * @param string message catalogue to load.
-   */
-  protected function loadCatalogue($catalogue)
-  {
-    if (in_array($catalogue, $this->catalogues))
+    /**
+     * Constructor.
+     * Create a new instance of sfMessageFormat using the messages
+     * from the supplied message source.
+     *
+     * @param MessageSource the source of translation messages
+     * @param string charset for the message output
+     */
+    public function __construct(sfIMessageSource $source, $charset = 'UTF-8')
     {
-      return;
+        $this->source = $source;
+        $this->setCharset($charset);
     }
 
-    if ($this->source->load($catalogue))
+    /**
+     * Sets the charset for message output.
+     *
+     * @param string charset, default is UTF-8
+     */
+    public function setCharset($charset)
     {
-      $this->messages[$catalogue] = $this->source->read();
-      $this->catalogues[] = $catalogue;
-    }
-  }
-
-  /**
-   * Formats the string. That is, for a particular string find
-   * the corresponding translation. Variable subsitution is performed
-   * for the $args parameter. A different catalogue can be specified
-   * using the $catalogue parameter.
-   * The output charset is determined by $this->getCharset();
-   *
-   * @param string the string to translate.
-   * @param array a list of string to substitute.
-   * @param string get the translation from a particular message
-   * @param string charset, the input AND output charset catalogue.
-   * @return string translated string.
-   */
-  public function format($string, $args = array(), $catalogue = null, $charset = null)
-  {
-    // make sure that objects with __toString() are converted to strings
-    $string = (string) $string;
-    if (empty($charset))
-    {
-      $charset = $this->getCharset();
+        $this->charset = $charset;
     }
 
-    $s = $this->formatString(I18N_toUTF8($string, $charset), $args, $catalogue);
-
-    return I18N_toEncoding($s, $charset);
-  }
-
-  public function formatExists($string, $args = array(), $catalogue = null, $charset = null)
-  {
-    if (empty($charset))
+    /**
+     * Gets the charset for message output. Default is UTF-8.
+     *
+     * @return string charset, default UTF-8
+     */
+    public function getCharset()
     {
-      $charset = $this->getCharset();
+        return $this->charset;
     }
 
-    $s = $this->getFormattedString(I18N_toUTF8($string, $charset), $args, $catalogue);
-
-    return I18N_toEncoding($s, $charset);
-  }
-
-  /**
-   * Do string translation.
-   *
-   * @param string the string to translate.
-   * @param array a list of string to substitute.
-   * @param string get the translation from a particular message catalogue.
-   * @return string translated string.
-   */
-  protected function formatString($string, $args = array(), $catalogue = null)
-  {
-    if (empty($args))
+    /**
+     * Loads the message from a particular catalogue. A listed
+     * loaded catalogues is kept to prevent reload of the same
+     * catalogue. The load catalogue messages are stored
+     * in the $this->message array.
+     *
+     * @param string message catalogue to load
+     */
+    protected function loadCatalogue($catalogue)
     {
-      $args = array();
-    }
-
-    $target = $this->getFormattedString($string, $args, $catalogue);
-
-    // well we did not find the translation string.
-    if (!$target)
-    {
-      $this->source->append($string);
-      $target = $this->postscript[0].$this->replaceArgs($string, $args).$this->postscript[1];
-    }
-
-    return $target;
-  }
-
-  protected function getFormattedString($string, $args = array(), $catalogue = null)
-  {
-    if (empty($catalogue))
-    {
-      $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
-    }
-
-    if (empty($args))
-    {
-      $args = array();
-    }
-
-    $this->loadCatalogue($catalogue);
-
-    foreach ($this->messages[$catalogue] as $variant)
-    {
-      // we found it, so return the target translation
-      if (isset($variant[$string]))
-      {
-        $target = $variant[$string];
-
-        // check if it contains only strings.
-        if (is_array($target))
-        {
-          $target = array_shift($target);
+        if (in_array($catalogue, $this->catalogues)) {
+            return;
         }
 
-        // found, but untranslated
-        if (empty($target))
-        {
-          return $this->postscript[0].$this->replaceArgs($string, $args).$this->postscript[1];
+        if ($this->source->load($catalogue)) {
+            $this->messages[$catalogue] = $this->source->read();
+            $this->catalogues[] = $catalogue;
         }
-        return $this->replaceArgs($target, $args);
-      }
     }
 
-    return null;
-  }
-
-  protected function replaceArgs($string, $args)
-  {
-    // replace object with strings
-    foreach ($args as $key => $value)
+    /**
+     * Formats the string. That is, for a particular string find
+     * the corresponding translation. Variable subsitution is performed
+     * for the $args parameter. A different catalogue can be specified
+     * using the $catalogue parameter.
+     * The output charset is determined by $this->getCharset();.
+     *
+     * @param string the string to translate
+     * @param array a list of string to substitute
+     * @param string get the translation from a particular message
+     * @param string charset, the input AND output charset catalogue
+     *
+     * @return string translated string
+     */
+    public function format($string, $args = [], $catalogue = null, $charset = null)
     {
-      if (is_object($value) && method_exists($value, '__toString'))
-      {
-        $args[$key] = $value->__toString();
-      }
+        // make sure that objects with __toString() are converted to strings
+        $string = (string) $string;
+        if (empty($charset)) {
+            $charset = $this->getCharset();
+        }
+
+        $s = $this->formatString(I18N_toUTF8($string, $charset), $args, $catalogue);
+
+        return I18N_toEncoding($s, $charset);
     }
 
-    return strtr($string, $args);
-  }
-
-  /**
-   * Gets the message source.
-   *
-   * @return MessageSource
-   */
-  function getSource()
-  {
-    return $this->source;
-  }
-
-  /**
-   * Sets the prefix and suffix to append to untranslated messages.
-   * e.g. $postscript=array('[T]','[/T]'); will output
-   * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
-   *
-   * @param array first element is the prefix, second element the suffix.
-   */
-  function setUntranslatedPS($postscript)
-  {
-    if (is_array($postscript) && count($postscript) >= 2)
+    public function formatExists($string, $args = [], $catalogue = null, $charset = null)
     {
-      $this->postscript[0] = $postscript[0];
-      $this->postscript[1] = $postscript[1];
+        if (empty($charset)) {
+            $charset = $this->getCharset();
+        }
+
+        $s = $this->getFormattedString(I18N_toUTF8($string, $charset), $args, $catalogue);
+
+        return I18N_toEncoding($s, $charset);
     }
-  }
+
+    /**
+     * Do string translation.
+     *
+     * @param string the string to translate
+     * @param array a list of string to substitute
+     * @param string get the translation from a particular message catalogue
+     *
+     * @return string translated string
+     */
+    protected function formatString($string, $args = [], $catalogue = null)
+    {
+        if (empty($args)) {
+            $args = [];
+        }
+
+        $target = $this->getFormattedString($string, $args, $catalogue);
+
+        // well we did not find the translation string.
+        if (!$target) {
+            $this->source->append($string);
+            $target = $this->postscript[0].$this->replaceArgs($string, $args).$this->postscript[1];
+        }
+
+        return $target;
+    }
+
+    protected function getFormattedString($string, $args = [], $catalogue = null)
+    {
+        if (empty($catalogue)) {
+            $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
+        }
+
+        if (empty($args)) {
+            $args = [];
+        }
+
+        $this->loadCatalogue($catalogue);
+
+        foreach ($this->messages[$catalogue] as $variant) {
+            // we found it, so return the target translation
+            if (isset($variant[$string])) {
+                $target = $variant[$string];
+
+                // check if it contains only strings.
+                if (is_array($target)) {
+                    $target = array_shift($target);
+                }
+
+                // found, but untranslated
+                if (empty($target)) {
+                    return $this->postscript[0].$this->replaceArgs($string, $args).$this->postscript[1];
+                }
+
+                return $this->replaceArgs($target, $args);
+            }
+        }
+
+        return null;
+    }
+
+    protected function replaceArgs($string, $args)
+    {
+        // replace object with strings
+        foreach ($args as $key => $value) {
+            if (is_object($value) && method_exists($value, '__toString')) {
+                $args[$key] = $value->__toString();
+            }
+        }
+
+        return strtr($string, $args);
+    }
+
+    /**
+     * Gets the message source.
+     *
+     * @return MessageSource
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Sets the prefix and suffix to append to untranslated messages.
+     * e.g. $postscript=array('[T]','[/T]'); will output
+     * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
+     *
+     * @param array first element is the prefix, second element the suffix
+     */
+    public function setUntranslatedPS($postscript)
+    {
+        if (is_array($postscript) && count($postscript) >= 2) {
+            $this->postscript[0] = $postscript[0];
+            $this->postscript[1] = $postscript[1];
+        }
+    }
 }

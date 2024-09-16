@@ -9,55 +9,55 @@
  */
 
 /**
- * @package    symfony
- * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: SfExtensionPeerBuilder.php 2624 2006-11-07 09:34:59Z fabien $
  */
 class SfExtensionPeerBuilder extends PHP5ExtensionPeerBuilder
 {
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
+    protected function addIncludes(&$script)
     {
-      return;
+        if (!DataModelBuilder::getBuildProperty('builderAddIncludes')) {
+            return;
+        }
+
+        parent::addIncludes($script);
     }
 
-    parent::addIncludes($script);
-  }
+    /**
+     * Adds class phpdoc comment and openning of class.
+     *
+     * @param string &$script The script will be modified in this method
+     */
+    protected function addClassOpen(&$script)
+    {
+        $table = $this->getTable();
+        $tableName = $table->getName();
+        $tableDesc = $table->getDescription();
 
-  /**
-   * Adds class phpdoc comment and openning of class.
-   * @param string &$script The script will be modified in this method.
-   */
-  protected function addClassOpen(&$script)
-  {
-    $table = $this->getTable();
-    $tableName = $table->getName();
-    $tableDesc = $table->getDescription();
+        $baseClassname = $this->getPeerBuilder()->getClassname();
 
-    $baseClassname = $this->getPeerBuilder()->getClassname();
-
-    $script .= "
+        $script .= "
 /**
  * Subclass for performing query and update operations on the '$tableName' table.
  *
  * $tableDesc
  *
- * @package ".$this->getPackage()."
+ * @package ".$this->getPackage().'
  */
-class ".$this->getClassname()." extends $baseClassname
+class '.$this->getClassname()." extends $baseClassname
 {";
-  }
+    }
 
-  /**
-   * Closes class.
-   * @param string &$script The script will be modified in this method.
-   */
-  protected function addClassClose(&$script)
-  {
-    $script .= "
+    /**
+     * Closes class.
+     *
+     * @param string &$script The script will be modified in this method
+     */
+    protected function addClassClose(&$script)
+    {
+        $script .= '
 }
-";
-  }
+';
+    }
 }

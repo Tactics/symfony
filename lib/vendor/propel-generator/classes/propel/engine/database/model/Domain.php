@@ -33,11 +33,6 @@ class Domain extends XMLElement {
 
 	private $name;
 	private $description;
-	private $size;
-	private $scale;
-
-	/** type as defined in schema.xml */
-	private $propelType;
 	private $sqlType;
 	private $defaultValue;
 
@@ -45,20 +40,17 @@ class Domain extends XMLElement {
 	private $database;
 
 	/**
-	 * Creates a new Domain object.
-	 * If this domain needs a name, it must be specified manually.
-	 *
-	 * @param      string $type Propel type.
-	 * @param      string $sqlType SQL type.
-	 * @param      string $size
-	 * @param      string $scale
-	 */
-	public function __construct($type = null, $sqlType = null, $size = null, $scale = null)
+  * Creates a new Domain object.
+  * If this domain needs a name, it must be specified manually.
+  *
+  * @param string $propelType Propel type.
+  * @param      string $sqlType SQL type.
+  * @param      string $size
+  * @param      string $scale
+  */
+ public function __construct(private $propelType = null, $sqlType = null, private $size = null, private $scale = null)
 	{
-		$this->propelType = $type;
-		$this->sqlType = ($sqlType !== null) ? $sqlType : $type;
-		$this->size = $size;
-		$this->scale = $scale;
+		$this->sqlType = $sqlType ?? $this->propelType;
 	}
 
 	public function copy(Domain $domain)
@@ -78,7 +70,7 @@ class Domain extends XMLElement {
 	 */
 	protected function setupObject()
 	{
-		$schemaType = strtoupper($this->getAttribute("type"));
+		$schemaType = strtoupper((string) $this->getAttribute("type"));
 		$this->copy($this->getDatabase()->getPlatform()->getDomainForType($schemaType));
 
 		//Name
@@ -247,7 +239,7 @@ class Domain extends XMLElement {
 			return $this->booleanValue($this->defaultValue);
 		} elseif ($this->propelType === PropelTypes::DATE || $this->propelType === PropelTypes::TIME || $this->propelType === PropelTypes::TIMESTAMP) {
 			// DATE/TIME vals need to be converted to integer timestamp
-			$ts = strtotime($this->defaultValue);
+			$ts = strtotime((string) $this->defaultValue);
 			if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
 				throw new EngineException("Unable to parse default value as date/time value: " . var_export($this->defaultValue, true));
 			}

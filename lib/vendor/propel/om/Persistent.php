@@ -42,7 +42,7 @@ interface Persistent {
 	 * @return     void
 	 * @throws     Exception This method might throw an exceptions
 	 */
-	public function setPrimaryKey($primaryKey): void;
+	public function setPrimaryKey(mixed $primaryKey): void;
 
 
 	/**

@@ -32,24 +32,17 @@ include_once 'phing/system/io/Reader.php';
 */
 class BufferedReader extends Reader {
 
-    private $bufferSize = 0;
     private $buffer     = null;
     private $bufferPos  = 0;
 
     /**
-     * The Reader we are buffering for.
-     */
-    private $in;
-
-    /**
      *
-     * @param object $reader The reader (e.g. FileReader).
-     * @param integer $buffsize The size of the buffer we should use for reading files.
+     * @param object $in The reader (e.g. FileReader).
+     * @param integer $bufferSize The size of the buffer we should use for reading files.
      *                             A large buffer ensures that most files (all scripts?) are parsed in 1 buffer.
      */
-    function __construct(Reader $reader, $buffsize = 65536) {
-        $this->in = $reader;
-        $this->bufferSize = $buffsize;
+    function __construct(private readonly Reader $in, private $bufferSize = 65536)
+    {
     }
 
     /**
@@ -68,16 +61,16 @@ class BufferedReader extends Reader {
 			// not all files end with a newline character, so we also need to check EOF
 			if (!$this->in->eof()) {
 
-	            $notValidPart = strrchr($data, "\n");
+	            $notValidPart = strrchr((string) $data, "\n");
 	            $notValidPartSize = strlen($notValidPart);
 
 	            if ( $notValidPartSize > 1 ) {
 	                // Block doesn't finish on a EOL
 	                // Find the last EOL and forgot all following stuff
-	                $dataSize = strlen($data);
+	                $dataSize = strlen((string) $data);
 	                $validSize = $dataSize - $notValidPartSize + 1;
 
-	                $data = substr($data, 0, $validSize);
+	                $data = substr((string) $data, 0, $validSize);
 
 	                // Rewind to the begining of the forgotten stuff.
 	                $this->in->skip(-$notValidPartSize+1);
@@ -144,7 +137,7 @@ class BufferedReader extends Reader {
             // so we just return empty string (char) at this point.  (Probably could also return -1 ...?)
             $ch = ($this->buffer !== "") ? $this->buffer[$this->bufferPos] : '';
             $this->bufferPos++;
-            if ( $this->bufferPos >= strlen($this->buffer) ) {
+            if ( $this->bufferPos >= strlen((string) $this->buffer) ) {
                 $this->buffer = null;
                 $this->bufferPos = 0;
             }

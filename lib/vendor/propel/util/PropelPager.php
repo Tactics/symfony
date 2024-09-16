@@ -286,7 +286,7 @@ class PropelPager {
 	{
 		$this->criteria->setOffset($this->start);
 		$this->criteria->setLimit($this->max);
-		$this->rs = call_user_func(array($this->getPeerClass(), $this->getPeerSelectMethod()), $this->criteria);
+		$this->rs = call_user_func([$this->getPeerClass(), $this->getPeerSelectMethod()], $this->criteria);
 	}
 
 	/**
@@ -366,7 +366,7 @@ class PropelPager {
 		$start = $this->getPage() - 1;
 		$end = $this->getPage() - $range;
 		$first =  $this->getFirstPage();
-		$links = array();
+		$links = [];
 		for($i=$start; $i>$end; $i--) {
 			if($i < $first) {
 					break;
@@ -389,7 +389,7 @@ class PropelPager {
 		$start = $this->getPage() + 1;
 		$end = $this->getPage() + $range;
 		$last =  $this->getLastPage();
-		$links = array();
+		$links = [];
 		for($i=$start; $i<$end; $i++) {
 			if($i > $last) {
 					break;
@@ -508,10 +508,7 @@ class PropelPager {
 						$this->countCriteria->setOffset(0);
 
 						$this->recordCount = call_user_func(
-								        array(
-								                $this->getPeerClass(),
-												$this->getPeerCountMethod()
-								             ),
+								        [$this->getPeerClass(), $this->getPeerCountMethod()],
 								        $this->countCriteria
 								        );
 

@@ -13,6 +13,6 @@ class PearPkgOption {
 
     public function setValue($v) { $this->value = $v; }
     public function getValue() { return $this->value; }
-    public function addText($txt) { $this->value = trim($txt); }
+    public function addText($txt) { $this->value = trim((string) $txt); }
 
 }

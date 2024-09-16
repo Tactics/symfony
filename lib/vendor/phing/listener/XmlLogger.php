@@ -213,24 +213,12 @@
 
 			$messageElement = $this->doc->createElement(XmlLogger::MESSAGE_TAG);
 
-			switch ($priority)
-			{
-				case Project::PROJECT_MSG_ERR:
-					$name = "error";
-					break;
-
-				case Project::PROJECT_MSG_WARN:
-					$name = "warn";
-					break;
-
-				case Project::PROJECT_MSG_INFO:
-					$name = "info";
-					break;
-
-				default:
-					$name = "debug";
-					break;
-			}
+			$name = match ($priority) {
+       Project::PROJECT_MSG_ERR => "error",
+       Project::PROJECT_MSG_WARN => "warn",
+       Project::PROJECT_MSG_INFO => "info",
+       default => "debug",
+   };
 
 			$messageElement->setAttribute(XmlLogger::PRIORITY_ATTR, $name);
 

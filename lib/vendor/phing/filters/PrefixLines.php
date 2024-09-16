@@ -73,8 +73,8 @@ class PrefixLines extends BaseParamFilterReader implements ChainableReader {
             return -1;
         }
         
-        $lines = explode("\n", $buffer);        
-        $filtered = array();        
+        $lines = explode("\n", (string) $buffer);        
+        $filtered = [];        
         
         foreach($lines as $line) {
             $line = $this->_prefix . $line;

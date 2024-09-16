@@ -314,7 +314,7 @@ abstract class OMBuilder extends DataModelBuilder {
 	 */
 	public function getPackage()
 	{
-		$pkg = ($this->getTable()->getPackage() ? $this->getTable()->getPackage() : $this->getDatabase()->getPackage());
+		$pkg = ($this->getTable()->getPackage() ?: $this->getDatabase()->getPackage());
 		if (!$pkg) {
 			$pkg = $this->getBuildProperty('targetPackage');
 		}
@@ -367,13 +367,13 @@ abstract class OMBuilder extends DataModelBuilder {
 			print $e;
 			throw $e;
 		}
-		$classname = $this->getPeerClassname($phpName);
+		$classname = $this->getPeerClassname();
 
 		// was it overridden in schema.xml ?
 		if ($col->getPeerName()) {
 			$const = strtoupper($col->getPeerName());
 		} else {
-			$const = strtoupper($col->getName());
+			$const = strtoupper((string) $col->getName());
 		}
 		return 'Base' . $classname.'::'.$const;
 	}

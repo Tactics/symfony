@@ -38,7 +38,7 @@ class IoncubeComment
 	
 	public function addText($txt)
 	{
-		$this->value = trim($txt);
+		$this->value = trim((string) $txt);
 	}
 }
 ?>

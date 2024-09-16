@@ -9,15 +9,6 @@
  */
 class Join
 {
-    /** the left column of the join condition */
-    private $leftColumn = null;
-
-    /** the right column of the join condition */
-    private $rightColumn = null;
-
-    /** the type of the join (LEFT JOIN, ...), or null */
-    private $joinType = null;
-
     /**
      * Constructor
      * @param      string $leftColumn the left column of the join condition;
@@ -28,11 +19,8 @@ class Join
      *        null (adding the join condition to the where clause),
      *        Criteria::LEFT_JOIN(), Criteria::RIGHT_JOIN(), and Criteria::INNER_JOIN()
      */
-    public function __construct($leftColumn, $rightColumn, $joinType = null)
+    public function __construct(private $leftColumn, private $rightColumn, private $joinType = null)
     {
-        $this->leftColumn = $leftColumn;
-        $this->rightColumn = $rightColumn;
-        $this->joinType = $joinType;
     }
 
     /**

@@ -126,13 +126,13 @@ class Criteria implements IteratorAggregate {
 
 	private $ignoreCase = false;
 	private $singleRecord = false;
-	private $selectModifiers = array();
-	private $selectColumns = array();
-	private $orderByColumns = array();
-	private $groupByColumns = array();
+	private $selectModifiers = [];
+	private $selectColumns = [];
+	private $orderByColumns = [];
+	private $groupByColumns = [];
 	private $having = null;
-	private $asColumns = array();
-	private $joins = array();
+	private $asColumns = [];
+	private $joins = [];
 
 	/** The name of the database. */
 	private $dbName;
@@ -152,7 +152,7 @@ class Criteria implements IteratorAggregate {
 	// flag to note that the criteria involves a blob.
 	private $blobFlag = null;
 
-	private $aliases = array();
+	private $aliases = [];
 
 	private $useTransaction = false;
 
@@ -160,7 +160,7 @@ class Criteria implements IteratorAggregate {
 	 * Primary storage of criteria data.
 	 * @var        array
 	 */
-	private $map = array();
+	private $map = [];
 
 	/**
 	 * Creates a new instance with the default capacity which corresponds to
@@ -200,21 +200,21 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function clear()
 	{
-		$this->map = array();
+		$this->map = [];
 		$this->ignoreCase = false;
 		$this->singleRecord = false;
-		$this->selectModifiers = array();
-		$this->selectColumns = array();
-		$this->orderByColumns = array();
-		$this->groupByColumns = array();
+		$this->selectModifiers = [];
+		$this->selectColumns = [];
+		$this->orderByColumns = [];
+		$this->groupByColumns = [];
 		$this->having = null;
-		$this->asColumns = array();
-		$this->joins = array();
+		$this->asColumns = [];
+		$this->joins = [];
 		$this->dbName = $this->originalDbName;
 		$this->offset = 0;
 		$this->limit = -1;
 		$this->blobFlag = null;
-		$this->aliases = array();
+		$this->aliases = [];
 		$this->useTransaction = false;
 	}
 
@@ -314,15 +314,14 @@ class Criteria implements IteratorAggregate {
 	}
 
 	/**
-	 * Will force the sql represented by this criteria to be executed within
-	 * a transaction.  This is here primarily to support the oid type in
-	 * postgresql.  Though it can be used to require any single sql statement
-	 * to use a transaction.
-     *
-     * @param      mixed $v
-	 * @return     void
-	 */
-	public function setUseTransaction($v)
+  * Will force the sql represented by this criteria to be executed within
+  * a transaction.  This is here primarily to support the oid type in
+  * postgresql.  Though it can be used to require any single sql statement
+  * to use a transaction.
+  *
+  * @return     void
+  */
+ public function setUseTransaction(mixed $v)
 	{
 		$this->useTransaction = (boolean) $v;
 	}
@@ -353,16 +352,15 @@ class Criteria implements IteratorAggregate {
 	}
 
 	/**
-	 * Method to return criterion that is not added automatically
-	 * to this Criteria.  This can be used to chain the
-	 * Criterions to form a more complex where clause.
-	 *
-	 * @param      string $column Full name of column (for example TABLE.COLUMN).
-	 * @param      mixed $value
-	 * @param      string $comparison
-	 * @return     Criterion A Criterion
-	 */
-	public function getNewCriterion($column, $value, $comparison = null)
+  * Method to return criterion that is not added automatically
+  * to this Criteria.  This can be used to chain the
+  * Criterions to form a more complex where clause.
+  *
+  * @param      string $column Full name of column (for example TABLE.COLUMN).
+  * @param      string $comparison
+  * @return     Criterion A Criterion
+  */
+ public function getNewCriterion($column, mixed $value, $comparison = null)
 	{
 		return new \Criterion($this, $column, $value, $comparison);
 	}
@@ -387,11 +385,11 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function getTablesColumns()
 	{
-		$tables = array();
+		$tables = [];
 		foreach ( array_keys ( $this->map ) as $key) {
 			$t = substr ( $key, 0, strpos ( $key, '.' ) );
 			if ( ! isset ( $tables[$t] ) ) {
-				$tables[$t] = array( $key );
+				$tables[$t] = [$key];
 			} else {
 				$tables[$t][] = $key;
 			}
@@ -432,7 +430,7 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function setDbName($dbName = null)
 	{
-		$this->dbName = ($dbName === null ? Propel::getDefaultDB() : $dbName);
+		$this->dbName = ($dbName ?? Propel::getDefaultDB());
 	}
 
 	/**
@@ -475,20 +473,19 @@ class Criteria implements IteratorAggregate {
 	}
 
     /**
-     * Overrides Hashtable put, so that this object is returned
-     * instead of the value previously in the Criteria object.
-     * The reason is so that it more closely matches the behavior
-     * of the add() methods. If you want to get the previous value
-     * then you should first Criteria.get() it yourself. Note, if
-     * you attempt to pass in an Object that is not a String, it will
-     * throw a NPE. The reason for this is that none of the add()
-     * methods support adding anything other than a String as a key.
-     *
-     * @param      string $key
-     * @param      mixed $value
-     * @return     Criteria Instance of self
-     */
-	public function put($key, $value)
+  * Overrides Hashtable put, so that this object is returned
+  * instead of the value previously in the Criteria object.
+  * The reason is so that it more closely matches the behavior
+  * of the add() methods. If you want to get the previous value
+  * then you should first Criteria.get() it yourself. Note, if
+  * you attempt to pass in an Object that is not a String, it will
+  * throw a NPE. The reason for this is that none of the add()
+  * methods support adding anything other than a String as a key.
+  *
+  * @param      string $key
+  * @return     Criteria Instance of self
+  */
+ public function put($key, mixed $value)
 	{
 		return $this->add($key, $value);
 	}
@@ -503,7 +500,7 @@ class Criteria implements IteratorAggregate {
 	 *
 	 * @param      mixed $t Mappings to be stored in this map.
 	 */
-	public function putAll($t)
+	public function putAll(mixed $t)
 	{
 		if (is_array($t)) {
 
@@ -531,31 +528,29 @@ class Criteria implements IteratorAggregate {
 
 
 	/**
-	 * This method adds a new criterion to the list of criterias.
-	 * If a criterion for the requested column already exists, it is
-	 * replaced. If is used as follow:
-	 *
-	 * <p>
-	 * <code>
-	 * $crit = new Criteria();
-	 * $crit->add(&quot;column&quot;,
-	 *                                      &quot;value&quot;
-	 *                                      &quot;Criteria::GREATER_THAN&quot;);
-	 * </code>
-	 *
-	 * Any comparison can be used.
-	 *
-	 * The name of the table must be used implicitly in the column name,
-	 * so the Column name must be something like 'TABLE.id'. If you
-	 * don't like this, you can use the add(table, column, value) method.
-	 *
-	 * @param      string|Criterion $p1 critOrColumn The column to run the comparison on, or Criterion object.
-	 * @param      mixed $value
-	 * @param      string $comparison A String.
-	 *
-	 * @return     Criteria A modified Criteria object.
-	 */
-	public function add($p1, $value = null, $comparison = null)
+  * This method adds a new criterion to the list of criterias.
+  * If a criterion for the requested column already exists, it is
+  * replaced. If is used as follow:
+  *
+  * <p>
+  * <code>
+  * $crit = new Criteria();
+  * $crit->add(&quot;column&quot;,
+  *                                      &quot;value&quot;
+  *                                      &quot;Criteria::GREATER_THAN&quot;);
+  * </code>
+  *
+  * Any comparison can be used.
+  *
+  * The name of the table must be used implicitly in the column name,
+  * so the Column name must be something like 'TABLE.id'. If you
+  * don't like this, you can use the add(table, column, value) method.
+  *
+  * @param      string|Criterion $p1 critOrColumn The column to run the comparison on, or Criterion object.
+  * @param      string $comparison A String.
+  * @return     Criteria A modified Criteria object.
+  */
+ public function add($p1, mixed $value = null, $comparison = null)
 	{
 		if ($p1 instanceof Criterion) {
 			$c = $p1;
@@ -608,7 +603,7 @@ class Criteria implements IteratorAggregate {
      * @throws PropelException
 	 * @deprecated This method is no longer used by BasePeer.
 	 */
-	public function getJoinL()
+	public function getJoinL(): never
 	{
 		throw new PropelException("getJoinL() in Criteria is no longer supported!");
 	}
@@ -620,7 +615,7 @@ class Criteria implements IteratorAggregate {
      * @throws PropelException
      * @deprecated This method is no longer used by BasePeer.
 	 */
-	public function getJoinR()
+	public function getJoinR(): never
 	{
 		throw new PropelException("getJoinR() in Criteria is no longer supported!");
 	}
@@ -678,7 +673,7 @@ class Criteria implements IteratorAggregate {
 	 * one record.
 	 * @return     Criteria A modified Criteria object.
 	 */
-	public function setSingleRecord($b)
+	public function setSingleRecord(mixed $b)
 	{
 		$this->singleRecord = (boolean) $b;
 		return $this;
@@ -767,8 +762,8 @@ class Criteria implements IteratorAggregate {
 	 * @return     Criteria A modified Criteria object.
 	 */
 	public function clearSelectColumns() {
-		$this->selectColumns = array();
-		$this->asColumns = array();
+		$this->selectColumns = [];
+		$this->asColumns = [];
 		return $this;
 	}
 
@@ -835,7 +830,7 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function clearOrderByColumns()
 	{
-		$this->orderByColumns = array();
+		$this->orderByColumns = [];
 		return $this;
 	}
 
@@ -846,7 +841,7 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function clearGroupByColumns()
 	{
-		$this->groupByColumns = array();
+		$this->groupByColumns = [];
 		return $this;
 	}
 
@@ -878,7 +873,7 @@ class Criteria implements IteratorAggregate {
 	 */
 	public function remove($key)
 	{
-		$c = isset($this->map[$key]) ? $this->map[$key] : null;
+		$c = $this->map[$key] ?? null;
 		unset($this->map[$key]);
 		if ($c instanceof Criterion) {
 			return $c->getValue();
@@ -897,7 +892,7 @@ class Criteria implements IteratorAggregate {
 
 		try {
 
-            $params = array();
+            $params = [];
 			$sb .= "\nCurrent Query SQL (may not be complete or applicable): "
 			  . BasePeer::createSelectSql($this, $params);
 
@@ -920,13 +915,12 @@ class Criteria implements IteratorAggregate {
 	}
 
 	/**
-	 * This method checks another Criteria to see if they contain
-	 * the same attributes and hashtable entries.
-     *
-     * @param      mixed $crit
-	 * @return     boolean
-	 */
-	public function equals($crit)
+  * This method checks another Criteria to see if they contain
+  * the same attributes and hashtable entries.
+  *
+  * @return     boolean
+  */
+ public function equals(mixed $crit)
 	{
 		$isEquiv = false;
 		if ($crit === null || !($crit instanceof Criteria)) {
@@ -1022,7 +1016,7 @@ class Criteria implements IteratorAggregate {
 	 *
 	 * @return     Criteria A modified Criteria object.
 	 */
-	public function addAnd($p1, $p2 = null, $p3 = null)
+	public function addAnd($p1, mixed $p2 = null, $p3 = null)
 	{
 		if ($p3 !== null) {
 			// addAnd(column, value, comparison)
@@ -1083,7 +1077,7 @@ class Criteria implements IteratorAggregate {
      *
 	 * @return     Criteria A modified Criteria object.
 	 */
-	public function addOr($p1, $p2 = null, $p3 = null)
+	public function addOr($p1, mixed $p2 = null, $p3 = null)
 	{
 		if ($p3 !== null) {
 			// addOr(column, value, comparison)

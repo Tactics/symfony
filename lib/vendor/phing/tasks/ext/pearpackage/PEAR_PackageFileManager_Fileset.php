@@ -50,7 +50,7 @@ class PEAR_PackageFileManager_Fileset {
      * FileSets to use.
      * @var array FileSet[]
      */
-    private $filesets = array();
+    private $filesets = [];
 
     /**
      * Set up the FileSet filelist generator
@@ -77,7 +77,7 @@ class PEAR_PackageFileManager_Fileset {
      */
     function getFileList() {
 
-        $allfiles = array();
+        $allfiles = [];
 
         foreach($this->filesets as $fs) {
             $ds = $fs->getDirectoryScanner($this->project);
@@ -96,42 +96,39 @@ class PEAR_PackageFileManager_Fileset {
             }
         }
 
-        $struc = array();
+        $struc = [];
 
         foreach($allfiles as $basedir => $files) {
 
             foreach($files as $file) {
 
                 // paths are relative to $basedir above
-                $path = strtr(dirname($file), DIRECTORY_SEPARATOR, '/');
+                $path = strtr(dirname((string) $file), DIRECTORY_SEPARATOR, '/');
 
                 if (!$path || $path == '.') {
                     $path = '/'; // for array index
                 }
 
-				$parts = explode('.', basename($file));
+				$parts = explode('.', basename((string) $file));
                 $ext = array_pop($parts);
-                if (strlen($ext) == strlen($file)) {
+                if (strlen($ext) == strlen((string) $file)) {
                     $ext = '';
                 }
 
                 $f = new PhingFile($basedir, $file);
 
-                $struc[$path][] = array('file' => basename($file),
-                                        'ext' => $ext,
-                                        'path' => (($path == '/') ? basename($file) : $path . '/' . basename($file)),
-                                        'fullpath' => $f->getAbsolutePath());
+                $struc[$path][] = ['file' => basename((string) $file), 'ext' => $ext, 'path' => (($path == '/') ? basename((string) $file) : $path . '/' . basename((string) $file)), 'fullpath' => $f->getAbsolutePath()];
             }
         }
 
         uksort($struc,'strnatcasecmp');
         foreach($struc as $key => $ind) {
-            usort($ind, array($this, 'sortfiles'));
+            usort($ind, $this->sortfiles(...));
             $struc[$key] = $ind;
         }
 
         $tempstruc = $struc;
-        $struc = array('/' => $tempstruc['/']);
+        $struc = ['/' => $tempstruc['/']];
         $bv = 0;
         foreach($tempstruc as $key => $ind) {
             $save = $key;
@@ -139,7 +136,7 @@ class PEAR_PackageFileManager_Fileset {
                 $struc['/'] = $this->setupDirs($struc['/'], explode('/', $key), $tempstruc[$key]);
             }
         }
-        uksort($struc['/'], array($this, 'mystrucsort'));
+        uksort($struc['/'], $this->mystrucsort(...));
 
         return $struc;
     }
@@ -168,9 +165,9 @@ class PEAR_PackageFileManager_Fileset {
                         $b = explode('/', $dir);
                         $c = array_shift($b);
                         if (isset($contents[$c])) {
-                            $contents[$c] = $this->setDir($contents[$c], $this->setupDirs(array(), $b, $a));
+                            $contents[$c] = $this->setDir($contents[$c], $this->setupDirs([], $b, $a));
                         } else {
-                            $contents[$c] = $this->setupDirs(array(), $b, $a);
+                            $contents[$c] = $this->setupDirs([], $b, $a);
                         }
                     }
                 }
@@ -179,7 +176,7 @@ class PEAR_PackageFileManager_Fileset {
         }
         $me = array_shift($dir);
         if (!isset($struc[$me])) {
-            $struc[$me] = array();
+            $struc[$me] = [];
         }
         $struc[$me] = $this->setupDirs($struc[$me], $dir, $contents);
         return $struc;
@@ -213,7 +210,7 @@ class PEAR_PackageFileManager_Fileset {
      */
     function sortfiles($a, $b)
     {
-        return strnatcasecmp($a['file'],$b['file']);
+        return strnatcasecmp((string) $a['file'],(string) $b['file']);
     }
 
     function mystrucsort($a, $b)
@@ -226,7 +223,7 @@ class PEAR_PackageFileManager_Fileset {
             if ($a < $b) return -1;
             if ($a == $b) return 0;
         }
-        return strnatcasecmp($a,$b);
+        return strnatcasecmp((string) $a,(string) $b);
     }
 }
 ?>

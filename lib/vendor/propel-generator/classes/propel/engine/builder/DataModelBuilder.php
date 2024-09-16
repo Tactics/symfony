@@ -50,7 +50,7 @@ abstract class DataModelBuilder {
 	 * Build properties (after they've been transformed from "propel.some.name" => "someName").
 	 * @var        array string[]
 	 */
-	private static $buildProperties = array();
+	private static $buildProperties = [];
 
 	/**
 	 * Sets the [name transformed] build properties to use.
@@ -68,7 +68,7 @@ abstract class DataModelBuilder {
 	 */
 	public static function getBuildProperty($name)
 	{
-		return isset(self::$buildProperties[$name]) ? self::$buildProperties[$name] : null;
+		return self::$buildProperties[$name] ?? null;
 	}
 
 	/**
@@ -81,7 +81,7 @@ abstract class DataModelBuilder {
 		if (empty(self::$buildProperties)) {
 			throw new BuildException("Cannot determine builder class when no build properties have been loaded (hint: Did you call DataModelBuilder::setBuildProperties(\$props) first?)");
 		}
-		$propname = 'builder' . ucfirst(strtolower($type)) . 'Class';
+		$propname = 'builder' . ucfirst(strtolower((string) $type)) . 'Class';
 		$classpath = self::getBuildProperty($propname);
 
 		if (empty($classpath)) {
@@ -132,30 +132,24 @@ abstract class DataModelBuilder {
 		}
 	}
 
-	// --------------------------------------------------------------
-	// Non-static properties & methods inherited by subclasses
-	// --------------------------------------------------------------
-
-	/**
-	 * The current table.
-	 * @var        Table
-	 */
-	private $table;
-
 	/**
 	 * An array of warning messages that can be retrieved for display (e.g. as part of phing build process).
 	 * @var        array string[]
 	 */
-	private $warnings = array();
+	private $warnings = [];
 
 	/**
 	 * Creates new instance of DataModelBuilder subclass.
 	 * @param      Table $table The Table which we are using to build [OM, DDL, etc.].
 	 */
-	public function __construct(Table $table)
-	{
-		$this->table = $table;
-	}
+	public function __construct(
+     /**
+      * The current table.
+      */
+     private readonly Table $table
+ )
+ {
+ }
 
 	/**
 	 * Returns the Platform class for this table (database).

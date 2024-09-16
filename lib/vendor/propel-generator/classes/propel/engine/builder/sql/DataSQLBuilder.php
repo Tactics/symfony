@@ -44,7 +44,7 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 		$sql .= "INSERT INTO ".$this->quoteIdentifier($this->getTable()->getName())." (";
 
 		// add column names to SQL
-		$colNames = array();
+		$colNames = [];
 		foreach ($row->getColumnValues() as $colValue) {
 			$colNames[] = $this->quoteIdentifier($colValue->getColumn()->getName());
 		}
@@ -53,7 +53,7 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 
 		$sql .= ") VALUES (";
 
-		$colVals = array();
+		$colVals = [];
 		foreach ($row->getColumnValues() as $colValue) {
 			$colVals[] = $this->getColumnValueSql($colValue);
 		}
@@ -98,7 +98,7 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 	 * @param      mixed $blob Blob object or string data.
 	 * @return     string
 	 */
-	protected function getBlobSql($blob)
+	protected function getBlobSql(mixed $blob)
 	{
 		// they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($blob)) {
@@ -113,7 +113,7 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 	 * @param      mixed $clob Clob object or string data.
 	 * @return     string
 	 */
-	protected function getClobSql($clob)
+	protected function getClobSql(mixed $clob)
 	{
 		// they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($clob)) {

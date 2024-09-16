@@ -79,8 +79,8 @@ class SelectorUtils {
             return false;
         }
 
-        $patDirs = explode(DIRECTORY_SEPARATOR, $pattern);
-        $strDirs = explode(DIRECTORY_SEPARATOR, $str);
+        $patDirs = explode(DIRECTORY_SEPARATOR, (string) $pattern);
+        $strDirs = explode(DIRECTORY_SEPARATOR, (string) $str);
 
         $patIdxStart = 0;
         $patIdxEnd   = count($patDirs)-1;
@@ -137,8 +137,8 @@ class SelectorUtils {
             return false;
         }
 
-        $patDirs = explode(DIRECTORY_SEPARATOR, $pattern);
-        $strDirs = explode(DIRECTORY_SEPARATOR, $str);
+        $patDirs = explode(DIRECTORY_SEPARATOR, (string) $pattern);
+        $strDirs = explode(DIRECTORY_SEPARATOR, (string) $str);
 
         $patIdxStart = 0;
         $patIdxEnd   = count($patDirs)-1;
@@ -287,8 +287,8 @@ class SelectorUtils {
                     if ($isCaseSensitive && $ch !== $strArr[$i]) {
                         return false;// Character mismatch
                     }
-                    if (!$isCaseSensitive && strtoupper($ch) !==
-                        strtoupper($strArr[$i])) {
+                    if (!$isCaseSensitive && strtoupper((string) $ch) !==
+                        strtoupper((string) $strArr[$i])) {
                         return false; // Character mismatch
                     }
                 }
@@ -306,8 +306,8 @@ class SelectorUtils {
                 if ($isCaseSensitive && $ch !== $strArr[$strIdxStart]) {
                     return false;// Character mismatch
                 }
-                if (!$isCaseSensitive && strtoupper($ch) !==
-                    strtoupper($strArr[$strIdxStart])) {
+                if (!$isCaseSensitive && strtoupper((string) $ch) !==
+                    strtoupper((string) $strArr[$strIdxStart])) {
                     return false;// Character mismatch
                 }
             }
@@ -332,8 +332,8 @@ class SelectorUtils {
                 if ($isCaseSensitive && $ch !== $strArr[$strIdxEnd]) {
                     return false;// Character mismatch
                 }
-                if (!$isCaseSensitive && strtoupper($ch) !==
-                    strtoupper($strArr[$strIdxEnd])) {
+                if (!$isCaseSensitive && strtoupper((string) $ch) !==
+                    strtoupper((string) $strArr[$strIdxEnd])) {
                     return false;// Character mismatch
                 }
             }
@@ -380,8 +380,8 @@ class SelectorUtils {
                         if ($isCaseSensitive && $ch !== $strArr[$strIdxStart+$i+$j]) {
                                continue 2; //continue to strLoop:
                         }
-                        if (!$isCaseSensitive && strtoupper($ch) !==
-                            strtoupper($strArr[$strIdxStart+$i+$j])) {
+                        if (!$isCaseSensitive && strtoupper((string) $ch) !==
+                            strtoupper((string) $strArr[$strIdxStart+$i+$j])) {
                                continue 2; //continue to strLoop:
                         }
                     }

@@ -75,17 +75,11 @@ class DepthSelector extends BaseExtendSelector {
         if ($parameters !== null) {
             for ($i = 0, $size=count($parameters); $i < $size; $i++) {
                 $paramname = $parameters[$i]->getName();
-                switch(strtolower($paramname)) {
-                    case self::MIN_KEY:
-                        $this->setMin($parameters[$i]->getValue());
-                        break;
-                    case self::MAX_KEY:
-                        $this->setMax($parameters[$i]->getValue());
-                        break;
-                        
-                    default:
-                        $this->setError("Invalud parameter " . $paramname);
-                } // switch                
+                match (strtolower((string) $paramname)) {
+                    self::MIN_KEY => $this->setMin($parameters[$i]->getValue()),
+                    self::MAX_KEY => $this->setMax($parameters[$i]->getValue()),
+                    default => $this->setError("Invalud parameter " . $paramname),
+                }; // switch                
             }
         }
     }

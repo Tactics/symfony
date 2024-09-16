@@ -103,7 +103,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 (
 	";
 
-		$lines = array();
+		$lines = [];
 
 		foreach ($table->getColumns() as $col) {
 			$lines[] = $this->getColumnDDL($col);

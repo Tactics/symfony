@@ -39,11 +39,8 @@ class Index extends XMLElement {
 	private $indexName;
 	private $parentTable;
 
-	/** @var        array string[] */
-	private $indexColumns;
-
 	/** @var        array  */
-	private $indexColumnSizes = array();
+	private $indexColumnSizes = [];
 
 	/**
 	 * Creates a new instance with default characteristics (no name or
@@ -52,17 +49,16 @@ class Index extends XMLElement {
 	 * @param      Table $table
 	 * @param      array $indexColumns
 	 */
-	public function __construct(Table $table, $indexColumns = array())
+	public function __construct(Table $table, private $indexColumns = [])
 	{
-		$this->indexColumns = $indexColumns;
 		$this->setTable($table);
-		if (!empty($indexColumns)) {
+		if (!empty($this->indexColumns)) {
 
 			$this->createName();
 
 			if (self::DEBUG) {
 				print("Created Index named " . $this->getName()
-						. " with " . count($indexColumns) . " columns\n");
+						. " with " . count($this->indexColumns) . " columns\n");
 			}
 		}
 	}
@@ -70,7 +66,7 @@ class Index extends XMLElement {
 	private function createName()
 	{
 		$table = $this->getTable();
-		$inputs = array();
+		$inputs = [];
 		$inputs[] = $table->getDatabase();
 		$inputs[] = $table->getName();
 		if ($this->isUnique()) {
@@ -133,7 +129,7 @@ class Index extends XMLElement {
 			try {
 				// generate an index name if we don't have a supplied one
 				$this->createName();
-			} catch (EngineException $e) {
+			} catch (EngineException) {
 				// still no name
 			}
 		}
@@ -211,10 +207,7 @@ class Index extends XMLElement {
 	 */
 	public function getColumnSize($name)
 	{
-		if (isset($this->indexColumnSizes[$name])) {
-			return $this->indexColumnSizes[$name];
-		}
-		return null; // just to be explicit
+		return $this->indexColumnSizes[$name] ?? null; // just to be explicit
 	}
 
 	/**

@@ -90,7 +90,7 @@ class Timer {
      * @access    private
      */
     function getMicrotime() {
-        list($usec, $sec) = explode(" ", microtime());
+        [$usec, $sec] = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
 }

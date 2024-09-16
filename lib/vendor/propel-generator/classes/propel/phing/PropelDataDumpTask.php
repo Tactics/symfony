@@ -266,7 +266,7 @@ class PropelDataDumpTask extends AbstractPropelDataModelTask {
 		$this->validate();
 
 		$buf = "Database settings:\n"
-			. " driver: " . ($this->databaseDriver ? $this->databaseDriver : "(default)" ). "\n"
+			. " driver: " . ($this->databaseDriver ?: "(default)" ). "\n"
 			. " URL: " . $this->databaseUrl . "\n"
 			. ($this->databaseUser ? " user: " . $this->databaseUser . "\n" : "") // deprecated
 			. ($this->databasePassword ? " password: " . $this->databasePassword . "\n" : ""); // deprecated
@@ -293,7 +293,7 @@ class PropelDataDumpTask extends AbstractPropelDataModelTask {
 						$url = str_replace("@DB@", $database->getName(), $this->databaseUrl);
 
 						$buf = "Database settings:\n"
-						. " driver: " . ($this->databaseDriver ? $this->databaseDriver : "(default)" ). "\n"
+						. " driver: " . ($this->databaseDriver ?: "(default)" ). "\n"
 						. " URL: " . $url . "\n"
 						. ($this->databaseUser ? " user: " . $this->databaseUser . "\n" : "")
 						. ($this->databasePassword ? " password: " . $this->databasePassword . "\n" : "");
@@ -369,7 +369,7 @@ class PropelDataDumpTask extends AbstractPropelDataModelTask {
 				foreach ($tbl->getColumns() as $col) {
 					$cval = $rs->get($col->getName());
 					if ($cval !== null) {
-						$rowNode->setAttribute($col->getPhpName(), iconv($this->dbEncoding, 'utf-8', $cval));
+						$rowNode->setAttribute($col->getPhpName(), iconv((string) $this->dbEncoding, 'utf-8', (string) $cval));
 					}
 				}
 				$dsNode->appendChild($rowNode);

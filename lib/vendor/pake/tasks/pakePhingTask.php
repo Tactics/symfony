@@ -14,9 +14,9 @@ class pakePhingTask
   {
   }
 
-  public static function call_phing($task, $target, $build_file = '', $options = array())
+  public static function call_phing($task, $target, $build_file = '', $options = [])
   {
-    $args = array();
+    $args = [];
     foreach ($options as $key => $value)
     {
       $args[] = "-D$key=$value";

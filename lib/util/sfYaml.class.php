@@ -11,95 +11,91 @@
 /**
  * sfYaml class.
  *
- * @package    symfony
- * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfYaml.class.php 7888 2008-03-14 20:42:21Z fabien $
  */
 class sfYaml
 {
-  /**
-   * Load YAML into a PHP array statically
-   *
-   * The load method, when supplied with a YAML stream (string or file),
-   * will do its best to convert YAML in a file into a PHP array.
-   *
-   *  Usage:
-   *  <code>
-   *   $array = sfYAML::Load('config.yml');
-   *   print_r($array);
-   *  </code>
-   *
-   * @return array
-   * @param string $input Path of YAML file or string containing YAML
-   */
-  public static function load($input)
-  {
-    $input = self::getIncludeContents($input);
-
-    // if an array is returned by the config file assume it's in plain php form else in yaml
-    if (is_array($input))
+    /**
+     * Load YAML into a PHP array statically.
+     *
+     * The load method, when supplied with a YAML stream (string or file),
+     * will do its best to convert YAML in a file into a PHP array.
+     *
+     *  Usage:
+     *  <code>
+     *   $array = sfYAML::Load('config.yml');
+     *   print_r($array);
+     *  </code>
+     *
+     * @param string $input Path of YAML file or string containing YAML
+     *
+     * @return array
+     */
+    public static function load($input)
     {
-      return $input;
+        $input = self::getIncludeContents($input);
+
+        // if an array is returned by the config file assume it's in plain php form else in yaml
+        if (is_array($input)) {
+            return $input;
+        }
+
+        // syck is prefered over spyc
+        if (function_exists('syck_load')) {
+            $retval = syck_load($input);
+
+            return is_array($retval) ? $retval : [];
+        } else {
+            require_once __DIR__.'/Spyc.class.php';
+
+            $spyc = new Spyc();
+
+            return $spyc->load($input);
+        }
     }
 
-    // syck is prefered over spyc
-    if (function_exists('syck_load'))
+    /**
+     * Dump YAML from PHP array statically.
+     *
+     * The dump method, when supplied with an array, will do its best
+     * to convert the array into friendly YAML.
+     *
+     * @param array $array PHP array
+     *
+     * @return string
+     */
+    public static function dump($array)
     {
-      $retval = syck_load($input);
+        require_once __DIR__.'/Spyc.class.php';
 
-      return is_array($retval) ? $retval : array();
-    }
-    else
-    {
-      require_once(dirname(__FILE__).'/Spyc.class.php');
+        $spyc = new Spyc();
 
-      $spyc = new Spyc();
-
-      return $spyc->load($input);
-    }
-  }
-
-  /**
-   * Dump YAML from PHP array statically
-   *
-   * The dump method, when supplied with an array, will do its best
-   * to convert the array into friendly YAML.
-   *
-   * @return string
-   * @param array $array PHP array
-   */
-  public static function dump($array)
-  {
-    require_once(dirname(__FILE__).'/Spyc.class.php');
-
-    $spyc = new Spyc();
-
-    return $spyc->dump($array, false, 0);
-  }
-
-  protected static function getIncludeContents($input)
-  {
-    // if input is a file, process it
-    if (strpos($input, "\n") === false && is_file($input))
-    {
-      ob_start();
-      $retval = include($input);
-      $contents = ob_get_clean();
-
-      // if an array is returned by the config file assume it's in plain php form else in yaml
-      return is_array($retval) ? $retval : $contents;
+        return $spyc->dump($array, false, 0);
     }
 
-    // else return original input
-    return $input;
-  }
+    protected static function getIncludeContents($input)
+    {
+        // if input is a file, process it
+        if (!str_contains((string) $input, "\n") && is_file($input)) {
+            ob_start();
+            $retval = include $input;
+            $contents = ob_get_clean();
+
+            // if an array is returned by the config file assume it's in plain php form else in yaml
+            return is_array($retval) ? $retval : $contents;
+        }
+
+        // else return original input
+        return $input;
+    }
 }
 
 /**
- * Wraps echo to automatically provide a newline
+ * Wraps echo to automatically provide a newline.
  */
 function echoln($string)
 {
-  echo $string."\n";
+    echo $string."\n";
 }

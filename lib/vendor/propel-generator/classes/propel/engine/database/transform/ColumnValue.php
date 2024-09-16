@@ -7,13 +7,8 @@
  */
 class ColumnValue {
 
-    private $col;
-    private $val;
-
-    public function __construct(Column $col, $val)
+    public function __construct(private readonly Column $col, private $val)
     {
-        $this->col = $col;
-        $this->val = $val;
     }
 
     public function getColumn()

@@ -28,9 +28,9 @@
  */
 abstract class XMLElement {
 
-	protected $attributes = array();
+	protected $attributes = [];
 
-	protected $vendorSpecificInfo = array();
+	protected $vendorSpecificInfo = [];
 
 	/**
 	 * Replaces the old loadFromXML() so that we can use loadFromXML() to load the attribs into the class.
@@ -63,7 +63,7 @@ abstract class XMLElement {
 	 * @param      mixed $defaultValue The default value to use in case the attribute is not set.
 	 * @return     mixed The value of the attribute or $defaultValue if not set.
 	 */
-	public function getAttribute($name, $defaultValue = null) {
+	public function getAttribute($name, mixed $defaultValue = null) {
 		$name = strtolower($name);
         return $this->attributes[$name] ?? $defaultValue;
     }
@@ -82,7 +82,7 @@ abstract class XMLElement {
             return false;
         }
 
-        return in_array(strtolower($val), array('true', 't', 'y', 'yes'), true);
+        return in_array(strtolower((string) $val), ['true', 't', 'y', 'yes'], true);
     }
 
 	/**
@@ -112,10 +112,7 @@ abstract class XMLElement {
 	 */
 	public function getVendorParameter($name)
 	{
-		if (isset($this->vendorSpecificInfo[$name])) {
-			return $this->vendorSpecificInfo[$name];
-		}
-		return null; // just to be explicit
+		return $this->vendorSpecificInfo[$name] ?? null; // just to be explicit
 	}
 
 	/**

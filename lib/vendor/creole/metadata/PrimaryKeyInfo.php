@@ -28,22 +28,18 @@
  */
 class PrimaryKeyInfo {
 
-    /** name of the primary key */
-    private $name;
-
     /** columns in the primary key */
-    private $columns = array();
-
-    /** additional vendor specific information */
-    private $vendorSpecificInfo = array();
+    private $columns = [];
 
     /**
      * @param string $name The name of the foreign key.
      */
-    function __construct($name, $vendorInfo = array())
+    function __construct(
+        private $name,
+        /** additional vendor specific information */
+        private $vendorSpecificInfo = []
+    )
     {
-        $this->name = $name;
-        $this->vendorSpecificInfo = $vendorInfo;
     }
 
     /**

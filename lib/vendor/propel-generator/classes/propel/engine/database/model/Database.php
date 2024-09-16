@@ -40,7 +40,7 @@ include_once 'propel/engine/database/model/Table.php';
 class Database extends XMLElement {
 
 	private $platform;
-	private $tableList = array();
+	private $tableList = [];
 	private $curColumn;
 	private $name;
 	private $pkg;
@@ -51,11 +51,11 @@ class Database extends XMLElement {
 	private $defaultPhpNamingMethod;
 	private $defaultTranslateMethod;
 	private $dbParent;
-	private $tablesByName = array();
-	private $tablesByPhpName = array();
+	private $tablesByName = [];
+	private $tablesByPhpName = [];
 	private $heavyIndexing;
 
-	private $domainMap = array();
+	private $domainMap = [];
 
 	/**
 	 * Sets up the Database object based on the attributes that were passed to loadFromXML().
@@ -253,10 +253,7 @@ class Database extends XMLElement {
 	 */
 	public function getTable($name)
 	{
-		if (isset($this->tablesByName[$name])) {
-			return $this->tablesByName[$name];
-		}
-		return null; // just to be explicit
+		return $this->tablesByName[$name] ?? null; // just to be explicit
 	}
 
 	/**
@@ -266,10 +263,7 @@ class Database extends XMLElement {
 	 */
 	public function getTableByPhpName($phpName)
 	{
-		if (isset($this->tablesByPhpName[$phpName])) {
-			return $this->tablesByPhpName[$phpName];
-		}
-		return null; // just to be explicit
+		return $this->tablesByPhpName[$phpName] ?? null; // just to be explicit
 	}
 
 	/**

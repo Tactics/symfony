@@ -30,8 +30,8 @@
  */
 class PHPUnit2Task extends Task
 {
-	private $batchtests = array();
-	private $formatters = array();
+	private $batchtests = [];
+	private $formatters = [];
 	private $haltonerror = false;
 	private $haltonfailure = false;
 	private $failureproperty;
@@ -115,7 +115,7 @@ class PHPUnit2Task extends Task
 	 */
 	function main()
 	{
-		$tests = array();
+		$tests = [];
 
 		if ($this->printsummary)
 		{

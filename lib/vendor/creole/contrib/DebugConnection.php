@@ -115,7 +115,7 @@ class DebugConnection implements Connection {
 	{
 		$this->log("prepareStatement(): $sql");
 		$obj = $this->childConnection->prepareStatement($sql);
-		$objClass = get_class($obj);		
+		$objClass = $obj::class;		
 		return new $objClass($this, $sql);
 	}
 	
@@ -125,7 +125,7 @@ class DebugConnection implements Connection {
 	public function createStatement()
 	{
 		$obj = $this->childConnection->createStatement();
-		$objClass = get_class($obj);		
+		$objClass = $obj::class;		
 		return new $objClass($this);
 	}
 	

@@ -129,7 +129,7 @@ class SQLiteConnection extends ConnectionCommon implements Connection {
     /**
      * @see Connection::prepareCall()
      */
-    public function prepareCall($sql) {
+    public function prepareCall($sql): never {
         throw new SQLException('SQLite does not support stored procedures using CallableStatement.');
     }
 

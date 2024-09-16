@@ -8,7 +8,7 @@
 class PearPkgMapping {
 
     private    $name;
-    private $elements = array();
+    private $elements = [];
 
     public function setName($v) {
         $this->name = $v;
@@ -33,7 +33,7 @@ class PearPkgMapping {
      * @return array
      */
     public function getValue() {
-        $value = array();
+        $value = [];
         foreach($this->getElements() as $el) {
             if ($el->getKey() !== null) {
                 $value[ $el->getKey() ] = $el->getValue();

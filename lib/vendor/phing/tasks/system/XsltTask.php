@@ -40,14 +40,14 @@ class XsltTask extends CopyTask {
     private $xsltFilter;
 
     /** Parameters to pass to XSLT procesor. */
-    private $parameters = array();
+    private $parameters = [];
 
     /**
      * Setup the filterchains w/ XSLTFilter that we will use while copying the files.
      */
     function init() {
         $xf = new XsltFilter();
-        $chain = $this->createFilterChain($this->getProject());
+        $chain = $this->createFilterChain();
         $chain->addXsltFilter($xf);
         $this->xsltFilter = $xf;
     }

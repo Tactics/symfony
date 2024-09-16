@@ -9,46 +9,40 @@
  */
 
 /**
- * @package    symfony
- * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: SfMapBuilderBuilder.php 3058 2006-12-16 17:17:26Z fabien $
  */
 class SfMapBuilderBuilder extends PHP5MapBuilderBuilder
 {
-  public function build()
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    public function build()
     {
-      return sfToolkit::stripComments(parent::build());
+        if (!DataModelBuilder::getBuildProperty('builderAddComments')) {
+            return sfToolkit::stripComments(parent::build());
+        }
+
+        return parent::build();
     }
 
-    return parent::build();
-  }
-
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
+    protected function addIncludes(&$script)
     {
-      return;
+        if (!DataModelBuilder::getBuildProperty('builderAddIncludes')) {
+            return;
+        }
+
+        parent::addIncludes($script);
     }
 
-    parent::addIncludes($script);
-  }
-
-  protected function addDoBuild(&$script)
-  {
-    parent::addDoBuild($script);
-
-    // fix http://propel.phpdb.org/trac/ticket/235: Column sizes not being inserted into [table]MapBuilder->DoBuild() by PHP5MapBuilderBuilder
-    $sizes = array();
-    foreach ($this->getTable()->getColumns() as $col)
+    protected function addDoBuild(&$script)
     {
-      $sizes[$col->getPhpName()] = !$col->getSize() ? 'null' : $col->getSize();
-    }
+        parent::addDoBuild($script);
 
-    $script = preg_replace_callback("/\\\$tMap\->addColumn\('([^']+)', '([^']+)', '([^']+)', CreoleTypes\:\:VARCHAR, (false|true)\)/", function($m){
-      return '"\\\$tMap->addColumn(\'$m[1]\', \'$m[2]\', \'$m[3]\', CreoleTypes::VARCHAR, $m[4], {$sizes[\'$m[2]\']})"';
-    }, $script);
-  }
+        // fix http://propel.phpdb.org/trac/ticket/235: Column sizes not being inserted into [table]MapBuilder->DoBuild() by PHP5MapBuilderBuilder
+        $sizes = [];
+        foreach ($this->getTable()->getColumns() as $col) {
+            $sizes[$col->getPhpName()] = !$col->getSize() ? 'null' : $col->getSize();
+        }
+
+        $script = preg_replace_callback("/\\\$tMap\->addColumn\('([^']+)', '([^']+)', '([^']+)', CreoleTypes\:\:VARCHAR, (false|true)\)/", fn ($m) => '"\\\$tMap->addColumn(\'$m[1]\', \'$m[2]\', \'$m[3]\', CreoleTypes::VARCHAR, $m[4], {$sizes[\'$m[2]\']})"', $script);
+    }
 }

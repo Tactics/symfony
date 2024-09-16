@@ -43,16 +43,13 @@ if (class_exists('pakeNumberCompare'))
  */
 class pakeNumberCompare
 {
-  private $test = '';
-
-  public function __construct($test)
+  public function __construct(private $test)
   {
-    $this->test = $test;
   }
 
   public function test($number)
   {
-    if (!preg_match('{^([<>]=?)?(.*?)([kmg]i?)?$}i', $this->test, $matches))
+    if (!preg_match('{^([<>]=?)?(.*?)([kmg]i?)?$}i', (string) $this->test, $matches))
     {
       throw new pakeException(sprintf('Don\'t understand "%s" as a test.', $this->test));
     }

@@ -95,7 +95,7 @@ class MySQLResultSet extends ResultSetCommon implements ResultSet {
     {
         if(is_resource($this->result))
             @mysql_free_result($this->result);
-        $this->fields = array();
+        $this->fields = [];
     }
 
     /**
@@ -123,11 +123,11 @@ class MySQLResultSet extends ResultSetCommon implements ResultSet {
         if (!array_key_exists($column, $this->fields)) { throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column)); }
         if ($this->fields[$column] === null || $this->fields[$column] == '0000-00-00 00:00:00') { return null; }
 
-        $ts = strtotime($this->fields[$column]);
+        $ts = strtotime((string) $this->fields[$column]);
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             // otherwise it's an ugly MySQL timestamp!
             // YYYYMMDDHHMMSS
-            if (preg_match('/([\d]{4})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})/', $this->fields[$column], $matches)) {
+            if (preg_match('/([\d]{4})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})/', (string) $this->fields[$column], $matches)) {
                 //              YYYY      MM        DD      HH        MM       SS
                 //                $1        $2          $3      $4        $5         $6
                 $ts = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);

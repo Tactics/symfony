@@ -36,16 +36,13 @@ class PHPUnit2TestRunner
 	private $test = NULL;
 	private $suite = NULL;
 	private $retCode = 0;
-	private $formatters = array();
+	private $formatters = [];
 
 	private $codecoverage = false;
 
-	private $project = NULL;
-
-	function __construct(PHPUnit2_Framework_TestSuite $suite, Project $project)
+	function __construct(PHPUnit2_Framework_TestSuite $suite, private readonly Project $project)
 	{
 		$this->suite = $suite;
-		$this->project = $project;
 		$this->retCode = self::SUCCESS;
 	}
 

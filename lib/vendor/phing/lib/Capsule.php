@@ -30,7 +30,7 @@ class Capsule {
      * The variables that can be used by the templates.
      * @var array Hash of variables.
      */
-    public $vars = array();
+    public $vars = [];
     
     /**
      * Has template been initialized.
@@ -51,9 +51,9 @@ class Capsule {
      * @param mixed $which String name of var, or array of names.
      * @return void
      */
-    function clear($which = null) {
+    function clear(mixed $which = null) {
         if ($which === null) {
-            $this->vars = array();
+            $this->vars = [];
         } elseif (is_array($which)) {
             foreach($which as $var) {
                 unset($this->vars[$var]);
@@ -227,13 +227,12 @@ class Capsule {
     
     /**
      * Adds a variable to the context.
-     * 
+     *
      * Resulting template will have access to ${$name$} variable.
-     * 
+     *
      * @param string $name
-     * @param mixed $value
      */
-    function put($name, $value) {
+    function put($name, mixed $value) {
         $this->vars[$name] = $value;
     }
         
@@ -254,9 +253,8 @@ class Capsule {
      * This is primarily to force copying (cloning) of objects, rather
      * than the default behavior which is to assign them by reference.
      * @param string $name
-     * @param mixed $value
      */
-    function putCopy($name, $value) {
+    function putCopy($name, mixed $value) {
         if (is_object($value)) {
             $value = clone $value;
         }

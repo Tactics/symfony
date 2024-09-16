@@ -30,25 +30,19 @@
 	 */
 	class LogWriter extends Writer
 	{
-		private $task = NULL;
-
-		private $level = NULL;
-
 		/**
 		 * Constructs a new LogWriter object
 		 */
-		function __construct(Task $task, $level = Project::PROJECT_MSG_INFO)
-		{
-			$this->task = $task;
-			$this->level = $level;
-		}
+		function __construct(private readonly Task $task, private $level = Project::PROJECT_MSG_INFO)
+  {
+  }
 
 		/**
 		 * @see Writer::write()
 		 */
 		function write($buf, $off = null, $len = null)
 		{
-			$lines = explode("\n", $buf);
+			$lines = explode("\n", (string) $buf);
 
 			foreach ($lines as $line)
 			{

@@ -287,7 +287,7 @@ abstract class FileSystem {
         if (!$d) {
             return null;
         }
-        $list = array();
+        $list = [];
         while($entry = $d->read()) {
             if ($entry != "." && $entry != "..") {
                 array_push($list, $entry);
@@ -390,7 +390,7 @@ abstract class FileSystem {
 
         try {
             $dest->setMode($src->getMode());
-        } catch(Exception $exc) {
+        } catch(Exception) {
             // [MA] does chmod returns an error on systems that do not support it ?
             // eat it up for now.
         }
@@ -548,7 +548,7 @@ abstract class FileSystem {
                         // This ONLY serves the purpose of making the Logger
                         // output look nice:)
 
-                        if (strpos(strrev($dir), DIRECTORY_SEPARATOR) === 0) {// there is a /
+                        if (str_starts_with(strrev((string) $dir), DIRECTORY_SEPARATOR)) {// there is a /
                             $next_entry = $dir . $entry;
                         } else { // no /
                             $next_entry = $dir . DIRECTORY_SEPARATOR . $entry;
@@ -645,13 +645,7 @@ abstract class FileSystem {
             // Add error from php to end of log message. $php_errormsg.
             $msg = "FileSystem::compareMTimes() FAILED. Cannot can not get modified time of $file2.";
             throw new Exception($msg);
-        } else { // Worked. Log and return compare.
-            // Compare mtimes.
-            if ($mtime1 == $mtime2) {
-                return 0;
-            } else {
-                return ($mtime1 < $mtime2) ? -1 : 1;
-            } // end compare
+        } else { return $mtime1 <=> $mtime2; // end compare
         }
     }
 

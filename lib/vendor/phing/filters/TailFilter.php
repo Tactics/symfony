@@ -59,7 +59,7 @@ class TailFilter extends BaseParamFilterReader implements ChainableReader {
      * Array to hold lines.
      * @var array
      */
-    private    $_lineBuffer = array();
+    private    $_lineBuffer = [];
 
     /**
      * Returns the last n lines of a file.
@@ -72,7 +72,7 @@ class TailFilter extends BaseParamFilterReader implements ChainableReader {
             // Remove the last "\n" from buffer for
             // prevent explode to add an empty cell at
             // the end of array
-            $buffer= trim($buffer, "\n");
+            $buffer= trim((string) $buffer, "\n");
 
             $lines = explode("\n", $buffer);
 
@@ -93,7 +93,7 @@ class TailFilter extends BaseParamFilterReader implements ChainableReader {
             $ret = -1;
         else {
             $ret = implode("\n", $this->_lineBuffer);
-            $this->_lineBuffer = array();
+            $this->_lineBuffer = [];
         }
 
         return $ret;

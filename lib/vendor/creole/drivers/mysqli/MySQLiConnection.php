@@ -59,7 +59,7 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
         if (isset($dsninfo['protocol']) && $dsninfo['protocol'] == 'unix') {
             $dbhost = ':' . $dsninfo['socket'];
         } else {
-            $dbhost = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : 'localhost';
+            $dbhost = $dsninfo['hostspec'] ?: 'localhost';
 
             if (!empty($dsninfo['port'])) {
                 $dbhost .= ':' . $dsninfo['port'];
@@ -93,16 +93,11 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
 
         if ($dsninfo['database']) {
             if (!@mysqli_select_db($conn, $dsninfo['database'])) {
-               switch(mysqli_errno($conn)) {
-                        case 1049:
-                            $exc = new SQLException("no such database", mysqli_error($conn));
-                        break;
-                        case 1044:
-                            $exc = new SQLException("access violation", mysqli_error($conn));
-                        break;
-                        default:
-                           $exc = new SQLException("cannot select database", mysqli_error($conn));
-                }
+               $exc = match (mysqli_errno($conn)) {
+                   1049 => new SQLException("no such database", mysqli_error($conn)),
+                   1044 => new SQLException("access violation", mysqli_error($conn)),
+                   default => new SQLException("cannot select database", mysqli_error($conn)),
+               };
 
                 throw $exc;
 
@@ -149,7 +144,7 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
     /**
      * @see Connection::prepareCall()
      */
-    public function prepareCall($sql) {
+    public function prepareCall($sql): never {
         throw new SQLException('MySQL does not support stored procedures.');
     }
 

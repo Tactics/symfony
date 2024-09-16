@@ -29,138 +29,125 @@
  *                                     persistent.
  * # <b>username</b>       - [none]  - The database username.
  *
- * @package    symfony
- * @subpackage database
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
+ *
  * @version    SVN: $Id: sfMySQLDatabase.class.php 7791 2008-03-09 21:57:09Z fabien $
  */
 class sfMySQLDatabase extends sfDatabase
 {
-  /**
-   * Connects to the database.
-   *
-   * @throws <b>sfDatabaseException</b> If a connection could not be created
-   */
-  public function connect()
-  {
-
-    // determine how to get our
-    $method = $this->getParameter('method', 'normal');
-
-    switch ($method)
+    /**
+     * Connects to the database.
+     *
+     * @throws <b>sfDatabaseException</b> If a connection could not be created
+     */
+    public function connect()
     {
-      case 'normal':
-        // get parameters normally
-        $database = $this->getParameter('database');
-        $host     = $this->getParameter('host', 'localhost');
-        $password = $this->getParameter('password');
-        $username = $this->getParameter('username');
+        // determine how to get our
+        $method = $this->getParameter('method', 'normal');
 
-        break;
+        switch ($method) {
+            case 'normal':
+                // get parameters normally
+                $database = $this->getParameter('database');
+                $host = $this->getParameter('host', 'localhost');
+                $password = $this->getParameter('password');
+                $username = $this->getParameter('username');
 
-      case 'server':
-        // construct a connection string from existing $_SERVER values
-        // and extract them to local scope
-        $parameters =& $this->loadParameters($_SERVER);
-        extract($parameters);
+                break;
 
-        break;
+            case 'server':
+                // construct a connection string from existing $_SERVER values
+                // and extract them to local scope
+                $parameters = &$this->loadParameters($_SERVER);
+                extract($parameters);
 
-      case 'env':
-        // construct a connection string from existing $_ENV values
-        // and extract them to local scope
-        $string =& $this->loadParameters($_ENV);
-        extract($parameters);
+                break;
 
-        break;
+            case 'env':
+                // construct a connection string from existing $_ENV values
+                // and extract them to local scope
+                $string = &$this->loadParameters($_ENV);
+                extract($parameters);
 
-      default:
-        // who knows what the user wants...
-        $error = 'Invalid MySQLDatabase parameter retrieval method "%s"';
-        $error = sprintf($error, $method);
+                break;
 
-        throw new sfDatabaseException($error);
+            default:
+                // who knows what the user wants...
+                $error = 'Invalid MySQLDatabase parameter retrieval method "%s"';
+                $error = sprintf($error, $method);
+
+                throw new sfDatabaseException($error);
+        }
+
+        // let's see if we need a persistent connection
+        $persistent = $this->getParameter('persistent', false);
+        $host = ($persistent) ? 'p:'.$host : $host;
+
+        if ($password == null) {
+            if ($username == null) {
+                $this->connection = @mysqli_connect($host);
+            } else {
+                $this->connection = @mysqli_connect($host, $username);
+            }
+        } else {
+            $this->connection = @mysqli_connect($host, $username, $password);
+        }
+
+        // make sure the connection went through
+        if ($this->connection === false) {
+            // the connection's foobar'd
+            $error = 'Failed to create a MySQLDatabase connection';
+
+            throw new sfDatabaseException($error);
+        }
+
+        // select our database
+        if ($database != null && !@mysqli_select_db($this->connection, $database)) {
+            // can't select the database
+            $error = 'Failed to select MySQLDatabase "%s"';
+            $error = sprintf($error, $database);
+
+            throw new sfDatabaseException($error);
+        }
+
+        // since we're not an abstraction layer, we copy the connection
+        // to the resource
+        $this->resource = $this->connection;
     }
 
-    // let's see if we need a persistent connection
-    $persistent = $this->getParameter('persistent', false);
-    $host       = ($persistent) ? 'p:'.$host : $host;
-
-    if ($password == null)
+    /**
+     * Loads connection parameters from an existing array.
+     *
+     * @return array An associative array of connection parameters
+     */
+    protected function &loadParameters(&$array)
     {
-      if ($username == null)
-      {
-        $this->connection = @mysqli_connect($host);
-      }
-      else
-      {
-        $this->connection = @mysqli_connect($host, $username);
-      }
-    }
-    else
-    {
-      $this->connection = @mysqli_connect($host, $username, $password);
-    }
+        // list of available parameters
+        $available = ['database', 'host', 'password', 'user'];
 
-    // make sure the connection went through
-    if ($this->connection === false)
-    {
-      // the connection's foobar'd
-      $error = 'Failed to create a MySQLDatabase connection';
+        $parameters = [];
 
-      throw new sfDatabaseException($error);
+        foreach ($available as $parameter) {
+            ${$parameter} = $this->getParameter($parameter);
+
+            $parameters[$parameter] = (${$parameter} != null) ? $array[${$parameter}] : null;
+        }
+
+        return $parameters;
     }
 
-    // select our database
-    if ($database != null && !@mysqli_select_db($this->connection, $database))
+    /**
+     * Execute the shutdown procedure.
+     *
+     * @return void
+     *
+     * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database
+     */
+    public function shutdown()
     {
-      // can't select the database
-      $error = 'Failed to select MySQLDatabase "%s"';
-      $error = sprintf($error, $database);
-
-      throw new sfDatabaseException($error);
+        if ($this->connection != null) {
+            @mysqli_close($this->connection);
+        }
     }
-
-    // since we're not an abstraction layer, we copy the connection
-    // to the resource
-    $this->resource = $this->connection;
-  }
-
-  /**
-   * Loads connection parameters from an existing array.
-   *
-   * @return array An associative array of connection parameters
-   */
-  protected function & loadParameters(&$array)
-  {
-    // list of available parameters
-    $available = array('database', 'host', 'password', 'user');
-
-    $parameters = array();
-
-    foreach ($available as $parameter)
-    {
-      $$parameter = $this->getParameter($parameter);
-
-      $parameters[$parameter] = ($$parameter != null) ? $array[$$parameter] : null;
-    }
-
-    return $parameters;
-  }
-
-  /**
-   * Execute the shutdown procedure
-   *
-   * @return void
-   *
-   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database
-   */
-  public function shutdown()
-  {
-    if ($this->connection != null)
-    {
-      @mysqli_close($this->connection);
-    }
-  }
 }

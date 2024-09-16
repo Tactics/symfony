@@ -210,15 +210,15 @@ class PHPMailer
      * @access private
      */
     private $smtp            = NULL;
-    private $to              = array();
-    private $cc              = array();
-    private $bcc             = array();
-    private $ReplyTo         = array();
-    private $attachment      = array();
-    private $CustomHeader    = array();
+    private $to              = [];
+    private $cc              = [];
+    private $bcc             = [];
+    private $ReplyTo         = [];
+    private $attachment      = [];
+    private $CustomHeader    = [];
     private $message_type    = "";
-    private $boundary        = array();
-    private $language        = array();
+    private $boundary        = [];
+    private $language        = [];
     private $error_count     = 0;
     private $LE              = PHP_EOL;
     /**#@-*/
@@ -400,8 +400,8 @@ class PHPMailer
             return false;
         }
 
-        fputs($mail, $header);
-        fputs($mail, $body);
+        fputs($mail, (string) $header);
+        fputs($mail, (string) $body);
 
         $result = pclose($mail) >> 8 & 0xFF;
         if($result != 0)
@@ -431,11 +431,11 @@ class PHPMailer
             $old_from = ini_get("sendmail_from");
             ini_set("sendmail_from", $this->Sender);
             $params = sprintf("-oi -f %s", $this->Sender);
-            $rt = @mail($to, $this->EncodeHeader($this->Subject), $body,
+            $rt = @mail($to, $this->EncodeHeader($this->Subject), (string) $body,
                         $header, $params);
         }
         else
-            $rt = @mail($to, $this->EncodeHeader($this->Subject), $body, $header);
+            $rt = @mail($to, $this->EncodeHeader($this->Subject), (string) $body, $header);
 
         if (isset($old_from))
             ini_set("sendmail_from", $old_from);
@@ -459,7 +459,7 @@ class PHPMailer
     function SmtpSend($header, $body) {
         include_once($this->PluginDir . "class.smtp.php");
         $error = "";
-        $bad_rcpt = array();
+        $bad_rcpt = [];
 
         if(!$this->SmtpConnect())
             return false;
@@ -535,7 +535,7 @@ class PHPMailer
         while($index < count($hosts) && $connection == false)
         {
             if(strstr($hosts[$index], ":"))
-                list($host, $port) = explode(":", $hosts[$index]);
+                [$host, $port] = explode(":", $hosts[$index]);
             else
             {
                 $host = $hosts[$index];
@@ -595,7 +595,7 @@ class PHPMailer
      */
     function SetLanguage($lang_type, $lang_path = "language/") {
         if($lang_path == "language/") {
-            $lang_path = dirname(__FILE__).DIRECTORY_SEPARATOR.$lang_path;
+            $lang_path = __DIR__.DIRECTORY_SEPARATOR.$lang_path;
         }
 
         if(file_exists($lang_path.'phpmailer.lang-'.$lang_type.'.php'))
@@ -678,7 +678,7 @@ class PHPMailer
               {
                 // If utf-8 encoding is used, we will need to make sure we don't
                 // split multibyte characters when we wrap
-                $is_utf8 = (strpos(strtolower($this->CharSet),'utf-8') !== False);
+                $is_utf8 = (str_contains(strtolower($this->CharSet),'utf-8'));
                 $space_left = $length - strlen($buf) - 1;
                 if ($e != 0)
                 {
@@ -777,9 +777,9 @@ class PHPMailer
           // construct a binary representation of this byte
           $byte = str_pad(decbin($dec), 8,'0', STR_PAD_LEFT);
           // First two character tell the type of character byte
-          $isFirstOfMulti = strpos($byte,'11') === 0;
-          $isMiddleOfMulti = strpos($byte,'10') === 0;
-          $isSingle = strpos($byte,'0') === 0;
+          $isFirstOfMulti = str_starts_with($byte, '11');
+          $isMiddleOfMulti = str_starts_with($byte, '10');
+          $isSingle = str_starts_with($byte, '0');
           if ($isSingle)
           {
             // Single byte character.
@@ -864,7 +864,7 @@ class PHPMailer
                 $result .= $this->AddrAppend("Cc", $this->cc);
         }
 
-        $from = array();
+        $from = [];
         $from[0][0] = trim($this->From);
         $from[0][1] = $this->FromName;
         $result .= $this->AddrAppend("From", $from);
@@ -893,8 +893,8 @@ class PHPMailer
         // Add custom headers
         for($index = 0; $index < count($this->CustomHeader); $index++)
         {
-            $result .= $this->HeaderLine(trim($this->CustomHeader[$index][0]),
-                       $this->EncodeHeader(trim($this->CustomHeader[$index][1])));
+            $result .= $this->HeaderLine(trim((string) $this->CustomHeader[$index][0]),
+                       $this->EncodeHeader(trim((string) $this->CustomHeader[$index][1])));
         }
         $result .= $this->HeaderLine("MIME-Version", "1.0");
 
@@ -1111,7 +1111,7 @@ class PHPMailer
      */
     function AttachAll() {
         // Return text of body
-        $mime = array();
+        $mime = [];
 
         // Add all attachments
         for($i = 0; $i < count($this->attachment); $i++)
@@ -1187,15 +1187,15 @@ class PHPMailer
      */
     function EncodeString ($str, $encoding = "base64") {
         $encoded = "";
-        switch(strtolower($encoding)) {
+        switch(strtolower((string) $encoding)) {
           case "base64":
               // chunk_split is found in PHP >= 3.0.6
-              $encoded = chunk_split(base64_encode($str), 76, $this->LE);
+              $encoded = chunk_split(base64_encode((string) $str), 76, $this->LE);
               break;
           case "7bit":
           case "8bit":
               $encoded = $this->FixEOL($str);
-              if (substr($encoded, -(strlen($this->LE))) != $this->LE)
+              if (!str_ends_with($encoded, (string) $this->LE))
                 $encoded .= $this->LE;
               break;
           case "binary":
@@ -1219,25 +1219,25 @@ class PHPMailer
     function EncodeHeader ($str, $position = 'text') {
       $x = 0;
 
-      switch (strtolower($position)) {
+      switch (strtolower((string) $position)) {
         case 'phrase':
-          if (!preg_match('/[\200-\377]/', $str)) {
+          if (!preg_match('/[\200-\377]/', (string) $str)) {
             // Can't use addslashes as we don't know what value has magic_quotes_sybase.
-            $encoded = addcslashes($str, "\0..\37\177\\\"");
+            $encoded = addcslashes((string) $str, "\0..\37\177\\\"");
 
-            if (($str == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $str))
+            if (($str == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', (string) $str))
               return ($encoded);
             else
               return ("\"$encoded\"");
           }
-          $x = preg_match_all('/[^\040\041\043-\133\135-\176]/', $str, $matches);
+          $x = preg_match_all('/[^\040\041\043-\133\135-\176]/', (string) $str, $matches);
           break;
         case 'comment':
-          $x = preg_match_all('/[()"]/', $str, $matches);
+          $x = preg_match_all('/[()"]/', (string) $str, $matches);
           // Fall-through
         case 'text':
         default:
-          $x += preg_match_all('/[\000-\010\013\014\016-\037\177-\377]/', $str, $matches);
+          $x += preg_match_all('/[\000-\010\013\014\016-\037\177-\377]/', (string) $str, $matches);
           break;
       }
 
@@ -1246,9 +1246,9 @@ class PHPMailer
 
       $maxlen = 75 - 7 - strlen($this->CharSet);
       // Try to select the encoding which should produce the shortest output
-      if (strlen($str)/3 < $x) {
+      if (strlen((string) $str)/3 < $x) {
         $encoding = 'B';
-        $encoded = base64_encode($str);
+        $encoded = base64_encode((string) $str);
         $maxlen -= $maxlen % 4;
         $encoded = trim(chunk_split($encoded, $maxlen, "\n"));
       } else {
@@ -1271,18 +1271,14 @@ class PHPMailer
      */
     function EncodeQP ($str) {
         $encoded = $this->FixEOL($str);
-        if (substr($encoded, -(strlen($this->LE))) != $this->LE)
+        if (!str_ends_with($encoded, (string) $this->LE))
             $encoded .= $this->LE;
 
         // Replace every high ascii, control and = characters
-        $encoded = preg_replace_callback('/([\000-\010\013\014\016-\037\075\177-\377])/', function($matches) {
-          return '='.sprintf('%02X', ord($matches[1]));
-        }, $encoded);
+        $encoded = preg_replace_callback('/([\000-\010\013\014\016-\037\075\177-\377])/', fn($matches) => '='.sprintf('%02X', ord($matches[1])), $encoded);
 
         $le  = $this->LE;
-        $encoded = preg_replace_callback("/([\011\040])".$this->LE."/", function($matches) use ($le) {
-          return '='.sprintf('%02X', ord($matches[1])).$le;
-        }, $encoded);
+        $encoded = preg_replace_callback("/([\011\040])".$this->LE."/", fn($matches) => '='.sprintf('%02X', ord($matches[1])).$le, $encoded);
 
         // Maximum line length of 76 characters before CRLF (74 + space + '=')
         $encoded = $this->WrapText($encoded, 74, true);
@@ -1299,22 +1295,16 @@ class PHPMailer
         // There should not be any EOL in the string
         $encoded = preg_replace("[\r\n]", "", $str);
 
-        switch (strtolower($position)) {
+        switch (strtolower((string) $position)) {
           case "phrase":
-            $encoded = preg_replace_callback("/([^A-Za-z0-9!*+\/ -])/", function($matches) {
-              return '='.sprintf('%02X', ord($matches[1]));
-            } , $encoded);
+            $encoded = preg_replace_callback("/([^A-Za-z0-9!*+\/ -])/", fn($matches) => '='.sprintf('%02X', ord($matches[1])) , $encoded);
             break;
           case "comment":
-            $encoded = preg_replace_callback("/([\(\)\"])/", function($matches) {
-              return '='.sprintf('%02X', ord($matches[1]));
-            }, $encoded);
+            $encoded = preg_replace_callback("/([\(\)\"])/", fn($matches) => '='.sprintf('%02X', ord($matches[1])), $encoded);
           case "text":
           default:
             // Replace every high ascii, control =, ? and _ characters
-            $encoded = preg_replace_callback('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/', function($matches) {
-              return '='.sprintf('%02X', ord($matches[1]));
-            }, $encoded);
+            $encoded = preg_replace_callback('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/', fn($matches) => '='.sprintf('%02X', ord($matches[1])), $encoded);
             break;
         }
 
@@ -1416,7 +1406,7 @@ class PHPMailer
      * @return void
      */
     function ClearAddresses() {
-        $this->to = array();
+        $this->to = [];
     }
 
     /**
@@ -1424,7 +1414,7 @@ class PHPMailer
      * @return void
      */
     function ClearCCs() {
-        $this->cc = array();
+        $this->cc = [];
     }
 
     /**
@@ -1432,7 +1422,7 @@ class PHPMailer
      * @return void
      */
     function ClearBCCs() {
-        $this->bcc = array();
+        $this->bcc = [];
     }
 
     /**
@@ -1440,7 +1430,7 @@ class PHPMailer
      * @return void
      */
     function ClearReplyTos() {
-        $this->ReplyTo = array();
+        $this->ReplyTo = [];
     }
 
     /**
@@ -1449,9 +1439,9 @@ class PHPMailer
      * @return void
      */
     function ClearAllRecipients() {
-        $this->to = array();
-        $this->cc = array();
-        $this->bcc = array();
+        $this->to = [];
+        $this->cc = [];
+        $this->bcc = [];
     }
 
     /**
@@ -1460,7 +1450,7 @@ class PHPMailer
      * @return void
      */
     function ClearAttachments() {
-        $this->attachment = array();
+        $this->attachment = [];
     }
 
     /**
@@ -1468,7 +1458,7 @@ class PHPMailer
      * @return void
      */
     function ClearCustomHeaders() {
-        $this->CustomHeader = array();
+        $this->CustomHeader = [];
     }
 
 
@@ -1510,14 +1500,14 @@ class PHPMailer
      * @return mixed
      */
     function ServerVar($varName) {
-        global $HTTP_SERVER_VARS;
-        global $HTTP_ENV_VARS;
+        global $_SERVER;
+        global $_ENV;
 
         if(!isset($_SERVER))
         {
-            $_SERVER = $HTTP_SERVER_VARS;
+            $_SERVER = $_SERVER;
             if(!isset($_SERVER["REMOTE_ADDR"]))
-                $_SERVER = $HTTP_ENV_VARS; // must be Apache
+                $_SERVER = $_ENV; // must be Apache
         }
 
         if(isset($_SERVER[$varName]))
@@ -1582,6 +1572,6 @@ class PHPMailer
      * @return void
      */
     function AddCustomHeader($custom_header) {
-        $this->CustomHeader[] = explode(":", $custom_header, 2);
+        $this->CustomHeader[] = explode(":", (string) $custom_header, 2);
     }
 }

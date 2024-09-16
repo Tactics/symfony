@@ -46,14 +46,14 @@ class Project {
     public const PROJECT_MSG_ERR = 0;
 
     /** contains the targets */
-    private $targets         = array();
+    private $targets         = [];
     /** global filterset (future use) */
-    private $globalFilterSet = array();
+    private $globalFilterSet = [];
     /**  all globals filters (future use) */
-    private $globalFilters   = array();
+    private $globalFilters   = [];
 
     /** Project properties map (usually String to String). */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * Map of "user" properties (as created in the Ant task, for example).
@@ -61,7 +61,7 @@ class Project {
      * project properties, so only the project properties need to be queried.
      * Mapping is String to String.
      */
-    private $userProperties = array();
+    private $userProperties = [];
 
     /**
      * Map of inherited "user" properties - that are those "user"
@@ -69,16 +69,16 @@ class Project {
      * from the command line or a GUI tool.
      * Mapping is String to String.
      */
-    private $inheritedProperties = array();
+    private $inheritedProperties = [];
 
     /** task definitions for this project*/
-    private $taskdefs = array();
+    private $taskdefs = [];
 
     /** type definitions for this project */
-    private $typedefs = array();
+    private $typedefs = [];
 
     /** holds ref names and a reference to the referred object*/
-    private $references = array();
+    private $references = [];
 
     /** The InputHandler being used by this project. */
     private $inputHandler;
@@ -101,7 +101,7 @@ class Project {
     private $fileUtils;
 
     /**  Build listeneers */
-    private $listeners = array();
+    private $listeners = [];
 
     /**
      *  Constructor, sets any default vars.
@@ -147,7 +147,7 @@ class Project {
                 $value = $props->getProperty($key);
                 $this->addTaskDefinition($key, $value);
             }
-        } catch (IOException $ioe) {
+        } catch (IOException) {
             throw new BuildException("Can't load default task list");
         }
 
@@ -167,7 +167,7 @@ class Project {
                 $value = $props->getProperty($key);
                 $this->addDataTypeDefinition($key, $value);
             }
-        } catch(IOException $ioe) {
+        } catch(IOException) {
             throw new BuildException("Can't load default datatype list");
         }
     }
@@ -389,7 +389,7 @@ class Project {
 
 
     function setDefaultTarget($targetName) {
-        $this->defaultTarget = (string) trim($targetName);
+        $this->defaultTarget = (string) trim((string) $targetName);
     }
 
     function getDefaultTarget() {
@@ -406,7 +406,7 @@ class Project {
      */
 
     function setName($name) {
-        $this->name = (string) trim($name);
+        $this->name = (string) trim((string) $name);
         $this->setProperty("phing.project.name", $this->name);
     }
 
@@ -423,7 +423,7 @@ class Project {
 
     /** Set the projects description */
     function setDescription($description) {
-        $this->description = (string) trim($description);
+        $this->description = (string) trim((string) $description);
     }
 
     /** return the description, null otherwise */
@@ -581,7 +581,7 @@ class Project {
             $cls = "";
             $tasklwr = strtolower($taskType);
             foreach ($this->taskdefs as $name => $class) {
-                if (strtolower($name) === $tasklwr) {
+                if (strtolower((string) $name) === $tasklwr) {
                     $cls = StringHelper::unqualify($class);
                     break;
                 }
@@ -631,9 +631,9 @@ class Project {
     function createDataType($typeName) {
         try {
             $cls = "";
-            $typelwr = strtolower($typeName);
+            $typelwr = strtolower((string) $typeName);
             foreach ($this->typedefs as $name => $class) {
-                if (strtolower($name) === $typelwr) {
+                if (strtolower((string) $name) === $typelwr) {
                     $cls = StringHelper::unqualify($class);
                     break;
                 }
@@ -727,9 +727,9 @@ class Project {
     function _topoSort($root, &$targets) {
 
         $root     = (string) $root;
-        $ret      = array();
-        $state    = array();
-        $visiting = array();
+        $ret      = [];
+        $state    = [];
+        $visiting = [];
 
         // We first run a DFS based sort using the root as the starting node.
         // This creates the minimum sequence of Targets to the root node.
@@ -854,7 +854,7 @@ class Project {
         if (isset($this->references[$name])) {
             $this->log("Overriding previous definition of reference to $name", Project::PROJECT_MSG_WARN);
         }
-        $this->log("Adding reference: $name -> ".get_class($object), Project::PROJECT_MSG_DEBUG);
+        $this->log("Adding reference: $name -> ".$object::class, Project::PROJECT_MSG_DEBUG);
         $this->references[$name] = $object;
     }
 
@@ -873,10 +873,7 @@ class Project {
 	 */
 	function getReference($key)
 	{
-		if (isset($this->references[$key])) {
-		    return $this->references[$key];
-		}
-		return null; // just to be explicit
+		return $this->references[$key] ?? null; // just to be explicit
 	}
 
     /**
@@ -895,7 +892,7 @@ class Project {
     }
 
     function removeBuildListener(BuildListener $listener) {
-        $newarray = array();
+        $newarray = [];
         for ($i=0, $size=count($this->listeners); $i < $size; $i++) {
             if ($this->listeners[$i] !== $listener) {
                 $newarray[] = $this->listeners[$i];

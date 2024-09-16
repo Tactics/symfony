@@ -30,15 +30,13 @@
  */
 class CoverageReportTransformer
 {
-	private $task = NULL;
 	private $styleDir = "";
 	private $toDir = "";
 	private $document = NULL;
 
-	function __construct(Task $task)
-	{
-		$this->task = $task;
-	}
+	function __construct(private readonly Task $task)
+ {
+ }
 
 	function setStyleDir($styleDir)
 	{

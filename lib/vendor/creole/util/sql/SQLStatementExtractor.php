@@ -62,12 +62,12 @@ class SQLStatementExtractor {
      */
     protected static function extractStatements($lines) {
         
-        $statements = array();
+        $statements = [];
         $sql = "";
                
         foreach($lines as $line) {
         
-                $line = trim($line);
+                $line = trim((string) $line);
                 
                 if (self::startsWith("//", $line) || 
                     self::startsWith("--", $line) ||
@@ -85,12 +85,12 @@ class SQLStatementExtractor {
                 // SQL defines "--" as a comment to EOL
                 // and in Oracle it may contain a hint
                 // so we cannot just remove it, instead we must end it
-                if (strpos($line, "--") !== false) {
+                if (str_contains($line, "--")) {
                     $sql .= "\n";
                 }
     
                 if (self::endsWith(self::$delimiter, $sql)) {
-                    $statements[] = self::substring($sql, 0, strlen($sql)-1 - strlen(self::$delimiter));
+                    $statements[] = self::substring($sql, 0, strlen($sql)-1 - strlen((string) self::$delimiter));
                     $sql = "";
                 }
             }
@@ -111,7 +111,7 @@ class SQLStatementExtractor {
         if ($check === "" || $check === $string) {
             return true;
         } else {
-            return (strpos($string, $check) === 0) ? true : false;
+            return (str_starts_with($string, $check)) ? true : false;
         }
     }
     
@@ -125,7 +125,7 @@ class SQLStatementExtractor {
         if ($check === "" || $check === $string) {
             return true;
         } else {
-            return (strpos(strrev($string), strrev($check)) === 0) ? true : false;
+            return (str_starts_with(strrev($string), strrev($check))) ? true : false;
         }
     } 
 
@@ -134,7 +134,7 @@ class SQLStatementExtractor {
      * return values suck if you want to program strict as of C or friends 
      */
     protected static function substring($string, $startpos, $endpos = -1) {
-        $len    = strlen($string);
+        $len    = strlen((string) $string);
         $endpos = (int) (($endpos === -1) ? $len-1 : $endpos);
         if ($startpos > $len-1 || $startpos < 0) {
             trigger_error("substring(), Startindex out of bounds must be 0<n<$len", E_USER_ERROR);
@@ -143,11 +143,11 @@ class SQLStatementExtractor {
             trigger_error("substring(), Endindex out of bounds must be $startpos<n<".($len-1), E_USER_ERROR);
         }
         if ($startpos === $endpos) {
-            return (string) $string{$startpos};
+            return (string) $string[$startpos];
         } else {
             $len = $endpos-$startpos;
         }
-        return substr($string, $startpos, $len+1);
+        return substr((string) $string, $startpos, $len+1);
     }
     
     /**
@@ -157,7 +157,7 @@ class SQLStatementExtractor {
      * @return array string[] lines of file.
      */
     protected static function getLines($buffer) {       
-       $lines = preg_split("/\r?\n|\r/", $buffer);
+       $lines = preg_split("/\r?\n|\r/", (string) $buffer);
        return $lines;
     }
     

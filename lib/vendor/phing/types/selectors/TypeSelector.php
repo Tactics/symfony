@@ -38,7 +38,7 @@ class TypeSelector extends BaseExtendSelector {
     const TYPE_KEY = "type";
     
     /** Valid types */
-    private static $types = array('file', 'dir');
+    private static $types = ['file', 'dir'];
     
     /**
      * @return string A string describing this object
@@ -67,7 +67,7 @@ class TypeSelector extends BaseExtendSelector {
         if ($parameters !== null) {
             for ($i = 0, $size=count($parameters); $i < $size; $i++) {
                 $paramname = $parameters[$i]->getName();
-                if (self::TYPE_KEY == strtolower($paramname)) {
+                if (self::TYPE_KEY == strtolower((string) $paramname)) {
                     $this->setType($parameters[$i]->getValue());
                 } else {
                     $this->setError("Invalid parameter " . $paramname);
@@ -85,7 +85,7 @@ class TypeSelector extends BaseExtendSelector {
         if ($this->type === null) {
             $this->setError("The type attribute is required");
         } elseif (!in_array($this->type, self::$types, true)) {
-            $this->setError("Invalid type specified; must be one of (" . implode(self::$types) . ")");
+            $this->setError("Invalid type specified; must be one of (" . implode('', self::$types) . ")");
         }
     }
 

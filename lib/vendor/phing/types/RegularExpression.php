@@ -88,7 +88,7 @@ class RegularExpression extends DataType {
 
     function getRef(Project $p) {
         if ( !$this->checked ) {
-            $stk = array();
+            $stk = [];
             array_push($stk, $this);
             $this->dieOnCircularReference($stk, $p);            
         }

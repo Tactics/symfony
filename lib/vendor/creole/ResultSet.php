@@ -262,7 +262,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed Usually expect a string.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function get($column);
+    public function get(mixed $column);
 
     /**
      * Reads a column as an array.
@@ -272,7 +272,7 @@ interface ResultSet extends IteratorAggregate {
      * @return array value or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getArray($column) : array;
+    public function getArray(mixed $column) : array;
 
     /**
      * Returns value translated to boolean.
@@ -281,7 +281,7 @@ interface ResultSet extends IteratorAggregate {
      * @return boolean value or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getBoolean($column) : bool;
+    public function getBoolean(mixed $column) : bool;
 
     /**
      * Returns Blob with contents of column value.
@@ -290,7 +290,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Blob New Blob with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getBlob($column) : Blob;
+    public function getBlob(mixed $column) : Blob;
 
     /**
      * Returns Blob with contents of column value.
@@ -299,7 +299,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Blob New Blob with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getBlobOrNull($column) : ?Blob;
+    public function getBlobOrNull(mixed $column) : ?Blob;
 
     /**
      * Returns Clob with contents of column value.
@@ -308,7 +308,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Clob New Clob object with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getClob($column) : Clob;
+    public function getClob(mixed $column) : Clob;
 
     /**
      * Returns Clob with contents of column value.
@@ -317,7 +317,7 @@ interface ResultSet extends IteratorAggregate {
      * @return Clob New Clob object with data from column or null if database returned null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getClobOrNull($column) : ?Clob;
+    public function getClobOrNull(mixed $column) : ?Clob;
 
 
     /**
@@ -333,7 +333,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed  Formatted date, or integer unix timestamp (using 00:00:00 for time) if $format was null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getDate($column, $format = '%x');
+    public function getDate(mixed $column, $format = '%x');
 
     /**
      * Return a formatted date.
@@ -348,7 +348,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed  Formatted date, or integer unix timestamp (using 00:00:00 for time) if $format was null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getDateOrNull($column, $format = '%x');
+    public function getDateOrNull(mixed $column, $format = '%x');
 
     /**
      * Returns value cast as a float (in PHP this is same as double).
@@ -357,7 +357,7 @@ interface ResultSet extends IteratorAggregate {
      * @return float value or null if database returned null
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getFloat($column) : float;
+    public function getFloat(mixed $column) : float;
 
     /**
      * Returns value cast as a float (in PHP this is same as double).
@@ -366,7 +366,7 @@ interface ResultSet extends IteratorAggregate {
      * @return float value or null if database returned null
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getFloatOrNull($column) : ?float;
+    public function getFloatOrNull(mixed $column) : ?float;
 
     /**
      * Returns value cast as integer.
@@ -376,7 +376,7 @@ interface ResultSet extends IteratorAggregate {
      * @see getInteger()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getInt($column) : int;
+    public function getInt(mixed $column) : int;
 
     /**
      * Returns value cast as integer.
@@ -386,7 +386,7 @@ interface ResultSet extends IteratorAggregate {
      * @see getInteger()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getIntOrNull($column) : ?int;
+    public function getIntOrNull(mixed $column) : ?int;
 
     /**
      * Returns value cast as string.
@@ -396,7 +396,7 @@ interface ResultSet extends IteratorAggregate {
      * @see get()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getString($column) : string;
+    public function getString(mixed $column) : string;
 
     /**
      * Returns value cast as string.
@@ -406,7 +406,7 @@ interface ResultSet extends IteratorAggregate {
      * @see get()
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getStringOrNull($column) : ?string;
+    public function getStringOrNull(mixed $column) : ?string;
 
     /**
      * Return a formatted time.
@@ -421,7 +421,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed  Formatted time, or integer unix timestamp (using today's date) if $format was null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getTime($column, $format = '%X');
+    public function getTime(mixed $column, $format = '%X');
 
     /**
      * Return a formatted time.
@@ -436,7 +436,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed  Formatted time, or integer unix timestamp (using today's date) if $format was null.
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getTimeOrNull($column, $format = '%X');
+    public function getTimeOrNull(mixed $column, $format = '%X');
 
     /**
      * Return a formatted timestamp.
@@ -452,7 +452,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed Formatted timestamp, or integer unix timestamp (if $format was null)
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getTimestamp($column, $format = 'Y-m-d H:i:s');
+    public function getTimestamp(mixed $column, $format = 'Y-m-d H:i:s');
 
     /**
      * Return a formatted timestamp.
@@ -468,7 +468,7 @@ interface ResultSet extends IteratorAggregate {
      * @return mixed Formatted timestamp, or integer unix timestamp (if $format was null)
      * @throws SQLException - If the column specified is not a valid key in current field array.
      */
-    public function getTimestampOrNull($column, $format = 'Y-m-d H:i:s');
+    public function getTimestampOrNull(mixed $column, $format = 'Y-m-d H:i:s');
 
 }
 

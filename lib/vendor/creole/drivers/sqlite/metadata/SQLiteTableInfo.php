@@ -56,11 +56,11 @@ class SQLiteTableInfo extends TableInfo {
             $precision = null;
             $scale = null;
             
-            if (preg_match('/^([^\(]+)\(\s*(\d+)\s*,\s*(\d+)\s*\)$/', $fulltype, $matches)) {
+            if (preg_match('/^([^\(]+)\(\s*(\d+)\s*,\s*(\d+)\s*\)$/', (string) $fulltype, $matches)) {
                 $type = $matches[1];
                 $precision = $matches[2];
                 $scale = $matches[3]; // aka precision    
-            } elseif (preg_match('/^([^\(]+)\(\s*(\d+)\s*\)$/', $fulltype, $matches)) {
+            } elseif (preg_match('/^([^\(]+)\(\s*(\d+)\s*\)$/', (string) $fulltype, $matches)) {
                 $type = $matches[1];
                 $size = $matches[2];
             } else {
@@ -76,7 +76,7 @@ class SQLiteTableInfo extends TableInfo {
             
             $this->columns[$name] = new ColumnInfo($this, $name, SQLiteTypes::getType($type), $type, $size, $precision, $scale, $is_nullable, $default_val);
             
-            if (($row['pk'] == 1) || (strtolower($type) == 'integer primary key')) {
+            if (($row['pk'] == 1) || (strtolower((string) $type) == 'integer primary key')) {
                 if ($this->primaryKey === null) {
                     $this->primaryKey = new PrimaryKeyInfo($name);
                 }

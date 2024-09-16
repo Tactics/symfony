@@ -36,7 +36,7 @@ class UnknownElement extends Task {
 
     private $elementName;
     private $realThing;
-    private $children = array();
+    private $children = [];
 
     /**
      * Constructs a UnknownElement object
@@ -116,7 +116,7 @@ class UnknownElement extends Task {
             $parent = $parent->getProxy();
         }
 
-        $parentClass = get_class($parent);
+        $parentClass = $parent::class;
         $ih = IntrospectionHelper::getHelper($parentClass);
 
         for ($i=0, $childrenCount=count($this->children); $i < $childrenCount; $i++) {

@@ -57,7 +57,7 @@ class UniqueValidator implements BasicValidator
 		  $cmd = sprintf('$isValid = %sPeer::doCount($c) == 0;', $table);
 		  eval($cmd);
 
-	  } catch(PropelException $e) {
+	  } catch(PropelException) {
 		/* what to do here ? */
 	  }
 

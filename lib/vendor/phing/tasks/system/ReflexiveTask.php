@@ -52,10 +52,10 @@ class ReflexiveTask extends Task {
     private $file;
 
     /** Any filesets that should be processed. */
-    private $filesets = array();
+    private $filesets = [];
 
     /** Any filters to be applied before append happens. */
-    private $filterChains = array();
+    private $filterChains = [];
 
     /** Alias for setFrom() */
     function setFile(PhingFile $f) {
@@ -88,14 +88,14 @@ class ReflexiveTask extends Task {
         // compile a list of all files to modify, both file attrib and fileset elements
         // can be used.
 
-        $files = array();
+        $files = [];
 
         if ($this->file !== null) {
             $files[] = $this->file;
         }
 
         if (!empty($this->filesets)) {
-            $filenames = array();
+            $filenames = [];
             foreach($this->filesets as $fs) {
                 try {
                     $ds = $fs->getDirectoryScanner($this->project);

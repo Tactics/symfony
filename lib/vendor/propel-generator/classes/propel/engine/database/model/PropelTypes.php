@@ -99,19 +99,15 @@ class PropelTypes {
 	{
 		if (self::$isInitialized === false) {
 
-			self::$TEXT_TYPES = array (
-						self::CHAR, self::VARCHAR, self::LONGVARCHAR, self::CLOB, self::DATE, self::TIME, self::TIMESTAMP, self::BU_DATE, self::BU_TIMESTAMP
-					);
+			self::$TEXT_TYPES = [self::CHAR, self::VARCHAR, self::LONGVARCHAR, self::CLOB, self::DATE, self::TIME, self::TIMESTAMP, self::BU_DATE, self::BU_TIMESTAMP];
 
-			self::$LOB_TYPES = array (
-						self::VARBINARY, self::LONGVARBINARY, self::CLOB, self::BLOB
-					);
+			self::$LOB_TYPES = [self::VARBINARY, self::LONGVARBINARY, self::CLOB, self::BLOB];
 
 			/*
 			 * Create Creole -> native PHP type mappings.
 			 */
 
-			self::$propelToPHPNativeMap = array();
+			self::$propelToPHPNativeMap = [];
 
 			self::$propelToPHPNativeMap[self::CHAR] = self::CHAR_NATIVE_TYPE;
 			self::$propelToPHPNativeMap[self::VARCHAR] = self::VARCHAR_NATIVE_TYPE;
@@ -141,7 +137,7 @@ class PropelTypes {
 			 * Create Propel -> Creole _name_ mappings (not CreoleType:: mappings).
 			 * (this is now pretty useless since we've designed them to be the same!)
 			 */
-			self::$propelTypeToCreoleTypeMap = array();
+			self::$propelTypeToCreoleTypeMap = [];
 			self::$propelTypeToCreoleTypeMap[self::CHAR] = self::CHAR;
 			self::$propelTypeToCreoleTypeMap[self::VARCHAR] = self::VARCHAR;
 			self::$propelTypeToCreoleTypeMap[self::LONGVARCHAR] = self::LONGVARCHAR;
@@ -174,7 +170,7 @@ class PropelTypes {
 			/*
 			 * Create Creole type code to Propel type map.
 			 */
-			self::$creoleToPropelTypeMap = array();
+			self::$creoleToPropelTypeMap = [];
 
 			self::$creoleToPropelTypeMap[CreoleTypes::CHAR] = self::CHAR;
 			self::$creoleToPropelTypeMap[CreoleTypes::VARCHAR] = self::VARCHAR;

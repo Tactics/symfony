@@ -59,7 +59,7 @@ class StripLineComments extends BaseParamFilterReader implements ChainableReader
     const COMMENTS_KEY = "comment";
 
     /** Array that holds the comment prefixes. */
-    private $_comments = array();
+    private $_comments = [];
 
     /**
      * Returns stream only including
@@ -85,8 +85,8 @@ class StripLineComments extends BaseParamFilterReader implements ChainableReader
             return -1;
         }
 
-        $lines = explode("\n", $buffer);
-        $filtered = array();
+        $lines = explode("\n", (string) $buffer);
+        $filtered = [];
 
         $commentsSize = count($this->_comments);
 

@@ -169,13 +169,13 @@ class PropelSQLTask extends AbstractPropelDataModelTask {
 				$this->log("Writing to SQL file: " . $outFile->getPath());
 
 				// First add any "header" SQL
-				$ddl = call_user_func(array($builderClazz, 'getDatabaseStartDDL'));
+				$ddl = call_user_func([$builderClazz, 'getDatabaseStartDDL']);
 
 				foreach($database->getTables() as $table) {
 
 					if (!$table->isSkipSql()) {
 						$builder = DataModelBuilder::builderFactory($table, 'ddl');
-						$this->log("\t+ " . $table->getName() . " [builder: " . get_class($builder) . "]");
+						$this->log("\t+ " . $table->getName() . " [builder: " . $builder::class . "]");
 						$ddl .= $builder->build();
 						foreach($builder->getWarnings() as $warning) {
 							$this->log($warning, Project::PROJECT_MSG_WARN);
@@ -187,7 +187,7 @@ class PropelSQLTask extends AbstractPropelDataModelTask {
 				} // foreach database->getTables()
 
 				// Finally check to see if there is any "footer" SQL
-				$ddl .= call_user_func(array($builderClazz, 'getDatabaseEndDDL'));
+				$ddl .= call_user_func([$builderClazz, 'getDatabaseEndDDL']);
 
 
 				// Now we're done.  Write the file!
@@ -215,7 +215,7 @@ class PropelSQLTask extends AbstractPropelDataModelTask {
 
 			$dataModels = $this->getDataModels();
 			$dataModel = array_shift($dataModels);
-			$packagedDataModels = array();
+			$packagedDataModels = [];
 
 			$platform = $this->getPlatformForTargetDatabase();
 
@@ -240,16 +240,15 @@ class PropelSQLTask extends AbstractPropelDataModelTask {
 
 	protected function cloneDatabase($db) {
 
-		$attributes = array (
-			'name' => $db->getName(),
-			'baseClass' => $db->getBaseClass(),
-			'basePeer' => $db->getBasePeer(),
-			//'defaultPhpType' => $db->getDefaultPhpType(),
-			'defaultIdMethod' => $db->getDefaultIdMethod(),
-			'defaultPhpNamingMethod' => $db->getDefaultPhpNamingMethod(),
-			'defaultTranslateMethod' => $db->getDefaultTranslateMethod(),
-			//'heavyIndexing' => $db->getHeavyIndexing(),
-		);
+		$attributes = [
+      'name' => $db->getName(),
+      'baseClass' => $db->getBaseClass(),
+      'basePeer' => $db->getBasePeer(),
+      //'defaultPhpType' => $db->getDefaultPhpType(),
+      'defaultIdMethod' => $db->getDefaultIdMethod(),
+      'defaultPhpNamingMethod' => $db->getDefaultPhpNamingMethod(),
+      'defaultTranslateMethod' => $db->getDefaultTranslateMethod(),
+  ];
 
 		$clone = new Database();
 		$clone->loadFromXML($attributes);

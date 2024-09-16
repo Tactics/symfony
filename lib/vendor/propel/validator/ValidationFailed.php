@@ -34,16 +34,7 @@
  * @package    propel.validator
  * @see        BasePeer::doValidate()
  */
-class ValidationFailed {
-
-	/** Column name in tablename.COLUMN_NAME format */
-	private $colname;
-
-	/** Message to display to user. */
-	private $message;
-
-	/** Validator object that caused this to fail. */
-	private $validator;
+class ValidationFailed implements \Stringable {
 
 	/**
 	 * Construct a new ValidationFailed object.
@@ -51,12 +42,9 @@ class ValidationFailed {
 	 * @param      string $message Message to display to user.
 	 * @param      object $validator The Validator that caused this column to fail.
 	 */
-	public function __construct($colname, $message, $validator = null)
-	{
-		$this->colname = $colname;
-		$this->message = $message;
-		$this->validator = $validator;
-	}
+	public function __construct(private $colname, private $message, private $validator = null)
+ {
+ }
 
 	/**
 	 * Set the column name.
@@ -118,7 +106,7 @@ class ValidationFailed {
 	 * on (string) cast.  Until then it's pretty useless.
 	 * @return     string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->getMessage();
 	}

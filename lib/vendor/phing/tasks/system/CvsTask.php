@@ -48,7 +48,7 @@ class CvsTask extends Task {
      * List of Commandline children
      * @var array Commandline[]
      */
-    private $commandlines = array();
+    private $commandlines = [];
 
     /**
      * the CVSROOT variable.
@@ -141,7 +141,7 @@ class CvsTask extends Task {
          // use the same filename.
 
         if ($this->passFile === null) {
-            $defaultPassFile = new PhingFile(Phing::getProperty("cygwin.user.home", Phing::getProperty("user.home"))
+            $defaultPassFile = new PhingFile(Phing::getProperty("cygwin.user.home")
                 . DIRECTORY_SEPARATOR . ".cvspass");
             if($defaultPassFile->exists()) {
                 $this->setPassfile($defaultPassFile);
@@ -305,7 +305,7 @@ class CvsTask extends Task {
     public function setCvsRsh($rsh) {
         // Check if not real cvsrsh => set it to null
         if ($rsh !== null) {
-            if (trim($rsh) == "") {
+            if (trim((string) $rsh) == "") {
                 $rsh = null;
             }
         }
@@ -400,7 +400,7 @@ class CvsTask extends Task {
      * @param p
      */
     public function setDate($p) {
-        if ($p !== null && trim($p) !== "") {
+        if ($p !== null && trim((string) $p) !== "") {
             $this->appendCommandArgument("-D");
             $this->appendCommandArgument($p);
         }

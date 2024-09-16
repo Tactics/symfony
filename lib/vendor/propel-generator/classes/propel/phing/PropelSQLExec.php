@@ -81,7 +81,7 @@ class PropelSQLExec extends Task {
 	private $sqlCommand = "";
 
 	/** SQL transactions to perform */
-	private $transactions = array();
+	private $transactions = [];
 
 	/** SQL Statement delimiter */
 	private $delimiter = ";";
@@ -288,7 +288,7 @@ class PropelSQLExec extends Task {
 	 */
 	public function main()
 	{
-		$this->sqlCommand = trim($this->sqlCommand);
+		$this->sqlCommand = trim((string) $this->sqlCommand);
 
 		if ($this->sqldbmap === null || $this->getSqlDbMap()->exists() === false) {
 			throw new BuildException("You haven't provided an sqldbmap, or "
@@ -303,11 +303,11 @@ class PropelSQLExec extends Task {
 
 		try {
 			$map->load($this->getSqlDbMap());
-		} catch (IOException $ioe) {
+		} catch (IOException) {
 			throw new BuildException("Cannot open and process the sqldbmap!");
 		}
 
-		$databases = array();
+		$databases = [];
 
 		foreach($map->keys() as $sqlfile) {
 
@@ -316,12 +316,12 @@ class PropelSQLExec extends Task {
 			// Q: already there?
 			if (!isset($databases[$database])) {
 			// A: No.
-				$databases[$database] = array();
+				$databases[$database] = [];
 			}
 
 			// We want to make sure that the base schemas
 			// are inserted first.
-			if (strpos($sqlfile, "schema.sql") !== false) {
+			if (str_contains((string) $sqlfile, "schema.sql")) {
 				// add to the beginning of the array
 				array_unshift($databases[$database], $sqlfile);
 			} else {
@@ -330,7 +330,7 @@ class PropelSQLExec extends Task {
 		}
 
 		foreach($databases as $db => $files) {
-			$transactions = array();
+			$transactions = [];
 
 			foreach($files as $fileName) {
 
@@ -366,7 +366,7 @@ class PropelSQLExec extends Task {
 		try {
 
 			$buf = "Database settings:\n"
-			. " driver: " . ($this->driver ? $this->driver : "(default)" ). "\n"
+			. " driver: " . ($this->driver ?: "(default)" ). "\n"
 			. " URL: " . $url . "\n"
 			. ($this->userId ? " user: " . $this->userId . "\n" : "")
 			. ($this->password ? " password: " . $this->password . "\n" : "");
@@ -406,7 +406,7 @@ class PropelSQLExec extends Task {
 						$this->conn->commit();
 					}
 				}
-			} catch (Exception $e) {
+			} catch (Exception) {
 				if ($out) $out->close();
 			}
 
@@ -415,7 +415,7 @@ class PropelSQLExec extends Task {
 			if (!$this->autocommit && $this->conn !== null && $this->onError == "abort") {
 				try {
 					$this->conn->rollback();
-				} catch (SQLException $ex) {
+				} catch (SQLException) {
 					// do nothing.
 					System::println("Rollback failed.");
 				}
@@ -426,7 +426,7 @@ class PropelSQLExec extends Task {
 			if (!$this->autocommit && $this->conn !== null && $this->onError == "abort") {
 				try {
 					$this->conn->rollback();
-				} catch (SQLException $ex) {
+				} catch (SQLException) {
 					// do nothing.
 					System::println("Rollback failed");
 				}
@@ -464,7 +464,7 @@ class PropelSQLExec extends Task {
 
 		try {
 			while (($line = $in->readLine()) !== null) {
-				$line = trim($line);
+				$line = trim((string) $line);
 				$line = ProjectConfigurator::replaceProperties($this->project, $line,
 						$this->project->getProperties());
 
@@ -490,14 +490,14 @@ class PropelSQLExec extends Task {
 				// SQL defines "--" as a comment to EOL
 				// and in Oracle it may contain a hint
 				// so we cannot just remove it, instead we must end it
-				if (strpos($line, "--") !== false) {
+				if (str_contains($line, "--")) {
 					$sql .= "\n";
 				}
 
 				// DELIM_ROW doesn't need this (as far as i can tell)
 				if($this->delimiterType == self::DELIM_NORMAL) {
 
-					$reg = "#((?:\"(?:\\\\.|[^\"])*\"?)+|'(?:\\\\.|[^'])*'?|" . preg_quote($this->delimiter) . ")#";
+					$reg = "#((?:\"(?:\\\\.|[^\"])*\"?)+|'(?:\\\\.|[^'])*'?|" . preg_quote((string) $this->delimiter) . ")#";
 
 					$sqlParts = preg_split($reg, $sql, 0, PREG_SPLIT_DELIM_CAPTURE);
 					$sqlBacklog = "";
@@ -516,7 +516,7 @@ class PropelSQLExec extends Task {
 
 				if ($hasQuery || ($this->delimiterType == self::DELIM_ROW && $line == $this->delimiter)) {
 					// this assumes there is always a delimter on the end of the SQL statement.
-					$sql = StringHelper::substring($sql, 0, strlen($sql) - 1 - strlen($this->delimiter));
+					$sql = StringHelper::substring($sql, 0, strlen($sql) - 1 - strlen((string) $this->delimiter));
 					$this->log("SQL: " . $sql, Project::PROJECT_MSG_VERBOSE);
 					$this->execSQL($sql, $out);
 					$sql = "";
@@ -543,7 +543,7 @@ class PropelSQLExec extends Task {
 	protected function execSQL($sql, $out = null)
 	{
 		// Check and ignore empty statements
-		if (trim($sql) == "") {
+		if (trim((string) $sql) == "") {
 			return;
 		}
 

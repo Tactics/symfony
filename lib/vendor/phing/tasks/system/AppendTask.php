@@ -59,13 +59,13 @@ class AppendTask extends Task {
     private $file;
 
     /** Any filesets of files that should be appended. */
-    private $filesets = array();
+    private $filesets = [];
 
     /** Any filelists of files that should be appended. */
-    private $filelists = array();
+    private $filelists = [];
 
     /** Any filters to be applied before append happens. */
-    private $filterChains = array();
+    private $filterChains = [];
 
     /** Text to append. (cannot be used in conjunction w/ files or filesets) */
     private $text;
@@ -163,7 +163,7 @@ class AppendTask extends Task {
 
             // for debugging primarily, maybe comment
             // out for better performance(?)
-            $lines = explode("\n", $this->text);
+            $lines = explode("\n", (string) $this->text);
             foreach($lines as $line) {
                 $this->log($line, Project::PROJECT_MSG_VERBOSE);
             }

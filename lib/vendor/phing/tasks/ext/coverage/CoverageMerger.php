@@ -32,7 +32,7 @@ class CoverageMerger
 {
 	private static function mergeCodeCoverage($left, $right)
 	{
-		$coverageMerged = array();
+		$coverageMerged = [];
 
 		reset($left);
 		reset($right);
@@ -103,7 +103,7 @@ class CoverageMerger
 		{
 			foreach ($coverage as $filename => $coverageFile)
 			{
-				$filename = strtolower($filename);
+				$filename = strtolower((string) $filename);
 
 				if ($props->getProperty($filename) != null)
 				{

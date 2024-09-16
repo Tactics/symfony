@@ -32,33 +32,32 @@
 class BatchTest
 {
 	/** the list of filesets containing the testcase filename rules */
-	private $filesets = array();
-
-	/** the reference to the project */
-	private $project = NULL;
+	private $filesets = [];
 
 	/** the classpath to use with Phing::__import() calls */
 	private $classpath = NULL;
 
 	/** names of classes to exclude */
-	private $excludeClasses = array();
+	private $excludeClasses = [];
 
 	/**
 	 * Create a new batchtest instance
 	 *
 	 * @param Project the project it depends on.
 	 */
-	function __construct(Project $project)
-	{
-		$this->project = $project;
-	}
+	function __construct(
+     /** the reference to the project */
+     private readonly Project $project
+ )
+ {
+ }
 
 	/**
 	 * Sets the classes to exclude
 	 */
 	function setExclude($exclude)
 	{
-		$this->excludeClasses = explode(" ", $exclude);
+		$this->excludeClasses = explode(" ", (string) $exclude);
 	}
 
 	/**
@@ -111,7 +110,7 @@ class BatchTest
 	 */
 	private function getFilenames()
 	{
-		$filenames = array();
+		$filenames = [];
 
 		foreach ($this->filesets as $fileset)
 		{
@@ -122,7 +121,7 @@ class BatchTest
 
 			foreach ($files as $file)
 			{
-				if (strstr($file, ".php"))
+				if (strstr((string) $file, ".php"))
 				{
 					$filenames[] = $ds->getBaseDir() . "/" . $file;
 				}
@@ -153,7 +152,7 @@ class BatchTest
 	{
 		$filenames = $this->getFilenames();
 
-		$declaredClasses = array();
+		$declaredClasses = [];
 
 		foreach ($filenames as $filename)
 		{
@@ -162,7 +161,7 @@ class BatchTest
 			$declaredClasses = array_merge($declaredClasses, $definedClasses);
 		}
 
-		$elements = array_filter($declaredClasses, array($this, "filterTests"));
+		$elements = array_filter($declaredClasses, [$this, "filterTests"]);
 
 		return $elements;
 	}

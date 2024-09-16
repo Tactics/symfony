@@ -132,7 +132,7 @@ class DataType extends ProjectComponent {
 
         if (!$this->checked) {
             // should be in stack
-            $stk = array();
+            $stk = [];
             $stk[] = $this;
             $this->dieOnCircularReference($stk, $this->getProject());
         }

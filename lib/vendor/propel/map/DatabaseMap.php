@@ -46,9 +46,6 @@ include_once 'propel/map/TableMap.php';
  */
 class DatabaseMap {
 
-	/** Name of the database. */
-	private $name;
-
 	/** Name of the tables in the database. */
 	private $tables;
 
@@ -57,10 +54,9 @@ class DatabaseMap {
 	 *
 	 * @param      string $name Name of the database.
 	 */
-	function __construct($name)
+	function __construct(private $name)
 	{
-		$this->name = $name;
-		$this->tables = array();
+		$this->tables = [];
 	}
 
 	/**

@@ -65,7 +65,7 @@ class EchoTask extends Task {
 				$handle = fopen($this->file, "w");
 			}
 
-			fwrite($handle, $this->msg);
+			fwrite($handle, (string) $this->msg);
 
 			fclose($handle);
 		}

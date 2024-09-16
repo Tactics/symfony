@@ -72,12 +72,6 @@ class TaskHandler extends AbstractHandler {
     private $wrapper;
 
     /**
-     * The phing project configurator object
-     * @var ProjectConfigurator
-     */
-    private $configurator;
-
-    /**
      * Constructs a new TaskHandler and sets up everything.
      *
      * @param AbstractSAXParser The ExpatParser object
@@ -87,7 +81,10 @@ class TaskHandler extends AbstractHandler {
 	 * @param RuntimeConfigurable $parentWrapper  Wrapper for the parent element, if any.
      * @param Target $target The target object this task is contained in (null for top-level tasks).
      */
-    function __construct(AbstractSAXParser $parser, $parentHandler, ProjectConfigurator $configurator, $container = null, $parentWrapper = null, $target = null) {
+    function __construct(AbstractSAXParser $parser, $parentHandler, /**
+     * The phing project configurator object
+     */
+    private ProjectConfigurator $configurator, $container = null, $parentWrapper = null, $target = null) {
 
         parent::__construct($parser, $parentHandler);
 
@@ -100,8 +97,6 @@ class TaskHandler extends AbstractHandler {
         if (($target !== null) && !($target instanceof Target)) {
             throw new Exception("Argument expected to be a Target, got something else");
         }
-
-		$this->configurator = $configurator;
         $this->container = $container;
 		$this->parentWrapper = $parentWrapper;
         $this->target = $target;

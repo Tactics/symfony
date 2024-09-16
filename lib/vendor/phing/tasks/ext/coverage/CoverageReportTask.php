@@ -31,7 +31,7 @@ class CoverageReportTask extends Task
 {
 	private $outfile = "coverage.xml";
 
-	private $transformers = array();
+	private $transformers = [];
 
 	/** the classpath to use (optional) */
 	private $classpath = NULL;
@@ -126,10 +126,10 @@ class CoverageReportTask extends Task
 
 	protected function stripDiv($source)
 	{
-		$openpos = strpos($source, "<div");
-		$closepos = strpos($source, ">", $openpos);
+		$openpos = strpos((string) $source, "<div");
+		$closepos = strpos((string) $source, ">", $openpos);
 
-		$line = substr($source, $closepos + 1);
+		$line = substr((string) $source, $closepos + 1);
 
 		$tagclosepos = strpos($line, "</div>");
 
@@ -158,7 +158,7 @@ class CoverageReportTask extends Task
 
 			$html = $geshi->parse_code();
 
-			$lines = split("<li>|</li>", $html);
+			$lines = preg_split("#<li>|<\\/li>#m", $html);
 
 			// skip first and last line
 			array_pop($lines);
@@ -166,7 +166,7 @@ class CoverageReportTask extends Task
 
 			$lines = array_filter($lines);
 
-			$lines = array_map(array($this, 'stripDiv'), $lines);
+			$lines = array_map([$this, 'stripDiv'], $lines);
 
 			return $lines;
 		}
@@ -190,7 +190,7 @@ class CoverageReportTask extends Task
 	protected function transformSourceFile($filename, $coverageInformation, $classStartLine = 1)
 	{
 		$sourceElement = $this->doc->createElement('sourcefile');
-		$sourceElement->setAttribute('name', basename($filename));
+		$sourceElement->setAttribute('name', basename((string) $filename));
 
 		$filelines = $this->highlightSourceFile($filename);
 
@@ -199,7 +199,7 @@ class CoverageReportTask extends Task
 		foreach ($filelines as $line)
 		{
 			$lineElement = $this->doc->createElement('sourceline');
-			$lineElement->setAttribute('coveredcount', (isset($coverageInformation[$linenr]) ? $coverageInformation[$linenr] : '0'));
+			$lineElement->setAttribute('coveredcount', ($coverageInformation[$linenr] ?? '0'));
 
 			if ($linenr == $classStartLine)
 			{
@@ -301,7 +301,7 @@ class CoverageReportTask extends Task
 				}
 
 				$statementcount = count($coverageInformation);
-				$statementscovered = count(array_filter($coverageInformation, array($this, 'filterCovered')));
+				$statementscovered = count(array_filter($coverageInformation, [$this, 'filterCovered']));
 
 				$classElement->appendChild($this->transformSourceFile($filename, $coverageInformation, $classStartLine));
 

@@ -32,19 +32,13 @@ class FileWriter extends Writer {
     protected $file;
     protected $fd;
     
-    /** Whether to append contents to file. */
-    protected $append;
-    
-    /** Whether we should attempt to lock the file (currently disabled). */
-    protected $exclusive;
-    
     /**
      * Construct a new FileWriter.
      * @param mixed $file PhingFile or string pathname.
      * @param boolean $append Append to existing file?
      * @param boolean $exclusive Lock file? (currently disabled due to windows incompatibility)
      */
-    function __construct($file, $append = false, $exclusive = false) {
+    function __construct(mixed $file, protected $append = false, protected $exclusive = false) {
         if ($file instanceof PhingFile) {
             $this->file = $file;
         } elseif (is_string($file)) {
@@ -52,8 +46,6 @@ class FileWriter extends Writer {
         } else {
             throw new Exception("Invalid argument type for \$file.");
         }
-        $this->append = $append;
-        $this->exclusive = $exclusive;
     }
 
     function close() {
@@ -106,7 +98,7 @@ class FileWriter extends Writer {
         }
 
         $this->open();
-        $result = @fwrite($this->fd, $buffer);
+        $result = @fwrite($this->fd, (string) $buffer);
         $this->close();
 
         if ($result === false) {
@@ -120,10 +112,10 @@ class FileWriter extends Writer {
         if ( $off === null && $len === null )
             $to_write = $buf;
         else
-            $to_write = substr($buf, $off, $len);
+            $to_write = substr((string) $buf, $off, $len);
 
         $this->open();
-        $result = @fwrite($this->fd, $to_write);
+        $result = @fwrite($this->fd, (string) $to_write);
 
         if ( $result === false ) {
             throw new IOException("Error writing file.");

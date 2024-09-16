@@ -22,11 +22,10 @@
  */
 class pakeTask
 {
-  protected static $TASKS = array();
-  protected static $ALIAS = array();
+  protected static $TASKS = [];
+  protected static $ALIAS = [];
   protected static $last_comment = '';
-  protected $prerequisites = array();
-  protected $name = '';
+  protected $prerequisites = [];
   protected $comment = '';
   protected $already_invoked = false;
   protected $trace = null;
@@ -34,11 +33,10 @@ class pakeTask
   protected $dryrun = null;
   protected $alias = '';
 
-  public function __construct($task_name)
+  public function __construct(protected $name)
   {
-    $this->name = $task_name;
     $this->comment = '';
-    $this->prerequisites = array();
+    $this->prerequisites = [];
     $this->already_invoked = false;
     $pake = pakeApp::get_instance();
     $this->trace = $pake->get_trace();
@@ -136,7 +134,7 @@ class pakeTask
   // Format the trace flags for display.
   private function format_trace_flags()
   {
-    $flags = array();
+    $flags = [];
     if (!$this->already_invoked)
     {
       $flags[] = 'first_time';
@@ -196,10 +194,10 @@ class pakeTask
     }
 
     // action to run
-    $function = ($this->get_alias() ? $this->get_alias() : $this->get_name());
-    if ($pos = strpos($function, '::'))
+    $function = ($this->get_alias() ?: $this->get_name());
+    if ($pos = strpos((string) $function, '::'))
     {
-      $function = array(substr($function, 0, $pos), preg_replace('/\-/', '_', 'run_'.strtolower(substr($function, $pos + 2))));
+      $function = [substr((string) $function, 0, $pos), preg_replace('/\-/', '_', 'run_'.strtolower(substr((string) $function, $pos + 2)))];
       if (!is_callable($function))
       {
         throw new pakeException(sprintf('Task "%s" is defined but with no action defined.', $function[1]));
@@ -207,7 +205,7 @@ class pakeTask
     }
     else
     {
-      $function = preg_replace('/\-/', '_', 'run_'.strtolower($function));
+      $function = preg_replace('/\-/', '_', 'run_'.strtolower((string) $function));
       if (!function_exists($function))
       {
         throw new pakeException(sprintf('Task "%s" is defined but with no action defined.', $this->name));
@@ -215,7 +213,7 @@ class pakeTask
     }
 
     // execute action
-    return call_user_func_array($function, array($this, $args, $options));
+    return call_user_func_array($function, [$this, $args, $options]);
   }
 
   public function is_needed()
@@ -232,7 +230,7 @@ class pakeTask
       if ($t > $max) $max = $t;
     }
 
-    return ($max ? $max : time());
+    return ($max ?: time());
   }
 
   public static function define_task($name, $deps = null)
@@ -287,8 +285,8 @@ class pakeTask
 
   public static function get_mini_task_name($task_name)
   {
-    $is_method_task = strpos($task_name, '::');
-    return ($is_method_task ? substr($task_name, $is_method_task + 2) : $task_name);
+    $is_method_task = strpos((string) $task_name, '::');
+    return ($is_method_task ? substr((string) $task_name, $is_method_task + 2) : $task_name);
   }
 
   public static function define_comment($comment)

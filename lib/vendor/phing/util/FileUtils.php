@@ -197,7 +197,7 @@ class FileUtils {
             $ca = str_replace('/', '\\', $path);
             $ca = StringHelper::toCharArray($ca);
 
-            $path = strtoupper($ca[0]).':';
+            $path = strtoupper((string) $ca[0]).':';
 
             for ($i=2, $_i=count($ca); $i < $_i; $i++) {
                 if (($ca[$i] !== '\\') ||
@@ -232,7 +232,7 @@ class FileUtils {
             }
         }
 
-        $s = array();
+        $s = [];
         array_push($s, $root);
         $tok = strtok($path, DIRECTORY_SEPARATOR);
         while ($tok !== false) {

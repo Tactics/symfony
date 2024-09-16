@@ -364,7 +364,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 		foreach ($fk->getLocalColumns() as $columnName) {
 			$column = $table->getColumn($columnName);
 			$cptype = $column->getPhpNative();
-			$clo = strtolower($column->getName());
+			$clo = strtolower((string) $column->getName());
 
 			// FIXME: is this correct? what about negative numbers?
 			if ($cptype === "integer" || $cptype === "float" || $cptype === "double") {
@@ -1237,14 +1237,14 @@ $script .= "
 	{
 ";
 
-		$pkcols = array();
+		$pkcols = [];
 		foreach ($table->getColumns() as $pkcol) {
 			if ($pkcol->isPrimaryKey()) {
 				$pkcols[] = $pkcol->getName();
 			}
 		}
 
-        $ucols = array();
+        $ucols = [];
         /** @var Unique $unice **/
         foreach ($table->getUnices() as $unice) {
 
@@ -1260,7 +1260,7 @@ $script .= "
             // Primary keys and unique keys should never be copied into new object, since they are by definition unique.
 			if (!in_array($col->getName(), $pkcols, true) && !in_array($col->getName(), $ucols, true)) {
 				$script .= "
-		\$copyObj->set".$col->getPhpName()."(\$this->".strtolower($col->getName()).");
+		\$copyObj->set".$col->getPhpName()."(\$this->".strtolower((string) $col->getName()).");
 ";
 			}
 		} // foreach

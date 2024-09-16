@@ -72,14 +72,14 @@ class ReplaceTokens extends BaseParamFilterReader implements ChainableReader {
      * Array to hold the replacee-replacer pairs (String to String).
      * @var array
      */
-    private $_tokens = array();
+    private $_tokens = [];
 
     /**
      * Array to hold the token sources that make tokens from
      * different sources available
      * @var array
      */
-    private $_tokensources = array();
+    private $_tokensources = [];
 
     /**
      * Array holding all tokens given directly to the Filter and
@@ -115,7 +115,7 @@ class ReplaceTokens extends BaseParamFilterReader implements ChainableReader {
          * done a bit more elegantly
          */
         if ($this->_alltokens === null) {
-            $this->_alltokens = array();
+            $this->_alltokens = [];
 
             $count = count($this->_tokensources);
             for ($i = 0; $i < $count; $i++) {
@@ -170,7 +170,7 @@ class ReplaceTokens extends BaseParamFilterReader implements ChainableReader {
         // filter buffer
         $buffer = preg_replace_callback(
             "/".preg_quote($this->_beginToken)."([\w\.\-:]+?)".preg_quote($this->_endToken)."/",
-            array($this, 'replaceTokenCallback'), $buffer);
+            [$this, 'replaceTokenCallback'], $buffer);
 
         return $buffer;
     }
@@ -315,9 +315,9 @@ class ReplaceTokens extends BaseParamFilterReader implements ChainableReader {
                     if ( $type === "tokenchar" ) {
                         $name = $params[$i]->getName();
                         if ( $name === "begintoken" ) {
-                            $this->_beginToken = substr($params[$i]->getValue(), 0, 1);
+                            $this->_beginToken = substr((string) $params[$i]->getValue(), 0, 1);
                         } else if ( $name === "endtoken" ) {
-                            $this->_endToken = substr($params[$i]->getValue(), 0, 1);
+                            $this->_endToken = substr((string) $params[$i]->getValue(), 0, 1);
                         }
                     } else if ( $type === "token" ) {
                         $name  = $params[$i]->getName();
@@ -330,7 +330,7 @@ class ReplaceTokens extends BaseParamFilterReader implements ChainableReader {
                         array_push($this->_tokens, $tok);
                     } else if ( $type === "tokensource" ) {
                         // Store data from nested tags in local array
-                        $arr = array(); $subparams = $params[$i]->getParams();
+                        $arr = []; $subparams = $params[$i]->getParams();
                         $count = count($subparams);
                         for ($i = 0; $i < $count; $i++)  {
                             $arr[$subparams[$i]->getName()] = $subparams[$i]->getValue();

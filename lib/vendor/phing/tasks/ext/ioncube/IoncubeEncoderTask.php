@@ -46,7 +46,7 @@ class IoncubeEncoderTask extends Task
 	private $licensePath = "";
 	private $passPhrase = "";
 
-	private $comments = array();
+	private $comments = [];
 
 	/**
 	 * Sets the path to the ionCube encoder
@@ -277,26 +277,15 @@ class IoncubeEncoderTask extends Task
 
 		if (!empty($this->targetOption))
 		{
-			switch ($this->targetOption)
-			{
-				case "replace":
-				case "merge":
-				case "update":
-				case "rename":
-				{
-					$arguments.= "--" . $this->targetOption . "-target ";
-				} break;
-
-				default:
-				{
-					throw new BuildException("Unknown target option '" . $this->targetOption . "'");
-				} break;
-			}
+			match ($this->targetOption) {
+       "replace", "merge", "update", "rename" => $arguments.= "--" . $this->targetOption . "-target ",
+       default => throw new BuildException("Unknown target option '" . $this->targetOption . "'"),
+   };
 		}
 
 		if (!empty($this->encrypt))
 		{
-			foreach (explode(" ", $this->encrypt) as $encrypt)
+			foreach (explode(" ", (string) $this->encrypt) as $encrypt)
 			{
 				$arguments.= "--encrypt '$encrypt' ";
 			}

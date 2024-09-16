@@ -69,7 +69,7 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
         }
 
         while ($row = pg_fetch_assoc($result)) {
-            $this->tables[strtoupper($row['relname'])] = new PgSQLTableInfo($this, $row['relname'], $version, $row['oid']);
+            $this->tables[strtoupper((string) $row['relname'])] = new PgSQLTableInfo($this, $row['relname'], $version, $row['oid']);
         }
 		
 		$this->tablesLoaded = true;
@@ -84,7 +84,7 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
     protected function initSequences()
     {
      
-	 	$this->sequences = array();
+	 	$this->sequences = [];
 		   
         $result = pg_query($this->conn->getResource(), "SELECT c.oid, 
 														case when n.nspname='public' then c.relname else n.nspname||'.'||c.relname end as relname 
@@ -104,7 +104,7 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
 			$obj = new stdClass;
 			$obj->name = $row['relname'];
 			$obj->oid = $row['oid'];
-            $this->sequences[strtoupper($row['relname'])] = $obj;
+            $this->sequences[strtoupper((string) $row['relname'])] = $obj;
         }
 		
     }

@@ -42,7 +42,7 @@ interface BasicLogger {
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function alert($message);
+	public function alert(mixed $message);
 
 	/**
 	 * A convenience function for logging a critical event.
@@ -50,7 +50,7 @@ interface BasicLogger {
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function crit($message);
+	public function crit(mixed $message);
 
 	/**
 	 * A convenience function for logging an error event.
@@ -58,7 +58,7 @@ interface BasicLogger {
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function err($message);
+	public function err(mixed $message);
 
 	/**
 	 * A convenience function for logging a warning event.
@@ -66,21 +66,21 @@ interface BasicLogger {
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function warning($message);
+	public function warning(mixed $message);
 	/**
 	 * A convenience function for logging an critical event.
 	 *
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function notice($message);
+	public function notice(mixed $message);
 	/**
 	 * A convenience function for logging an critical event.
 	 *
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function info($message);
+	public function info(mixed $message);
 
 	/**
 	 * A convenience function for logging a debug event.
@@ -88,7 +88,7 @@ interface BasicLogger {
 	 * @param      mixed   $message    String or Exception object containing the message
 	 *                              to log.
 	 */
-	public function debug($message);
+	public function debug(mixed $message);
 
 	/**
 	 * Primary method to handle logging.
@@ -98,6 +98,6 @@ interface BasicLogger {
 	 * @param      int     $severity   The numeric severity.  Defaults to null so that no
 	 *                              assumptions are made about the logging backend.
 	 */
-	public function log($message, $severity = null);
+	public function log(mixed $message, $severity = null);
 
 }

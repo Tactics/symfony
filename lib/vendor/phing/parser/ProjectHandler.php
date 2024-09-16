@@ -35,12 +35,6 @@ require_once 'phing/system/io/PhingFile.php';
 class ProjectHandler extends AbstractHandler {
 
     /**
-     * The phing project configurator object.
-     * @var ProjectConfigurator
-     */
-    private $configurator;
-
-    /**
      * Constructs a new ProjectHandler
      *
      * @param  object  the ExpatParser object
@@ -48,8 +42,10 @@ class ProjectHandler extends AbstractHandler {
      * @param  object  the ProjectConfigurator object
      * @access public
      */
-    function __construct($parser, $parentHandler, $configurator) {
-        $this->configurator = $configurator;
+    function __construct($parser, $parentHandler, /**
+     * The phing project configurator object.
+     */
+    private $configurator) {
         parent::__construct($parser, $parentHandler);
     }
 

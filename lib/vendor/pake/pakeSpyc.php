@@ -80,7 +80,7 @@ class pakeSpyc {
     public function load($input) {
         // See what type of input we're talking about
         // If it's not a file, assume it's a string
-        if (!empty($input) && (strpos($input, "\n") === false)
+        if (!empty($input) && (!str_contains($input, "\n"))
             && file_exists($input)) {
             $yaml = file($input);
         } else {
@@ -109,7 +109,7 @@ class pakeSpyc {
             } elseif ($this->_inBlock == true && empty($ifchk)) {
                 $last =& $this->_allNodes[$this->_lastNode];
                 $last->data[key($last->data)] .= "\n";
-            } elseif ($ifchk[0] != '#' && substr($ifchk,0,3) != '---') {
+            } elseif ($ifchk[0] != '#' && !str_starts_with($ifchk, '---')) {
                 // Create a new node and get its indent
                 $node         = new pakeYAMLNode;
                 $node->indent = $this->_getIndent($line);
@@ -167,7 +167,7 @@ class pakeSpyc {
                         if ($this->_blockEnd = "\n") {
                             $last =& $this->_allNodes[$this->_lastNode];
                             $last->data[key($last->data)] =
-                                trim($last->data[key($last->data)]);
+                                trim((string) $last->data[key($last->data)]);
                         }
                     }
 
@@ -198,9 +198,9 @@ class pakeSpyc {
                             isset($node->data[key($node->data)]) &&
                             (!is_array($node->data[key($node->data)])) )
                         &&
-                        ( (preg_match('/^&([^ ]+)/',$node->data[key($node->data)]))
+                        ( (preg_match('/^&([^ ]+)/',(string) $node->data[key($node->data)]))
                             ||
-                            (preg_match('/^\*([^ ]+)/',$node->data[key($node->data)])) )
+                            (preg_match('/^\*([^ ]+)/',(string) $node->data[key($node->data)])) )
                     ) {
                         $this->_haveRefs[] =& $this->_allNodes[$node->id];
                     } elseif (
@@ -211,9 +211,9 @@ class pakeSpyc {
                         // Incomplete reference making code.  Ugly, needs cleaned up.
                         foreach ($node->data[key($node->data)] as $d) {
                             if ( !is_array($d) &&
-                                ( (preg_match('/^&([^ ]+)/',$d))
+                                ( (preg_match('/^&([^ ]+)/',(string) $d))
                                     ||
-                                    (preg_match('/^\*([^ ]+)/',$d)) )
+                                    (preg_match('/^\*([^ ]+)/',(string) $d)) )
                             ) {
                                 $this->_haveRefs[] =& $this->_allNodes[$node->id];
                             }
@@ -350,7 +350,7 @@ class pakeSpyc {
      */
     private function _dumpNode($key,$value,$indent) {
         // do some folding here, for blocks
-        if (strpos($value,"\n")) {
+        if (strpos((string) $value,"\n")) {
             $value = $this->_doLiteralBlock($value,$indent);
         } else {
             $value  = $this->_doFolding($value,$indent);
@@ -376,7 +376,7 @@ class pakeSpyc {
      * @param $indent int The value of the indent
      */
     private function _doLiteralBlock($value,$indent) {
-        $exploded = explode("\n",$value);
+        $exploded = explode("\n",(string) $value);
         $newValue = '|';
         $indent  += $this->_dumpIndent;
         $spaces   = str_repeat(' ',$indent);
@@ -398,10 +398,10 @@ class pakeSpyc {
             return $value;
         }
 
-        if (strlen($value) > $this->_dumpWordWrap) {
+        if (strlen((string) $value) > $this->_dumpWordWrap) {
             $indent += $this->_dumpIndent;
             $indent = str_repeat(' ',$indent);
-            $wrapped = wordwrap($value,$this->_dumpWordWrap,"\n$indent");
+            $wrapped = wordwrap((string) $value,$this->_dumpWordWrap,"\n$indent");
             $value   = ">\n".$indent.$wrapped;
         }
         return $value;
@@ -434,13 +434,13 @@ class pakeSpyc {
     private function _parseLine($line) {
         $line = trim($line);
 
-        $array = array();
+        $array = [];
 
         if (preg_match('/^-(.*):$/',$line)) {
             // It's a mapped sequence
             $key         = trim(substr(substr($line,1),0,-1));
             $array[$key] = '';
-        } elseif ($line[0] == '-' && substr($line,0,3) != '---') {
+        } elseif ($line[0] == '-' && !str_starts_with($line, '---')) {
             // It's a list item but not a new stream
             if (strlen($line) > 1) {
                 $value   = trim(substr($line,1));
@@ -448,7 +448,7 @@ class pakeSpyc {
                 $value   = $this->_toType($value);
                 $array[] = $value;
             } else {
-                $array[] = array();
+                $array[] = [];
             }
         } elseif (preg_match('/^(.+):/',$line,$key)) {
             // It's a key/value pair most likely
@@ -493,18 +493,18 @@ class pakeSpyc {
             $explode = $this->_inlineEscape($matches[1]);
 
             // Propogate value array
-            $value  = array();
+            $value  = [];
             foreach ($explode as $v) {
                 $value[] = $this->_toType($v);
             }
-        } elseif (strpos($value,': ')!==false && !preg_match('/^{(.+)/',$value)) {
+        } elseif (str_contains($value,': ') && !preg_match('/^{(.+)/',$value)) {
             // It's a map
             $array = explode(': ',$value);
             $key   = trim($array[0]);
             array_shift($array);
             $value = trim(implode(': ',$array));
             $value = $this->_toType($value);
-            $value = array($key => $value);
+            $value = [$key => $value];
         } elseif (preg_match("/{(.+)}$/",$value,$matches)) {
             // Inline Mapping
 
@@ -512,7 +512,7 @@ class pakeSpyc {
             $explode = $this->_inlineEscape($matches[1]);
 
             // Propogate value array
-            $array = array();
+            $array = [];
             foreach ($explode as $v) {
                 $array = $array + $this->_toType($v);
             }
@@ -522,17 +522,17 @@ class pakeSpyc {
         } elseif (ctype_digit($value)) {
             $value = (int)$value;
         } elseif (in_array(strtolower($value),
-            array('true', 'on', '+', 'yes', 'y'))) {
+            ['true', 'on', '+', 'yes', 'y'])) {
             $value = TRUE;
         } elseif (in_array(strtolower($value),
-            array('false', 'off', '-', 'no', 'n'))) {
+            ['false', 'off', '-', 'no', 'n'])) {
             $value = FALSE;
         } elseif (is_numeric($value)) {
             $value = (float)$value;
         } else {
             // Just a normal string, right?
             $preg = $value ? preg_replace('/#(.+)$/','',$value) : $value;
-            $value = trim($preg);
+            $value = trim((string) $preg);
         }
 
         return $value;
@@ -551,25 +551,25 @@ class pakeSpyc {
 
         // Check for strings
         $regex = '/(?:(")|(?:\'))((?(1)[^"]+|[^\']+))(?(1)"|\')/';
-        if (preg_match_all($regex,$inline,$strings)) {
+        if (preg_match_all($regex,(string) $inline,$strings)) {
             $strings = $strings[2];
             $inline  = $inline ? preg_replace($regex,'YAMLString',$inline) : $inline;
         }
         unset($regex);
 
         // Check for sequences
-        if (preg_match_all('/\[(.+)\]/U',$inline,$seqs)) {
+        if (preg_match_all('/\[(.+)\]/U',(string) $inline,$seqs)) {
             $inline = $inline ? preg_replace('/\[(.+)\]/U','YAMLSeq',$inline) : $inline;
             $seqs   = $seqs[0];
         }
 
         // Check for mappings
-        if (preg_match_all('/{(.+)}/U',$inline,$maps)) {
+        if (preg_match_all('/{(.+)}/U',(string) $inline,$maps)) {
             $inline = $inline ? preg_replace('/{(.+)}/U','YAMLMap',$inline) : $inline;
             $maps   = $maps[0];
         }
 
-        $explode = explode(', ',$inline);
+        $explode = explode(', ',(string) $inline);
 
         // Re-add the strings
         if (!empty($strings)) {
@@ -586,7 +586,7 @@ class pakeSpyc {
         if (!empty($seqs)) {
             $i = 0;
             foreach ($explode as $key => $value) {
-                if (strpos($value,'YAMLSeq') !== false) {
+                if (str_contains($value,'YAMLSeq')) {
                     $explode[$key] = str_replace('YAMLSeq',$seqs[$i],$value);
                     ++$i;
                 }
@@ -597,7 +597,7 @@ class pakeSpyc {
         if (!empty($maps)) {
             $i = 0;
             foreach ($explode as $key => $value) {
-                if (strpos($value,'YAMLMap') !== false) {
+                if (str_contains($value,'YAMLMap')) {
                     $explode[$key] = str_replace('YAMLMap',$maps[$i],$value);
                     ++$i;
                 }
@@ -613,7 +613,7 @@ class pakeSpyc {
      * @return array
      */
     private function _buildArray() {
-        $trunk = array();
+        $trunk = [];
 
         if (!isset($this->_indentSort[0])) {
             return $trunk;
@@ -659,25 +659,25 @@ class pakeSpyc {
     function _linkRef(&$n,$key,$k = NULL,$v = NULL) {
         if (empty($k) && empty($v)) {
             // Look for &refs
-            if (preg_match('/^&([^ ]+)/',$n->data[$key],$matches)) {
+            if (preg_match('/^&([^ ]+)/',(string) $n->data[$key],$matches)) {
                 // Flag the node so we know it's a reference
                 $this->_allNodes[$n->id]->ref = substr($matches[0],1);
                 $this->_allNodes[$n->id]->data[$key] =
-                    substr($n->data[$key],strlen($matches[0])+1);
+                    substr((string) $n->data[$key],strlen($matches[0])+1);
                 // Look for *refs
-            } elseif (preg_match('/^\*([^ ]+)/',$n->data[$key],$matches)) {
+            } elseif (preg_match('/^\*([^ ]+)/',(string) $n->data[$key],$matches)) {
                 $ref = substr($matches[0],1);
                 // Flag the node as having a reference
                 $this->_allNodes[$n->id]->refKey =  $ref;
             }
         } elseif (!empty($k) && !empty($v)) {
-            if (preg_match('/^&([^ ]+)/',$v,$matches)) {
+            if (preg_match('/^&([^ ]+)/',(string) $v,$matches)) {
                 // Flag the node so we know it's a reference
                 $this->_allNodes[$n->id]->ref = substr($matches[0],1);
                 $this->_allNodes[$n->id]->data[$key][$k] =
-                    substr($v,strlen($matches[0])+1);
+                    substr((string) $v,strlen($matches[0])+1);
                 // Look for *refs
-            } elseif (preg_match('/^\*([^ ]+)/',$v,$matches)) {
+            } elseif (preg_match('/^\*([^ ]+)/',(string) $v,$matches)) {
                 $ref = substr($matches[0],1);
                 // Flag the node as having a reference
                 $this->_allNodes[$n->id]->refKey =  $ref;
@@ -692,7 +692,7 @@ class pakeSpyc {
      * @return array
      */
     private function _gatherChildren($nid) {
-        $return = array();
+        $return = [];
         $node   =& $this->_allNodes[$nid];
         foreach ($this->_allNodes as $z) {
             if ($z->parent == $node->id) {
@@ -731,7 +731,7 @@ class pakeSpyc {
         } elseif (!is_array($node->data) && $node->children == true) {
             // Same as above, find the children of this node
             $childs       = $this->_gatherChildren($node->id);
-            $node->data   = array();
+            $node->data   = [];
             $node->data[] = $childs;
         }
 
@@ -778,10 +778,10 @@ class pakeSpyc {
      */
     private function _array_kmerge($arr1,$arr2) {
         if(!is_array($arr1))
-            $arr1 = array();
+            $arr1 = [];
 
         if(!is_array($arr2))
-            $arr2 = array();
+            $arr2 = [];
 
         $keys1 = array_keys($arr1);
         $keys2 = array_keys($arr2);
@@ -789,7 +789,7 @@ class pakeSpyc {
         $vals1 = array_values($arr1);
         $vals2 = array_values($arr2);
         $vals  = array_merge($vals1,$vals2);
-        $ret   = array();
+        $ret   = [];
 
         foreach($keys as $key) {
             $val = current($vals);

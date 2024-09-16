@@ -52,14 +52,14 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
         $this->dsn = $dsninfo;
         $this->flags = $flags;
 
-        $serverName = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : '(local)';
+        $serverName = $dsninfo['hostspec'] ?: '(local)';
 
         if(!empty($dsninfo['port'])) {
             $portDelimiter = ",";
             $serverName .= $portDelimiter.$dsninfo['port'];
         }
 
-        $connectionInfo = array();
+        $connectionInfo = [];
         if(array_key_exists('username', $dsninfo) && $dsninfo['username'] != '')
         {
             $connectionInfo['UID'] = $dsninfo['username'];
@@ -72,7 +72,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
         {
             $connectionInfo['Database'] = $dsninfo['database'];
         }
-        if(array_key_exists('encoding', $dsninfo) && in_array($dsninfo['encoding'], array('SQLSRV_ENC_CHAR', 'SQLSRV_ENC_BINARY', 'UTF-8')))
+        if(array_key_exists('encoding', $dsninfo) && in_array($dsninfo['encoding'], ['SQLSRV_ENC_CHAR', 'SQLSRV_ENC_BINARY', 'UTF-8']))
         {
             $connectionInfo['CharacterSet'] = $dsninfo['encoding'];
         }
@@ -198,7 +198,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
         $this->lastQuery = $sql;
 
         //var_dump( $this->getPointerType());
-        $result = sqlsrv_query($this->dblink, $sql, null, array("Scrollable" => $this->getPointerType()));
+        $result = sqlsrv_query($this->dblink, $sql, null, ["Scrollable" => $this->getPointerType()]);
         if($result === false)
         {
             throw new SQLException('Could not execute query: ' . $sql,  $this->sqlError());

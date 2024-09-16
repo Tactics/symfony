@@ -34,7 +34,7 @@ include_once 'phing/system/io/FileWriter.php';
  */
 class Properties {
 
-    private $properties = array();
+    private $properties = [];
 
     /**
      * Load properties from a file.
@@ -45,7 +45,7 @@ class Properties {
      */
     function load(PhingFile $file) {
         if ($file->canRead()) {
-            $this->parse($file->getPath(), false);
+            $this->parse($file->getPath());
         } else {
             throw new IOException("Can not read file ".$file->getPath());
         }
@@ -71,7 +71,7 @@ class Properties {
             throw new IOException("Unable to parse contents of $filePath");
         }
 
-        $this->properties = array();
+        $this->properties = [];
         $sec_name = "";
 
         foreach($lines as $line) {
@@ -115,7 +115,7 @@ class Properties {
      * @param mixed $val The property value (may be boolean, etc.)
      * @return string
      */
-    protected function outVal($val) {
+    protected function outVal(mixed $val) {
         if ($val === true) {
             $val = "true";
         } elseif ($val === false) {
@@ -211,10 +211,9 @@ class Properties {
      * Set the value for a property.
      *
      * @param string $key
-     * @param mixed $value
      * @return mixed Old property value or NULL if none was set.
      */
-    function setProperty($key, $value) {
+    function setProperty($key, mixed $value) {
         $oldValue = @$this->properties[$key];
         $this->properties[$key] = $value;
         return $oldValue;
@@ -226,10 +225,9 @@ class Properties {
      * interface for properties.
      *
      * @param string $key
-     * @param mixed $value
      * @return mixed
      */
-    function put($key, $value) {
+    function put($key, mixed $value) {
         return $this->setProperty($key, $value);
     }
 

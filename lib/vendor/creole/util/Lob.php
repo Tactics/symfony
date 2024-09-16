@@ -26,7 +26,7 @@
  * @version   $Revision: 1.10 $
  * @package   creole.util
  */
-abstract class Lob {
+abstract class Lob implements \Stringable {
 
     /** 
      * The contents of the Lob.
@@ -216,7 +216,7 @@ abstract class Lob {
      * Convenience method to get contents of LOB as string.
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getContents();
     }

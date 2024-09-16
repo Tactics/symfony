@@ -43,9 +43,9 @@ class MySQLiTableInfo extends TableInfo {
         // the MySQL "SHOW COLUMNS FROM $tablename" SQL.
         $res = mysqli_query($this->conn->getResource(), "SHOW COLUMNS FROM " . $this->name);
 
-        $defaults = array();
-        $nativeTypes = array();
-        $precisions = array();
+        $defaults = [];
+        $nativeTypes = [];
+        $precisions = [];
 
         while($row = mysqli_fetch_assoc($res)) {
             $name = $row['Field'];

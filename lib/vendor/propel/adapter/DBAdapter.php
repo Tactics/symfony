@@ -50,17 +50,7 @@ abstract class DBAdapter {
 	 * Creole driver to Propel adapter map.
 	 * @var        array
 	 */
-	private static $adapters = array(
-								    'mysql' => 'DBMySQL',
-                    'mysqli' => 'DBMySQLi',
-								    'mssql' => 'DBMSSQL',
-                    'mssqlsrv' => 'DBMSSQLSRV',
-								    'sybase' => 'DBSybase',
-								    'oracle' => 'DBOracle',
-								    'pgsql' => 'DBPostgres',
-								    'sqlite' => 'DBSQLite',
-								    '' => 'DBNone'
-								);
+	private static $adapters = ['mysql' => 'DBMySQL', 'mysqli' => 'DBMySQLi', 'mssql' => 'DBMSSQL', 'mssqlsrv' => 'DBMSSQLSRV', 'sybase' => 'DBSybase', 'oracle' => 'DBOracle', 'pgsql' => 'DBPostgres', 'sqlite' => 'DBSQLite', '' => 'DBNone'];
 
 	/**
 	 * Creates a new instance of the database adapter associated
@@ -72,7 +62,7 @@ abstract class DBAdapter {
 	 * @throws     PropelException if the adapter could not be instantiated.
 	 */
 	public static function factory($driver) {
-		$adapterClass = isset(self::$adapters[$driver]) ? self::$adapters[$driver] : null;
+		$adapterClass = self::$adapters[$driver] ?? null;
 		if ($adapterClass !== null) {
 			require_once 'propel/adapter/'.$adapterClass.'.php';
 			$a = new $adapterClass();

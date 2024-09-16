@@ -9,74 +9,66 @@
  */
 
 /**
- *
- * @package    symfony
- * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfFileLogger.class.php 10964 2008-08-19 18:33:50Z fabien $
  */
 class sfFileLogger
 {
-  protected
-    $fp = null;
+    protected $fp;
 
-  /**
-   * Initializes the file logger.
-   *
-   * @param array Options for the logger
-   */
-  public function initialize($options = array())
-  {
-    if (!isset($options['file']))
+    /**
+     * Initializes the file logger.
+     *
+     * @param array Options for the logger
+     */
+    public function initialize($options = [])
     {
-      throw new sfConfigurationException('File option is mandatory for a file logger');
+        if (!isset($options['file'])) {
+            throw new sfConfigurationException('File option is mandatory for a file logger');
+        }
+
+        $dir = dirname((string) $options['file']);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, 1);
+        }
+
+        $fileExists = file_exists($options['file']);
+        if (!is_writable($dir) || ($fileExists && !is_writable($options['file']))) {
+            throw new sfFileException(sprintf('Unable to open the log file "%s" for writing', $options['file']));
+        }
+
+        $this->fp = fopen($options['file'], 'a');
+        if (!$fileExists) {
+            chmod($options['file'], 0666);
+        }
     }
 
-    $dir = dirname($options['file']);
-
-    if (!is_dir($dir))
+    /**
+     * Logs a message.
+     *
+     * @param string Message
+     * @param string Message priority
+     * @param string Message priority name
+     */
+    public function log($message, $priority, $priorityName)
     {
-      mkdir($dir, 0777, 1);
+        $time = date('Y-m-d H:i:s', time());
+        $line = sprintf('%s %s [%s] %s%s', $time, 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
+
+        flock($this->fp, LOCK_EX);
+        fwrite($this->fp, $line);
+        flock($this->fp, LOCK_UN);
     }
 
-    $fileExists = file_exists($options['file']);
-    if (!is_writable($dir) || ($fileExists && !is_writable($options['file'])))
+    /**
+     * Executes the shutdown method.
+     */
+    public function shutdown()
     {
-      throw new sfFileException(sprintf('Unable to open the log file "%s" for writing', $options['file']));
+        if (is_resource($this->fp)) {
+            fclose($this->fp);
+        }
     }
-
-    $this->fp = fopen($options['file'], 'a');
-    if (!$fileExists)
-    {
-      chmod($options['file'], 0666);
-    }
-  }
-
-  /**
-   * Logs a message.
-   *
-   * @param string Message
-   * @param string Message priority
-   * @param string Message priority name
-   */
-  public function log($message, $priority, $priorityName)
-  {
-    $time = date('Y-m-d H:i:s', time());
-    $line = sprintf("%s %s [%s] %s%s", $time, 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
-
-    flock($this->fp, LOCK_EX);
-    fwrite($this->fp, $line);
-    flock($this->fp, LOCK_UN);
-  }
-
-  /**
-   * Executes the shutdown method.
-   */
-  public function shutdown()
-  {
-    if (is_resource($this->fp))
-    {
-      fclose($this->fp);
-    }
-  }
 }

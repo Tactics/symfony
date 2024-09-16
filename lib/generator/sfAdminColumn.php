@@ -1,20 +1,15 @@
 <?php
 
-
 /**
  * Admin generator column.
  *
- * @package    symfony
- * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: sfAdminGenerator.class.php 9861 2008-06-25 12:07:06Z fabien $
  */
 class sfAdminColumn
 {
-    protected
-        $phpName    = '',
-        $column     = null,
-        $flags      = array();
+    protected $flags = [];
 
     /**
      * Constructor.
@@ -23,17 +18,15 @@ class sfAdminColumn
      * @param string The column name
      * @param array  The column flags
      */
-    public function __construct($phpName, $column = null, $flags = array())
+    public function __construct(protected $phpName, protected $column = null, $flags = [])
     {
-        $this->phpName = $phpName;
-        $this->column  = $column;
-        $this->flags   = (array) $flags;
+        $this->flags = (array) $flags;
     }
 
     /**
      * Returns true if the column maps a database column.
      *
-     * @return boolean true if the column maps a database column, false otherwise
+     * @return bool true if the column maps a database column, false otherwise
      */
     public function isReal()
     {
@@ -53,7 +46,7 @@ class sfAdminColumn
     /**
      * Returns true if the column is a partial.
      *
-     * @return boolean true if the column is a partial, false otherwise
+     * @return bool true if the column is a partial, false otherwise
      */
     public function isPartial()
     {
@@ -63,7 +56,7 @@ class sfAdminColumn
     /**
      * Returns true if the column is a component.
      *
-     * @return boolean true if the column is a component, false otherwise
+     * @return bool true if the column is a component, false otherwise
      */
     public function isComponent()
     {
@@ -73,7 +66,7 @@ class sfAdminColumn
     /**
      * Returns true if the column has a link.
      *
-     * @return boolean true if the column has a link, false otherwise
+     * @return bool true if the column has a link, false otherwise
      */
     public function isLink()
     {

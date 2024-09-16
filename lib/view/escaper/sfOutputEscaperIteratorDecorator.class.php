@@ -21,152 +21,152 @@
  * exception.
  *
  * @see        sfOutputEscaper
- * @package    symfony
- * @subpackage view
+ *
  * @author     Mike Squire <mike@somosis.co.uk>
+ *
  * @version    SVN: $Id: sfOutputEscaperIteratorDecorator.class.php 3232 2007-01-11 20:51:54Z fabien $
  */
-class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator implements Iterator, Countable, ArrayAccess
+class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator implements Iterator, Countable, ArrayAccess, Stringable
 {
-  /**
-   * The iterator to be used.
-   *
-   * @var IteratorIterator
-   */
-  private $iterator;
+    /**
+     * The iterator to be used.
+     *
+     * @var IteratorIterator
+     */
+    private $iterator;
 
-  /**
-   * Constructs a new escaping iteratoror using the escaping method and value supplied.
-   *
-   * @param string The escaping method to use
-   * @param Traversable The iterator to escape
-   */
-  public function __construct($escapingMethod, Traversable $value)
-  {
-    // Set the original value for __call(). Set our own iterator because passing
-    // it to IteratorIterator will lose any other method calls.
+    /**
+     * Constructs a new escaping iteratoror using the escaping method and value supplied.
+     *
+     * @param string The escaping method to use
+     * @param Traversable The iterator to escape
+     */
+    public function __construct($escapingMethod, Traversable $value)
+    {
+        // Set the original value for __call(). Set our own iterator because passing
+        // it to IteratorIterator will lose any other method calls.
 
-    parent::__construct($escapingMethod, $value);
+        parent::__construct($escapingMethod, $value);
 
-    $this->iterator = new IteratorIterator($value);
-  }
+        $this->iterator = new IteratorIterator($value);
+    }
 
-  /**
-   * Resets the iterator (as required by the Iterator interface).
-   *
-   * @return boolean true, if the iterator rewinds successfully otherwise false
-   */
-  public function rewind() : void
-  {
-     $this->iterator->rewind();
-  }
+    /**
+     * Resets the iterator (as required by the Iterator interface).
+     *
+     * @return bool true, if the iterator rewinds successfully otherwise false
+     */
+    public function rewind(): void
+    {
+        $this->iterator->rewind();
+    }
 
-  /**
-   * Escapes and gets the current element (as required by the Iterator interface).
-   *
-   * @return mixed The escaped value
-   */
-  public function current() : mixed
-  {
-    return sfOutputEscaper::escape($this->escapingMethod, $this->iterator->current());
-  }
+    /**
+     * Escapes and gets the current element (as required by the Iterator interface).
+     *
+     * @return mixed The escaped value
+     */
+    public function current(): mixed
+    {
+        return sfOutputEscaper::escape($this->escapingMethod, $this->iterator->current());
+    }
 
-  /**
-   * Gets the current key (as required by the Iterator interface).
-   *
-   * @return string Iterator key
-   */
-  public function key() : mixed
-  {
-    return $this->iterator->key();
-  }
+    /**
+     * Gets the current key (as required by the Iterator interface).
+     *
+     * @return string Iterator key
+     */
+    public function key(): mixed
+    {
+        return $this->iterator->key();
+    }
 
-  /**
-   * Moves to the next element in the iterator (as required by the Iterator interface).
-   */
-  public function next() : void
-  {
-     $this->iterator->next();
-  }
+    /**
+     * Moves to the next element in the iterator (as required by the Iterator interface).
+     */
+    public function next(): void
+    {
+        $this->iterator->next();
+    }
 
-  /**
-   * Returns whether the current element is valid or not (as required by the
-   * Iterator interface).
-   *
-   * @return boolean true if the current element is valid; false otherwise
-   */
-  public function valid() : bool
-  {
-    return $this->iterator->valid();
-  }
+    /**
+     * Returns whether the current element is valid or not (as required by the
+     * Iterator interface).
+     *
+     * @return bool true if the current element is valid; false otherwise
+     */
+    public function valid(): bool
+    {
+        return $this->iterator->valid();
+    }
 
-  /**
-   * Returns true if the supplied offset is set in the array (as required by
-   * the ArrayAccess interface).
-   *
-   * @param string The offset of the value to check existance of
-   *
-   * @return boolean true if the offset exists; false otherwise
-   */
-  public function offsetExists($offset) : bool
-  {
-    return array_key_exists($offset, $this->value);
-  }
+    /**
+     * Returns true if the supplied offset is set in the array (as required by
+     * the ArrayAccess interface).
+     *
+     * @param string The offset of the value to check existance of
+     *
+     * @return bool true if the offset exists; false otherwise
+     */
+    public function offsetExists($offset): bool
+    {
+        return array_key_exists($offset, $this->value);
+    }
 
-  /**
-   * Returns the element associated with the offset supplied (as required by the ArrayAccess interface).
-   *
-   * @param string The offset of the value to get
-   *
-   * @return mixed The escaped value
-   */
-  public function offsetGet($offset) : mixed
-  {
-    return sfOutputEscaper::escape($this->escapingMethod, $this->value[$offset]);
-  }
+    /**
+     * Returns the element associated with the offset supplied (as required by the ArrayAccess interface).
+     *
+     * @param string The offset of the value to get
+     *
+     * @return mixed The escaped value
+     */
+    public function offsetGet($offset): mixed
+    {
+        return sfOutputEscaper::escape($this->escapingMethod, $this->value[$offset]);
+    }
 
-  /**
-   * Throws an exception saying that values cannot be set (this method is
-   * required for the ArrayAccess interface).
-   *
-   * This (and the other sfOutputEscaper classes) are designed to be read only
-   * so this is an illegal operation.
-   *
-   * @param string (ignored)
-   * @param string (ignored)
-   *
-   * @throws <b>sfException</b>
-   */
-  public function offsetSet($offset, $value): void
-  {
-    throw new sfException('Cannot set values.');
-  }
+    /**
+     * Throws an exception saying that values cannot be set (this method is
+     * required for the ArrayAccess interface).
+     *
+     * This (and the other sfOutputEscaper classes) are designed to be read only
+     * so this is an illegal operation.
+     *
+     * @param string (ignored)
+     * @param string (ignored)
+     *
+     * @throws <b>sfException</b>
+     */
+    public function offsetSet($offset, $value): void
+    {
+        throw new sfException('Cannot set values.');
+    }
 
-  /**
-   * Throws an exception saying that values cannot be unset (this method is
-   * required for the ArrayAccess interface).
-   *
-   * This (and the other sfOutputEscaper classes) are designed to be read only
-   * so this is an illegal operation.
-   *
-   * @param string (ignored)
-   *
-   * @throws <b>sfException</b>
-   */
-  public function offsetUnset($offset) : void
-  {
-    throw new sfException('Cannot unset values.');
-  }
+    /**
+     * Throws an exception saying that values cannot be unset (this method is
+     * required for the ArrayAccess interface).
+     *
+     * This (and the other sfOutputEscaper classes) are designed to be read only
+     * so this is an illegal operation.
+     *
+     * @param string (ignored)
+     *
+     * @throws <b>sfException</b>
+     */
+    public function offsetUnset($offset): void
+    {
+        throw new sfException('Cannot unset values.');
+    }
 
-  /**
-   * Returns the size of the array (are required by the Countable interface).
-   *
-   * @return int The size of the array
-   */
-  public function count() : int
-  {
-    return count($this->value);
-  }
+    /**
+     * Returns the size of the array (are required by the Countable interface).
+     *
+     * @return int The size of the array
+     */
+    public function count(): int
+    {
+        return count($this->value);
+    }
 
     /**
      * Returns the result of calling the get() method on the object, bypassing
@@ -180,10 +180,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
      *
      * @throws <b>sfException</b> if the object does not have a callable get() method
      */
-    public function getRaw($key) : mixed
+    public function getRaw($key): mixed
     {
-        if (!is_callable(array($this->value, 'get')))
-        {
+        if (!is_callable([$this->value, 'get'])) {
             throw new sfException('Object does not have a callable get() method.');
         }
 
@@ -214,35 +213,27 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperGetterDecorator im
      */
     public function __call($method, $args)
     {
-        if (count($args) > 0)
-        {
+        if (count($args) > 0) {
             $escapingMethod = $args[count($args) - 1];
-            if (is_string($escapingMethod) && substr($escapingMethod, 0, 4) === 'esc_')
-            {
+            if (is_string($escapingMethod) && str_starts_with($escapingMethod, 'esc_')) {
                 array_pop($args);
-            }
-            else
-            {
+            } else {
                 $escapingMethod = $this->escapingMethod;
             }
-        }
-        else
-        {
+        } else {
             $escapingMethod = $this->escapingMethod;
         }
 
-        $value = call_user_func_array(array($this->value, $method), $args);
+        $value = call_user_func_array([$this->value, $method], $args);
 
         return sfOutputEscaper::escape($escapingMethod, $value);
     }
 
     /**
      * Try to call decorated object __toString() method if exists.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->escape($this->escapingMethod, $this->value->__toString());
+        return (string) $this->escape($this->escapingMethod, $this->value->__toString());
     }
 }

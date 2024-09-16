@@ -60,7 +60,7 @@ class AvailableTask extends Task {
     }
 
     function setType($type) {
-        $this->type = (string) strtolower($type);
+        $this->type = (string) strtolower((string) $type);
     }
 
     function main() {

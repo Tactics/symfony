@@ -38,16 +38,46 @@ class SizeSelector extends BaseExtendSelector {
     const UNITS_KEY = "units";
     const WHEN_KEY = "when";
 
-    private static $sizeComparisons =  array("less", "more", "equal");
-    private static $byteUnits = array("K", "k", "kilo", "KILO",
-                                 "Ki", "KI", "ki", "kibi", "KIBI",
-                                 "M", "m", "mega", "MEGA",
-                                 "Mi", "MI", "mi", "mebi", "MEBI",
-                                 "G", "g", "giga", "GIGA",
-                                 "Gi", "GI", "gi", "gibi", "GIBI",
-                                 "T", "t", "tera", "TERA",
-            /* You wish! */      "Ti", "TI", "ti", "tebi", "TEBI"
-                                 );
+    private static $sizeComparisons =  ["less", "more", "equal"];
+    private static $byteUnits = [
+        "K",
+        "k",
+        "kilo",
+        "KILO",
+        "Ki",
+        "KI",
+        "ki",
+        "kibi",
+        "KIBI",
+        "M",
+        "m",
+        "mega",
+        "MEGA",
+        "Mi",
+        "MI",
+        "mi",
+        "mebi",
+        "MEBI",
+        "G",
+        "g",
+        "giga",
+        "GIGA",
+        "Gi",
+        "GI",
+        "gi",
+        "gibi",
+        "GIBI",
+        "T",
+        "t",
+        "tera",
+        "TERA",
+        /* You wish! */
+        "Ti",
+        "TI",
+        "ti",
+        "tebi",
+        "TEBI",
+    ];
 
     public function toString() {
         $buf = "{sizeselector value: ";
@@ -156,11 +186,11 @@ class SizeSelector extends BaseExtendSelector {
         if ($parameters !== null) {
             for ($i = 0, $size=count($parameters); $i < $size; $i++) {
                 $paramname = $parameters[$i]->getName();
-                switch(strtolower($paramname)) {
+                switch(strtolower((string) $paramname)) {
                     case self::SIZE_KEY:
                         try {
                             $this->setValue($parameters[$i]->getValue());
-                           } catch (Exception $nfe) {
+                           } catch (Exception) {
                                $this->setError("Invalid size setting "
                                 . $parameters[$i]->getValue());
                            }

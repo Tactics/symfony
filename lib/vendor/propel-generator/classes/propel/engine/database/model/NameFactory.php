@@ -59,7 +59,7 @@ class NameFactory {
 	 */
 	protected function __construct()
 	{
-		$this->algorithms = array();
+		$this->algorithms = [];
 	}
 
 	private static function instance()
@@ -79,7 +79,7 @@ class NameFactory {
      */
 	protected function getAlgorithm($name)
 	{
-		$algorithm = isset($this->algorithms[$name]) ? $this->algorithms[$name] : null;
+		$algorithm = $this->algorithms[$name] ?? null;
 		if ($algorithm === null) {
 			try {
 				include_once 'propel/engine/database/model/' . $name . '.php';

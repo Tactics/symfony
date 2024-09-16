@@ -41,7 +41,7 @@ class AdhocTask extends Task {
      */
     protected $script;
 
-    protected $newClasses = array();
+    protected $newClasses = [];
 
     /**
      * Main entry point

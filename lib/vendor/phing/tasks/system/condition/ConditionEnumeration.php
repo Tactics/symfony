@@ -10,11 +10,11 @@ class ConditionEnumeration implements Iterator {
     /** Current element number */
     private int $num = 0;
 
-    /** "Outer" ConditionBase class. */
-    private ConditionBase $outer;
-
-    public function __construct(ConditionBase $outer) {
-        $this->outer = $outer;
+    public function __construct(
+        /** "Outer" ConditionBase class. */
+        private readonly ConditionBase $outer
+    )
+    {
     }
 
     public function valid(): bool

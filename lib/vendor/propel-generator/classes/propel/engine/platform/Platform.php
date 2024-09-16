@@ -123,6 +123,6 @@ interface Platform {
 	 * @param      mixed $tf A boolean or string representation of boolean ('y', 'true').
 	 * @return     mixed
 	 */
-	public function getBooleanString($tf);
+	public function getBooleanString(mixed $tf);
 
 }

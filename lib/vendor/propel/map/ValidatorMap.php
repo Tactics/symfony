@@ -49,13 +49,13 @@ class ValidatorMap
 	private $value;
 	/** execption message thrown on invalid input */
 	private $message;
-	/** related column */
-	private $column;
 
-	public function __construct($containingColumn)
-	{
-		$this->column = $containingColumn;
-	}
+	public function __construct(
+     /** related column */
+     private $column
+ )
+ {
+ }
 
 	public function getColumn()
 	{

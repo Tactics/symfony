@@ -33,8 +33,8 @@ class ZipTask extends MatchingTask {
     private $zipFile;
     private $baseDir;
 
-    private $filesets = array();
-    private $fileSetFiles = array();
+    private $filesets = [];
+    private $fileSetFiles = [];
 
     /**
      * Add a new fileset.
@@ -137,12 +137,12 @@ class ZipTask extends MatchingTask {
                 // to also include empty directories.  Not high priority, since non-inclusion
                 // of empty dirs is probably not unexpected behavior for ZipTask.
                 $fsBasedir = $fs->getDir($this->project);
-                $filesToZip = array();
+                $filesToZip = [];
                 for ($i=0, $fcount=count($files); $i < $fcount; $i++) {
                     $f = new PhingFile($fsBasedir, $files[$i]);
                     $filesToZip[] = $f->getAbsolutePath();
                 }
-                $zip->add($filesToZip, array('remove_path' => $fsBasedir->getCanonicalPath()));
+                $zip->add($filesToZip, ['remove_path' => $fsBasedir->getCanonicalPath()]);
             }
 
 

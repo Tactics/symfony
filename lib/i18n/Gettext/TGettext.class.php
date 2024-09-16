@@ -14,17 +14,17 @@
 //
 // $Id: TGettext.class.php 9858 2008-06-25 11:34:30Z fabien $
 /**
- * File::Gettext
+ * File::Gettext.
  *
  * @author      Michael Wallner <mike@php.net>
  * @license     PHP License
  */
 /**
- * Use PHPs builtin error messages
+ * Use PHPs builtin error messages.
  */
-//ini_set('track_errors', true);
+// ini_set('track_errors', true);
 /**
- * File_Gettext
+ * File_Gettext.
  *
  * GNU gettext file reader and writer.
  *
@@ -33,83 +33,82 @@
  * #################################################################
  *
  * @author      Michael Wallner <mike@php.net>
+ *
  * @version     $Revision: 9858 $
- * @access      public
- * @package System.I18N.core
  */
 class TGettext
 {
     /**
-     * strings
+     * strings.
      *
      * associative array with all [msgid => msgstr] entries
      *
-     * @access  protected
-     * @var     array
-    */
-    protected $strings = array();
+     * @var array
+     */
+    protected $strings = [];
 
     /**
-     * meta
+     * meta.
      *
      * associative array containing meta
      * information like project name or content type
      *
-     * @access  protected
-     * @var     array
+     * @var array
      */
-    protected $meta = array();
+    protected $meta = [];
 
     /**
-     * file path
+     * file path.
      *
-     * @access  protected
-     * @var     string
+     * @var string
      */
     protected $file = '';
 
     /**
-     * Factory
+     * Factory.
      *
      * @static
-     * @access  public
-     * @return  object  Returns File_Gettext_PO or File_Gettext_MO on success
-     *                  or PEAR_Error on failure.
-     * @param   string  $format MO or PO
-     * @param   string  $file   path to GNU gettext file
+     *
+     * @param string $format MO or PO
+     * @param string $file   path to GNU gettext file
+     *
+     * @return object returns File_Gettext_PO or File_Gettext_MO on success
+     *                or PEAR_Error on failure
      */
-    static function factory($format, $file = '')
+    public static function factory($format, $file = '')
     {
-        $format = strToUpper($format);
-        $filename = dirname(__FILE__).'/'.$format.'.php';
-        if (is_file($filename) == false)
-        	throw new Exception ("Class file $file not found");
+        $format = strtoupper($format);
+        $filename = __DIR__.'/'.$format.'.php';
+        if (is_file($filename) == false) {
+            throw new Exception("Class file $file not found");
+        }
 
         include_once $filename;
-        $class = 'TGettext_' . $format;
+        $class = 'TGettext_'.$format;
 
         return new $class($file);
     }
 
     /**
-     * poFile2moFile
+     * poFile2moFile.
      *
      * That's a simple fake of the 'msgfmt' console command.  It reads the
      * contents of a GNU PO file and saves them to a GNU MO file.
      *
      * @static
-     * @access  public
-     * @return  mixed   Returns true on success or PEAR_Error on failure.
-     * @param   string  $pofile path to GNU PO file
-     * @param   string  $mofile path to GNU MO file
+     *
+     * @param string $pofile path to GNU PO file
+     * @param string $mofile path to GNU MO file
+     *
+     * @return mixed returns true on success or PEAR_Error on failure
      */
-    function poFile2moFile($pofile, $mofile)
+    public function poFile2moFile($pofile, $mofile)
     {
         if (!is_file($pofile)) {
             throw new Exception("File $pofile doesn't exist.");
         }
 
-        include_once dirname(__FILE__).'/PO.php';
+        include_once __DIR__.'/PO.php';
 
         $PO = new PO($pofile);
         if (true !== ($e = $PO->load())) {
@@ -126,50 +125,55 @@ class TGettext
     }
 
     /**
-     * prepare
+     * prepare.
      *
      * @static
-     * @access  protected
-     * @return  string
-     * @param   string  $string
-     * @param   bool    $reverse
+     *
+     * @param string $string
+     * @param bool   $reverse
+     *
+     * @return string
      */
-    function prepare($string, $reverse = false)
+    public function prepare($string, $reverse = false)
     {
         if ($reverse) {
-            $smap = array('"', "\n", "\t", "\r");
-            $rmap = array('\"', '\\n"' . "\n" . '"', '\\t', '\\r');
+            $smap = ['"', "\n", "\t", "\r"];
+            $rmap = ['\"', '\\n"'."\n".'"', '\\t', '\\r'];
+
             return (string) str_replace($smap, $rmap, $string);
         } else {
-        	$string = $string ? preg_replace('/"\s+"/', '', $string) : $string;
-            $smap = array('\\n', '\\r', '\\t', '\"');
-            $rmap = array("\n", "\r", "\t", '"');
+            $string = $string ? preg_replace('/"\s+"/', '', $string) : $string;
+            $smap = ['\\n', '\\r', '\\t', '\"'];
+            $rmap = ["\n", "\r", "\t", '"'];
+
             return (string) str_replace($smap, $rmap, $string);
         }
     }
 
     /**
-     * meta2array
+     * meta2array.
      *
      * @static
-     * @access  public
-     * @return  array
-     * @param   string  $meta
+     *
+     * @param string $meta
+     *
+     * @return array
      */
-    function meta2array($meta)
+    public function meta2array($meta)
     {
-        $array = array();
+        $array = [];
         foreach (explode("\n", $meta) as $info) {
             if ($info = trim($info)) {
-                list($key, $value) = explode(':', $info, 2);
+                [$key, $value] = explode(':', $info, 2);
                 $array[trim($key)] = trim($value);
             }
         }
+
         return $array;
     }
 
     /**
-     * toArray
+     * toArray.
      *
      * Returns meta info and strings as an array of a structure like that:
      * <code>
@@ -189,16 +193,16 @@ class TGettext
      * </code>
      *
      * @see     fromArray()
-     * @access  protected
-     * @return  array
+     *
+     * @return array
      */
-    function toArray()
+    public function toArray()
     {
-    	return array('meta' => $this->meta, 'strings' => $this->strings);
+        return ['meta' => $this->meta, 'strings' => $this->strings];
     }
 
     /**
-     * fromArray
+     * fromArray.
      *
      * Assigns meta info and strings from an array of a structure like that:
      * <code>
@@ -218,50 +222,52 @@ class TGettext
      * </code>
      *
      * @see     toArray()
-     * @access  protected
-     * @return  bool
-     * @param   array       $array
+     *
+     * @param array $array
+     *
+     * @return bool
      */
-    function fromArray($array)
+    public function fromArray($array)
     {
-    	if (!array_key_exists('strings', $array)) {
-    	    if (count($array) != 2) {
+        if (!array_key_exists('strings', $array)) {
+            if (count($array) != 2) {
                 return false;
-    	    } else {
-    	        list($this->meta, $this->strings) = $array;
+            } else {
+                [$this->meta, $this->strings] = $array;
             }
-    	} else {
+        } else {
             $this->meta = @$array['meta'];
             $this->strings = @$array['strings'];
         }
+
         return true;
     }
 
     /**
-     * toMO
+     * toMO.
      *
-     * @access  protected
-     * @return  object  File_Gettext_MO
+     * @return object File_Gettext_MO
      */
-    function toMO()
+    public function toMO()
     {
-        include_once dirname(__FILE__).'/MO.php';
-        $MO = new MO;
+        include_once __DIR__.'/MO.php';
+        $MO = new MO();
         $MO->fromArray($this->toArray());
+
         return $MO;
     }
 
     /**
-     * toPO
+     * toPO.
      *
-     * @access  protected
-     * @return  object      File_Gettext_PO
+     * @return object File_Gettext_PO
      */
-    function toPO()
+    public function toPO()
     {
-        include_once dirname(__FILE__).'/PO.php';
-        $PO = new PO;
+        include_once __DIR__.'/PO.php';
+        $PO = new PO();
         $PO->fromArray($this->toArray());
+
         return $PO;
     }
 }

@@ -28,23 +28,18 @@
  */
 class IndexInfo {
 
-    /** name of the index */
-    private $name;
-
     /** columns in this index */
-    private $columns = array();
+    private $columns = [];
 
-    /** uniqueness flag */
-    private $isUnique = false;
-
-    /** additional vendor specific information */
-    private $vendorSpecificInfo = array();
-
-    function __construct($name, $isUnique = false, $vendorInfo = array())
+    function __construct(
+        /** name of the index */
+        private $name,
+        /** uniqueness flag */
+        private $isUnique = false,
+        /** additional vendor specific information */
+        private $vendorSpecificInfo = []
+    )
     {
-        $this->name = $name;
-        $this->isUnique = $isUnique;
-        $this->vendorSpecificInfo = $vendorInfo;
     }
 
     public function isUnique()

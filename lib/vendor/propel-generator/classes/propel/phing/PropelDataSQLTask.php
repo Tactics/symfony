@@ -194,7 +194,7 @@ class PropelDataSQLTask extends AbstractPropelDataModelTask {
 						$builder = DataModelBuilder::builderFactory($currTable, 'datasql');
 					}
 					$sql = $builder->buildRowSql($dataRow);
-					fwrite($fp, $sql);
+					fwrite($fp, (string) $sql);
 				}
 
 				fclose($fp);

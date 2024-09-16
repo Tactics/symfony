@@ -38,7 +38,7 @@ class PgsqlDDLBuilder extends DDLBuilder {
 	 *
 	 * @var        Array of schema names
 	 */
-	protected static $addedSchemas = array();
+	protected static $addedSchemas = [];
 
 	/**
 	 * Get the schema for the current table
@@ -101,7 +101,7 @@ DROP TABLE ".$this->quoteIdentifier($table->getName())." CASCADE;
 ";
 		if ($table->getIdMethod() == "native") {
 			$script .= "
-DROP SEQUENCE ".$this->quoteIdentifier(strtolower($table->getSequenceName())).";
+DROP SEQUENCE ".$this->quoteIdentifier(strtolower((string) $table->getSequenceName())).";
 ";
 		}
 	}
@@ -137,7 +137,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 (
 	";
 
-		$lines = array();
+		$lines = [];
 
 		foreach ($table->getColumns() as $col) {
 			$lines[] = $this->getColumnDDL($col);
@@ -196,7 +196,7 @@ COMMENT ON COLUMN ".$this->quoteIdentifier($table->getName()).".".$this->quoteId
 
 		if ($table->getIdMethod() == "native") {
 			$script .= "
-CREATE SEQUENCE ".$this->quoteIdentifier(strtolower($table->getSequenceName())).";
+CREATE SEQUENCE ".$this->quoteIdentifier(strtolower((string) $table->getSequenceName())).";
 ";
 		}
 	}

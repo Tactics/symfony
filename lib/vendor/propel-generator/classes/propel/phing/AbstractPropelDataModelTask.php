@@ -37,12 +37,12 @@ abstract class AbstractPropelDataModelTask extends Task {
 	 * Fileset of XML schemas which represent our data models.
 	 * @var        array Fileset[]
 	 */
-	protected $schemaFilesets = array();
+	protected $schemaFilesets = [];
 
 	/**
 	 * Data models that we collect. One from each XML schema file.
 	 */
-	protected $dataModels = array();
+	protected $dataModels = [];
 
 	/**
 	 * Have datamodels been initialized?
@@ -381,7 +381,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 	 */
 	protected function loadDataModels()
 	{
-		$ads = array();
+		$ads = [];
 
 		// Get all matched files from schemaFilesets
 		foreach($this->schemaFilesets as $fs) {
@@ -450,8 +450,8 @@ abstract class AbstractPropelDataModelTask extends Task {
 		if (!$this->packageObjectModel) {
 
 			$this->dataModels = $ads;
-			$this->databaseNames = array(); // doesn't seem to be used anywhere
-			$this->dataModelDbMap = array();
+			$this->databaseNames = []; // doesn't seem to be used anywhere
+			$this->dataModelDbMap = [];
 
 			// Different datamodels may state the same database
 			// names, we just want the unique names of databases.
@@ -560,10 +560,10 @@ abstract class AbstractPropelDataModelTask extends Task {
 	protected function getPropelProperties()
 	{
 		$allProps = $this->getProject()->getProperties();
-		$renamedPropelProps = array();
+		$renamedPropelProps = [];
 		foreach ($allProps as $key => $propValue) {
-			if (strpos($key, "propel.") === 0) {
-				$newKey = substr($key, strlen("propel."));
+			if (str_starts_with((string) $key, "propel.")) {
+				$newKey = substr((string) $key, strlen("propel."));
 				$j = strpos($newKey, '.');
 				while ($j !== false) {
 					$newKey =  substr($newKey, 0, $j) . ucfirst(substr($newKey, $j + 1));
@@ -584,10 +584,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 	protected function getPropelProperty($name)
 	{
 		$props = $this->getPropelProperties();
-		if (isset($props[$name])) {
-			return $props[$name];
-		}
-		return null; // just to be explicit
+		return $props[$name] ?? null; // just to be explicit
 	}
 
 	/**

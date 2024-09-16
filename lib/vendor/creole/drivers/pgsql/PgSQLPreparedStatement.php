@@ -48,7 +48,7 @@ class PgSQLPreparedStatement extends PreparedStatementCommon implements Prepared
      */
     private function arrayToStr($arr)
     {
-        $parts = array();
+        $parts = [];
         foreach((array)$arr as $el) {
             if (is_array($el)) {
                 $parts[] = $this->arrayToStr($el);

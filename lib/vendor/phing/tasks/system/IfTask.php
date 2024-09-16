@@ -110,7 +110,7 @@ class IfTask extends ConditionBase {
 
 
     private $thenTasks = null;
-    private $elseIfTasks = array();
+    private $elseIfTasks = [];
     private $elseTasks = null;
 
     /***

@@ -29,7 +29,7 @@
  */
 class PHPUnit2Util
 {
-	protected static $definedClasses = array();
+	protected static $definedClasses = [];
 	
 	/**
 	 * Returns the package of a class as defined in the docblock of the class using @package
@@ -61,7 +61,7 @@ class PHPUnit2Util
 	 */
 	static function getClassFromFileName($filename)
 	{
-		$filename = basename($filename);
+		$filename = basename((string) $filename);
 		
 		$rpos = strrpos($filename, '.');
 		
@@ -114,7 +114,7 @@ class PHPUnit2Util
 		}
 		else
 		{
-			return array();
+			return [];
 		}
 	}
 }

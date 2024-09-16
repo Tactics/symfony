@@ -55,7 +55,7 @@ class MSSQLSRVTableInfo extends TableInfo {
             $precision = $row['PRECISION'];
             $scale = $row['SCALE'];
 			$identity = false;
-			if (strtolower($type) == "int identity") {
+			if (strtolower((string) $type) == "int identity") {
 			    $identity = true;
 			}
             $this->columns[$name] = new ColumnInfo($this, $name, MSSQLSRVTypes::getType($type), $type, $length, $precision, $scale, $is_nullable, $default, $identity);

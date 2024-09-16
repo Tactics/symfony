@@ -51,12 +51,6 @@ abstract class PreparedStatementCommon {
      * @var int
      */
     protected $offset = 0;
-    
-    /**
-     * The SQL this class operates on.
-     * @var string
-     */
-    protected $sql;
 
     /**
      * Possibly contains a cached prepared SQL Statement.
@@ -90,7 +84,7 @@ abstract class PreparedStatementCommon {
      * Map of index => value for bound params.
      * @var array string[]
      */
-    protected $boundInVars = array();    
+    protected $boundInVars = [];    
     
     /**
      * Temporarily hold a ResultSet object after an execute() query.
@@ -112,12 +106,14 @@ abstract class PreparedStatementCommon {
      * @param array $positions The positions in SQL of ?'s.
      * @param restult $stmt If the driver supports prepared queries, then $stmt will contain the statement to use.
      */ 
-    public function __construct(Connection $conn, $sql)
+    public function __construct(Connection $conn, /**
+     * The SQL this class operates on.
+     */
+    protected $sql)
     {
         $this->conn = $conn;
-        $this->sql = $sql;
     
-	$this->positions = $this->parseQuery ( $sql );
+	$this->positions = $this->parseQuery ( $this->sql );
         // save processing later in cases where we may repeatedly exec statement
 	$this->positionsCount = count ( $this->positions );
     }
@@ -131,7 +127,7 @@ abstract class PreparedStatementCommon {
     protected function parseQuery ( $sql )
     {
 
-        $positions = array();
+        $positions = [];
 	// match anything ? ' " or \ in $sql with an early out if we find nothing
         if ( preg_match_all ( '([\?]|[\']|[\"]|[\\\])', $sql, $matches, PREG_OFFSET_CAPTURE ) !== 0 ) {
                 $matches = $matches['0'];
@@ -307,7 +303,7 @@ abstract class PreparedStatementCommon {
      * @return ResultSet
      * @throws SQLException if a database access error occurs.
      */
-	public function executeQuery($p1 = null, $fetchmode = null)
+	public function executeQuery(mixed $p1 = null, $fetchmode = null)
 	{    
 	    $params = null;
 		if ($fetchmode !== null) {
@@ -365,17 +361,16 @@ abstract class PreparedStatementCommon {
     
     /**
      * A generic set method.
-     * 
+     *
      * You can use this if you don't want to concern yourself with the details.  It involves
      * slightly more overhead than the specific settesr, since it grabs the PHP type to determine
      * which method makes most sense.
-     * 
+     *
      * @param int $paramIndex
-     * @param mixed $value
      * @return void
      * @throws SQLException
      */
-    function set($paramIndex, $value)
+    function set($paramIndex, mixed $value)
     {
         $type = gettype($value);
         if ($type == "object") {
@@ -389,7 +384,7 @@ abstract class PreparedStatementCommon {
                  // it does, then this method just shouldn't be used).
                  $this->setTimestamp($paramIndex, $value);
             } else {
-                throw new SQLException("Unsupported object type passed to set(): " . get_class($value));
+                throw new SQLException("Unsupported object type passed to set(): " . $value::class);
             }
         } else {
 	    switch ( $type ) {

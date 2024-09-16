@@ -34,7 +34,7 @@ include_once 'phing/types/Parameter.php';
 class PhingFilterReader extends DataType {
 
     private $className;
-    private $parameters = array();
+    private $parameters = [];
     private $classPath;
 
     function setClassName($className) {
@@ -96,7 +96,7 @@ class PhingFilterReader extends DataType {
 		
     function getParams() {
         // We return a COPY
-        $ret = array();
+        $ret = [];
         for($i=0,$size=count($this->parameters); $i < $size; $i++) {
             $ret[] = clone $this->parameters[$i];
         }

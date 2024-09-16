@@ -62,13 +62,13 @@ class PhingTask extends Task {
     private $inheritRefs = false;
 
     /** the properties to pass to the new project */
-    private $properties = array();
+    private $properties = [];
 
     /** the references to pass to the new project */
-    private $references = array();
+    private $references = [];
 
     /** The filesets that contain the files PhingTask is to be run on. */
-    private $filesets = array();
+    private $filesets = [];
 
     /** the temporary project created to run the build file */
     private $newProject;
@@ -400,7 +400,7 @@ class PhingTask extends Task {
 
         $newReferences = $this->newProject->getReferences();
 
-        $subprojRefKeys = array();
+        $subprojRefKeys = [];
 
         if (count($this->references) > 0) {
             for ($i=0, $count=count($this->references); $i < $count; $i++) {
@@ -469,7 +469,7 @@ class PhingTask extends Task {
 
         if ($copy instanceof ProjectComponent) {
             $copy->setProject($this->newProject);
-        } elseif (in_array('setProject', get_class_methods(get_class($copy)))) {
+        } elseif (in_array('setProject', get_class_methods($copy::class))) {
             $copy->setProject($this->newProject);
 		} elseif ($copy instanceof Project) {
 			// don't copy the old "Project" itself

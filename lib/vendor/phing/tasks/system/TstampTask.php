@@ -32,7 +32,7 @@
  */
 class TstampTask extends Task
 {
-	private $customFormats = array();
+	private $customFormats = [];
 
 	private $prefix = "";
 

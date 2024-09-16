@@ -65,7 +65,7 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
 
         $persistent = ($flags & Creole::PERSISTENT === Creole::PERSISTENT);
 
-        $protocol = (isset($dsninfo['protocol'])) ? $dsninfo['protocol'] : 'tcp';
+        $protocol = $dsninfo['protocol'] ?? 'tcp';
         $connstr = '';
 
         if ($protocol == 'tcp') {
@@ -78,13 +78,13 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
         }
 
         if (isset($dsninfo['database'])) {
-            $connstr .= ' dbname=\'' . addslashes($dsninfo['database']) . '\'';
+            $connstr .= ' dbname=\'' . addslashes((string) $dsninfo['database']) . '\'';
         }
         if (!empty($dsninfo['username'])) {
-            $connstr .= ' user=\'' . addslashes($dsninfo['username']) . '\'';
+            $connstr .= ' user=\'' . addslashes((string) $dsninfo['username']) . '\'';
         }
         if (!empty($dsninfo['password'])) {
-            $connstr .= ' password=\'' . addslashes($dsninfo['password']) . '\'';
+            $connstr .= ' password=\'' . addslashes((string) $dsninfo['password']) . '\'';
         }
         if (!empty($dsninfo['options'])) {
             $connstr .= ' options=' . $dsninfo['options'];
@@ -247,7 +247,7 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
     /**
      * @see Connection::prepareCall()
      */
-    public function prepareCall($sql) {
+    public function prepareCall($sql): never {
         throw new SQLException('PostgreSQL does not support stored procedures.');
     }
 

@@ -148,7 +148,7 @@ class StripPhpComments extends BaseFilterReader implements ChainableReader {
                         } else if ( $ch === "*" ) {
                             while ( $ch !== -1 ) {
                                 $ch = $this->in->readChar();
-                                while ( $ch === "*" && $ch !== -1 ) {
+                                while ( $ch === "*" && 0 !== -1 ) {
                                     $ch = $this->in->readChar();
                                 }
 

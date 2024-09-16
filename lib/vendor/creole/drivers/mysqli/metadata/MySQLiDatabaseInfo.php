@@ -44,7 +44,7 @@ class MySQLiDatabaseInfo extends DatabaseInfo {
         }
         
         while ($row = mysqli_fetch_row($result)) {
-            $this->tables[strtoupper($row[0])] = new MySQLiTableInfo($this, $row[0]);
+            $this->tables[strtoupper((string) $row[0])] = new MySQLiTableInfo($this, $row[0]);
         }
     }
 

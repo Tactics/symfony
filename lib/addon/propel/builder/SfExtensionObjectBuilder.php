@@ -9,51 +9,50 @@
  */
 
 /**
- * @package    symfony
- * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: SfExtensionObjectBuilder.php 2624 2006-11-07 09:34:59Z fabien $
  */
 class SfExtensionObjectBuilder extends PHP5ExtensionObjectBuilder
 {
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
+    protected function addIncludes(&$script)
     {
-      return;
+        if (!DataModelBuilder::getBuildProperty('builderAddIncludes')) {
+            return;
+        }
+
+        parent::addIncludes($script);
     }
 
-    parent::addIncludes($script);
-  }
+    protected function addClassOpen(&$script)
+    {
+        $table = $this->getTable();
+        $tableName = $table->getName();
+        $tableDesc = $table->getDescription();
 
-  protected function addClassOpen(&$script)
-  {
-    $table = $this->getTable();
-    $tableName = $table->getName();
-    $tableDesc = $table->getDescription();
+        $baseClassname = $this->getObjectBuilder()->getClassname();
 
-    $baseClassname = $this->getObjectBuilder()->getClassname();
-
-    $script .= "
+        $script .= "
 /**
  * Subclass for representing a row from the '$tableName' table.
  *
  * $tableDesc
  *
- * @package ".$this->getPackage()."
+ * @package ".$this->getPackage().'
  */
-class ".$this->getClassname()." extends $baseClassname
+class '.$this->getClassname()." extends $baseClassname
 {";
-  }
+    }
 
-  /**
-   * Closes class.
-   * @param string &$script The script will be modified in this method.
-   */
-  protected function addClassClose(&$script)
-  {
-    $script .= "
+    /**
+     * Closes class.
+     *
+     * @param string &$script The script will be modified in this method
+     */
+    protected function addClassClose(&$script)
+    {
+        $script .= '
 }
-";
-  }
+';
+    }
 }

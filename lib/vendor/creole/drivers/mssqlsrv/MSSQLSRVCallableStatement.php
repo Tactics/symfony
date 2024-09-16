@@ -42,36 +42,13 @@ include_once 'creole/CreoleTypes.php';
 class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements CallableStatement {
 
   /** Output variables */
-  private $boundOutVars = array();
+  private $boundOutVars = [];
 
   /**
    * Match Creole types to SQL Server types
    * @var array
    */
-  private static $typeMap = array(
-  CreoleTypes::BOOLEAN => SQLBIT,
-  CreoleTypes::BIGINT => SQLINT4,
-  CreoleTypes::SMALLINT => SQLINT2,
-  CreoleTypes::TINYINT => SQLINT2,
-  CreoleTypes::INTEGER => SQLINT4,
-  CreoleTypes::CHAR => SQLCHAR,
-  CreoleTypes::VARCHAR => SQLVARCHAR,
-  CreoleTypes::TEXT => SQLTEXT,
-  CreoleTypes::FLOAT => SQLFLT8,
-  CreoleTypes::DOUBLE => SQLFLT8,
-  CreoleTypes::DATE => SQLVARCHAR,
-  CreoleTypes::TIME => SQLVARCHAR,
-  CreoleTypes::TIMESTAMP => SQLVARCHAR,
-  CreoleTypes::VARBINARY => SQLVARCHAR,
-  CreoleTypes::NUMERIC => SQLINT4,
-  CreoleTypes::DECIMAL => SQLFLT8
-  );
-
-  /**
-   * Statement created by mssql_init()
-   * @var resource
-   */
-  private $stmt;
+  private static $typeMap = [CreoleTypes::BOOLEAN => SQLBIT, CreoleTypes::BIGINT => SQLINT4, CreoleTypes::SMALLINT => SQLINT2, CreoleTypes::TINYINT => SQLINT2, CreoleTypes::INTEGER => SQLINT4, CreoleTypes::CHAR => SQLCHAR, CreoleTypes::VARCHAR => SQLVARCHAR, CreoleTypes::TEXT => SQLTEXT, CreoleTypes::FLOAT => SQLFLT8, CreoleTypes::DOUBLE => SQLFLT8, CreoleTypes::DATE => SQLVARCHAR, CreoleTypes::TIME => SQLVARCHAR, CreoleTypes::TIMESTAMP => SQLVARCHAR, CreoleTypes::VARBINARY => SQLVARCHAR, CreoleTypes::NUMERIC => SQLINT4, CreoleTypes::DECIMAL => SQLFLT8];
 
 
   /**
@@ -92,10 +69,12 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
    * @param Connection $conn
    * @param resource $stmt
    */
-  public function __construct(Connection $conn, $stmt)
+  public function __construct(Connection $conn, /**
+   * Statement created by mssql_init()
+   */
+  private $stmt)
   {
     $this->conn = $conn;
-    $this->stmt = $stmt;
   }
 
   /**
@@ -165,7 +144,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
   function registerOutParameter($paramIndex, $sqlType, $maxLength = null)
   {
     // TODO:
-    $this->params[$paramIndex] = array($value, SQLSRV_PARAM_IN, 'SQLSRV_PHPTYPE_' . $this->boundOutVars[$paramIndex]);
+    $this->params[$paramIndex] = [$value, SQLSRV_PARAM_IN, 'SQLSRV_PHPTYPE_' . $this->boundOutVars[$paramIndex]];
   }
 
   /**
@@ -179,7 +158,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     } else {
       $value = serialize($value);
       $sql_param = ($out) ? SQLSRV_PARAM_INOUT : SQLSRV_PARAM_IN;
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLTEXT);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLTEXT];
       //            mssql_bind($this->stmt, $paramIndex, $value, SQLTEXT, $out);
     }
   }
@@ -195,7 +174,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     } else {
       $value = ($value) ? 1 : 0;
       $sql_param = ($out) ? SQLSRV_PARAM_INOUT : SQLSRV_PARAM_IN;
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLBIT);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLBIT];
       //           mssql_bind($this->stmt, $paramIndex, $value, SQLBIT, $out);
     }
   }
@@ -213,8 +192,8 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
         $blob = $blob->__toString();
       }
       if ($out) $this->boundOutVars[$paramIndex] = &$blob; // reference means that changes to value, will be reflected
-      $data = unpack("H*hex", $blob);
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLTEXT);
+      $data = unpack("H*hex", (string) $blob);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLTEXT];
       //            mssql_bind($this->stmt, $paramIndex, $data, SQLTEXT, $out);
     }
   }
@@ -231,7 +210,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
         $clob = $clob->__toString();
       }
       if ($out) $this->boundOutVars[$paramIndex] = &$clob; // reference means that changes to value, will be reflected
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLTEXT);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLTEXT];
       //            mssql_bind($this->stmt, $paramIndex, $clob, SQLTEXT, $out);
     }
   }
@@ -246,7 +225,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
       $this->setNull($paramIndex);
     } else {
       if (is_numeric($value)) $value = date("Y-m-d", $value);
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR];
       //            mssql_bind($this->stmt, $paramIndex, $value, SQLVARCHAR, $out);
     }
   }
@@ -261,7 +240,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
       $this->setNull($paramIndex);
     } else {
       $value = (float) $value;
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLFLT8);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLFLT8];
       //            mssql_bind($this->stmt, $paramIndex, $value, SQLFLT8, $out);
     }
   }
@@ -276,7 +255,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
       $this->setNull($paramIndex);
     } else {
       $value = (int) $value;
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLINT4);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLINT4];
       //            mssql_bind($this->stmt, $paramIndex, $value, SQLINT4, $out);
     }
   }
@@ -288,7 +267,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
   {
     // hopefully type isn't essential here :)
     $value = null; // wants a var to pass by reference
-    $this->params[$paramIndex] = array(NULL, $sql_param, 'SQLSRV_PHPTYPE_' . SQLINT4);
+    $this->params[$paramIndex] = [NULL, $sql_param, 'SQLSRV_PHPTYPE_' . SQLINT4];
     //        mssql_bind($this->stmt, $paramIndex, $value, $type=null, $out=false, $is_null=true);
   }
 
@@ -302,7 +281,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
       $this->setNull($paramIndex);
     } else {
       $value = (string) $value;
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR];
 //      mssql_bind($this->stmt, $paramIndex, $value, SQLVARCHAR, $out);
     }
   }
@@ -317,7 +296,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
       $this->setNull($paramIndex);
     } else {
       if (is_numeric($value)) $value = date("H:i:s", $value);
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR];
 //      mssql_bind($this->stmt, $paramIndex, $value, SQLVARCHAR, $out);
     }
   }
@@ -332,7 +311,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
       $this->setNull($paramIndex);
     } else {
       if (is_numeric($value)) $value = date('Y-m-d H:i:s', $value);
-      $this->params[$paramIndex] = array($value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR);
+      $this->params[$paramIndex] = [$value, $sql_param, 'SQLSRV_PHPTYPE_' . SQLVARCHAR];
 //      mssql_bind($this->stmt, $paramIndex, $value, SQLVARCHAR, $out);
     }
   }
@@ -404,7 +383,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     }
     if ($this->boundOutVars[$paramIndex] === null) { return null; }
 
-    $ts = strtotime($this->boundOutVars[$paramIndex]);
+    $ts = strtotime((string) $this->boundOutVars[$paramIndex]);
     if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
       throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
     }
@@ -459,7 +438,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     }
     if ($this->boundOutVars[$paramIndex] === null) { return null; }
 
-    $ts = strtotime($this->boundOutVars[$paramIndex]);
+    $ts = strtotime((string) $this->boundOutVars[$paramIndex]);
     if ($ts === -1  || $ts === false) { // in PHP 5.1 return value changes to FALSE
       throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
     }
@@ -477,7 +456,7 @@ class MSSQLSRVCallableStatement extends MSSQLSRVPreparedStatement implements Cal
     }
     if ($this->boundOutVars[$paramIndex] === null) { return null; }
 
-    $ts = strtotime($this->boundOutVars[$paramIndex]);
+    $ts = strtotime((string) $this->boundOutVars[$paramIndex]);
     if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
       throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
     }

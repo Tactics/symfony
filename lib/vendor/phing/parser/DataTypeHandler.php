@@ -38,7 +38,6 @@ include_once 'phing/RuntimeConfigurable.php';
 
 class DataTypeHandler extends AbstractHandler {
 
-    private $target;
     private $element;
     private $wrapper;
 
@@ -50,9 +49,8 @@ class DataTypeHandler extends AbstractHandler {
      * @param ProjectConfigurator $configurator The ProjectConfigurator object
      * @param Target $target The target object this datatype is contained in (null for top-level datatypes).
      */
-    function __construct(AbstractSAXParser $parser, AbstractHandler $parentHandler, ProjectConfigurator $configurator, $target = null) { // FIXME b2 typehinting
+    function __construct(AbstractSAXParser $parser, AbstractHandler $parentHandler, ProjectConfigurator $configurator, private $target = null) { // FIXME b2 typehinting
         parent::__construct($parser, $parentHandler);
-        $this->target = $target;
         $this->configurator = $configurator;
     }
 

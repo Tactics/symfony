@@ -107,19 +107,12 @@ class FilenameSelector extends BaseExtendSelector {
         if ($parameters !== null) {
             for ($i=0, $len=count($parameters); $i < $len; $i++) {
                 $paramname = $parameters[$i]->getName();
-                switch(strtolower($paramname)) {
-                    case self::NAME_KEY:
-                        $this->setName($parameters[$i]->getValue());
-                        break;
-                    case self::CASE_KEY:
-                        $this->setCasesensitive($parameters[$i]->getValue());
-                        break;
-                    case self::NEGATE_KEY:
-                        $this->setNegate($parameters[$i]->getValue());
-                        break;
-                    default:
-                        $this->setError("Invalid parameter " . $paramname);
-                }
+                match (strtolower((string) $paramname)) {
+                    self::NAME_KEY => $this->setName($parameters[$i]->getValue()),
+                    self::CASE_KEY => $this->setCasesensitive($parameters[$i]->getValue()),
+                    self::NEGATE_KEY => $this->setNegate($parameters[$i]->getValue()),
+                    default => $this->setError("Invalid parameter " . $paramname),
+                };
             } // for each param
         } // if params
     }

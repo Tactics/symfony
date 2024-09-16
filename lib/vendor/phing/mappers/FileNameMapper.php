@@ -35,7 +35,7 @@ interface FileNameMapper {
      * @param mixed $sourceFileName The data the mapper works on.
      * @return  array The data after the mapper has been applied; must be in array format (for some reason).
      */
-    public function main($sourceFileName);
+    public function main(mixed $sourceFileName);
 
     /**
      * Accessor. Sets the to property. The actual implementation

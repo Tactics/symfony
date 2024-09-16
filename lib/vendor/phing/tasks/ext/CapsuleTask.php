@@ -46,7 +46,7 @@ class CapsuleTask extends Task {
      * Any vars assigned via the build file.
      * @var array AssignedVar[]
      */
-    protected $assignedVars = array();
+    protected $assignedVars = [];
 
     /**
      * This is the control template that governs the output.
@@ -251,7 +251,7 @@ class CapsuleTask extends Task {
                 $this->log("Using contextProperties file: " . $fullPath->toString());
                 $source->load($fullPath);
 
-            } catch (Exception $e) {
+            } catch (Exception) {
 
               throw new BuildException("Context properties file " . $sources[$i] .
                             " could not be found in the file system!");
@@ -385,10 +385,10 @@ class CapsuleTask extends Task {
             // for properties ending in file.contents:
             // in that case we dump the contents of the file
             // as the "value" for the Property.
-            if (preg_match('/file\.contents$/', $property)) {
+            if (preg_match('/file\.contents$/', (string) $property)) {
                 // pull in contents of file specified
 
-                $property = substr($property, 0, strpos($property, "file.contents") - 1);
+                $property = substr((string) $property, 0, strpos((string) $property, "file.contents") - 1);
 
                 // reset value, and then
                 // read in teh contents of the file into that var

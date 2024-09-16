@@ -149,7 +149,7 @@ class BaseFilterReader extends FilterReader {
      */
     function log($msg, $level = Project::PROJECT_MSG_INFO) {
         if ($this->project !== null) {
-            $this->project->log("[filter:".get_class($this)."] ".$msg, $level);
+            $this->project->log("[filter:".static::class."] ".$msg, $level);
         }
     }
 }

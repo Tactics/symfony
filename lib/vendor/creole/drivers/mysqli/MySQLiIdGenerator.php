@@ -29,17 +29,13 @@ require_once 'creole/IdGenerator.php';
  * @package   creole.drivers.mysqli
  */
 class MySQLiIdGenerator implements IdGenerator {
-    /** Connection object that instantiated this class */
-    private $conn;
-
     /**
      * Creates a new IdGenerator class, saves passed connection for use
      * later by getId() method.
      * @param Connection $conn
      */
-    public function __construct(Connection $conn)
+    public function __construct(private readonly Connection $conn)
     {
-        $this->conn = $conn;
     }
 
     /**

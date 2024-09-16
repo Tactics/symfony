@@ -5,7 +5,7 @@
  * By Ivan: web AT microstudi DOT com
  */
 
-$PHPMAILER_LANG = array(); 
+$PHPMAILER_LANG = []; 
 
 $PHPMAILER_LANG["provide_address"] = 'S\'ha de proveir almenys una adre�a d\'email com a destinatari.';
 $PHPMAILER_LANG["mailer_not_supported"] = ' mailer no est� suportat';

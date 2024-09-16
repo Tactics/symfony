@@ -29,46 +29,14 @@
  */
 class ColumnInfo {
 
-     // FIXME
-     //    - Currently all member attributes are public.  This should be fixed
-     // when PHP's magic __sleep() and __wakeup() functions & serialization support
-     // handles protected/private members. (if ever)
-
-    /** Column name */
-    public $name;
-
-    /** Column Creole type. */
-    public $type;
-
-    /** Column native type */
-    public $nativeType;
-
-    /** Column length */
-    public $size;
-    
-    /** Column presision */
-    public $precision;
-
-    /** Column scale (number of digits after decimal ) */
-    public $scale;
-
-    /** Is nullable? */
-    public $isNullable;
-
-    /** Default value */
-    public $defaultValue;
-
-    /** Is autoincrement? */
-    public $isAutoIncrement;
-
-    /** Table */
+     /** Table */
     public $table;
 
     /**
      * Additional and optional vendor specific information.
      * @var vendorSpecificInfo
      */
-    protected $vendorSpecificInfo = array();
+    protected $vendorSpecificInfo = [];
 
     /**
      * Construct a new ColumnInfo object.
@@ -79,33 +47,25 @@ class ColumnInfo {
      * @param string $nativeType Native type name.
      * @param int $size Column length.
      * @param int $scale Column scale (number of digits after decimal).
-     * @param boolean $is_nullable Whether col is nullable.
-     * @param mixed $default Default value.
-     * @param boolean $is_auto_increment Whether col is of autoIncrement type.
+     * @param boolean $isNullable Whether col is nullable.
+     * @param mixed $defaultValue Default value.
+     * @param boolean $isAutoIncrement Whether col is of autoIncrement type.
      */
     function __construct(TableInfo
                          $table,
-                         $name,
-                         $type = null,
-                         $nativeType = null,
-                         $size = null,
-                         $precision=null,
-                         $scale = null,
-                         $is_nullable = null,
-                         $default = null,
-                         $is_auto_increment = null,
-                         $vendorInfo = array())
+                         public $name,
+                         public $type = null,
+                         public $nativeType = null,
+                         public $size = null,
+                         /** Column presision */
+                         public $precision=null,
+                         public $scale = null,
+                         public $isNullable = null,
+                         public mixed $defaultValue = null,
+                         public $isAutoIncrement = null,
+                         $vendorInfo = [])
     {
         $this->table = $table;
-        $this->name = $name;
-        $this->type = $type;
-        $this->nativeType = $nativeType;
-        $this->size = $size;
-        $this->precision = $precision;
-        $this->scale = $scale;
-        $this->isNullable = $is_nullable;
-        $this->defaultValue = $default;
-        $this->isAutoIncrement = $is_auto_increment;
         $this->vendorSpecificInfo = $vendorInfo;
     }
 
@@ -117,7 +77,7 @@ class ColumnInfo {
      */
     function __sleep()
     {
-        return array('name', 'type', 'nativeType', 'size', 'precision', 'isNullable', 'defaultValue');
+        return ['name', 'type', 'nativeType', 'size', 'precision', 'isNullable', 'defaultValue'];
     }
 
     /**

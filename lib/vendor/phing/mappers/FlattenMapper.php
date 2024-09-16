@@ -39,7 +39,7 @@ class FlattenMapper implements FileNameMapper {
      */
     function main($sourceFileName) {
         $f = new PhingFile($sourceFileName);
-        return array($f->getName());
+        return [$f->getName()];
     }
 
     /**

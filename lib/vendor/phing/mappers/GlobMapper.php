@@ -69,7 +69,7 @@ class GlobMapper implements FileNameMapper {
         }
         $varpart = $this->_extractVariablePart($_sourceFileName);
         $substitution = $this->toPrefix.$varpart.$this->toPostfix;
-        return array($substitution);
+        return [$substitution];
     }
 
 
@@ -105,9 +105,9 @@ class GlobMapper implements FileNameMapper {
     private function _extractVariablePart($_name) {
         // ergh, i really hate php's string functions .... all but natural
         $start = ($this->prefixLength === 0) ? 0 : $this->prefixLength;
-        $end   = ($this->postfixLength === 0) ? strlen($_name) : strlen($_name) - $this->postfixLength;
+        $end   = ($this->postfixLength === 0) ? strlen((string) $_name) : strlen((string) $_name) - $this->postfixLength;
         $len   = $end-$start;
-        return substr($_name, $start, $len);
+        return substr((string) $_name, $start, $len);
     }
 
 }

@@ -9,20 +9,18 @@
  */
 
 /**
- * @package    symfony
- * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id: SfMultiExtendObjectBuilder.php 1919 2006-09-01 14:41:22Z fabien $
  */
 class SfMultiExtendObjectBuilder extends PHP5MultiExtendObjectBuilder
 {
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
+    protected function addIncludes(&$script)
     {
-      return;
-    }
+        if (!DataModelBuilder::getBuildProperty('builderAddIncludes')) {
+            return;
+        }
 
-    parent::addIncludes($script);
-  }
+        parent::addIncludes($script);
+    }
 }

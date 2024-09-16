@@ -6,7 +6,7 @@
  * Supplied by Dávur Sørensen [www.profo-webdesign.dk]
  */
 
-$PHPMAILER_LANG = array();
+$PHPMAILER_LANG = [];
 
 $PHPMAILER_LANG["provide_address"] = 'Tú skal uppgeva minst ' .
                                      'móttakara-emailadressu(r).';
