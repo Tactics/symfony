@@ -34,6 +34,7 @@ include_once 'creole/drivers/mysqli/MySQLiResultSet.php';
 class MySQLiConnection extends ConnectionCommon implements Connection {
     /** Current database (used in mysqli_select_db()). */
     private $database;
+    private $lastQuery;
 
     /**
      * Connect to a database and log in as the specified user.

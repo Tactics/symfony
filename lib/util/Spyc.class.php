@@ -300,6 +300,7 @@ class Spyc
     protected $_isInline;
     protected $_dumpIndent;
     protected $_dumpWordWrap;
+    protected $_indentSort;
 
     /**
      * Attempts to convert a key / value array item to YAML.
