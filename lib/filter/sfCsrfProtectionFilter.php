@@ -2,6 +2,15 @@
 
 class sfCsrfProtectionFilter extends sfFilter
 {
+    private readonly bool $isStrict;
+
+    public function initialize($context, $parameters = [])
+    {
+        parent::initialize($context, $parameters);
+
+        $this->isStrict = $parameters['is_strict'] ?? true;
+    }
+
     public function execute($filterchain)
     {
         $context = $this->getContext();
@@ -10,6 +19,11 @@ class sfCsrfProtectionFilter extends sfFilter
         $actionEntry = $controller->getActionStack()->getLastEntry();
         /** @var sfAction $actionInstance */
         $actionInstance = $actionEntry->getActionInstance();
+
+        if (!$this->isStrict && $request->isXmlHttpRequest()) {
+            $filterchain->execute();
+            return;
+        }
 
         $actionIsCsrfProtected = $this->actionIsCsrfProtected($actionInstance);
         if (!$actionIsCsrfProtected) {

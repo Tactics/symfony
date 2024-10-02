@@ -43,27 +43,30 @@ class sfMethodFilter extends sfFilter
      */
     private function getRequiredMethod(sfAction $actionInstance): ?RequestMethod
     {
-        $validateAction = 'validate' . ucfirst($actionInstance->getActionName());
-        if (method_exists($actionInstance, $validateAction)) {
-            $refValidateMethod = new ReflectionMethod($actionInstance::class, $validateAction);
-            $attribute = $refValidateMethod->getAttributes(RequiredMethod::class);
+        $actionName = ucfirst($actionInstance->getActionName());
 
-            if (!empty($attribute)) {
-                /** @var RequiredMethod $attributeInstance */
-                $attributeInstance = $attribute[0]->newInstance();
-                return $attributeInstance->getMethod();
+        foreach(['validate', 'execute'] as $actionType) {
+            $requestMethod = $this->getMethodAttribute($actionInstance, $actionType . $actionName);
+            if ($requestMethod) {
+                return $requestMethod;
             }
-
         }
 
-        $executeAction = 'execute' . ucfirst($actionInstance->getActionName());
-        if (method_exists($actionInstance, $executeAction)) {
-            $refExecuteMethod = new ReflectionMethod($actionInstance::class, $executeAction);
-            $attribute = $refExecuteMethod->getAttributes(RequiredMethod::class);
+        return null;
+    }
 
-            if (!empty($attribute)) {
+    /**
+     * @throws ReflectionException
+     */
+    private function getMethodAttribute(sfAction $actionInstance, string $methodName): ?RequestMethod
+    {
+        if (method_exists($actionInstance, $methodName)) {
+            $refMethod = new ReflectionMethod($actionInstance::class, $methodName);
+            $attributes = $refMethod->getAttributes(RequiredMethod::class);
+
+            if (!empty($attributes)) {
                 /** @var RequiredMethod $attributeInstance */
-                $attributeInstance = $attribute[0]->newInstance();
+                $attributeInstance = $attributes[0]->newInstance();
                 return $attributeInstance->getMethod();
             }
         }
