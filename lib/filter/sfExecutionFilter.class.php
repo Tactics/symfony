@@ -94,17 +94,8 @@ class sfExecutionFilter extends sfFilter
                 // process manual validation
                 $validateToRun = 'validate'.ucfirst($actionName);
                 $manualValidated = false;
-                if (method_exists($actionInstance, $validateToRun))
-                {
-                    $manualValidated = $actionInstance->$validateToRun();
-                    //If manual validation is added, we assume that it was a form post. So the request type should be POST
-                    $manualValidated = $manualValidated && $context->getRequest()->getMethod() === sfRequest::POST;
-                }
-                else
-                {
-                    $manualValidated = $actionInstance->validate();
-                }
-
+                $manualValidated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
+                
                 // action is validated if:
                 // - all validation methods (manual and automatic) return true
                 // - or automatic validation returns false but errors have been 'removed' by manual validation
