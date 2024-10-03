@@ -119,30 +119,22 @@ function options_for_select($options = array(), $selected = '', $html_options = 
  */
 function form_tag($url_for_options = '', $options = array())
 {
-  $options = _parse_attributes($options);
+    $options = _parse_attributes($options);
 
-  $html_options = $options;
-  if (!isset($html_options['method']))
-  {
-    $html_options['method'] = 'post';
-  }
+    $html_options = $options;
+    if (!isset($html_options['method'])) {
+        $html_options['method'] = 'post';
+    }
 
-  if (_get_option($html_options, 'multipart'))
-  {
-    $html_options['enctype'] = 'multipart/form-data';
-  }
+    if (_get_option($html_options, 'multipart')) {
+        $html_options['enctype'] = 'multipart/form-data';
+    }
 
-  $html_options['action'] = url_for($url_for_options);
+    $html_options['action'] = url_for($url_for_options);
 
-  if (isset($html_options['name'])) {
-      $formName = $html_options['name'];
-      $csrfManager = new sfCsrfTokenManager($formName, sfCsrfTokenManager::TOKEN_FIELD_NAME, 4 * 60 * 60);
-      $csrfToken = $csrfManager->generateToken(sfCsrfTokenManager::TOKEN_FIELD_NAME);
-  } else {
-      $formName = 'default';
-      $csrfManager = new sfCsrfTokenManager($formName, sfCsrfTokenManager::TOKEN_FIELD_NAME, 4 * 60 * 60);
-      $csrfToken = $csrfManager->generateToken(sfCsrfTokenManager::TOKEN_FIELD_NAME, 20);
-  }
+    $formName = $html_options['name'] ?? 'default';
+    $csrfManager = new sfCsrfTokenManager($formName, sfCsrfTokenManager::TOKEN_FIELD_NAME, 4 * 60 * 60);
+    $csrfToken = $csrfManager->generateToken(sfCsrfTokenManager::TOKEN_FIELD_NAME, maxTokens: $html_options['name'] ? 5 : 20);
     $csrfTag = input_hidden_tag(sfCsrfTokenManager::TOKEN_FIELD_NAME, $csrfToken);
     $nameTag = input_hidden_tag(sfCsrfTokenManager::SESSION_KEY_FIELD_NAME, $formName);
 

@@ -1,6 +1,8 @@
 <?php
 
-class sfMethodFilter extends sfFilter
+declare(strict_types=1);
+
+final class sfMethodFilter extends sfFilter
 {
     private readonly bool $isStrict;
 

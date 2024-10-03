@@ -1,6 +1,8 @@
 <?php
 
-class sfCsrfProtectionFilter extends sfFilter
+declare(strict_types=1);
+
+final class sfCsrfProtectionFilter extends sfFilter
 {
     private readonly bool $isStrict;
 
@@ -25,7 +27,7 @@ class sfCsrfProtectionFilter extends sfFilter
             return;
         }
 
-        $actionIsCsrfProtected = $this->actionIsCsrfProtected($actionInstance);
+        $actionIsCsrfProtected = $request->getMethod() === sfRequest::POST && $this->actionIsCsrfProtected($actionInstance);
         if (!$actionIsCsrfProtected) {
             // no CsrfProtected attribute but _name is in payload
             if ($request->hasParameter(sfCsrfTokenManager::SESSION_KEY_FIELD_NAME)) {

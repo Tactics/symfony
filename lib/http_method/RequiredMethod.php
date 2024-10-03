@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class RequiredMethod
+final class RequiredMethod
 {
     public function __construct(
         private readonly RequestMethod $method

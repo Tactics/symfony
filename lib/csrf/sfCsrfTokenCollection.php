@@ -1,6 +1,8 @@
 <?php
 
-class sfCsrfTokenCollection
+declare(strict_types=1);
+
+final class sfCsrfTokenCollection
 {
     private array $tokens;
 

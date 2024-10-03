@@ -1,6 +1,8 @@
 <?php
 
-class sfCsrfToken
+declare(strict_types=1);
+
+final class sfCsrfToken
 {
     private string $token;
     private string $formContext;
