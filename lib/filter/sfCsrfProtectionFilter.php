@@ -1,7 +1,18 @@
 <?php
 
-class sfCsrfProtectionFilter extends sfFilter
+declare(strict_types=1);
+
+final class sfCsrfProtectionFilter extends sfFilter
 {
+    private readonly bool $isStrict;
+
+    public function initialize($context, $parameters = [])
+    {
+        parent::initialize($context, $parameters);
+
+        $this->isStrict = $parameters['is_strict'] ?? true;
+    }
+
     public function execute($filterchain)
     {
         $context = $this->getContext();
@@ -11,7 +22,12 @@ class sfCsrfProtectionFilter extends sfFilter
         /** @var sfAction $actionInstance */
         $actionInstance = $actionEntry->getActionInstance();
 
-        $actionIsCsrfProtected = $this->actionIsCsrfProtected($actionInstance);
+        if (!$this->isStrict && $request->isXmlHttpRequest()) {
+            $filterchain->execute();
+            return;
+        }
+
+        $actionIsCsrfProtected = $request->getMethod() === sfRequest::POST && $this->actionIsCsrfProtected($actionInstance);
         if (!$actionIsCsrfProtected) {
             // no CsrfProtected attribute but _name is in payload
             if ($request->hasParameter(sfCsrfTokenManager::SESSION_KEY_FIELD_NAME)) {

@@ -1,6 +1,8 @@
 <?php
 
-class sfCsrfTokenManager
+declare(strict_types=1);
+
+final class sfCsrfTokenManager
 {
     public const TOKEN_FIELD_NAME = '_token';
     public const SESSION_KEY_FIELD_NAME = '_name';
