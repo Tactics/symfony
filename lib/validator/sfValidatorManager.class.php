@@ -181,7 +181,6 @@ class sfValidatorManager
         $error = null;
         $errorName = null;
         $force = null !== $data['group'] ? $data['group']['_force'] : false;
-        $retval = true;
         $value = null;
 
         // get our parameter value
@@ -198,11 +197,11 @@ class sfValidatorManager
             }
         } else {
             // we have a parent
-            $errorName = $parent.'{'.$name.'}';
+            $errorName = $parent . '{' . $name . '}';
 
             if ($data['is_file']) {
                 // file
-                $parent = $this->request->getFile($parent.'['.$name.']');
+                $parent = $this->request->getFile($parent . '[' . $name . ']');
 
                 if ($parent != null) {
                     $value = $parent;
@@ -217,10 +216,44 @@ class sfValidatorManager
             }
         }
 
-        // now for the dirty work
+        if (is_array($value['full_path'])) { // fix for multiple file upload
+            foreach (array_keys($value['full_path']) as $fileIndex) {
+                // now for the dirty work
+                list($error, $retval, $data) = $this->nowForTheDirtyWork($data, $value[$fileIndex], $force);
+                if (!$retval) { // vanaf 1 false => false
+                    break;
+                }
+            }
+        } else {
+            // now for the dirty work
+            list($error, $retval, $data) = $this->nowForTheDirtyWork($data, $value, $force);
+        }
+
+
+        if (!$retval) {
+            // set validation status
+            $data['validation_status'] = false;
+
+            // set the request error
+            $this->request->setError($errorName, $error);
+        }
+
+        return $retval;
+    }
+
+    /**
+     * @param $data
+     * @param $value
+     * @param $force
+     * @return array
+     */
+    public function nowForTheDirtyWork($data, $value, $force): array
+    {
+        $retval = true;
+
         if (
             ($data['is_file'] && !$value['name'])
-            || (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value === null || strlen((string) $value) == 0)))
+            || (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value === null || strlen((string)$value) == 0)))
         ) {
             if ($data['required'] || $force) {
                 // it's empty!
@@ -252,14 +285,6 @@ class sfValidatorManager
             }
         }
 
-        if (!$retval) {
-            // set validation status
-            $data['validation_status'] = false;
-
-            // set the request error
-            $this->request->setError($errorName, $error);
-        }
-
-        return $retval;
+        return array($error, $retval, $data);
     }
 }
