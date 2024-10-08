@@ -855,6 +855,12 @@ class BasePeer
             .($havingString ? " HAVING ".$havingString : "")
             .($orderByClause ? " ORDER BY ".implode(",", $orderByClause) : "");
 
+        // Check for wildcard characters
+        $wildcardCount = substr_count($sql, '%') + substr_count($sql, '_')  + substr_count($sql, '*');
+        if ($wildcardCount > 8) {
+            throw new PropelException("SQL query contains too many wildcards.");
+        }
+
         Propel::log($sql . ' [LIMIT: ' . $criteria->getLimit() . ', OFFSET: ' . $criteria->getOffset() . ']', Propel::LOG_DEBUG);
 
         return $sql;
