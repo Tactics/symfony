@@ -216,7 +216,7 @@ class sfValidatorManager
             }
         }
 
-        if (is_array($value['full_path'])) { // fix for multiple file upload
+        if (is_array($value) && isset($value['full_path']) && is_array($value['full_path'])) { // fix for multiple file upload
             foreach (array_keys($value['full_path']) as $fileIndex) {
                 // now for the dirty work
                 list($error, $retval, $data) = $this->nowForTheDirtyWork($data, $value[$fileIndex], $force);
