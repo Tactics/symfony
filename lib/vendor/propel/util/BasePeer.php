@@ -855,8 +855,14 @@ class BasePeer
             .($havingString ? " HAVING ".$havingString : "")
             .($orderByClause ? " ORDER BY ".implode(",", $orderByClause) : "");
 
-        // Check for wildcard characters
-        $wildcardCount = substr_count($sql, '%') + substr_count($sql, '_')  + substr_count($sql, '*');
+        // Check for wildcard characters in the params array
+        $wildcardCount = array_reduce($params, static function($count, $param) {
+            if (isset($param['value']) && is_string($param['value'])) {
+                $count += substr_count($param['value'], '%') + substr_count($param['value'], '_') + substr_count($param['value'], '*');
+            }
+            return $count;
+        }, 0);
+
         if ($wildcardCount > 8) {
             throw new PropelException("SQL query contains too many wildcards.");
         }
