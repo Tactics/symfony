@@ -838,7 +838,7 @@ class BasePeer
                 if ($column && $column->getType() == 'string') {
                     $orderByClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias") . $direction;
                     $selectClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias");
-                } else if (preg_match('/^[\w0-9_]+\.[\w0-9_]+( (ASC|DESC))?$/', $orderByColumn)) {
+                } else if (preg_match('/^([\w0-9_]+\.)?[\w0-9_]+( (ASC|DESC))?$/i', $orderByColumn)) {
                     $orderByClause[] = $orderByColumn;
                 }
             }
