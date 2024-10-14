@@ -178,7 +178,6 @@ class sfValidatorManager
     protected function validate(&$name, &$data, $parent)
     {
         // get defaults
-        $error = null;
         $errorName = null;
         $force = null !== $data['group'] ? $data['group']['_force'] : false;
         $value = null;
@@ -250,6 +249,7 @@ class sfValidatorManager
     public function nowForTheDirtyWork($data, $value, $force): array
     {
         $retval = true;
+        $error = null;
 
         if (
             ($data['is_file'] && !$value['name'])
@@ -263,10 +263,7 @@ class sfValidatorManager
                 // we don't have to validate it
                 $retval = true;
             }
-        } else {
-            // time for the fun
-            $error = null;
-
+        } else { // time for the fun
             // get group force status
             if ($data['group'] != null) {
                 // we set this because we do have a value for a parameter in this group
