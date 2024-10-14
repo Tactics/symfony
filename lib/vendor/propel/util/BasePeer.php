@@ -856,21 +856,20 @@ class BasePeer
             .($orderByClause ? " ORDER BY ".implode(",", $orderByClause) : "");
 
         // Check for wildcard characters in the params array
-        $wildcardCount = array_reduce($params, static function($count, $param) {
+        $tooManyWildcards = false;
+        foreach ($params as $param) {
+            $wilcardsInThisParam = 0;
             if (isset($param['value']) && is_string($param['value'])) {
-                $count += substr_count($param['value'], '%') + substr_count($param['value'], '_') + substr_count($param['value'], '*');
+                $wilcardsInThisParam = substr_count($param['value'], '%') + substr_count($param['value'], '_') + substr_count($param['value'], '*');
             }
-            return $count;
-        }, 0);
-
-        if ($wildcardCount > 8) {
-            throw new PropelException("SQL query contains too many wildcards.");
+            if ($wilcardsInThisParam > 5) {
+                throw new PropelException("SQL query parameter contains too many wildcards.");
+            }
         }
 
         Propel::log($sql . ' [LIMIT: ' . $criteria->getLimit() . ', OFFSET: ' . $criteria->getOffset() . ']', Propel::LOG_DEBUG);
 
         return $sql;
-
     }
 
     /**
