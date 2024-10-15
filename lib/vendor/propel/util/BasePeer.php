@@ -858,6 +858,14 @@ class BasePeer
         // Check for wildcard characters in the params array
         $tooManyWildcards = false;
         foreach ($params as $param) {
+            if (!isset($param['table']) || !isset($param['column'])) {
+                continue;
+            }
+            $cton = $criteria->getCriterion($param['table'] . '.' . $param['column']);
+            if (!$cton || !in_array($cton->getComparison(), [Criteria::LIKE, Criteria::NOT_LIKE])) {
+                continue;
+            }
+            // we have a (not) like where clause and want to limit the wildcards.
             $wilcardsInThisParam = 0;
             if (isset($param['value']) && is_string($param['value'])) {
                 $wilcardsInThisParam = substr_count($param['value'], '%') + substr_count($param['value'], '_') + substr_count($param['value'], '*');
