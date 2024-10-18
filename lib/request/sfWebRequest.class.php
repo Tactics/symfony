@@ -250,7 +250,7 @@ class sfWebRequest extends sfRequest
     protected function convertFileInformation($taintedFiles)
     {
         $files = $this->arrayToPaths($taintedFiles);
-        $preg = $files ? preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', $files) : $files;
+        $preg = $files ? preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size|/full_path)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', $files) : $files;
 
         return $this->pathsToArray($preg);
     }
