@@ -836,6 +836,7 @@ class BasePeer
                 $column = $tableName ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
                 if ($column && $column->getType() == 'string') {
                     $orderByClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias") . " $direction";
+                    $selectClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias");
                 } else if ($column) {
                     $orderByClause[] = "$tableAlias.$columnAlias $direction";
                 }
