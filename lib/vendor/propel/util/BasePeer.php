@@ -790,9 +790,10 @@ class BasePeer
             foreach($orderBy as $orderByColumn) {
 
                 // Add function expression as-is.
-
                 if (str_contains((string) $orderByColumn, '(')) {
-                    $orderByClause[] = $orderByColumn;
+                    // As this is vulnerable to sql injection we disallow it
+                    // Hopefully (🙏) we don't need it...
+//                    $orderByClause[] = $orderByColumn;
                     continue;
                 }
 
