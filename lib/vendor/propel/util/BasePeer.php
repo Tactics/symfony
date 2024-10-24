@@ -811,12 +811,10 @@ class BasePeer
                 }
 
                 $spacePos = strpos((string) $columnName, ' ');
-
-
                 if ($spacePos !== false) {
-                    $direction = substr((string) $columnName, $spacePos);
+                    $direction = substr((string) $columnName, $spacePos + 1);
                     //Prevent SQL Injection
-                    if (!in_array(trim($direction), ['ASC', 'DESC'])) {
+                    if (!in_array($direction, ['ASC', 'DESC'])) {
                         $direction = '';
                     }
                     $columnName = substr((string) $columnName, 0, $spacePos);
@@ -837,10 +835,9 @@ class BasePeer
 
                 $column = $tableName ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
                 if ($column && $column->getType() == 'string') {
-                    $orderByClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias") . $direction;
-                    $selectClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias");
-                } else if (preg_match('/^([\w0-9_]+\.)?[\w0-9_]+( (ASC|DESC))?$/i', $orderByColumn)) {
-                    $orderByClause[] = $orderByColumn;
+                    $orderByClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias") . " $direction";
+                } else if ($column) {
+                    $orderByClause[] = "$tableAlias.$columnAlias $direction";
                 }
             }
         }
