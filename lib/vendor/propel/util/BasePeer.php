@@ -830,7 +830,8 @@ class BasePeer
 
                 $columnAlias = $columnName;
                 if ($asColumnName = $criteria->getColumnForAs($columnName)) {
-                    $columnName = $asColumnName;
+                    $orderByClause[] = "$columnName $direction";
+                    continue;
                 }
 
                 $column = $tableName ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
