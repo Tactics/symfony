@@ -38,8 +38,6 @@ class sfFileValidator extends sfValidator
      */
     public function execute(&$value, &$error)
     {
-        $request = $this->getContext()->getRequest();
-
         // file too large?
         $max_size = $this->getParameter('max_size');
         if ($max_size !== null && $max_size < $value['size']) {
@@ -48,13 +46,33 @@ class sfFileValidator extends sfValidator
             return false;
         }
 
-        // supported mime types formats
-        $mimeType = $this->getMimeType($value['tmp_name']) ?: $value['type'];
-        $allowedMimeTypes = $this->getParameter('mime_types');
-        if ($allowedMimeTypes !== null && !in_array($mimeType, $allowedMimeTypes)) {
+        // check if detected mime-type matches the given mime-type
+        $realMimeType = $this->getMimeType($value['tmp_name']);
+        $givenMimeType = $value['type'];
+        if ($realMimeType && $realMimeType !== $givenMimeType) {
             $error = $this->getParameter('mime_types_error');
 
             return false;
+        }
+
+        // check if mime-type is allowed
+        $allowedMimeTypes = $this->getParameter('mime_types');
+        if ($allowedMimeTypes !== null && !in_array($realMimeType ?: $givenMimeType, $allowedMimeTypes)) {
+            $error = $this->getParameter('mime_types_error');
+
+            return false;
+        }
+
+        // check if file extension is a valid extension based on the detected mime-type of the file.
+        $finfo = finfo_open(FILEINFO_EXTENSION);
+        if (false !== $finfo->file($value['tmp_name'])) {
+            $validExtensionsForMimeType = explode('/', trim($finfo->file($value['tmp_name']), '/'));
+            $givenExtension = pathinfo($value['name'], PATHINFO_EXTENSION);
+            if (!empty($validExtensionsForMimeType) && !in_array($givenExtension, $validExtensionsForMimeType)) {
+                $error = $this->getParameter('mime_types_error');
+
+                return false;
+            }
         }
 
         return true;
