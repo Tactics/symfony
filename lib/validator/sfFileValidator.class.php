@@ -49,8 +49,9 @@ class sfFileValidator extends sfValidator
         }
 
         // supported mime types formats
-        $mime_types = $this->getParameter('mime_types');
-        if ($mime_types !== null && !in_array($value['type'], $mime_types)) {
+        $mimeType = $this->getMimeType($value['tmp_name']) ?: $value['type'];
+        $allowedMimeTypes = $this->getParameter('mime_types');
+        if ($allowedMimeTypes !== null && !in_array($mimeType, $allowedMimeTypes)) {
             $error = $this->getParameter('mime_types_error');
 
             return false;
@@ -92,5 +93,48 @@ class sfFileValidator extends sfValidator
         }
 
         return true;
+    }
+
+    /**
+     * Geeft het mimetype van het bestand
+     *
+     * @param string $path
+     */
+    public function getMimeType($path)
+    {
+        $info = null;
+
+        if (function_exists('finfo_open'))
+        {
+            static $fileInfoInstance;
+
+            if (! $fileInfoInstance)
+            {
+                // Windows: download een magic file en zet MAGIC environment variable
+                // Unix: gebruikt default /usr/share/file/magic
+                $fileInfoInstance = finfo_open(FILEINFO_MIME);
+            }
+
+            $info = false !== $fileInfoInstance ? finfo_file($fileInfoInstance, $path) : null;
+        }
+
+        // Only on unix
+        if (!$info && (strtoupper (substr(PHP_OS, 0,3)) != 'WIN'))
+        {
+            $info = @exec("file -bi '" . $path . "'");
+        }
+
+        if (! $info && function_exists('mime_content_type'))
+        {
+            $info = mime_content_type($path);
+        }
+
+        if (str_contains($info, ';'))
+        {
+            $info = explode(';', $info);
+            $info = $info[0];
+        }
+
+        return $info;
     }
 }
