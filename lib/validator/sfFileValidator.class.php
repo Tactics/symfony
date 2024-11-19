@@ -122,12 +122,10 @@ class sfFileValidator extends sfValidator
     {
         $info = null;
 
-        if (function_exists('finfo_open'))
-        {
+        if (function_exists('finfo_open')) {
             static $fileInfoInstance;
 
-            if (! $fileInfoInstance)
-            {
+            if (!$fileInfoInstance) {
                 // Windows: download een magic file en zet MAGIC environment variable
                 // Unix: gebruikt default /usr/share/file/magic
                 $fileInfoInstance = finfo_open(FILEINFO_MIME);
@@ -137,18 +135,15 @@ class sfFileValidator extends sfValidator
         }
 
         // Only on unix
-        if (!$info && (strtoupper (substr(PHP_OS, 0,3)) != 'WIN'))
-        {
+        if (!$info && (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')) {
             $info = @exec("file -bi '" . $path . "'");
         }
 
-        if (! $info && function_exists('mime_content_type'))
-        {
+        if (!$info && function_exists('mime_content_type')) {
             $info = mime_content_type($path);
         }
 
-        if (str_contains($info, ';'))
-        {
+        if (str_contains($info, ';')) {
             $info = explode(';', $info);
             $info = $info[0];
         }
