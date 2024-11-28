@@ -812,9 +812,9 @@ class BasePeer
 
                 $spacePos = strpos((string) $columnName, ' ');
                 if ($spacePos !== false) {
-                    $direction = substr((string) $columnName, $spacePos + 1);
+                    $direction = substr((string) $columnName, $spacePos);
                     //Prevent SQL Injection
-                    if (!in_array($direction, ['ASC', 'DESC'])) {
+                    if (!in_array(trim($direction), ['ASC', 'DESC'])) {
                         $direction = '';
                     }
                     $columnName = substr((string) $columnName, 0, $spacePos);
