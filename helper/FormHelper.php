@@ -132,9 +132,9 @@ function form_tag($url_for_options = '', $options = array())
 
     $html_options['action'] = url_for($url_for_options);
 
-    $formName = $html_options['name'] ?? 'default';
+    $formName = bin2hex(random_bytes(8));
     $csrfManager = new sfCsrfTokenManager($formName, sfCsrfTokenManager::TOKEN_FIELD_NAME, 4 * 60 * 60);
-    $csrfToken = $csrfManager->generateToken(sfCsrfTokenManager::TOKEN_FIELD_NAME, maxTokens: isset($html_options['name']) ? 5 : 20);
+    $csrfToken = $csrfManager->generateToken(sfCsrfTokenManager::TOKEN_FIELD_NAME, maxTokens: 20);
     $csrfTag = input_hidden_tag(sfCsrfTokenManager::TOKEN_FIELD_NAME, $csrfToken);
     $nameTag = input_hidden_tag(sfCsrfTokenManager::SESSION_KEY_FIELD_NAME, $formName);
 
