@@ -45,7 +45,14 @@ final class sfCsrfTokenManager
 
     public function generateToken(string $context, int $tokenTTL = -1, int $maxTokens = 5): string
     {
-        $token = $this->createToken($context, $tokenTTL, $maxTokens);
+        // one token per session and context is enough
+        // from owasp cheatsheet: CSRF tokens should be generated on the server-side
+        // and they should be generated only once per user session or each request.
+        $token = $this->getToken($context);
+        if (!$token) {
+            $token = $this->createToken($context, $tokenTTL, $maxTokens);
+        }
+
         return htmlspecialchars($token->get(), ENT_QUOTES, 'UTF-8');
     }
 
@@ -96,4 +103,10 @@ final class sfCsrfTokenManager
         return false;
     }
 
+    private function getToken(string $context): ?sfCsrfToken
+    {
+        $token = $this->tokenCollection->findByContext($context);
+
+        return $token && !$token->isExpired() ? $token : null;
+    }
 }
