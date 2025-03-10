@@ -48,8 +48,9 @@ final class sfCsrfTokenManager
         // one token per session and context is enough
         // from owasp cheatsheet: CSRF tokens should be generated on the server-side
         // and they should be generated only once per user session or each request.
+        // we regenerate if it expires in less than 15 minutes (900 seconds)
         $token = $this->getToken($context);
-        if (!$token) {
+        if (!$token || ($token->expiresAt() - 900 <= time())) {
             $token = $this->createToken($context, $tokenTTL, $maxTokens);
         }
 

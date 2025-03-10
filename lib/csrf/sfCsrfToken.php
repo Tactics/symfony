@@ -36,6 +36,11 @@ final class sfCsrfToken
         return !($this->expirtyTimestamp === 0 || $this->expirtyTimestamp > time());
     }
 
+    public function expiresAt()
+    {
+        return $this->expirtyTimestamp;
+    }
+
     public function matchesContext(string $context): bool
     {
         return $context === $this->formContext;
