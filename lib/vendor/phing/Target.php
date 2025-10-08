@@ -85,7 +85,7 @@ class Target implements TaskContainer {
         // explode should be faster than strtok
         $deps = explode(',', $depends);
         for ($i=0, $size=count($deps); $i < $size; $i++) {
-            $trimmed = trim($deps[$i]);
+            $trimmed = php7_trim($deps[$i]);
             if ($trimmed === "") {
                 throw new BuildException("Syntax Error: Depend attribute for target ".$this->getName()." is malformed.");
             }

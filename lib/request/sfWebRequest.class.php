@@ -454,7 +454,7 @@ class sfWebRequest extends sfRequest
                     $this->setParameter('action', sfConfig::get('sf_error_404_action'));
                 }
             } else {
-                $array = explode('/', trim($pathInfo, '/'));
+                $array = explode('/', php7_trim($pathInfo, '/'));
                 $count = count($array);
 
                 for ($i = 0; $i < $count; ++$i) {
@@ -777,8 +777,8 @@ class sfWebRequest extends sfRequest
         foreach (array_filter(explode(',', (string) $header)) as $value) {
             // Cut off any q-value that might come after a semi-colon
             if ($pos = strpos($value, ';')) {
-                $q = (float) trim(substr($value, $pos + 3));
-                $value = trim(substr($value, 0, $pos));
+                $q = (float) php7_trim(substr($value, $pos + 3));
+                $value = php7_trim(substr($value, 0, $pos));
             } else {
                 $q = 1;
             }
@@ -805,7 +805,7 @@ class sfWebRequest extends sfRequest
     protected function pathsToArray($str)
     {
         $array = [];
-        $lines = explode("\n", trim((string) $str));
+        $lines = explode("\n", php7_trim((string) $str));
 
         if (!empty($lines[0])) {
             foreach ($lines as $line) {

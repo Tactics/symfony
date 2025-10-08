@@ -68,7 +68,7 @@ class sfPropelData extends sfData
         }
 
         foreach ($data as $class => $datas) {
-            $class = trim((string) $class);
+            $class = php7_trim((string) $class);
 
             $peer_class = $class.'Peer';
 
@@ -165,7 +165,7 @@ class sfPropelData extends sfData
 
             $classes = array_keys($data);
             foreach (array_reverse($classes) as $class) {
-                $class = trim($class);
+                $class = php7_trim($class);
                 if (in_array($class, $this->deletedClasses)) {
                     continue;
                 }

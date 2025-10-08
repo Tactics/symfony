@@ -46,7 +46,7 @@ class sfDateValidator extends sfValidator
 
         // If the compare date is given
         if ($compareDate) {
-            $operator = trim((string) $this->getParameter('operator', '=='), '\'" ');
+            $operator = php7_trim((string) $this->getParameter('operator', '=='), '\'" ');
             $value2 = $this->getValidDate($compareDate, $culture);
 
             // If the check date is valid, compare it. Otherwise ignore the comparison

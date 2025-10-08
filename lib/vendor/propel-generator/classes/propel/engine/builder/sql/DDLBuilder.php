@@ -69,7 +69,7 @@ abstract class DDLBuilder extends DataModelBuilder {
 		$sb .= $col->getNotNullString() . " ";
 		$sb .= $col->getAutoIncrementString();
 
-		return trim($sb);
+		return php7_trim($sb);
 	}
 
 	/**

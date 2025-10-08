@@ -152,7 +152,7 @@ class ProjectConfigurator {
      * @access public
      */
     public static function addText($project, $target, $text = null) {
-        if ($text === null || strlen(trim((string) $text)) === 0) {
+        if ($text === null || strlen(php7_trim((string) $text)) === 0) {
             return;
         }
         $ih = IntrospectionHelper::getHelper($target::class);

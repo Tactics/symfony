@@ -814,7 +814,7 @@ class BasePeer
                 if ($spacePos !== false) {
                     $direction = substr((string) $columnName, $spacePos);
                     //Prevent SQL Injection
-                    if (!in_array(trim($direction), ['ASC', 'DESC'])) {
+                    if (!in_array(php7_trim($direction), ['ASC', 'DESC'])) {
                         $direction = '';
                     }
                     $columnName = substr((string) $columnName, 0, $spacePos);

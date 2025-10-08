@@ -285,7 +285,7 @@ class CvsTask extends Task {
 
         // Check if not real cvsroot => set it to null
         if ($root !== null) {
-            if (trim($root) == "") {
+            if (php7_trim($root) === "") {
                 $root = null;
             }
         }
@@ -305,7 +305,7 @@ class CvsTask extends Task {
     public function setCvsRsh($rsh) {
         // Check if not real cvsrsh => set it to null
         if ($rsh !== null) {
-            if (trim((string) $rsh) == "") {
+            if (php7_trim((string) $rsh) == "") {
                 $rsh = null;
             }
         }
@@ -381,7 +381,7 @@ class CvsTask extends Task {
      */
     public function setTag($p) {
         // Check if not real tag => set it to null
-        if ($p !== null && trim($p) !== "") {
+        if ($p !== null && php7_trim($p) !== "") {
             $this->appendCommandArgument("-r");
             $this->appendCommandArgument($p);
         }
@@ -400,7 +400,7 @@ class CvsTask extends Task {
      * @param p
      */
     public function setDate($p) {
-        if ($p !== null && trim((string) $p) !== "") {
+        if ($p !== null && php7_trim((string) $p) !== "") {
             $this->appendCommandArgument("-D");
             $this->appendCommandArgument($p);
         }

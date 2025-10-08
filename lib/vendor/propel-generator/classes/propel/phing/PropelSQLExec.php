@@ -288,7 +288,7 @@ class PropelSQLExec extends Task {
 	 */
 	public function main()
 	{
-		$this->sqlCommand = trim((string) $this->sqlCommand);
+		$this->sqlCommand = php7_trim((string) $this->sqlCommand);
 
 		if ($this->sqldbmap === null || $this->getSqlDbMap()->exists() === false) {
 			throw new BuildException("You haven't provided an sqldbmap, or "
@@ -464,7 +464,7 @@ class PropelSQLExec extends Task {
 
 		try {
 			while (($line = $in->readLine()) !== null) {
-				$line = trim((string) $line);
+				$line = php7_trim((string) $line);
 				$line = ProjectConfigurator::replaceProperties($this->project, $line,
 						$this->project->getProperties());
 
@@ -604,7 +604,7 @@ class PropelSQLExec extends Task {
 					foreach($rs->fields as $columnValue) {
 
 						if ($columnValue != null) {
-							$columnValue = trim($columnValue);
+							$columnValue = php7_trim($columnValue);
 						}
 
 						if ($first) {

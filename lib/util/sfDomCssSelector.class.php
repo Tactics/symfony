@@ -41,7 +41,7 @@ class sfDomCssSelector
             $nodes = [$this->dom];
             foreach ($this->tokenize($selector) as $token) {
                 $combinator = $token['combinator'];
-                $token = trim((string) $token['name']);
+                $token = php7_trim((string) $token['name']);
                 $pos = strpos($token, '#');
                 if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos))) {
                     // Token is an ID selector
@@ -193,7 +193,7 @@ class sfDomCssSelector
         $token = '';
         for ($i = 0, $max = strlen((string) $selector); $i < $max; ++$i) {
             if (',' == $selector[$i] && !$quoted) {
-                $tokens[] = trim($token);
+                $tokens[] = php7_trim($token);
                 $token = '';
             } elseif ('"' == $selector[$i]) {
                 $token .= $selector[$i];
@@ -203,7 +203,7 @@ class sfDomCssSelector
             }
         }
         if ($token) {
-            $tokens[] = trim($token);
+            $tokens[] = php7_trim($token);
         }
 
         return $tokens;

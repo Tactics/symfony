@@ -117,7 +117,7 @@ class FileList extends DataType {
         if (!empty($filenames)) {
             $tok = strtok($filenames, ", \t\n\r");
             while ($tok !== false) {
-                $fname = trim($tok);
+                $fname = php7_trim($tok);
                 if ($fname !== "") {
                     $this->filenames[] = $tok;
                 }
@@ -208,7 +208,7 @@ class FileList extends DataType {
             while ($line !== null) {
                 if (!empty($line)) {
                     $line = $p->replaceProperties($line);
-                    $this->filenames[] = trim($line);
+                    $this->filenames[] = php7_trim($line);
                 }
                 $line = $listReader->readLine();
             }

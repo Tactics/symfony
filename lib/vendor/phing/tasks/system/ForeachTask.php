@@ -85,7 +85,7 @@ class ForeachTask extends Task {
         if ($this->list === null) {
             throw new BuildException("Missing list to iterate through");
         }
-        if (trim((string) $this->list) === '') {
+        if (php7_trim((string) $this->list) === '') {
             return;
         }
         if ($this->param === null) {

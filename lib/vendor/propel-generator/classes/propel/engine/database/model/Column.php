@@ -914,6 +914,6 @@ class Column extends XMLElement {
 		$sb .= $this->getDefaultSetting() . " ";
 		$sb .= $this->getNotNullString() . " ";
 		$sb .= $this->getAutoIncrementString();
-		return trim($sb);
+		return php7_trim($sb);
 	}
 }

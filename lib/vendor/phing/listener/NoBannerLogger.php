@@ -47,7 +47,7 @@ class NoBannerLogger extends DefaultLogger {
     function messageLogged(BuildEvent $event) {
         if ($event->getPriority() > $this->msgOutputLevel ||
                 null === $event->getMessage() ||
-                         trim($event->getMessage() === "")) {
+            php7_trim($event->getMessage()) === "") {
             return;
         }
 

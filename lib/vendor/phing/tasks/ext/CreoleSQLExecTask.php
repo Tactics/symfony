@@ -254,7 +254,7 @@ class CreoleSQLExecTask extends CreoleTask {
 
         $savedSqlCommand = $this->sqlCommand;
 
-        $this->sqlCommand = trim((string) $this->sqlCommand);
+        $this->sqlCommand = php7_trim((string) $this->sqlCommand);
 
         try {
             if ($this->srcFile === null && $this->sqlCommand === ""
@@ -350,7 +350,7 @@ class CreoleSQLExecTask extends CreoleTask {
         $in = new BufferedReader($reader);
         try {
             while (($line = $in->readLine()) !== null) {
-                $line = trim((string) $line);
+                $line = php7_trim((string) $line);
                 $line = ProjectConfigurator::replaceProperties($this->project, $line,
                         $this->project->getProperties());
 
@@ -366,7 +366,7 @@ class CreoleSQLExecTask extends CreoleTask {
                 }
 
                 $sql .= " " . $line;
-                $sql = trim($sql);
+                $sql = php7_trim($sql);
 
                 // SQL defines "--" as a comment to EOL
                 // and in Oracle it may contain a hint
@@ -401,7 +401,7 @@ class CreoleSQLExecTask extends CreoleTask {
      */
     protected function execSQL($sql, $out = null) {
         // Check and ignore empty statements
-        if (trim((string) $sql) == "") {
+        if (php7_trim((string) $sql) == "") {
             return;
         }
 
@@ -467,7 +467,7 @@ class CreoleSQLExecTask extends CreoleTask {
                     foreach($fields as $columnValue) {
 
                         if ($columnValue != null) {
-                            $columnValue = trim((string) $columnValue);
+                            $columnValue = php7_trim((string) $columnValue);
                         }
 
                         if ($first) {

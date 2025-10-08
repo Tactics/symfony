@@ -10,35 +10,35 @@ if (!empty($sequence)) {
 }
 ?>
 
-CREATE TABLE <?php echo $table->getName() ?> 
+CREATE TABLE <?php echo $table->getName() ?>
 (
 	<?php
 	$cols = $generator->parse("$basepath/columns.tpl");
-	$pk = trim($generator->parse("$basepath/primarykey.tpl"));
+	$pk = php7_trim($generator->parse("$basepath/primarykey.tpl"));
 	$unique = $generator->parse("$basepath/unique.tpl");
-	$index = trim($generator->parse("$basepath/index.tpl"));	
-	
+	$index = php7_trim($generator->parse("$basepath/index.tpl"));
+
 	if ( empty($pk) && empty($unique)) {
 	    echo preg_replace('/[ ,]+[\s]*$/', '', $cols);
 	} else {
 		echo $cols;
 	}
-	
+
 	if (empty($unique) && !empty($pk)) {
 	    echo preg_replace('/[ ,]+[\s]*$/', '', $pk);
 	} else {
 		echo $pk;
 	}
-	
+
 	if (!empty($unique)) {
 	    echo preg_replace('/[ ,]+[\s]*$/', '', $unique);
-	}	
-?> 
+	}
+?>
 );
-<?php 
-	if(!empty($index)) { 
-		echo preg_replace('/[ ,]+[\s]*$/', '', $index); 
-	} 
+<?php
+	if(!empty($index)) {
+		echo preg_replace('/[ ,]+[\s]*$/', '', $index);
+	}
 ?>
 
 COMMENT ON TABLE <?php echo $table->getName() ?> IS '<?php echo $platform->escapeText($table->getDescription()) ?>';

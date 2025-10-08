@@ -277,7 +277,7 @@ class sfDateFormat
         $pattern = strtr($pattern, ['yyyy' => 'Y', 'h' => 'H', 'z' => '', 'a' => '']);
         $pattern = strtr($pattern, ['yy' => 'yyyy', 'Y' => 'yyyy']);
 
-        return trim($pattern);
+        return php7_trim($pattern);
     }
 
     /**

@@ -350,7 +350,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         // create our empty entry validator array
         $entry['validators'] = [];
 
-        if (!$list || (!is_array($list) && trim((string) $list) == '')) {
+        if (!$list || (!is_array($list) && php7_trim((string) $list) == '')) {
             // skip the empty list
             return;
         }
@@ -359,7 +359,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         $array = is_array($list) ? $list : explode(',', (string) $list);
 
         foreach ($array as $validator) {
-            $validator = trim((string) $validator);
+            $validator = php7_trim((string) $validator);
 
             // add this validator name to our entry
             $entry['validators'][] = $validator;

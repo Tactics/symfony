@@ -118,7 +118,7 @@ class StringHelper {
             return $s; // it's already boolean (not a string)
         }
         // otherwise assume it's something like "true" or "t"
-        $trimmed = strtolower(trim((string) $s));
+        $trimmed = strtolower(php7_trim((string) $s));
         return (boolean) in_array($trimmed, self::$TRUE_VALUES);
     }
 
@@ -133,7 +133,7 @@ class StringHelper {
             return false; // not a valid string for testing
         }
 
-        $test = trim(strtolower($s));
+        $test = php7_trim(strtolower($s));
         return (boolean) in_array($test, array_merge(self::$FALSE_VALUES, self::$TRUE_VALUES));
     }
 
@@ -194,7 +194,7 @@ class StringHelper {
      * @return false|int
      */
     public static function isSlotVar($value) {
-        $value = trim($value);
+        $value = php7_trim($value);
         if ($value === "") return false;
         return preg_match('/^%\{([\w\.\-]+)\}$/', $value);
     }
@@ -205,7 +205,7 @@ class StringHelper {
      * @return string Extracted name part.
      */
     public static function slotVar($var) {
-        return trim($var, '%{} ');
+        return php7_trim($var, '%{} ');
     }
 
 }

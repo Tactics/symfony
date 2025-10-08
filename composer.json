@@ -19,7 +19,8 @@
         "ext-json": "*",
         "ext-curl": "*",
         "ext-bcmath": "*",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "ext-simplexml": "*"
     },
     "autoload": {
         "files": [
@@ -43,7 +44,8 @@
             "helper/UrlHelper.php",
             "helper/ValidationHelper.php",
             "includes/pakeFunction.php",
-            "includes/util.php"
+            "includes/util.php",
+            "helper/Php7.php"
         ],
         "classmap": [
             "lib/"

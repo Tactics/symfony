@@ -389,7 +389,7 @@ class Project {
 
 
     function setDefaultTarget($targetName) {
-        $this->defaultTarget = (string) trim((string) $targetName);
+        $this->defaultTarget = (string) php7_trim((string) $targetName);
     }
 
     function getDefaultTarget() {
@@ -406,7 +406,7 @@ class Project {
      */
 
     function setName($name) {
-        $this->name = (string) trim((string) $name);
+        $this->name = (string) php7_trim((string) $name);
         $this->setProperty("phing.project.name", $this->name);
     }
 
@@ -423,7 +423,7 @@ class Project {
 
     /** Set the projects description */
     function setDescription($description) {
-        $this->description = (string) trim((string) $description);
+        $this->description = (string) php7_trim((string) $description);
     }
 
     /** return the description, null otherwise */

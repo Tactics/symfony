@@ -147,7 +147,7 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 					$res[] = $this->strToArray($tok);
 				}
 			} else { // not sub-array
-				$val = trim($tok, '"'); // remove " (surrounding strings)
+				$val = php7_trim($tok, '"'); // remove " (surrounding strings)
 				// perform type castng here?
 				$res[] = $val;
 			}

@@ -287,7 +287,7 @@ class FileUtils {
         $c1 = file_get_contents($file1->getAbsolutePath());
         $c2 = file_get_contents($file2->getAbsolutePath());
 
-        return trim($c1) == trim($c2);
+        return php7_trim($c1) === php7_trim($c2);
     }
 
 }

@@ -66,7 +66,7 @@ class sfFileValidator extends sfValidator
         // check if file extension is a valid extension based on the detected mime-type of the file.
         $finfo = finfo_open(FILEINFO_EXTENSION);
         if (false !== $finfo->file($value['tmp_name'])) {
-            $validExtensionsForMimeType = explode('/', trim($finfo->file($value['tmp_name']), '/'));
+            $validExtensionsForMimeType = explode('/', php7_trim($finfo->file($value['tmp_name']), '/'));
             $givenExtension = pathinfo($value['name'], PATHINFO_EXTENSION);
             if (!empty($validExtensionsForMimeType) && !in_array($givenExtension, $validExtensionsForMimeType)) {
                 $error = $this->getParameter('mime_types_error');

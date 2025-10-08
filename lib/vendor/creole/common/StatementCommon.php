@@ -220,7 +220,7 @@ abstract class StatementCommon {
     {
         // is first word is SELECT, then return true, unless it's SELECT INTO ...
         // this doesn't, however, take comments into account ...
-        $sql = trim($sql);
+        $sql = php7_trim($sql);
         return (stripos($sql, 'select') === 0 && stripos($sql, 'select into ') !== 0);
     }
 

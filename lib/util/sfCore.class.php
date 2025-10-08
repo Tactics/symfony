@@ -94,7 +94,7 @@ class sfCore
     {
         // recent symfony update?
         $last_version = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
-        $current_version = trim(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
+        $current_version = php7_trim(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
         if ($last_version != $current_version) {
             // clear cache
             sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));

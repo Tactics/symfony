@@ -273,7 +273,7 @@ class sfToolkit
     public static function literalize($value, $quoted = false)
     {
         // lowercase our value for comparison
-        $value = trim((string) $value);
+        $value = php7_trim((string) $value);
         $lvalue = strtolower($value);
 
         if (in_array($lvalue, ['null', '~', ''])) {

@@ -120,7 +120,7 @@ function _pear_run_command($config, $command, $opts, $params)
   $ok   = $cmd->run($command, $opts, $params);
   $ret .= ob_get_clean();
 
-  $ret = trim($ret);
+  $ret = php7_trim($ret);
 
   return PEAR::isError($ok) ? array($ret, $ok->getMessage()) : array($ret, null);
 }
@@ -132,7 +132,7 @@ function _pear_echo_message($message)
   {
     foreach (explode("\n", wordwrap($longline, 62)) as $line)
     {
-      if ($line = trim($line))
+      if ($line = php7_trim($line))
       {
         $t .= pake_format_action('pear', $line);
       }

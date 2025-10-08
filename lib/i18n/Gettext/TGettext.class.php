@@ -163,9 +163,9 @@ class TGettext
     {
         $array = [];
         foreach (explode("\n", $meta) as $info) {
-            if ($info = trim($info)) {
+            if ($info = php7_trim($info)) {
                 [$key, $value] = explode(':', $info, 2);
-                $array[trim($key)] = trim($value);
+                $array[php7_trim($key)] = php7_trim($value);
             }
         }
 

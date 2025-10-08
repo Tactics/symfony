@@ -43,7 +43,7 @@ abstract class AbstractHandler {
     protected function __construct(public $parser, public $parentHandler) {
         $this->parser->setHandler($this);
     }
-        
+
     /**
      * Gets invoked when a XML open tag occurs
      *
@@ -72,7 +72,7 @@ abstract class AbstractHandler {
      * @param  string  the name of the XML element
      */
     public function endElement($name) {
-        $this->finished();        
+        $this->finished();
         $this->parser->setHandler($this->parentHandler);
     }
 
@@ -85,7 +85,7 @@ abstract class AbstractHandler {
      * @access    public
      */
     public function characters($data) {
-        $s = trim((string) $data);
+        $s = php7_trim((string) $data);
         if (strlen($s) > 0) {
             throw new ExpatParseException("Unexpected text '$s'", $this->parser->getLocation());
         }

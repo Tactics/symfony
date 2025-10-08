@@ -76,7 +76,7 @@ class Properties {
 
         foreach($lines as $line) {
 
-            $line = trim($line);
+            $line = php7_trim($line);
 
             if($line == "")
                 continue;
@@ -86,8 +86,8 @@ class Properties {
                 continue;
             } else {
                 $pos = strpos($line, '=');
-                $property = trim(substr($line, 0, $pos));
-                $value = trim(substr($line, $pos + 1));
+                $property = php7_trim(substr($line, 0, $pos));
+                $value = php7_trim(substr($line, $pos + 1));
                 $this->properties[$property] = $this->inVal($value);
             }
 

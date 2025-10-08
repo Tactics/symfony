@@ -637,7 +637,7 @@ class Phing {
             $file = new PhingFile($versionPath);
             $reader = new FileReader($file);
             $reader->readInto($buffer);
-            $buffer = trim((string) $buffer);
+            $buffer = php7_trim((string) $buffer);
             //$buffer = "PHING version 1.0, Released 2002-??-??";
             $phingVersion = $buffer;
         } catch (IOException) {

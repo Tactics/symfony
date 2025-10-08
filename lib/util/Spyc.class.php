@@ -114,7 +114,7 @@ class Spyc
         $this->_isInline = false;
 
         foreach ($yaml as $linenum => $line) {
-            $ifchk = trim($line);
+            $ifchk = php7_trim($line);
 
             // If the line starts with a tab (instead of a space), throw a fit.
             if (preg_match('/^ *(\t) *+(\w+)/', $line)) {
@@ -138,7 +138,7 @@ class Spyc
                     // If we're in a block, add the text to the parent's data
                     if ($this->_inBlock === true) {
                         $parent = &$this->_allNodes[$this->_lastNode];
-                        $parent->data[key($parent->data)] .= trim($line).$this->_blockEnd;
+                        $parent->data[key($parent->data)] .= php7_trim($line).$this->_blockEnd;
                     } else {
                         // The current node's parent is the same as the previous node's
                         if (isset($this->_allNodes[$this->_lastNode])) {
@@ -164,14 +164,14 @@ class Spyc
                                 $this->_inBlock = true;
                                 $this->_blockEnd = ' ';
                                 $parent->data[key($parent->data)] = str_replace('>', '', $parent->data[key($parent->data)]);
-                                $parent->data[key($parent->data)] .= trim($line).' ';
+                                $parent->data[key($parent->data)] .= php7_trim($line).' ';
                                 $this->_allNodes[$node->parent]->children = false;
                                 $this->_lastIndent = $node->indent;
                             } elseif ($chk === '|') {
                                 $this->_inBlock = true;
                                 $this->_blockEnd = "\n";
                                 $parent->data[key($parent->data)] = str_replace('|', '', $parent->data[key($parent->data)]);
-                                $parent->data[key($parent->data)] .= trim($line)."\n";
+                                $parent->data[key($parent->data)] .= php7_trim($line)."\n";
                                 $this->_allNodes[$node->parent]->children = false;
                                 $this->_lastIndent = $node->indent;
                             }
@@ -183,7 +183,7 @@ class Spyc
                         $this->_inBlock = false;
                         if ($this->_blockEnd = "\n") {
                             $last = &$this->_allNodes[$this->_lastNode];
-                            $last->data[key($last->data)] = trim((string) $last->data[key($last->data)]);
+                            $last->data[key($last->data)] = php7_trim((string) $last->data[key($last->data)]);
                         }
                     }
 
@@ -405,7 +405,7 @@ class Spyc
         $indent += $this->_dumpIndent;
         $spaces = str_repeat(' ', $indent);
         foreach ($exploded as $line) {
-            $newValue .= "\n".$spaces.trim($line);
+            $newValue .= "\n".$spaces.php7_trim($line);
         }
 
         return $newValue;
@@ -465,18 +465,18 @@ class Spyc
      */
     protected function _parseLine($line)
     {
-        $line = trim($line);
+        $line = php7_trim($line);
 
         $array = [];
 
         if (preg_match('/^-(.*):$/', $line)) {
             // It's a mapped sequence
-            $key = trim(substr(substr($line, 1), 0, -1));
+            $key = php7_trim(substr(substr($line, 1), 0, -1));
             $array[$key] = '';
         } elseif ($line[0] == '-' && !str_starts_with($line, '---')) {
             // It's a list item but not a new stream
             if (strlen($line) > 1) {
-                $value = trim(substr($line, 1));
+                $value = php7_trim(substr($line, 1));
                 // Set the type of the value.  Int, string, etc
                 $value = $this->_toType($value);
                 $array[] = $value;
@@ -487,14 +487,14 @@ class Spyc
             // It's a key/value pair most likely
             // If the key is in double quotes pull it out
             if (preg_match('/^(["\'](.*)["\'](\s)*:)/', $line, $matches)) {
-                $value = trim(str_replace($matches[1], '', $line));
+                $value = php7_trim(str_replace($matches[1], '', $line));
                 $key = $matches[2];
             } else {
                 // Do some guesswork as to the key and the value
                 $explode = explode(':', $line);
-                $key = trim($explode[0]);
+                $key = php7_trim($explode[0]);
                 array_shift($explode);
-                $value = trim(implode(':', $explode));
+                $value = php7_trim(implode(':', $explode));
             }
 
             // Set the type of the value.  Int, string, etc
@@ -516,7 +516,7 @@ class Spyc
      */
     protected function _toType($value)
     {
-        $value = trim($value);
+        $value = php7_trim($value);
         if ($value && !('"' == $value[0] || "'" == $value[0])) {
             $value = $value ? preg_replace('/\s*#(.+)$/', '', $value) : $value;
         }
@@ -543,9 +543,9 @@ class Spyc
         } elseif (str_contains((string) $value, ': ') && !preg_match('/^{(.+)/', (string) $value)) {
             // It's a map
             $array = explode(': ', (string) $value);
-            $key = trim($array[0]);
+            $key = php7_trim($array[0]);
             array_shift($array);
-            $value = trim(implode(': ', $array));
+            $value = php7_trim(implode(': ', $array));
             $value = $this->_toType($value);
             $value = [$key => $value];
         } elseif (preg_match('/{(.+)}$/', (string) $value, $matches)) {

@@ -27,7 +27,7 @@ class sfHtmlValidator extends sfValidator
      */
     public function execute(&$value, &$error)
     {
-        if (trim(strip_tags((string) $value)) == '') {
+        if (php7_trim(strip_tags((string) $value)) == '') {
             // If page contains an object or an image, it's ok
             if (preg_match('/<img/i', (string) $value) || preg_match('/<object/i', (string) $value)) {
                 return true;

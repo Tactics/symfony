@@ -285,7 +285,7 @@ class PHPMailer
      */
     function AddAddress($address, $name = "") {
         $cur = count($this->to);
-        $this->to[$cur][0] = trim($address);
+        $this->to[$cur][0] = php7_trim($address);
         $this->to[$cur][1] = $name;
     }
 
@@ -299,7 +299,7 @@ class PHPMailer
     */
     function AddCC($address, $name = "") {
         $cur = count($this->cc);
-        $this->cc[$cur][0] = trim($address);
+        $this->cc[$cur][0] = php7_trim($address);
         $this->cc[$cur][1] = $name;
     }
 
@@ -313,7 +313,7 @@ class PHPMailer
      */
     function AddBCC($address, $name = "") {
         $cur = count($this->bcc);
-        $this->bcc[$cur][0] = trim($address);
+        $this->bcc[$cur][0] = php7_trim($address);
         $this->bcc[$cur][1] = $name;
     }
 
@@ -325,7 +325,7 @@ class PHPMailer
      */
     function AddReplyTo($address, $name = "") {
         $cur = count($this->ReplyTo);
-        $this->ReplyTo[$cur][0] = trim($address);
+        $this->ReplyTo[$cur][0] = php7_trim($address);
         $this->ReplyTo[$cur][1] = $name;
     }
 
@@ -849,9 +849,9 @@ class PHPMailer
 
         $result .= $this->HeaderLine("Date", $this->RFCDate());
         if($this->Sender == "")
-            $result .= $this->HeaderLine("Return-Path", trim($this->From));
+            $result .= $this->HeaderLine("Return-Path", php7_trim($this->From));
         else
-            $result .= $this->HeaderLine("Return-Path", trim($this->Sender));
+            $result .= $this->HeaderLine("Return-Path", php7_trim($this->Sender));
 
         // To be created automatically by mail()
         if($this->Mailer != "mail")
@@ -865,7 +865,7 @@ class PHPMailer
         }
 
         $from = [];
-        $from[0][0] = trim($this->From);
+        $from[0][0] = php7_trim($this->From);
         $from[0][1] = $this->FromName;
         $result .= $this->AddrAppend("From", $from);
 
@@ -878,7 +878,7 @@ class PHPMailer
 
         // mail() sets the subject itself
         if($this->Mailer != "mail")
-            $result .= $this->HeaderLine("Subject", $this->EncodeHeader(trim($this->Subject)));
+            $result .= $this->HeaderLine("Subject", $this->EncodeHeader(php7_trim($this->Subject)));
 
         $result .= sprintf("Message-ID: <%s@%s>%s", $uniq_id, $this->ServerHostname(), $this->LE);
         $result .= $this->HeaderLine("X-Priority", $this->Priority);
@@ -887,7 +887,7 @@ class PHPMailer
         if($this->ConfirmReadingTo != "")
         {
             $result .= $this->HeaderLine("Disposition-Notification-To",
-                       "<" . trim($this->ConfirmReadingTo) . ">");
+                       "<" . php7_trim($this->ConfirmReadingTo) . ">");
         }
 
         // Add custom headers
@@ -1250,16 +1250,16 @@ class PHPMailer
         $encoding = 'B';
         $encoded = base64_encode((string) $str);
         $maxlen -= $maxlen % 4;
-        $encoded = trim(chunk_split($encoded, $maxlen, "\n"));
+        $encoded = php7_trim(chunk_split($encoded, $maxlen, "\n"));
       } else {
         $encoding = 'Q';
         $encoded = $this->EncodeQ($str, $position);
         $encoded = $this->WrapText($encoded, $maxlen, true);
-        $encoded = str_replace("=".$this->LE, "\n", trim($encoded));
+        $encoded = str_replace("=".$this->LE, "\n", php7_trim($encoded));
       }
 
       $encoded = preg_replace('/^(.*)$/m', " =?".$this->CharSet."?$encoding?\\1?=", $encoded);
-      $encoded = trim(str_replace("\n", $this->LE, $encoded));
+      $encoded = php7_trim(str_replace("\n", $this->LE, $encoded));
 
       return $encoded;
     }

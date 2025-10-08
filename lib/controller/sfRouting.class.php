@@ -262,7 +262,7 @@ class sfRouting
         } else {
             $elements = [];
             foreach (explode('/', (string) $route) as $element) {
-                if (trim($element)) {
+                if (php7_trim($element)) {
                     $elements[] = $element;
                 }
             }
