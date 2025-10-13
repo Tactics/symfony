@@ -41,6 +41,8 @@ class SQLiteConnection extends ConnectionCommon implements Connection {
      */
     private $sqliteAssocCase;
 
+    protected $lastQuery = null;
+
     /**
      * @see Connection::connect()
      */

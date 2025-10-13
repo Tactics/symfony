@@ -17,6 +17,7 @@ class sfI18N
 {
     protected $context;
     protected $globalMessageSource;
+    protected $globalMessageFormat;
     protected $messageSource;
     protected $messageFormat;
 

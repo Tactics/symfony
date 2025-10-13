@@ -38,6 +38,8 @@ class MySQLConnection extends ConnectionCommon implements Connection {
     /** Current database (used in mysql_select_db()). */
     private $database;
 
+    protected $lastQuery = null;
+
     /**
      * Connect to a database and log in as the specified user.
      *

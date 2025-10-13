@@ -40,6 +40,8 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
 
     private $pointer_type = SQLSRV_CURSOR_CLIENT_BUFFERED;
 
+    protected $lastQuery = null;
+
     /**
      * @see Connection::connect()
      */
