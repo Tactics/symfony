@@ -41,7 +41,7 @@ include_once 'phing/system/io/FileReader.php';
 class XmlToAppData extends AbstractHandler {
 
 	/** enables debug output */
-	const DEBUG = false;
+	public const DEBUG = false;
 
 	private $app;
 	private $platform;
@@ -61,18 +61,22 @@ class XmlToAppData extends AbstractHandler {
 	/** two-dimensional array,
 		first dimension is for schemas(key is the path to the schema file),
 		second is for tags within the schema */
-	private $schemasTagsStack = [];
+	private array $schemasTagsStack = [];
 
 	public $parser;
+    /**
+     * @var true
+     */
+    private bool $firstPass;
 
-	/**
+    /**
 	 * Creates a new instance for the specified database type.
 	 *
 	 * @param      Platform $platform The type of database for the application.
 	 * @param      string $defaultPackage the default PHP package used for the om
 	 * @param      string $encoding The database encoding.
 	 */
-	public function __construct(Platform $platform, private $defaultPackage, private $encoding = 'iso-8859-1')
+	public function __construct(Platform $platform, private $defaultPackage, private string $encoding = 'iso-8859-1')
 	{
 		$this->app = new AppData($platform);
 		$this->platform = $platform;

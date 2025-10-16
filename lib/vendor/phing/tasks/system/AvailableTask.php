@@ -42,6 +42,7 @@ class AvailableTask extends Task {
 
     private $type = null;
     private $filepath = null;
+    private PhingFile $file;
 
     function setProperty($property) {
         $this->property = (string) $property;
