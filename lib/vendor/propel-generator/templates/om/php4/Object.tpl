@@ -1469,7 +1469,7 @@ if (!$table->isAlias() && ($addGenericAccessors || ($addGenericMutators && !$tab
       foreach ($pks as $pk) {
         if ($pk->isAutoIncrement()) {
 ?>
-          $this->set<?php echo $pk->getPhpName();?>( $pk );  //[IMV] update autoincrement primary key
+          $this->set<?php echo $pk->getPhpName();?>((int) $pk );  //[IMV] update autoincrement primary key
 <?php
         }
       }

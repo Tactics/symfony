@@ -949,7 +949,7 @@ $script .= "
             foreach ($pks as $pk) {
                 if ($pk->isAutoIncrement()) {
                     $script .= "
-                \$this->set".$pk->getPhpName()."(\$pk);  //[IMV] update autoincrement primary key
+                \$this->set".$pk->getPhpName()."((int) \$pk);  //[IMV] update autoincrement primary key
 ";
                 }
             }
