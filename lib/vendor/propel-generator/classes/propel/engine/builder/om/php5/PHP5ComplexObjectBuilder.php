@@ -1159,8 +1159,10 @@ $script .= "
 				if (\$this->$collName !== []) {
 					foreach(\$this->$collName as \$referrerFK) {
 						if (!\$referrerFK->validate(\$columns)) {
-							\$failureMap = array_merge(\$failureMap, \$referrerFK->getValidationFailures());
-						}
+						    foreach (\$referrerFK->getValidationFailures() as \$failure) {
+                                \$failureMap[] = \$failure;
+                            }
+												}
 					}
 				}
 ";
