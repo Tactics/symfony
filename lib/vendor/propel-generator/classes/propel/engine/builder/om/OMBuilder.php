@@ -271,6 +271,7 @@ abstract class OMBuilder extends DataModelBuilder {
 	public function build()
 	{
 		$script = "<" . "?php\n"; // intentional concatenation
+        $script .= "declare(strict_types=1);\n";
 		$this->addIncludes($script);
 		$this->addClassOpen($script);
 		$this->addClassBody($script);
