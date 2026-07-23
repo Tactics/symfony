@@ -138,6 +138,30 @@ function form_tag($url_for_options = '', $options = array())
 }
 
 /**
+ * Returns an HTML <form> tag with a hidden CSRF token field.
+ *
+ * Drop-in replacement for form_tag(): it renders exactly what form_tag() would,
+ * followed immediately by a hidden <input> field named "_csrf_token". The token
+ * is per-session and is computed as md5($secret . session_id()), where $secret
+ * is read from the application configuration key "app_csrf_secret".
+ *
+ * <b>Examples:</b>
+ *   <code><?php echo form_tag_for_csrf('@myroute'); ?></code>
+ *   <code><?php echo form_tag_for_csrf('/module/action', array('name' => 'myformname')); ?></code>
+ *
+ * @param  string valid action, route or URL
+ * @param  array optional HTML parameters for the <form> tag
+ * @return string opening HTML <form> tag with options, followed by the hidden CSRF token field
+ */
+function form_tag_for_csrf($url_for_options = '', $options = array())
+{
+  $secret = sfConfig::get('app_csrf_secret');
+  $token = md5($secret.session_id());
+
+  return form_tag($url_for_options, $options).input_hidden_tag('_csrf_token', $token);
+}
+
+/**
  * Returns a <select> tag, optionally comprised of <option> tags.
  *
  * The select tag does not generate <option> tags by default.
